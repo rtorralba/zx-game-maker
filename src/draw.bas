@@ -15,6 +15,7 @@ sub mapDraw()
 	next index
 end sub
 
+#ifdef KEYS_ENABLED
 sub removeKeyDoors()
 	dim index, y, x as integer
 
@@ -33,6 +34,7 @@ sub removeKeyDoors()
 		end if
 	next index
 end sub
+#endif
 
 sub drawTile(tile as ubyte, x as ubyte, y as ubyte)
 	if tile < 2 then return
@@ -66,10 +68,12 @@ sub drawTile(tile as ubyte, x as ubyte, y as ubyte)
 		if screenObjects(currentScreen, SCREEN_OBJECT_KEY_INDEX)
 			SetTileChecked(tile, attrSet(tile), x, y)
 		end if
+	#ifdef KEYS_ENABLED
 	elseif tile = DOOR_TILE
 		if screenObjects(currentScreen, SCREEN_OBJECT_DOOR_INDEX)
 			SetTile(tile, attrSet(tile), x, y)
 		end if
+	#endif
 	elseif tile = LIFE_TILE
 		if screenObjects(currentScreen, SCREEN_OBJECT_LIFE_INDEX)
 			SetTileChecked(tile, attrSet(tile), x, y)
@@ -93,6 +97,7 @@ sub redrawScreen()
 	' enemiesDraw(currentScreen)
 end sub
 
+#ifdef KEYS_ENABLED
 function checkTileIsDoor(col as ubyte, lin as ubyte) as ubyte
 	if GetTile(col, lin) = DOOR_TILE
 		if currentKeys <> 0
@@ -107,7 +112,9 @@ function checkTileIsDoor(col as ubyte, lin as ubyte) as ubyte
 		return 0
 	end if
 end function
+#endif
 
+#ifdef KEYS_ENABLED
 function CheckDoor(x as uByte, y as uByte) as uByte
     Dim xIsEven as uByte = (x bAnd 1) = 0
     Dim yIsEven as uByte = (y bAnd 1) = 0
@@ -130,6 +137,7 @@ function CheckDoor(x as uByte, y as uByte) as uByte
             or checkTileIsDoor(col, lin + 2) or checkTileIsDoor(col + 1, lin + 2) or checkTileIsDoor(col + 2, lin + 2)
     end if
 end function
+#endif
 
 sub moveToScreen(direction as Ubyte)
 	' removeAllObjects()

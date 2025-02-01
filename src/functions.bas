@@ -23,11 +23,15 @@ sub printLife()
         PRINT AT 22, 10; "   "  
         PRINT AT 22, 10; currentAmmo
     #endif
-	PRINT AT 22, 16; currentKeys
+    #ifdef KEYS_ENABLED
+	    PRINT AT 22, 16; currentKeys
+    #endif
     #ifdef HISCORE_ENABLED
 	    PRINT AT 23, 25 - LEN(STR$(score)); score
     #endif
-	PRINT AT 22, 30; currentItems
+    #ifdef ITEMS_ENABLED
+	    PRINT AT 22, 30; currentItems
+    #endif
 end sub
 
 function isADamageTile(tile as ubyte) as UBYTE
