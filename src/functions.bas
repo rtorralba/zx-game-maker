@@ -20,8 +20,8 @@ sub printLife()
 	PRINT AT 22, 5; "   "  
 	PRINT AT 22, 5; currentLife
     #ifdef AMMO_ENABLED
-        PRINT AT 22, 9; "   "  
-        PRINT AT 22, 9; currentAmmo
+        PRINT AT 22, 10; "   "  
+        PRINT AT 22, 10; currentAmmo
     #endif
     #ifdef KEYS_ENABLED
 	    PRINT AT 22, 16; currentKeys
@@ -121,9 +121,11 @@ function isSolidTileByXY(x as ubyte, y as ubyte) as ubyte
     dim col as uByte = x >> 1
     dim lin as uByte = y >> 1
     
-    dim tile as ubyte = GetTile(col, lin)
+    if GetTile(col, lin) = 0 then return 0
 
-	return tile > 0 and tile < 64 ' is solid tile
+    if GetTile(col, lin) > 63 then return 0
+
+    return GetTile(col, lin)
 end function
 
 #ifdef SIDE_VIEW
