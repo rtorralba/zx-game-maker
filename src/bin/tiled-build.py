@@ -231,6 +231,7 @@ configStr += "const LIFE_TILE as ubyte = " + lifeTile + "\n"
 configStr += "const ANIMATE_PERIOD_MAIN as ubyte = " + str(animatePeriodMain) + "\n"
 configStr += "const ANIMATE_PERIOD_ENEMY as ubyte = " + str(animatePeriodEnemy) + "\n"
 configStr += "const ANIMATE_PERIOD_TILE as ubyte = " + str(animatePeriodTile) + "\n\n"
+configStr += "const ANIMATED_TILES_COUNT as ubyte = " + str(animatedTilesIdsCount) + "\n"
 
 configStr += "const ITEMS_COUNTDOWN as ubyte = " + str(itemsCountdown) + "\n"
 configStr += "const ITEMS_TO_FIND as ubyte = " + str(goalItems) + "\n"
@@ -379,9 +380,7 @@ for screen in screenAnimatedTiles:
         screenAnimatedTiles[screen].append([0, 0, 0, 0, 0])
 
 with open("output/animatedTilesInScreen.bin", "wb") as f:
-    for screen in screenAnimatedTiles:
-        for tile in screenAnimatedTiles[screen]:
-            f.write(bytearray([int(tile[0]), int(tile[1]), int(tile[2]), int(tile[3])]))
+    f.write(bytearray(animatedTilesIds))
 
 # configStr += "dim screenObjectsInitial(" + str(screensCount - 1) + ", 3) as ubyte = { _\n"
 # for screen in screenObjects:
