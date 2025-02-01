@@ -30,6 +30,7 @@ sub printLife()
 	    PRINT AT 23, 25 - LEN(STR$(score)); score
     #endif
     #ifdef ITEMS_ENABLED
+        PRINT AT 22, 30; "  "
 	    PRINT AT 22, 30; currentItems
     #endif
 end sub
@@ -127,6 +128,25 @@ function isSolidTileByXY(x as ubyte, y as ubyte) as ubyte
 
     return GetTile(col, lin)
 end function
+
+sub removeTilesFromScreen(tile as ubyte)
+	dim index, y, x as integer
+
+	x = 0
+	y = 0
+	
+	for index=0 to SCREEN_LENGTH
+		if peek(@decompressedMap + index) - 1 = tile
+			SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
+		end if
+
+		x = x + 1
+		if x = screenWidth
+			x = 0
+			y = y + 1
+		end if
+	next index
+end sub
 
 #ifdef SIDE_VIEW
 	sub jump()

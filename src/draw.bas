@@ -15,27 +15,6 @@ sub mapDraw()
 	next index
 end sub
 
-#ifdef KEYS_ENABLED
-sub removeKeyDoors()
-	dim index, y, x as integer
-
-	x = 0
-	y = 0
-	
-	for index=0 to SCREEN_LENGTH
-		if peek(@decompressedMap + index) - 1 = DOOR_TILE
-			SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
-		end if
-
-		x = x + 1
-		if x = screenWidth
-			x = 0
-			y = y + 1
-		end if
-	next index
-end sub
-#endif
-
 sub drawTile(tile as ubyte, x as ubyte, y as ubyte)
 	if tile < 2 then return
 
@@ -51,6 +30,17 @@ sub drawTile(tile as ubyte, x as ubyte, y as ubyte)
 	#else
 		if tile = 63 ' if is background, bullet or enemy kill door dont draw
 			SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
+			return
+		end if
+	#endif
+
+	#ifdef USE_BREAKABLE_TILE
+		if tile = 62
+			if brokenTiles(currentScreen)
+				SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
+			else
+				SetTileChecked(tile, attrSet(tile), x, y)
+			end if
 			return
 		end if
 	#endif
@@ -105,7 +95,7 @@ function checkTileIsDoor(col as ubyte, lin as ubyte) as ubyte
 			printLife()
 			screenObjects(currentScreen, SCREEN_OBJECT_DOOR_INDEX) = 0
 			BeepFX_Play(4)
-			removeKeyDoors()
+			removeTilesFromScreen(DOOR_TILE)
 		end if
 		return 1
 	else

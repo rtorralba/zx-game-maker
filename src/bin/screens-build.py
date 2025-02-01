@@ -29,6 +29,7 @@ MAP_FOLDER = str(Path("assets/map/")) + path_separator
 with open(OUTPUT_FOLDER + "maps.json", "r") as f:
     maps_json = json.load(f)
 enabled128K = any(prop["name"] == "128Kenabled" and prop["value"] for prop in maps_json["properties"])
+useBreakableTile = any(prop["name"] == "useBreakableTile" and prop["value"] for prop in maps_json["properties"])
 
 def run_command(command):
     result = subprocess.call(command, shell=True)
@@ -89,6 +90,9 @@ input_files = [
     OUTPUT_FOLDER + "decompressedEnemiesScreen.bin"
 ]
 
+if useBreakableTile:
+    input_files.append(OUTPUT_FOLDER + "brokenTiles.bin")
+
 # Concatenar archivos de entrada en el archivo de salida
 with open(output_file, 'ab') as outfile:
     for fname in input_files:
@@ -147,6 +151,8 @@ SIZE15 = os.path.getsize(Path(OUTPUT_FOLDER + "enemiesPerScreen.bin"))
 SIZE16 = os.path.getsize(Path(OUTPUT_FOLDER + "screenObjects.bin"))
 SIZE17 = os.path.getsize(Path(OUTPUT_FOLDER + "screensWon.bin"))
 SIZE18 = os.path.getsize(Path(OUTPUT_FOLDER + "decompressedEnemiesScreen.bin"))
+if useBreakableTile:
+    SIZE19 = os.path.getsize(Path(OUTPUT_FOLDER + "brokenTiles.bin"))
 
 tilesetAddress = SIZE0 + SIZE1 + SIZE2 + SIZE3 + SIZE4 + SIZE5
 attrAddress = tilesetAddress + SIZE6
@@ -161,6 +167,9 @@ enemiesPerScreenInitialAddress = enemiesPerScreenAddress + SIZE14
 screenObjectsAddress = enemiesPerScreenInitialAddress + SIZE15
 screensWonAddress = screenObjectsAddress + SIZE16
 decompressedEnemiesScreenAddress = screensWonAddress + SIZE17
+
+if useBreakableTile:
+    brokenTilesAddress = decompressedEnemiesScreenAddress + SIZE18
 
 if not enabled128K:
     with open(config_bas_path, 'a') as config_bas:
@@ -197,6 +206,9 @@ with open(config_bas_path, 'a') as config_bas:
     config_bas.write("const SCREEN_OBJECTS_DATA_ADDRESS as uinteger={}\n".format(screenObjectsAddress))
     config_bas.write("const SCREENS_WON_DATA_ADDRESS as uinteger={}\n".format(screensWonAddress))
     config_bas.write("const DECOMPRESSED_ENEMIES_SCREEN_DATA_ADDRESS as uinteger={}\n".format(decompressedEnemiesScreenAddress))
+
+    if useBreakableTile:
+        config_bas.write("const BROKEN_TILES_DATA_ADDRESS as uinteger={}\n".format(brokenTilesAddress))
 
 if enabled128K:
     with open(config_bas_path, 'a') as config_bas:

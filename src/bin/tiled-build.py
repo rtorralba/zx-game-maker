@@ -125,6 +125,8 @@ itemsEnabled = 1
 
 itemsCountdown = 0
 
+useBreakableTile = 0
+
 waitPressKeyAfterLoad = 0
 
 if 'properties' in data:
@@ -202,6 +204,8 @@ if 'properties' in data:
             itemsEnabled = 1 if property['value'] else 0
         elif property['name'] == 'itemsCountdown':
             itemsCountdown = 1 if property['value'] else 0
+        elif property['name'] == 'useBreakableTile':
+            useBreakableTile = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -401,6 +405,11 @@ if enemiesRespawn == 0:
 with open("output/screensWon.bin", "wb") as f:
     f.write(bytearray([0] * screensCount))
 
+if useBreakableTile == 1:
+    configStr += "#DEFINE USE_BREAKABLE_TILE\n"
+    with open("output/brokenTiles.bin", "wb") as f:
+        f.write(bytearray([0] * screensCount))
+
 for idx, screen in enumerate(screens):
     label = 'screen' + str(idx).zfill(3)
     with open(outputDir + label + '.bin', 'wb') as f:
@@ -569,7 +578,7 @@ with open("output/enemiesPerScreenInitial.bin", "wb") as f:
 
 with open("output/decompressedEnemiesScreen.bin", "wb") as f:
     for i in range(maxEnemiesPerScreen):
-        f.write(bytearray([0] * 11))
+        f.write(bytearray([0] * 12))
 
 with open(outputDir + "config.bas", "w") as text_file:
     print(configStr, file=text_file)

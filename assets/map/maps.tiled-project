@@ -183,6 +183,11 @@
                     "value": false
                 },
                 {
+                    "name": "useBreakableTile",
+                    "type": "bool",
+                    "value": false
+                },
+                {
                     "name": "waitPressKeyAfterLoad",
                     "type": "bool",
                     "value": false
