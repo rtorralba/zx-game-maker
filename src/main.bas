@@ -49,6 +49,7 @@ dim protaY as ubyte
 dim protaDirection as ubyte
 
 dim soundToPlay as ubyte = 1
+dim animatedFrame as ubyte = 0
 
 #ifdef SHOOTING_ENABLED
     dim noKeyPressedForShoot as UBYTE = 1
@@ -96,7 +97,7 @@ dim sprites(47, 31) as ubyte at SPRITES_DATA_ADDRESS
 dim screenObjectsInitial(SCREENS_COUNT, 4) as ubyte at SCREEN_OBJECTS_INITIAL_DATA_ADDRESS
 dim screensOffsets(SCREENS_COUNT) as uInteger at SCREEN_OFFSETS_DATA_ADDRESS
 dim enemiesInScreenOffsets(SCREENS_COUNT) as uInteger at ENEMIES_IN_SCREEN_OFFSETS_DATA_ADDRESS
-dim animatedTilesInScreen(SCREENS_COUNT, MAX_ANIMATED_TILES_PER_SCREEN, 3) as ubyte at ANIMATED_TILES_IN_SCREEN_DATA_ADDRESS
+dim animatedTilesInScreen(SCREENS_COUNT, MAX_ANIMATED_TILES_PER_SCREEN, 2) as ubyte at ANIMATED_TILES_IN_SCREEN_DATA_ADDRESS
 dim damageTiles(DAMAGE_TILES_COUNT) as ubyte at DAMAGE_TILES_DATA_ADDRESS
 dim enemiesPerScreen(SCREENS_COUNT) as ubyte at ENEMIES_PER_SCREEN_DATA_ADDRESS
 dim enemiesPerScreenInitial(SCREENS_COUNT) as ubyte at ENEMIES_PER_SCREEN_INITIAL_DATA_ADDRESS
@@ -384,11 +385,11 @@ end sub
 sub animateAnimatedTiles()
     for i=0 to MAX_ANIMATED_TILES_PER_SCREEN:
         if animatedTilesInScreen(currentScreen, i, 0) <> 0
-            dim tile as ubyte = animatedTilesInScreen(currentScreen, i, 0) + animatedTilesInScreen(currentScreen, i, 3) + 1
-            SetTileChecked(tile, attrSet(tile), animatedTilesInScreen(currentScreen, i, 1), animatedTilesInScreen(currentScreen, i, 2))
-            let animatedTilesInScreen(currentScreen, i, 3) = not animatedTilesInScreen(currentScreen, i, 3)
+            dim tile as ubyte = animatedTilesInScreen(currentScreen, i, 0) + animatedFrame + 1
+            SetTile(tile, attrSet(tile), animatedTilesInScreen(currentScreen, i, 1), animatedTilesInScreen(currentScreen, i, 2))
         end if
     next i
+    animatedFrame = not animatedFrame
 end sub
 
 sub debugA(value as UBYTE)

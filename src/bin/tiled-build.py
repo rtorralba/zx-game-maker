@@ -34,7 +34,7 @@ screenPixelsHeight = screenHeight * tileHeight
 spriteTileOffset = 0
 
 maxEnemiesPerScreen = 3
-maxAnimatedTilesPerScreen = 3
+maxAnimatedTilesPerScreen = 6
 
 damageTiles = []
 animatedTilesIds = []
@@ -206,6 +206,8 @@ if 'properties' in data:
             itemsCountdown = 1 if property['value'] else 0
         elif property['name'] == 'useBreakableTile':
             useBreakableTile = 1 if property['value'] else 0
+        elif property['name'] == 'maxAnimatedTilesPerScreen':
+            maxAnimatedTilesPerScreen = property['value']
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -345,7 +347,7 @@ for layer in data['layers']:
                 # screens[idx][mapY][mapX % screenWidth] = tile
 
                 if int(tile) in animatedTilesIds and len(screenAnimatedTiles[idx]) < maxAnimatedTilesPerScreen:
-                    screenAnimatedTiles[idx].append([tile, mapX, mapY, 0])
+                    screenAnimatedTiles[idx].append([tile, mapX, mapY])
 
                 if tile == keyTile:
                     screenObjects[idx]['key'] = 1
@@ -375,13 +377,13 @@ with open("output/objectsInScreen.bin", "wb") as f:
         f.write(bytearray([screenObjects[screen]['item'], screenObjects[screen]['key'], screenObjects[screen]['door'], screenObjects[screen]['life'], screenObjects[screen]['ammo']]))
 
 for screen in screenAnimatedTiles:
-    for i in range(3 - len(screenAnimatedTiles[screen])):
-        screenAnimatedTiles[screen].append([0, 0, 0, 0, 0])
+    for i in range(maxAnimatedTilesPerScreen - len(screenAnimatedTiles[screen])):
+        screenAnimatedTiles[screen].append([0, 0, 0])
 
 with open("output/animatedTilesInScreen.bin", "wb") as f:
     for screen in screenAnimatedTiles:
         for tile in screenAnimatedTiles[screen]:
-            f.write(bytearray([int(tile[0]), int(tile[1]), int(tile[2]), int(tile[3])]))
+            f.write(bytearray([int(tile[0]), int(tile[1]), int(tile[2])]))
 
 # configStr += "dim screenObjectsInitial(" + str(screensCount - 1) + ", 3) as ubyte = { _\n"
 # for screen in screenObjects:

@@ -153,6 +153,11 @@
                     "value": 5
                 },
                 {
+                    "name": "maxAnimatedTilesPerScreen",
+                    "type": "int",
+                    "value": 6
+                },
+                {
                     "name": "maxEnemiesPerScreen",
                     "type": "int",
                     "value": 5

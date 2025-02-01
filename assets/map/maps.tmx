@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" class="ZXSpectrumGameMaker" orientation="orthogonal" renderorder="left-down" width="132" height="116" tilewidth="8" tileheight="8" infinite="1" nextlayerid="3" nextobjectid="34">
+<map version="1.10" tiledversion="1.11.1-99-gec89c545" class="ZXSpectrumGameMaker" orientation="orthogonal" renderorder="left-down" width="132" height="116" tilewidth="8" tileheight="8" infinite="1" nextlayerid="3" nextobjectid="34">
  <editorsettings>
   <chunksize width="32" height="22"/>
  </editorsettings>
@@ -23,6 +23,7 @@
   <property name="keysEnabled" type="bool" value="true"/>
   <property name="killJumpingOnTop" type="bool" value="true"/>
   <property name="lifeAmount" type="int" value="5"/>
+  <property name="maxAnimatedTilesPerScreen" type="int" value="10"/>
   <property name="maxEnemiesPerScreen" type="int" value="5"/>
   <property name="musicEnabled" type="bool" value="true"/>
   <property name="shooting" type="bool" value="true"/>
@@ -124,7 +125,7 @@
 3,3,1,1,63,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,109,110,1,1,1,1,1,3,
 3,3,1,1,63,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,141,142,1,1,1,63,1,189,
 3,3,1,1,63,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,173,174,1,188,1,63,1,189,
-4,4,4,4,4,4,4,4,4,4,4,4,4,4,167,167,167,167,167,4,4,4,4,4,4,4,4,4,4,4,4,4,
+4,4,4,4,4,4,129,129,129,129,129,129,129,129,129,167,167,167,167,4,4,4,4,4,4,4,4,4,4,4,4,4,
 36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36
 </chunk>
    <chunk x="32" y="22" width="32" height="22">
@@ -179,7 +180,7 @@
    </properties>
    <point/>
   </object>
-  <object id="26" name="mainCharacter" type="mainCharacter" x="63.5" y="320">
+  <object id="26" name="mainCharacter" type="mainCharacter" x="160" y="320">
    <point/>
   </object>
   <object id="30" gid="217" x="408" y="256" width="16" height="16"/>
