@@ -304,6 +304,7 @@ if killJumpingOnTop == 1:
 
 if ammo > -1:
     configStr += "#DEFINE AMMO_ENABLED\n"
+    configStr += "const INITIAL_AMMO as ubyte = " + str(ammo) + "\n"
     configStr += "dim currentAmmo as ubyte = " + str(ammo) + "\n"
     configStr += "const AMMO_INCREMENT as ubyte = " + str(ammoIncrement) + "\n"
 

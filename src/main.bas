@@ -368,6 +368,9 @@ sub resetValues()
     #ifdef HISCORE_ENABLED
         score = 0
     #endif
+
+    currentAmmo = INITIAL_AMMO
+    
     redrawScreen()
     ' drawSprites()
 end sub
