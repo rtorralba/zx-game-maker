@@ -1,7 +1,5 @@
 numpy
-opencv-python
-pandas
-plotly
+matplotlib
 Pillow
 bin2tap
 zxp2gus

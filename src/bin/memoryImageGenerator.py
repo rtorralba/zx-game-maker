@@ -4,14 +4,11 @@ import os
 import sys
 import hashlib
 import numpy as np
-import pandas as pd
-import plotly.express as px
+import matplotlib.pyplot as plt
 
 # Función que genera un color hex a partir de una cadena
 def stringToColor(s):
-    # Generar un hash de la cadena
     hash_object = hashlib.md5(s.encode())
-    # Convertir el hash a un código de color hex
     hex_color = '#' + hash_object.hexdigest()[:6]
     return hex_color
 
@@ -32,31 +29,36 @@ free = bankMemory - total
 
 weight_counts["Free-Memory"] = np.array([free])
 
-# Inicializar colores
 colors = []
 labels = []
+values = []
 for label in weight_counts.keys():
     if label == "Free-Memory":
         colors.append("#999999")
     else:
         colors.append(stringToColor(label))
     labels.append(label + " (" + str(weight_counts[label][0]) + " bytes)")
+    values.append(weight_counts[label][0])
 
-# Crear DataFrame para Plotly Express
-data = {
-    'Label': labels,
-    'Value': [weight_count[0] for weight_count in weight_counts.values()],
-    'Color': colors,
-    'x': ['' for weight_count in weight_counts.values()]
-}
+# Crear gráfico de pastel
+fig, ax = plt.subplots()
+wedges, texts, autotexts = ax.pie(values, colors=colors, autopct='%1.1f%%', startangle=90)
+ax.axis('equal')  # Para asegurar que el gráfico de pastel sea circular
 
-df = pd.DataFrame(data)
+# Añadir título
+ax.set_title(f"Distribución de memoria ({free} bytes libres)")
 
-# Crear gráfico de barras apiladas
-fig = px.pie(df, names='Label', values='Value', title=f"Memoria ocupada ({free} bytes libres)", color='Label', color_discrete_sequence=colors, category_orders={"Label": labels})
+# Añadir leyendas a la derecha
+ax.legend(wedges, labels, title="Categorías", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
 
 # Guardar gráfico
 if not os.path.exists("dist"):
     os.mkdir("dist")
 
-fig.write_image("dist/" + sys.argv[2], format='png', scale=1.5)
+output_file = sys.argv[2]
+if not output_file.endswith(".png"):
+    output_file += ".png"
+
+plt.savefig(f"dist/{output_file}", format='png', dpi=150, bbox_inches="tight")
+
+print(f"Gráfico guardado en dist/{output_file}")
