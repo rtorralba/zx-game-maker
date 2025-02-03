@@ -129,7 +129,7 @@ if enabled128K:
         S5 = os.path.getsize(OUTPUT_FOLDER + "gameover.scr.zx0")
         params = "{},GameOver-Screen:{}".format(params, S5)
     
-    run_command(python_executable + BIN_FOLDER + "memoryImageGenerator.py " + params + " memory-bank-3.png")
+    #run_command(python_executable + BIN_FOLDER + "memoryImageGenerator.py " + params + " memory-bank-3.png")
 else:
     SIZE0 = SIZEFX + SIZE0
     SIZE1 = os.path.getsize(Path(OUTPUT_FOLDER + "title.png.scr.zx0"))
@@ -240,4 +240,4 @@ enemiesSize = SIZE5 + SIZE11 + SIZE14 + SIZE15 + SIZE18
 mapsSize = SIZE4 + SIZE10 + SIZE16 + SIZE17
 
 params = "FX:" + str(SIZEFX) + ",Init-Screen:" + str(SIZE1) + ",End-Screen:" + str(SIZE2) + ",HUD:" + str(SIZE3) + ",Maps:" + str(mapsSize) + ",Enemies:" + str(enemiesSize) + ",Tileset:" + str(SIZE6) + ",Attributes:" + str(SIZE7) + ",Sprites:" + str(SIZE8) + ",Objects:" + str(SIZE9) + ",Damage-Tiles:" + str(SIZE13) + ",Animated-Tiles:" + str(SIZE12) + " memory-bank-0.png"
-run_command(python_executable + BIN_FOLDER + "memoryImageGenerator.py " + params)
+#run_command(python_executable + BIN_FOLDER + "memoryImageGenerator.py " + params)
