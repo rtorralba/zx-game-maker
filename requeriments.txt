@@ -2,7 +2,6 @@ numpy
 opencv-python
 pandas
 plotly
-kaleido==0.1.0post1
 Pillow
 bin2tap
 zxp2gus
