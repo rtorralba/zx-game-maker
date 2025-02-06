@@ -64,8 +64,8 @@ dim animatedFrame as ubyte = 0
 
 load "" CODE ' Load files
 
+#include "128/im2.bas"
 #ifdef ENABLED_128k
-    #include "128/im2.bas"
     #include "128/vortexTracker.bas"
     #include "128/functions.bas"
     PaginarMemoria(4)
@@ -256,6 +256,8 @@ playGame:
     #ifdef HISCORE_ENABLED
         PRINT AT 23, 20; "00000"
     #endif
+
+    IM2_Inicializar(@BeepFX_NextNote)
     do
         waitretrace
 
