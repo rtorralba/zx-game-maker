@@ -35,8 +35,8 @@ dim keyArray(4) as uInteger
 
 dim framec AS ubyte AT 23672
 
-' const BEEP_PERIOD = 20
-' dim lastFrameBeep as ubyte = 0
+const BEEP_PERIOD = 2
+dim lastFrameBeep as ubyte = 0
 dim lastFrameProta as ubyte = 0
 dim lastFrameEnemies as ubyte = 0
 dim lastFrameTiles as ubyte = 0
@@ -254,7 +254,7 @@ playGame:
     let lastFrameProta = framec
     let lastFrameEnemies = framec
     let lastFrameTiles = framec
-    ' let lastFrameBeep = framec
+    let lastFrameBeep = framec
 
     #ifdef HISCORE_ENABLED
         PRINT AT 23, 20; "00000"
@@ -278,13 +278,6 @@ playGame:
             let lastFrameTiles = framec
         end if
 
-        ' if framec - lastFrameBeep >= BEEP_PERIOD
-        '     asm
-        '         call 49166 ; Reproducimos una nota
-        '     end asm
-        '     let lastFrameBeep = framec
-        ' end if
-
         protaMovement()
         checkDamageByTile()
         moveEnemies()
@@ -305,9 +298,12 @@ playGame:
             end if
         end if
 
-        asm
-            call 49166 ; Reproducimos una nota
-        end asm
+        if framec - lastFrameBeep >= BEEP_PERIOD
+            asm
+                call 49170 ; Reproducimos una nota
+            end asm
+            let lastFrameBeep = framec
+        end if
     loop
 
 ending:
