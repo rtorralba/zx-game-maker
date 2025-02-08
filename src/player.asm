@@ -162,4 +162,4 @@ FX:
 dw $0000
 
 FXAddress:
-include "../assets/fx/fx.asm"
+include "assets/fx/fx.asm"

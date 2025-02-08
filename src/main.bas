@@ -35,7 +35,7 @@ dim keyArray(4) as uInteger
 
 dim framec AS ubyte AT 23672
 
-const BEEP_PERIOD = 2
+const BEEP_PERIOD = 1
 dim lastFrameBeep as ubyte = 0
 dim lastFrameProta as ubyte = 0
 dim lastFrameEnemies as ubyte = 0
