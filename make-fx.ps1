@@ -1,12 +1,13 @@
-$pasmo = Get-Command pasmo -ErrorAction SilentlyContinue
+$filePath = ".\pasmo.exe"
 
-if ($null -eq $pasmo) {
-    Write-Host "Pasmo no esta instalado. Por favor, instala Pasmo antes de continuar." -ForegroundColor Red
+if (-not (Test-Path $filePath)) {
+    Write-Host "El fichero $filePath existe."
+    Write-Host "Descarga de https://pasmo.speccy.org/ y pon el fichero pasmo.exe en la raiz del proyecto"
     Read-Host "Pulse una tecla para cerrar..."
     exit 1
 }
 
-pasmo --tap src/player.asm assetsfx/fx.tap
+.\pasmo.exe --tap .\src\player.asm .\assets\fx\fx.tap
 
 Write-Host "FX creado correctamente."
 
