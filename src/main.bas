@@ -299,9 +299,7 @@ playGame:
         end if
 
         if framec - lastFrameBeep >= BEEP_PERIOD
-            asm
-                call 49170 ; Reproducimos una nota
-            end asm
+            BeepFX_NextNote()
             let lastFrameBeep = framec
         end if
     loop
