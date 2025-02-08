@@ -29,8 +29,6 @@ SoundEffect1Data:
 	defb 0
 SoundEffect2Data:
 	defb 2 ;noise
-	defw 1,500,10
-	defb 2 ;noise
 	defw 1,500,1
 	defb 0
 SoundEffect3Data:
