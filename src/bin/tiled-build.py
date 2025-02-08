@@ -235,7 +235,7 @@ configStr += "const ANIMATE_PERIOD_ENEMY as ubyte = " + str(animatePeriodEnemy) 
 configStr += "const ANIMATE_PERIOD_TILE as ubyte = " + str(animatePeriodTile) + "\n\n"
 
 configStr += "const ITEMS_COUNTDOWN as ubyte = " + str(itemsCountdown) + "\n"
-configStr += "const ITEMS_TO_FIND as ubyte = " + str(goalItems) + "\n"
+configStr += "dim itemsToFind as ubyte = " + str(goalItems) + "\n"
 if itemsCountdown == 1:
     configStr += "const ITEMS_INCREMENT as ubyte = -1\n"
     configStr += "const GOAL_ITEMS as ubyte = 0 \n"

@@ -148,6 +148,28 @@ sub removeTilesFromScreen(tile as ubyte)
 	next index
 end sub
 
+#ifdef ARCADE_MODE
+    sub countItemsOnTheScreen()
+        dim index, y, x as integer
+
+        x = 0
+        y = 0
+        
+        itemsToFind = 0
+        for index=0 to SCREEN_LENGTH
+            if peek(@decompressedMap + index) - 1 = ITEM_TILE
+                itemsToFind = itemsToFind + 1
+            end if
+
+            x = x + 1
+            if x = screenWidth
+                x = 0
+                y = y + 1
+            end if
+        next index
+    end sub
+#endif
+
 #ifdef SIDE_VIEW
 	sub jump()
         if jumpCurrentKey = jumpStopValue and landed

@@ -51,6 +51,8 @@ dim protaDirection as ubyte
 dim soundToPlay as ubyte = 1
 dim animatedFrame as ubyte = 0
 
+#define ARCADE_MODE
+
 #ifdef SHOOTING_ENABLED
     dim noKeyPressedForShoot as UBYTE = 1
 #endif
@@ -349,7 +351,7 @@ sub resetValues()
     currentKeys = 2 mod 2
     currentKeys = 0
     if ITEMS_COUNTDOWN
-        currentItems = ITEMS_TO_FIND
+        currentItems = itemsToFind
     else
         currentItems = 0
     end if
@@ -383,6 +385,11 @@ sub swapScreen()
     dzx0Standard(MAPS_DATA_ADDRESS + screensOffsets(currentScreen), @decompressedMap)
     dzx0Standard(ENEMIES_DATA_ADDRESS + enemiesInScreenOffsets(currentScreen), @decompressedEnemiesScreen)
     bulletPositionX = 0
+    #ifdef ARCADE_MODE
+        countItemsOnTheScreen()
+    #endif
+    print itemsToFind
+    pauseUntilPressKey()
 end sub
 
 sub animateAnimatedTiles()
