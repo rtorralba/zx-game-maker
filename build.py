@@ -175,7 +175,7 @@ def build():
 
     taps_build()
 
-    remove_temp_files()
+    #remove_temp_files()
 
     print("Game compiled successfully! You can find it at dist/" + PROJECT_FILE_NAME + ".tap.\n")
 

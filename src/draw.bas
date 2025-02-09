@@ -55,9 +55,14 @@ sub drawTile(tile as ubyte, x as ubyte, y as ubyte)
 			SetTileChecked(tile, attrSet(tile), x, y)
 		end if
 	elseif tile = KEY_TILE
-		if screenObjects(currentScreen, SCREEN_OBJECT_KEY_INDEX)
-			SetTileChecked(tile, attrSet(tile), x, y)
-		end if
+		#ifdef ARCADE_MODE
+			currentScreenKeyX = x
+			currentScreenKeyY = y
+		#else
+			if screenObjects(currentScreen, SCREEN_OBJECT_KEY_INDEX)
+				SetTileChecked(tile, attrSet(tile), x, y)
+			end if
+		#endif
 	#ifdef KEYS_ENABLED
 	elseif tile = DOOR_TILE
 		if screenObjects(currentScreen, SCREEN_OBJECT_DOOR_INDEX)
@@ -74,6 +79,12 @@ sub drawTile(tile as ubyte, x as ubyte, y as ubyte)
 		end if
 	end if
 end sub
+
+#ifdef ARCADE_MODE
+	sub drawKey()
+		SetTile(KEY_TILE, attrSet(KEY_TILE), currentScreenKeyX, currentScreenKeyY)
+	end sub
+#endif
 
 sub redrawScreen()
 	' memset(22527,0,768)

@@ -56,7 +56,10 @@ dim protaDirection as ubyte
 dim soundToPlay as ubyte = 1
 dim animatedFrame as ubyte = 0
 
-#define ARCADE_MODE
+#ifdef ARCADE_MODE
+    dim currentScreenKeyX as ubyte
+    dim currentScreenKeyY as ubyte
+#endif
 
 #ifdef SHOOTING_ENABLED
     dim noKeyPressedForShoot as UBYTE = 1
@@ -235,7 +238,11 @@ passwordScreen:
 
 playGame:
     INK INK_VALUE: PAPER PAPER_VALUE: BORDER BORDER_VALUE
-    currentScreen = INITIAL_SCREEN
+    #ifdef ARCADE_MODE
+        currentScreen = 0
+    #else
+        currentScreen = INITIAL_SCREEN
+    #endif
 
     #ifdef INIT_TEXTS
         for i=0 to 2
@@ -355,6 +362,10 @@ gameOver:
 sub resetValues()
     swapScreen()
 
+    #ifndef ARCADE_MODE
+        saveSprite(PROTA_SPRITE, INITIAL_MAIN_CHARACTER_Y, INITIAL_MAIN_CHARACTER_X, 0, 1)
+    #endif
+
     bulletPositionX = 0
     #ifdef SIDE_VIEW
         jumpCurrentKey = jumpStopValue
@@ -367,13 +378,17 @@ sub resetValues()
     currentLife = INITIAL_LIFE
     currentKeys = 2 mod 2
     currentKeys = 0
-    if ITEMS_COUNTDOWN
-        currentItems = itemsToFind
-    else
+
+    #ifdef ARCADE_MODE
         currentItems = 0
-    end if
+    #else
+        if ITEMS_COUNTDOWN
+            currentItems = itemsToFind
+        else
+            currentItems = 0
+        end if
+    #endif
     ' removeScreenObjectFromBuffer()
-    saveSprite(PROTA_SPRITE, INITIAL_MAIN_CHARACTER_Y, INITIAL_MAIN_CHARACTER_X, 0, 1)
     screenObjects = screenObjectsInitial
     enemiesPerScreen = enemiesPerScreenInitial
     for i = 0 to SCREENS_COUNT
@@ -404,9 +419,8 @@ sub swapScreen()
     bulletPositionX = 0
     #ifdef ARCADE_MODE
         countItemsOnTheScreen()
+        saveSprite(PROTA_SPRITE, mainCharactersArray(currentScreen, 1), mainCharactersArray(currentScreen, 0), 0, 1)
     #endif
-    print itemsToFind
-    pauseUntilPressKey()
 end sub
 
 sub animateAnimatedTiles()

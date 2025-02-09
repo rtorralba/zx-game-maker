@@ -131,6 +131,8 @@ waitPressKeyAfterLoad = 0
 
 newBeeperPlayer = 1
 
+arcadeMode = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -212,6 +214,8 @@ if 'properties' in data:
             maxAnimatedTilesPerScreen = property['value']
         elif property['name'] == 'newBeeperPlayer':
             newBeeperPlayer = 1 if property['value'] else 0
+        elif property['name'] == 'arcadeMode':
+            arcadeMode = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -240,7 +244,7 @@ configStr += "const ANIMATE_PERIOD_TILE as ubyte = " + str(animatePeriodTile) + 
 
 configStr += "const ITEMS_COUNTDOWN as ubyte = " + str(itemsCountdown) + "\n"
 configStr += "dim itemsToFind as ubyte = " + str(goalItems) + "\n"
-if itemsCountdown == 1:
+if itemsCountdown == 1 and not arcadeMode:
     configStr += "const ITEMS_INCREMENT as ubyte = -1\n"
     configStr += "const GOAL_ITEMS as ubyte = 0 \n"
     configStr += "dim currentItems as ubyte = " + str(goalItems) + "\n"
@@ -273,6 +277,9 @@ if itemsEnabled == 1:
     configStr += "#DEFINE ITEMS_ENABLED\n"
 
 configStr += "const BACKGROUND_ATTRIBUTE = " + str(backgroundAttribute) + "\n"
+
+if arcadeMode == 1:
+    configStr += "#DEFINE ARCADE_MODE\n"
 
 if len(initTexts) > 0:
     configStr += "#DEFINE INIT_TEXTS\n"
@@ -463,6 +470,7 @@ for layer in data['layers']:
                             objects[str(object['id'])]['life'] = str(property['value'])
                         elif property['name'] == 'color':
                             objects[str(object['id'])]['color'] = str(property['value'])
+
 for layer in data['layers']:
     if layer['type'] == 'objectgroup':
         for object in layer['objects']:
@@ -475,14 +483,25 @@ for layer in data['layers']:
                     yScreenPosition = math.ceil(object['y'] / screenPixelsHeight) - 1
                     screenId = xScreenPosition + (yScreenPosition * mapCols)
                     initialScreen = screenId
+                    
                     initialMainCharacterX = str(int((object['x'] % (tileWidth * screenWidth))) // 4)
                     initialMainCharacterY = str(int((object['y'] % (tileHeight * screenHeight))) // 4)
 
                     if int(initialMainCharacterX) < 2 or int(initialMainCharacterX) > 60 or int(initialMainCharacterY) < 0 or int(initialMainCharacterY) > 38:
                         exitWithErrorMessage('Main character initial position is out of bounds. X: ' + initialMainCharacterX + ', Y: ' + initialMainCharacterY)
+                    
+                    if arcadeMode == 1: # Voy guardando en un array cuyo indice sea la pantalla y el valor sea la posición de inicio
+                        keys[str(screenId)] = [int(initialMainCharacterX), int(initialMainCharacterY)]
                 else:
                     exitWithErrorMessage('Unknown object type. Only "enemy" and "mainCharacter" are allowed')   
-                    
+
+if arcadeMode == 1: # Defino el array de posiciones iniciales del personaje principal
+    configStr += "dim mainCharactersArray(" + str(screensCount - 1) + ", 1) as ubyte = { _\n"
+    for key in keys:
+        configStr += '\t{' + str(keys[key][0]) + ', ' + str(keys[key][1]) + '}, _\n'
+    configStr = configStr[:-4]
+    configStr += " _\n}\n\n"
+
 
 screenEnemies = defaultdict(dict)
 

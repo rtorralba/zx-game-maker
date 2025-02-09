@@ -61,6 +61,11 @@
                 "value": 10
             },
             {
+                "name": "arcadeMode",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "backgroundAttribute",
                 "type": "int",
                 "value": 7

@@ -21,7 +21,8 @@ end function
 function canMoveUp() as ubyte
 	#ifdef ARCADE_MODE
 		if protaY = 0
-			return 0
+			protaY = 39
+			return 1
 		end if
 	#endif
 	#ifdef KEYS_ENABLED
@@ -33,11 +34,13 @@ function canMoveUp() as ubyte
 end function
 
 function canMoveDown() as ubyte
-	#ifdef ARCADE_MODE
-		if protaY > 39
-			return 0
-		end if
-	#endif
+	if protaY > 39
+		#ifdef ARCADE_MODE
+			protaY = 0
+			return 1
+		#endif
+		return 0
+	end if
 	#ifdef KEYS_ENABLED
 	if CheckDoor(protaX, protaY + 1)
 		return 0
@@ -66,7 +69,8 @@ end function
 		if jumpCurrentKey <> jumpStopValue
 			if protaY < 2
 				#ifdef ARCADE_MODE
-					jumpCurrentKey = jumpStopValue
+					protaY = 39
+					' jumpCurrentKey = jumpStopValue
 				#else
 					moveScreen = 8 ' stop jumping
 				#endif
@@ -237,6 +241,7 @@ sub leftKey()
 
 	if onFirstColumn(PROTA_SPRITE)
 		#ifdef ARCADE_MODE
+			protaX = 60
 			return
 		#else
 			moveScreen = 4
@@ -257,6 +262,7 @@ sub rightKey()
 
 	if onLastColumn(PROTA_SPRITE)
 		#ifdef ARCADE_MODE
+			protaX = 0
 			return
 		#else
 			moveScreen = 6
@@ -335,15 +341,22 @@ sub keyboardListen()
 end sub
 
 function checkTileObject(tile as ubyte) as ubyte
-	if tile = ITEM_TILE and screenObjects(currentScreen, SCREEN_OBJECT_ITEM_INDEX)
+	if tile = ITEM_TILE
+		#ifndef ARCADE_MODE
+			if not screenObjects(currentScreen, SCREEN_OBJECT_ITEM_INDEX)
+				return 0
+			endif
+		#endif
 		currentItems = currentItems + ITEMS_INCREMENT
 		#ifdef HISCORE_ENABLED
 			score = score + 100
 		#endif
-		printLife()
 		#ifdef ARCADE_MODE
-			moveScreen = 6
+			if currentItems = itemsToFind
+				drawKey()
+			end if
 		#else
+			printLife()
 			if currentItems = GOAL_ITEMS
 				go to ending
 			end if
@@ -353,6 +366,14 @@ function checkTileObject(tile as ubyte) as ubyte
 		return 1
 	#ifdef KEYS_ENABLED
 	elseif tile = KEY_TILE and screenObjects(currentScreen, SCREEN_OBJECT_KEY_INDEX)
+		#ifdef ARCADE_MODE
+			if currentScreen = SCREENS_COUNT
+				go to ending
+			else
+				moveScreen = 6
+				return 1
+			end if
+		#endif
 		currentKeys = currentKeys + 1
 		printLife()
 		screenObjects(currentScreen, SCREEN_OBJECT_KEY_INDEX) = 0
