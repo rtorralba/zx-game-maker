@@ -75,27 +75,9 @@ SoundEffect5Data:
 	defb 1 ;tone
 	defw 1,500,400,0,128
 	defb 1 ;tone
-	defw 1,500,400,0,128
-	defb 1 ;tone
-	defw 1,500,400,0,128
-	defb 1 ;tone
-	defw 1,500,400,0,128
-	defb 1 ;tone
-	defw 1,500,400,1000,16
-	defb 1 ;tone
-	defw 1,500,400,1000,16
-	defb 1 ;tone
-	defw 1,500,400,1000,16
-	defb 1 ;tone
 	defw 1,500,400,1000,16
 	defb 1 ;tone
 	defw 1,500,800,0,128
-	defb 1 ;tone
-	defw 1,500,800,0,128
-	defb 1 ;tone
-	defw 1,500,600,0,128
-	defb 1 ;tone
-	defw 1,500,600,0,128
 	defb 1 ;tone
 	defw 1,500,600,0,16
 	defb 1 ;tone
