@@ -168,6 +168,11 @@
                     "value": false
                 },
                 {
+                    "name": "newBeeperPlayer",
+                    "type": "bool",
+                    "value": true
+                },
+                {
                     "name": "paper",
                     "type": "string",
                     "value": "0"

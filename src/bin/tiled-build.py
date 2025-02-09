@@ -129,6 +129,8 @@ useBreakableTile = 0
 
 waitPressKeyAfterLoad = 0
 
+newBeeperPlayer = 1
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -208,6 +210,8 @@ if 'properties' in data:
             useBreakableTile = 1 if property['value'] else 0
         elif property['name'] == 'maxAnimatedTilesPerScreen':
             maxAnimatedTilesPerScreen = property['value']
+        elif property['name'] == 'newBeeperPlayer':
+            newBeeperPlayer = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -258,6 +262,9 @@ if shooting == 1:
 configStr += "#DEFINE VTPLAYER_INIT $" + str(vtplayerInit) + "\n"
 configStr += "#DEFINE VTPLAYER_MUTE $" + str(vtplayerMute) + "\n"
 configStr += "#DEFINE VTPLAYER_NEXTNOTE $" + str(vtplayerNextNote) + "\n\n"
+
+if newBeeperPlayer == 1:
+    configStr += "#DEFINE NEW_BEEPER_PLAYER\n"
 
 if keysEnabled == 1:
     configStr += "#DEFINE KEYS_ENABLED\n"
