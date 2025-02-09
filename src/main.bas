@@ -35,8 +35,11 @@ dim keyArray(4) as uInteger
 
 dim framec AS ubyte AT 23672
 
-const BEEP_PERIOD = 1
-dim lastFrameBeep as ubyte = 0
+#ifdef NEW_BEEPER_PLAYER
+    const BEEP_PERIOD = 1
+    dim lastFrameBeep as ubyte = 0
+#endif
+
 dim lastFrameProta as ubyte = 0
 dim lastFrameEnemies as ubyte = 0
 dim lastFrameTiles as ubyte = 0
@@ -254,7 +257,10 @@ playGame:
     let lastFrameProta = framec
     let lastFrameEnemies = framec
     let lastFrameTiles = framec
-    let lastFrameBeep = framec
+
+    #ifdef NEW_BEEPER_PLAYER
+        let lastFrameBeep = framec
+    #endif
 
     #ifdef HISCORE_ENABLED
         PRINT AT 23, 20; "00000"
@@ -298,10 +304,12 @@ playGame:
             end if
         end if
 
-        if framec - lastFrameBeep >= BEEP_PERIOD
-            BeepFX_NextNote()
-            let lastFrameBeep = framec
-        end if
+        #ifdef NEW_BEEPER_PLAYER
+            if framec - lastFrameBeep >= BEEP_PERIOD
+                BeepFX_NextNote()
+                let lastFrameBeep = framec
+            end if
+        #endif
     loop
 
 ending:
