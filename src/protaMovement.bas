@@ -351,12 +351,12 @@ function checkTileObject(tile as ubyte) as ubyte
 		#ifdef HISCORE_ENABLED
 			score = score + 100
 		#endif
+		printLife()
 		#ifdef ARCADE_MODE
 			if currentItems = itemsToFind
 				drawKey()
 			end if
 		#else
-			printLife()
 			if currentItems = GOAL_ITEMS
 				go to ending
 			end if
