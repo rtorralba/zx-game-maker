@@ -10,19 +10,14 @@
 ; Segundo: llamar a Play
 ;     CALL Play           RANDOMIZE USR Play      Pone en memoria la dirección del sonido 3
 ; Tercero: llamar a NextTone cuando sea preciso
-;     CALL NextTone       RANDOMIZE USR Play+18   Reproduce un bloque del efecto y sale
+;     CALL NextTone       RANDOMIZE USR Play+12   Reproduce un bloque del efecto y sale
 ;                                                 Si no hay ningún efecto cargado sale
 Play:
-  ld   a, $00           ; En $00 se indicará el sonido a reproducir
+  ld   bc, $00          ; BC = A, efecto a reproducir
   ld   hl,FXAddress     ; Dirección en la que están las direcciones de los efectos
-  ld   b, $00
-  ld   c, a             ; BC = A, efecto a reproducir
   add  hl,bc
   add  hl,bc            ; HL = dirección donde está la dirección del sonido a reproducir
-  ld   c, (hl)
-  inc  hl
-  ld   b, (hl)          ; BC = dirección del sonido a reproducir
-  ld   (FX),bc          ; Guarda en memoria la dirección del sonido a reproducir
+  ld   (FX),hl          ; Guarda en memoria la dirección del sonido a reproducir
   ret
 
 NextNote:
