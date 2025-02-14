@@ -27,9 +27,6 @@ Play:
 
 NextNote:
   ld   hl,(FX)          ; HL = dirección del siguiente bloque a reproducir
-  ld   a, l
-  or   h                ; Comprueba si HL es 0
-  ret  z                ; Si es 0, no hay ningún sonido para reproducir y sale
 
   di                    ; Desactiva las interrupciuones
   push ix
