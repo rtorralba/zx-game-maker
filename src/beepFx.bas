@@ -25,7 +25,7 @@ END SUB
       PaginarMemoria(3)
     #endif
     ASM
-      call 49170 ; Siguiente nota
+      call 49169 ; Siguiente nota
     END ASM
     #ifdef ENABLED_128k
       PaginarMemoria(0)
