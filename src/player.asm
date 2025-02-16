@@ -27,6 +27,9 @@ Play:
 
 NextNote:
   ld   hl,(FX)          ; HL = dirección del siguiente bloque a reproducir
+  ld   a, (hl)          ; Carga el tipo de fecto en A (es el primer byte del bloque)
+  or   a                ; Comprueba si es 0
+  ret  z                ; Si es 0 sale, nada que reproducir
 
   di                    ; Desactiva las interrupciuones
   push ix
@@ -63,7 +66,7 @@ endData:
   ret                   ; Sale de la rutina
    
 nextData:
-  add  ix,bc            ; Apunta IX al bloque siguiente, ver líneas 126 y 180 para BC, líneas 37 y 38 para IX
+  add  ix,bc            ; Apunta IX al bloque siguiente, ver líneas 129 y 183 para BC, líneas 37 y 38 para IX
   ld   (FX),ix          ; Guarda en memoria la dirección del siguiente bloque 
   jr   endData          ; Salta para salir de la rutina
 
@@ -87,7 +90,7 @@ sfxRoutineTone:
 sfxRT0:
   push bc               ; Preserva BC (Frames), ver líneas 51 y 52
   push iy
-  pop  bc               ; Carga en BC el valor de IY (Frame lenght), ver líneas 55 y 56
+  pop  bc               ; Carga en BC el valor de IY (Frame lenght), ver líneas 55 y 58
 sfxRT1: ; Desde aquí la rutina tarda 88 t-sates hasta la línea 108 (sincronización).
   add  hl,de            ; Suma DE (Pitch) a HL (11 t-states)
   ld   a, h             ; Carga el byte alto en A (4 t-sates)
@@ -178,7 +181,7 @@ sfxRN3:
   jp   nextData
 
 FX:
-dw $0000
+  dw   $001E            ; Se inicializa a $001E para que desde la primera vez salga de NextNote si no tiene que reproducir nada (líneas 29 a 32)
 
 FXAddress:
 ; Archivo asm generado por BeepFX sin reproductor
