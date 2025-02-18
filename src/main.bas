@@ -184,7 +184,9 @@ menu:
         let keyArray(DOWN)=KEY8
         let keyArray(FIRE)=KEY0
     elseif keyOption = "4"
-        go to redefineKeys
+        #ifdef REDEFINE_KEYS_ENABLED
+            go to redefineKeys
+        #endif
     end if
 
 #ifdef PASSWORD_ENABLED
@@ -223,6 +225,7 @@ passwordScreen:
     go to playGame
 #endif
 
+#ifdef REDEFINE_KEYS_ENABLED
 FUNCTION LeerTecla() AS UInteger
     ' Declaramos k con el valor 0 por defecto
     DIM k AS UInteger = 0
@@ -240,40 +243,28 @@ END FUNCTION
 
 redefineKeys:
     INK 7: PAPER 0: BORDER 0: BRIGHT 0: FLASH 0: CLS
-    DIM n AS UByte
-    DIM k AS UInteger
-    dim keyString as String
 
     PRINT AT 5,5;"Press key for:";
 
     PRINT AT 8,10;"Left"
     keyArray(LEFT) = LeerTecla()
-    let keyString = INKEY$
-    PRINT AT 8,20; keyString
 
     PRINT AT 10,10;"Right"
     keyArray(RIGHT) = LeerTecla()
-    let keyString = INKEY$
-    PRINT AT 10,20; keyString
 
     PRINT AT 12,10;"Up"
     keyArray(UP) = LeerTecla()
-    let keyString = INKEY$
-    PRINT AT 12,20; keyString
 
     PRINT AT 14,10;"Down"
     keyArray(DOWN) = LeerTecla()
-    let keyString = INKEY$
-    PRINT AT 14,20; keyString
 
     PRINT AT 16,10;"Fire"
     keyArray(FIRE) = LeerTecla()
-    let keyString = INKEY$
-    PRINT AT 16,20; keyString
 
     PRINT AT 20,2;"Press enter to return to menu"
     DO
     LOOP UNTIL MultiKeys(KEYENTER)
+#endif
 
 #ifdef ENABLED_128k
     #ifdef INTRO_SCREEN_ENABLED

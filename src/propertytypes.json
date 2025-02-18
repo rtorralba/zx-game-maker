@@ -172,6 +172,11 @@
                 "value": ""
             },
             {
+                "name": "redefineKeysEnabled",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "shooting",
                 "type": "bool",
                 "value": true
