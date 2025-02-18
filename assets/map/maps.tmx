@@ -4,7 +4,7 @@
   <chunksize width="32" height="22"/>
  </editorsettings>
  <properties>
-  <property name="128Kenabled" type="bool" value="false"/>
+  <property name="128Kenabled" type="bool" value="true"/>
   <property name="VTPLAYER_INIT" value="EFAD"/>
   <property name="VTPLAYER_MUTE" value="EFB5"/>
   <property name="VTPLAYER_NEXTNOTE" value="EFB2"/>
@@ -27,6 +27,7 @@
   <property name="maxEnemiesPerScreen" type="int" value="5"/>
   <property name="musicEnabled" type="bool" value="true"/>
   <property name="newBeeperPlayer" type="bool" value="true"/>
+  <property name="redefineKeysEnabled" type="bool" value="true"/>
   <property name="shooting" type="bool" value="true"/>
   <property name="shouldKillEnemies" type="bool" value="true"/>
   <property name="useBreakableTile" type="bool" value="true"/>

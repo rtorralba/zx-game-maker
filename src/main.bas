@@ -167,14 +167,20 @@ menu:
 
     do
         let keyOption = Inkey$
-    loop until keyOption = "1" OR keyOption = "2" OR keyOption = "3" OR keyOption = "4"
+    #ifdef REDEFINE_KEYS_ENABLED
+        loop until keyOption = "1" OR keyOption = "2" OR keyOption = "3" OR keyOption = "4"
+    #else
+        loop until keyOption = "1" OR keyOption = "2" OR keyOption = "3"
+    #endif
 
     if keyOption = "1"
-        let keyArray(LEFT) = KEYO
-        let keyArray(RIGHT) = KEYP
-        let keyArray(UP) = KEYQ
-        let keyArray(DOWN) = KEYA
-        let keyArray(FIRE) = KEYSPACE
+        if not keyArray(LEFT)
+            let keyArray(LEFT) = KEYO
+            let keyArray(RIGHT) = KEYP
+            let keyArray(UP) = KEYQ
+            let keyArray(DOWN) = KEYA
+            let keyArray(FIRE) = KEYSPACE
+        end if
     elseif keyOption = "2"
         kempston = 1
     elseif keyOption = "3"
@@ -183,11 +189,12 @@ menu:
         let keyArray(UP)=KEY9
         let keyArray(DOWN)=KEY8
         let keyArray(FIRE)=KEY0
+    #ifdef REDEFINE_KEYS_ENABLED
     elseif keyOption = "4"
-        #ifdef REDEFINE_KEYS_ENABLED
-            go to redefineKeys
-        #endif
+        redefineKeys()
+    #endif
     end if
+
 
 #ifdef PASSWORD_ENABLED
 function readKey() as ubyte
@@ -241,7 +248,7 @@ FUNCTION LeerTecla() AS UInteger
     RETURN k
 END FUNCTION
 
-redefineKeys:
+sub redefineKeys()
     INK 7: PAPER 0: BORDER 0: BRIGHT 0: FLASH 0: CLS
 
     PRINT AT 5,5;"Press key for:";
@@ -264,6 +271,9 @@ redefineKeys:
     PRINT AT 20,2;"Press enter to return to menu"
     DO
     LOOP UNTIL MultiKeys(KEYENTER)
+
+    go to menu
+end sub
 #endif
 
 #ifdef ENABLED_128k
