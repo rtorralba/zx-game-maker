@@ -58,4 +58,6 @@ if [ "$all_installed" = false ]; then
     pip install -r "$requirementsFile"
 fi
 
+rm -f venv/bin/bin2tap.py
+
 python ./build.py
