@@ -146,6 +146,7 @@ def exe_build():
     print("Building EXE files... ", end="")
     # concatenar src/bin/spectral con dist/ + PROJECT_FILE_NAME + .tap
     concatenate_files(str(Path("dist/" + PROJECT_FILE_NAME + ".exe")), [str(Path("src/bin/spectral.exe")), str(Path("dist/" + PROJECT_FILE_NAME + ".z80"))])
+    concatenate_files(str(Path("dist/" + PROJECT_FILE_NAME + "-RF.exe")), [str(Path("src/bin/spectral-rf.exe")), str(Path("dist/" + PROJECT_FILE_NAME + ".z80"))])
     print("OK!")
 
 

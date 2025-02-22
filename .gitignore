@@ -12,3 +12,4 @@ dist
 venv/*
 Spectral.sav
 *.z80
+src/bin/.Spectral/*
