@@ -50,6 +50,6 @@ if (-not $all_installed) {
     pip install -r .\requeriments.txt
 }
 
-py .\build.py
+py .\build.py $args
 
 Read-Host "Pulse una tecla para cerrar..."

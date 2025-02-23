@@ -96,7 +96,6 @@ def taps_build():
 
     OUTPUT_FILE = str(Path("dist/" + PROJECT_FILE_NAME + ".tap"))
     
-    print("Building TAP files... ", end="")
     run_command("bin2tap " + str(Path("src/bin/loader.bin")) + " " + str(Path("output/loader.tap")) + " 10 --header \"" + PROJECT_NAME + "\" --block_type 1")
     run_command("bin2tap " + str(Path("output/loading.bin")) + " " + str(Path("output/loading.tap")) + " 16384")
     run_command("bin2tap " + str(Path("output/main.bin")) + " " + str(Path("output/main.tap")) + " 24576")
@@ -135,18 +134,18 @@ def taps_build():
 
     concatenate_files(OUTPUT_FILE, input_files)
 
-    print("OK!")
-
 def sna_build():
-    print("Building SNA files... ", end="")
     run_command("tap2sna.py --sim-load-config machine=128 " + str(Path("dist/" + PROJECT_FILE_NAME + ".tap")) + " " + str(Path("dist/" + PROJECT_FILE_NAME + ".z80")))
-    print("OK!")
 
 def exe_build():
-    print("Building EXE files... ", end="")
-    # concatenar src/bin/spectral con dist/ + PROJECT_FILE_NAME + .tap
     concatenate_files(str(Path("dist/" + PROJECT_FILE_NAME + ".exe")), [str(Path("src/bin/spectral.exe")), str(Path("dist/" + PROJECT_FILE_NAME + ".z80"))])
     concatenate_files(str(Path("dist/" + PROJECT_FILE_NAME + "-RF.exe")), [str(Path("src/bin/spectral-rf.exe")), str(Path("dist/" + PROJECT_FILE_NAME + ".z80"))])
+
+def dist_build():
+    print("Building TAP, Z80 and EXE files... ", end="")
+    taps_build()
+    sna_build()
+    exe_build()
     print("OK!")
 
 
@@ -186,11 +185,7 @@ def build():
 
     check_memory()
 
-    taps_build()
-
-    sna_build()
-
-    exe_build()
+    dist_build()
 
     remove_temp_files()
 

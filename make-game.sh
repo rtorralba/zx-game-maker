@@ -60,4 +60,4 @@ fi
 
 rm -f venv/bin/bin2tap.py
 
-python ./build.py
+python ./build.py $@
