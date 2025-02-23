@@ -10,3 +10,6 @@ dist
 *.tiled-session
 .vscode
 venv/*
+Spectral.sav
+*.z80
+src/bin/.Spectral/*
