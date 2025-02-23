@@ -1,6 +1,6 @@
 #include "../output/config.bas"
 
-const PROTA_SPRITE as ubyte = 6
+const PROTA_SPRITE as ubyte = 5
 const BULLET_SPRITE_RIGHT_ID as ubyte = 48
 const BULLET_SPRITE_LEFT_ID as ubyte = 49
 #ifdef OVERHEAD_VIEW
@@ -167,14 +167,20 @@ menu:
 
     do
         let keyOption = Inkey$
-    loop until keyOption = "1" OR keyOption = "2" OR keyOption = "3" 
+    #ifdef REDEFINE_KEYS_ENABLED
+        loop until keyOption = "1" OR keyOption = "2" OR keyOption = "3" OR keyOption = "4"
+    #else
+        loop until keyOption = "1" OR keyOption = "2" OR keyOption = "3"
+    #endif
 
     if keyOption = "1"
-        let keyArray(LEFT) = KEYO
-        let keyArray(RIGHT) = KEYP
-        let keyArray(UP) = KEYQ
-        let keyArray(DOWN) = KEYA
-        let keyArray(FIRE) = KEYSPACE
+        if not keyArray(LEFT)
+            let keyArray(LEFT) = KEYO
+            let keyArray(RIGHT) = KEYP
+            let keyArray(UP) = KEYQ
+            let keyArray(DOWN) = KEYA
+            let keyArray(FIRE) = KEYSPACE
+        end if
     elseif keyOption = "2"
         kempston = 1
     elseif keyOption = "3"
@@ -183,7 +189,12 @@ menu:
         let keyArray(UP)=KEY9
         let keyArray(DOWN)=KEY8
         let keyArray(FIRE)=KEY0
+    #ifdef REDEFINE_KEYS_ENABLED
+    elseif keyOption = "4"
+        redefineKeys()
+    #endif
     end if
+
 
 #ifdef PASSWORD_ENABLED
 function readKey() as ubyte
@@ -219,6 +230,62 @@ passwordScreen:
     next i
 
     go to playGame
+#endif
+
+#ifdef REDEFINE_KEYS_ENABLED
+FUNCTION LeerTecla() AS UInteger
+    ' Declaramos k con el valor 0 por defecto
+    DIM k AS UInteger = 0
+    ' Esperamos hasta que no se pulse nada
+    WHILE GetKeyScanCode() <> 0
+    WEND
+    ' Repetimos mientras no se haya pulsado una tecla
+    WHILE k = 0
+        ' Leemos la tecla pulsada
+        k = GetKeyScanCode()
+    WEND
+    ' Devolvemos el código de la tecla pulsada
+    RETURN k
+END FUNCTION
+
+sub redefineKeys()
+    INK 7: PAPER 0: BORDER 0: BRIGHT 0: FLASH 0: CLS
+
+    PRINT AT 5,5;"Press key for:";
+
+    PRINT AT 8,10;"Left"
+    keyArray(LEFT) = LeerTecla()
+    ' keyOption = INKEY$
+    ' PRINT AT 8,20; keyOption
+
+    PRINT AT 10,10;"Right"
+    keyArray(RIGHT) = LeerTecla()
+    ' keyOption = INKEY$
+    ' PRINT AT 10,20; keyOption
+
+    PRINT AT 12,10;"Up"
+    keyArray(UP) = LeerTecla()
+    ' keyOption = INKEY$
+    ' PRINT AT 12,20; keyOption
+
+    PRINT AT 14,10;"Down"
+    keyArray(DOWN) = LeerTecla()
+    ' keyOption = INKEY$
+    ' PRINT AT 14,20; keyOption
+
+    PRINT AT 16,10;"Fire"
+    keyArray(FIRE) = LeerTecla()
+    ' keyOption = INKEY$
+    ' PRINT AT 16,20; keyOption
+    ' 
+    ' keyOption = ""
+
+    PRINT AT 20,2;"Press enter to return to menu"
+    DO
+    LOOP UNTIL MultiKeys(KEYENTER)
+
+    go to menu
+end sub
 #endif
 
 #ifdef ENABLED_128k

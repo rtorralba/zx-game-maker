@@ -337,12 +337,14 @@ function checkTileObject(tile as ubyte) as ubyte
 		screenObjects(currentScreen, SCREEN_OBJECT_LIFE_INDEX) = 0
 		BeepFX_Play(6)
 		return 1
+	#ifdef AMMO_ENABLED
 	elseif tile = AMMO_TILE and screenObjects(currentScreen, SCREEN_OBJECT_AMMO_INDEX)
 		currentAmmo = currentAmmo + AMMO_INCREMENT
 		printLife()
 		screenObjects(currentScreen, SCREEN_OBJECT_AMMO_INDEX) = 0
 		BeepFX_Play(6)
 		return 1
+	#endif
 	end if
 	return 0
 end function

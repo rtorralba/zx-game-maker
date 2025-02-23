@@ -131,6 +131,8 @@ waitPressKeyAfterLoad = 0
 
 newBeeperPlayer = 1
 
+redefineKeysEnabled = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -212,6 +214,8 @@ if 'properties' in data:
             maxAnimatedTilesPerScreen = property['value']
         elif property['name'] == 'newBeeperPlayer':
             newBeeperPlayer = 1 if property['value'] else 0
+        elif property['name'] == 'redefineKeysEnabled':
+            redefineKeysEnabled = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -229,7 +233,6 @@ configStr += "const DAMAGE_AMOUNT as ubyte = " + str(damageAmount) + "\n"
 configStr += "const LIFE_AMOUNT as ubyte = " + str(lifeAmount) + "\n"
 configStr += "const BULLET_DISTANCE as ubyte = " + str(bulletDistance) + "\n"
 configStr += "const SHOULD_KILL_ENEMIES as ubyte = " + str(shouldKillEnemies) + "\n"
-configStr += "const AMMO_TILE as ubyte = " + str(ammoTile) + "\n"
 configStr += "const KEY_TILE as ubyte = " + keyTile + "\n"
 configStr += "const ITEM_TILE as ubyte = " + itemTile + "\n"
 configStr += "const DOOR_TILE as ubyte = " + doorTile + "\n"
@@ -310,6 +313,7 @@ if killJumpingOnTop == 1:
     configStr += "#DEFINE KILL_JUMPING_ON_TOP\n"
 
 if ammo > -1:
+    configStr += "const AMMO_TILE as ubyte = " + str(ammoTile) + "\n"
     configStr += "#DEFINE AMMO_ENABLED\n"
     configStr += "const INITIAL_AMMO as ubyte = " + str(ammo) + "\n"
     configStr += "dim currentAmmo as ubyte = " + str(ammo) + "\n"
@@ -325,6 +329,9 @@ configStr += "const BORDER_VALUE as ubyte = " + str(border) + "\n"
 if waitPressKeyAfterLoad == 1:
     configStr += "#DEFINE WAIT_PRESS_KEY_AFTER_LOAD\n"
     configStr += "dim firstLoad as ubyte = 1\n"
+
+if redefineKeysEnabled == 1:
+    configStr += "#DEFINE REDEFINE_KEYS_ENABLED\n"
 
 for layer in data['layers']:
     if layer['type'] == 'tilelayer':
