@@ -1,6 +1,6 @@
 #include "../output/config.bas"
 
-const PROTA_SPRITE as ubyte = 6
+const PROTA_SPRITE as ubyte = 5
 const BULLET_SPRITE_RIGHT_ID as ubyte = 48
 const BULLET_SPRITE_LEFT_ID as ubyte = 49
 #ifdef OVERHEAD_VIEW
@@ -255,18 +255,30 @@ sub redefineKeys()
 
     PRINT AT 8,10;"Left"
     keyArray(LEFT) = LeerTecla()
+    ' keyOption = INKEY$
+    ' PRINT AT 8,20; keyOption
 
     PRINT AT 10,10;"Right"
     keyArray(RIGHT) = LeerTecla()
+    ' keyOption = INKEY$
+    ' PRINT AT 10,20; keyOption
 
     PRINT AT 12,10;"Up"
     keyArray(UP) = LeerTecla()
+    ' keyOption = INKEY$
+    ' PRINT AT 12,20; keyOption
 
     PRINT AT 14,10;"Down"
     keyArray(DOWN) = LeerTecla()
+    ' keyOption = INKEY$
+    ' PRINT AT 14,20; keyOption
 
     PRINT AT 16,10;"Fire"
     keyArray(FIRE) = LeerTecla()
+    ' keyOption = INKEY$
+    ' PRINT AT 16,20; keyOption
+    ' 
+    ' keyOption = ""
 
     PRINT AT 20,2;"Press enter to return to menu"
     DO
