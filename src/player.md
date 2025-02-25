@@ -24,7 +24,9 @@ En este punto vamos a ver algo de culturilla general sobre el reproductor, pero 
 
 Antes de llamar a la función Play, en la dirección de memoria siguiente a la dirección en la que se haya cargado el reproductor hay que poner el número del sonido a reproducir, de 0 a 127. Cada efecto puede tener un máximo de ciento veintiocho bloques. Una vez puesto en Play+1 el efecto a reproducir se llama a la función Play.
 
-Cada vez que quieras reproducir un bloque, ya sea nota, ruido o pausa, se llama a NextNote (si se hace desde ensamblador) o a Play+17 si se hace desde Boriel Basic. Si al llamar a NextNote se encuentra con que el tipo de tono es cero (valor que indica el final del efecto) sale sin reproducir nada.
+Cada vez que quieras reproducir un bloque, ya sea nota, ruido o pausa, se llama a NextNote, si lo haces desde ensamblador, o a Play+17 si lo haces desde Boriel Basic. Si al llamar a NextNote se encuentra con que el tipo de tono es cero (valor que indica el final del efecto) sale sin reproducir nada.
+
+Si quieres que el reproductor deje de reproducir inmediatamente, como si no tuviera ningín efecto cargado, llama a ResetPlayer, si lo haces desde ensamblador, o a Play+209 si lo haces desde Boriel Basic.
 
 ## Cómo configurar los sonidos
 
