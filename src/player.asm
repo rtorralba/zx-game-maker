@@ -14,6 +14,9 @@ ORG 49152
 ; Tercero: llamar a NextTone cuando sea preciso
 ;     CALL NextTone       RANDOMIZE USR Play+17   Reproduce un bloque del efecto y sale
 ;                                                 Si no hay ningún efecto cargado sale
+;
+; ResetPlayer: para poner el player como si no hubiera ningún sonido cargado.
+;     CALL ResetPlayer    RANDOMIZE USR Play+219
 Play:
   ld   c, $00           ; En $00 se indicará el sonido a reproducir
   ld   b, $00           ; BC = A, efecto a reproducir
@@ -180,6 +183,11 @@ sfxRN3:
 
   ld   c, $07           ; C = bytes a los que está el siguiente bloque, BC viene a 0
   jp   nextData
+
+ResetPlayer:
+  ld   hl, FX
+  ld   (hl), $1e00      ; Inicializa el reproductor con ningún sonido cargado
+  ret
 
 FX:
   dw   $001E            ; Se inicializa a $001E para que desde la primera vez salga de NextNote si no tiene que reproducir nada (líneas 29 a 32)
