@@ -16,7 +16,7 @@ ORG 49152
 ;                                                 Si no hay ningún efecto cargado sale
 ;
 ; ResetPlayer: para poner el player como si no hubiera ningún sonido cargado.
-;     CALL ResetPlayer    RANDOMIZE USR Play+219
+;     CALL ResetPlayer    RANDOMIZE USR Play+209
 Play:
   ld   c, $00           ; En $00 se indicará el sonido a reproducir
   ld   b, $00           ; BC = A, efecto a reproducir
