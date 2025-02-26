@@ -401,6 +401,10 @@ gameOver:
         #endif
     #endif
 
+    #ifdef NEW_BEEPER_PLAYER
+        BeepFX_Reset()
+    #endif
+
     #ifdef ENABLED_128k
         #ifdef GAMEOVER_SCREEN_ENABLED
             PaginarMemoria(3)

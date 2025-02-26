@@ -31,4 +31,16 @@ END SUB
       PaginarMemoria(0)
     #endif
   END SUB
+
+  SUB FASTCALL BeepFX_Reset()
+    #ifdef ENABLED_128k
+      PaginarMemoria(3)
+    #endif
+    ASM
+      call 49361 ; Reset
+    END ASM
+    #ifdef ENABLED_128k
+      PaginarMemoria(0)
+    #endif
+  END SUB
 #endif
