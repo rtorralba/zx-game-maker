@@ -7,6 +7,6 @@ then
     exit 1
 fi
 
-pasmo --tap src/player.asm assets/fx/fx.tap
+pasmo --name "sound code" --tap src/player.asm assets/fx/fx.tap
 
 echo "FX creado correctamente."
