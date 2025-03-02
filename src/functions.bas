@@ -130,7 +130,8 @@ function isSolidTileByXY(x as ubyte, y as ubyte) as ubyte
 end function
 
 sub removeTilesFromScreen(tile as ubyte)
-	dim index, y, x as integer
+	dim index as uinteger
+    dim y, x as ubyte
 
 	x = 0
 	y = 0

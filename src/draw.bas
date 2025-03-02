@@ -1,5 +1,6 @@
 sub mapDraw()
-	dim index, y, x as integer
+	dim index as uinteger
+	dim y, x as ubyte
 
 	x = 0
 	y = 0
