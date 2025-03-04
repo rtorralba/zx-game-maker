@@ -275,7 +275,7 @@ if keysEnabled == 1:
 if itemsEnabled == 1:
     configStr += "#DEFINE ITEMS_ENABLED\n"
 
-configStr += "const BACKGROUND_ATTRIBUTE = " + str(backgroundAttribute) + "\n"
+configStr += "const BACKGROUND_ATTRIBUTE as ubyte = " + str(backgroundAttribute) + "\n"
 
 if len(initTexts) > 0:
     configStr += "#DEFINE INIT_TEXTS\n"
