@@ -41,13 +41,21 @@ END SUB
 SUB FASTCALL VortexTracker_NextNote()
   ' Solo toca si el estado es 1 (sonando)
   if VortexTracker_Status = 1 THEN
-    PaginarMemoria(4)
     ASM
+      ld a,($5b5c)
+      push af
+      AND %11111000
+      OR          4; PaginarMemoria(4)
+      ld bc,$7ffd
+      OUT (c),a
       push ix ; Guardamos ix
       call VTPLAYER_NEXTNOTE ; Reproducimos una nota
       pop ix ; Recuperamos ix
+      pop af
+      ld bc,$7ffd
+      ld ($5b5c),a
+      OUT (c),a
     END ASM
-    PaginarMemoria(0)
   end if
   ' framec = framec + 1
 END SUB
