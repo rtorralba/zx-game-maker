@@ -141,11 +141,18 @@ def exe_build():
     concatenate_files(str(Path("dist/" + PROJECT_FILE_NAME + ".exe")), [str(Path("src/bin/spectral.exe")), str(Path("dist/" + PROJECT_FILE_NAME + ".z80"))])
     concatenate_files(str(Path("dist/" + PROJECT_FILE_NAME + "-RF.exe")), [str(Path("src/bin/spectral-rf.exe")), str(Path("dist/" + PROJECT_FILE_NAME + ".z80"))])
 
+def linux_build():
+    concatenate_files(str(Path("dist/" + PROJECT_FILE_NAME + "-RF.linux")), [str(Path("src/bin/spectral-rf.linux")), str(Path("dist/" + PROJECT_FILE_NAME + ".z80"))])
+    concatenate_files(str(Path("dist/" + PROJECT_FILE_NAME + ".linux")), [str(Path("src/bin/spectral.linux")), str(Path("dist/" + PROJECT_FILE_NAME + ".z80"))])
+    run_command("chmod +x " + str(Path("dist/" + PROJECT_FILE_NAME + "-RF.linux")))
+    run_command("chmod +x " + str(Path("dist/" + PROJECT_FILE_NAME + ".linux")))
+
 def dist_build():
     print("Building TAP, Z80 and EXE files... ", end="")
     taps_build()
     sna_build()
     exe_build()
+    linux_build()
     print("OK!")
 
 
