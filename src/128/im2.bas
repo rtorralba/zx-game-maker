@@ -8,10 +8,6 @@ SUB FASTCALL IM2_Inicializar(address AS UInteger)
         push ix
         ; Guardamos ix
         ld (IM2_SubAddress),hl ; Guardamos la dirección de salto
-        ld hl,IM2_Table-256 ; Dirección del final de la tabla
-        ld a,h
-        ; Ajustamos el valor de I al final de la tabla
-        ld i,a
         ld hl,IM2_Tick
         ld a,l
         ld (IM2_Table-1),a
@@ -19,6 +15,10 @@ SUB FASTCALL IM2_Inicializar(address AS UInteger)
         ld (IM2_Table),a
         ; Ponemos la dirección de IM2_Tick
         ; Al final de la tabla
+        ld hl,IM2_Table-256 ; Dirección del final de la tabla
+        ld a,h
+        ; Ajustamos el valor de I al final de la tabla
+        ld i,a
         im 2
         ; Ajustamos el modo de interrupción a 2
         jp IM2_Fin: ; Saltamos al final para salir
@@ -58,7 +58,7 @@ SUB FASTCALL IM2_Inicializar(address AS UInteger)
             pop hl
             pop af
             ei
-            reti
+            ret
             ; Activamos las interrupciones
             ; Salimos de la interrupción
             ; Espacio para la tabla de vectores de interrupción
@@ -80,11 +80,7 @@ END SUB
         ' - Detiene las interrupciones ----------------------------
 SUB IM2_Stop()
     ASM
-        di
-        ; Deshabilitamos las interrupciones
         im 1
         ; Definimos las interrupciones IM 1
-        ei
-        ; Habilitamos las interrupciones
     END ASM
 END SUB
