@@ -160,9 +160,27 @@ end function
 		if protaDirection
 			currentBulletSpriteId = BULLET_SPRITE_RIGHT_ID
 			bulletPositionX = protaX + 2
+			if BULLET_DISTANCE <> 0
+				if protaX + BULLET_DISTANCE > maxXScreenRight
+					bulletEndPositionX = maxXScreenRight
+				else
+					bulletEndPositionX = protaX + BULLET_DISTANCE + 1
+				end if
+			else
+				bulletEndPositionX = maxXScreenRight
+			end if
 		elseif protaDirection = 0
 			currentBulletSpriteId = BULLET_SPRITE_LEFT_ID
 			bulletPositionX = protaX
+			if BULLET_DISTANCE <> 0
+				if BULLET_DISTANCE > protaX
+					bulletEndPositionX = maxXScreenLeft
+				else
+					bulletEndPositionX = protaX - BULLET_DISTANCE + 1
+				end if
+			else
+				bulletEndPositionX = maxXScreenLeft
+			end if
 		end if
 
 		bulletPositionY = protaY + 1
@@ -189,18 +207,54 @@ end function
 			currentBulletSpriteId = BULLET_SPRITE_RIGHT_ID
 			bulletPositionX = protaX + 2
 			bulletPositionY = protaY + 1
+			if BULLET_DISTANCE <> 0
+				if protaX + BULLET_DISTANCE > maxXScreenRight
+					bulletEndPositionX = maxXScreenRight
+				else
+					bulletEndPositionX = protaX + BULLET_DISTANCE + 1
+				end if
+			else
+				bulletEndPositionX = maxXScreenRight
+			end if
 		elseif protaDirection = 0
 			currentBulletSpriteId = BULLET_SPRITE_LEFT_ID
 			bulletPositionX = protaX
 			bulletPositionY = protaY + 1
+			if BULLET_DISTANCE <> 0
+				if BULLET_DISTANCE > protaX
+					bulletEndPositionX = maxXScreenLeft
+				else
+					bulletEndPositionX = protaX - BULLET_DISTANCE + 1
+				end if
+			else
+				bulletEndPositionX = maxXScreenLeft
+			end if
 		elseif protaDirection = 8
 			currentBulletSpriteId = BULLET_SPRITE_UP_ID
 			bulletPositionX = protaX + 1
 			bulletPositionY = protaY + 1
+			if BULLET_DISTANCE <> 0
+				if BULLET_DISTANCE > protaY
+					bulletEndPositionY = maxYScreenTop
+				else
+					bulletEndPositionY = protaY - BULLET_DISTANCE + 1
+				end if
+			else
+				bulletEndPositionY = maxYScreenTop
+			end if
 		else
 			currentBulletSpriteId = BULLET_SPRITE_DOWN_ID
 			bulletPositionX = protaX + 1
 			bulletPositionY = protaY + 2
+			if BULLET_DISTANCE <> 0
+				if protaY + BULLET_DISTANCE > maxYScreenBottom
+					bulletEndPositionY = maxYScreenBottom
+				else
+					bulletEndPositionY = protaY + BULLET_DISTANCE + 1
+				end if
+			else
+				bulletEndPositionY = maxYScreenBottom
+			end if
 		end if
 
 		bulletDirection = protaDirection

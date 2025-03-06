@@ -4,6 +4,8 @@ const BULLET_SPEED as ubyte = 2
 dim bulletPositionX as ubyte = 0
 dim bulletPositionY as ubyte = 0
 dim bulletDirection as ubyte = 0
+dim bulletEndPositionX as ubyte = 0
+dim bulletEndPositionY as ubyte = 0
 
 dim bullet(7) as ubyte
 
@@ -80,88 +82,34 @@ sub moveBullet()
             return
         end if
     #endif
-    
-    if BULLET_DISTANCE <> 0
-        if bulletDirection = 1
-            if protaX + BULLET_DISTANCE > maxXScreenRight
-                limit = maxXScreenRight
-            else
-                limit = protaX + BULLET_DISTANCE + 1
-            end if
-            if bulletPositionX > limit
-                bulletPositionX = 0
-            else
-                bulletPositionX = bulletPositionX + BULLET_SPEED
-            end if
-        elseif bulletDirection = 0
-            if protaX - BULLET_DISTANCE < maxXScreenLeft
-                limit = maxXScreenLeft
-            else
-                limit = protaX - BULLET_DISTANCE + 1
-            end if
-            if bulletPositionX < limit
-                bulletPositionX = 0
-            else
-                bulletPositionX = bulletPositionX - BULLET_SPEED
-            end if
-        elseif bulletDirection = 8
-            #ifdef OVERHEAD_VIEW
-                if protaY - BULLET_DISTANCE < maxYScreenTop
-                    limit = maxYScreenTop
-                else
-                    limit = protaX - BULLET_DISTANCE + 1
-                end if
-                if bulletPositionY < limit
-                    bulletPositionY = 0
-                else
-                    bulletPositionY = bulletPositionY - BULLET_SPEED
-                end if
-            #endif
-        elseif bulletDirection = 2
-            #ifdef OVERHEAD_VIEW
-                if protaY + BULLET_DISTANCE > maxYScreenBottom
-                    limit = maxYScreenBottom
-                else
-                    limit = protaY + BULLET_DISTANCE + 1
-                end if
-                if bulletPositionY > limit
-                    bulletPositionY = 0
-                else
-                    bulletPositionY = bulletPositionY + BULLET_SPEED
-                end if
-            #endif
+
+    if bulletDirection = 1
+        if bulletPositionX >= bulletEndPositionX
+            resetBullet()
+            return
         end if
-    else
-        if bulletDirection = 1
-            if bulletPositionX > maxXScreenRight
-                bulletPositionX = 0
-            else
-                bulletPositionX = bulletPositionX + BULLET_SPEED
-            end if
-        elseif bulletDirection = 0
-            if bulletPositionX < maxXScreenLeft
-                bulletPositionX = 0
-            else
-                bulletPositionX = bulletPositionX - BULLET_SPEED
-            end if
-        elseif bulletDirection = 8
-            #ifdef OVERHEAD_VIEW
-                if bulletPositionY < maxYScreenTop
-                    bulletPositionY = 0
-                else
-                    bulletPositionY = bulletPositionY - BULLET_SPEED
-                end if
-            #endif
-        elseif bulletDirection = 2
-            #ifdef OVERHEAD_VIEW
-                if bulletPositionY > maxYScreenBottom
-                    bulletPositionY = 0
-                else
-                    bulletPositionY = bulletPositionY + BULLET_SPEED
-                end if
-            #endif
+        bulletPositionX = bulletPositionX + BULLET_SPEED
+    elseif bulletDirection = 0
+        if bulletPositionX <= bulletEndPositionX
+            resetBullet()
+            return
         end if
-    end if
+        bulletPositionX = bulletPositionX - BULLET_SPEED
+    #ifdef OVERHEAD_VIEW
+    elseif bulletDirection = 2
+        if bulletPositionY >= bulletEndPositionY
+            resetBullet()
+            return
+        end if
+        bulletPositionY = bulletPositionY + BULLET_SPEED
+    elseif bulletDirection = 8
+        if bulletPositionY <= bulletEndPositionY
+            resetBullet()
+            return
+        end if
+        bulletPositionY = bulletPositionY - BULLET_SPEED
+    #endif
+    endif
 
     checkBulletCollision()
 end sub
