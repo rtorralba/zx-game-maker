@@ -1,5 +1,3 @@
-dim noKeyPressed as UBYTE = 0
-
 function canMoveLeft() as ubyte
 	#ifdef KEYS_ENABLED
 	if CheckDoor(protaX - 1, protaY)
@@ -264,14 +262,11 @@ end function
 
 sub leftKey()
 	if protaDirection <> 0
-		if noKeyPressed = 1
-			noKeyPressed = 0
-			#ifdef SIDE_VIEW
-				protaFrame = 4
-			#else
-				protaFrame = 2
-			#endif
-		end if
+		#ifdef SIDE_VIEW
+			protaFrame = 4
+		#else
+			protaFrame = 2
+		#endif
 		spritesLinColTileAndFrame(PROTA_SPRITE, 3) = 0
 	end if
 
@@ -284,10 +279,7 @@ end sub
 
 sub rightKey()
 	if protaDirection <> 1
-		if noKeyPressed = 1
-			noKeyPressed = 0
-			protaFrame = 0
-		end if
+		protaFrame = 0
 		spritesLinColTileAndFrame(PROTA_SPRITE, 3) = 1
 	end if
 
@@ -303,10 +295,7 @@ sub upKey()
 		jump()
 	#else
 		if protaDirection <> 8
-			if noKeyPressed = 1
-				noKeyPressed = 0
-				protaFrame = 4
-			end if
+			protaFrame = 4
 			spritesLinColTileAndFrame(PROTA_SPRITE, 3) = 8
 		end if
 		if canMoveUp()
@@ -321,10 +310,7 @@ end sub
 sub downKey()
 	#ifdef OVERHEAD_VIEW
 		if protaDirection <> 2
-			if noKeyPressed = 1
-				noKeyPressed = 0
-				protaFrame = 6
-			end if
+			protaFrame = 6
 			spritesLinColTileAndFrame(PROTA_SPRITE, 3) = 2
 		end if
 		if canMoveDown()
@@ -447,9 +433,6 @@ sub checkDamageByTile()
 end sub
 
 sub protaMovement()
-	if GetKeyScanCode()=0
-		noKeyPressed = 1
-	end if
 	if MultiKeys(keyArray(FIRE)) = 0
 		noKeyPressedForShoot = 1
 	end if
