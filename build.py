@@ -62,9 +62,9 @@ def taps_build():
     runCommand("bin2tap " + str(Path("output/main.bin")) + " " + str(Path("output/main.tap")) + " 24576")
 
     if getEnabled128K():
-        runCommand("bin2tap " + str(Path("output/title.png.scr.zx0")) + " " + str(Path("output/title.tap")) + " 49152")
-        runCommand("bin2tap " + str(Path("output/ending.png.scr.zx0")) + " " + str(Path("output/ending.tap")) + " 16384")
-        runCommand("bin2tap " + str(Path("output/hud.png.scr.zx0")) + " " + str(Path("output/hud.tap")) + " 24576")
+        runCommand("bin2tap " + str(Path("output/title.scr.zx0")) + " " + str(Path("output/title.tap")) + " 49152")
+        runCommand("bin2tap " + str(Path("output/ending.scr.zx0")) + " " + str(Path("output/ending.tap")) + " 16384")
+        runCommand("bin2tap " + str(Path("output/hud.scr.zx0")) + " " + str(Path("output/hud.tap")) + " 24576")
         input_files = [
             str(Path("output/loader.tap")),
             str(Path("output/loading.tap")),
