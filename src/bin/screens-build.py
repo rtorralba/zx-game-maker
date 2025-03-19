@@ -24,6 +24,7 @@ BIN_FOLDER = str(Path("src/bin/")) + path_separator
 OUTPUT_FOLDER = str(Path("output/")) + path_separator
 SCREENS_FOLDER = str(Path("assets/screens/")) + path_separator
 MAP_FOLDER = str(Path("assets/map/")) + path_separator
+DIST_FOLDER = str(Path("dist/")) + path_separator
 
 # Leer el valor de enabled128K desde output/maps.json
 with open(OUTPUT_FOLDER + "maps.json", "r") as f:
@@ -110,14 +111,19 @@ else:
     SIZEFX = 0
 
 if enabled128K:
+    pngPrefix = "128K-"
+else:
+    pngPrefix = "48K-"
+
+if enabled128K:
     SIZE1 = 0
     SIZE2 = 0
     SIZE3 = 0
-    SFX = os.path.getsize(Path("assets/fx/fx.tap"))
+    
     S1 = os.path.getsize(Path("output/title.png.scr.zx0"))
     S2 = os.path.getsize(Path("output/ending.png.scr.zx0"))
     S3 = os.path.getsize(Path("output/hud.png.scr.zx0"))
-    params = "FX:" + str(SFX) + ",Init-Screen:" + str(S1) + ",End-Screen:" + str(S2) + ",HUD:" + str(S3)
+    params = "Init-Screen:" + str(S1) + ",End-Screen:" + str(S2) + ",HUD:" + str(S3) + " " + pngPrefix + "memory-bank-3.png"
 
     if os.path.isfile(SCREENS_FOLDER + "intro.scr"):
         run_command(BIN_FOLDER + ZX0 + " -f " + SCREENS_FOLDER + "intro.scr " + OUTPUT_FOLDER + "intro.scr.zx0")
@@ -129,7 +135,13 @@ if enabled128K:
         S5 = os.path.getsize(OUTPUT_FOLDER + "gameover.scr.zx0")
         params = "{},GameOver-Screen:{}".format(params, S5)
     
-    run_command(python_executable + BIN_FOLDER + "memoryImageGenerator.py " + params + " memory-bank-3.png")
+    run_command(python_executable + BIN_FOLDER + "memoryImageGenerator.py " + params)
+
+    SFX = os.path.getsize(Path("assets/fx/fx.tap"))
+    SMusic = os.path.getsize(Path("assets/music/music.tap"))
+
+    params = "FX:" + str(SFX) + ",Music:" + str(SMusic) + " " + pngPrefix + "memory-bank-4.png"
+    run_command(python_executable + BIN_FOLDER + "memoryImageGenerator.py " + params)
 else:
     SIZE0 = SIZEFX + SIZE0
     SIZE1 = os.path.getsize(Path(OUTPUT_FOLDER + "title.png.scr.zx0"))
@@ -212,8 +224,8 @@ with open(config_bas_path, 'a') as config_bas:
 
 if enabled128K:
     with open(config_bas_path, 'a') as config_bas:
-        sizeFX = os.path.getsize(Path("assets/fx/fx.tap"))
-        baseAddress = sizeFX + SIZE0
+        config_bas.write("\n' Memory bank 3\n")
+        baseAddress = SIZE0
         config_bas.write("const TITLE_SCREEN_ADDRESS as uinteger={}\n".format(baseAddress))
         titleAddress = os.path.getsize(Path(OUTPUT_FOLDER + "title.png.scr.zx0"))
         baseAddress += titleAddress
@@ -239,5 +251,5 @@ os.system("bin2tap " + output_file + " " + OUTPUT_FOLDER + "files.tap " + str(SI
 enemiesSize = SIZE5 + SIZE11 + SIZE14 + SIZE15 + SIZE18
 mapsSize = SIZE4 + SIZE10 + SIZE16 + SIZE17
 
-params = "FX:" + str(SIZEFX) + ",Init-Screen:" + str(SIZE1) + ",End-Screen:" + str(SIZE2) + ",HUD:" + str(SIZE3) + ",Maps:" + str(mapsSize) + ",Enemies:" + str(enemiesSize) + ",Tileset:" + str(SIZE6) + ",Attributes:" + str(SIZE7) + ",Sprites:" + str(SIZE8) + ",Objects:" + str(SIZE9) + ",Damage-Tiles:" + str(SIZE13) + ",Animated-Tiles:" + str(SIZE12) + " memory-bank-0.png"
+params = "FX:" + str(SIZEFX) + ",Init-Screen:" + str(SIZE1) + ",End-Screen:" + str(SIZE2) + ",HUD:" + str(SIZE3) + ",Maps:" + str(mapsSize) + ",Enemies:" + str(enemiesSize) + ",Tileset:" + str(SIZE6) + ",Attributes:" + str(SIZE7) + ",Sprites:" + str(SIZE8) + ",Objects:" + str(SIZE9) + ",Damage-Tiles:" + str(SIZE13) + ",Animated-Tiles:" + str(SIZE12) + " " + pngPrefix + "memory-bank-0.png"
 run_command(python_executable + BIN_FOLDER + "memoryImageGenerator.py " + params)

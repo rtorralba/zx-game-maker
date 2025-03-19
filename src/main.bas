@@ -60,7 +60,7 @@ dim animatedFrame as ubyte = 0
     dim noKeyPressedForShoot as UBYTE = 1
 #endif
 #ifdef ENABLED_128k
-    PaginarMemoria(3)
+    PaginarMemoria(4)
     load "" CODE $c000 ' Load fx
     PaginarMemoria(0)
 #else

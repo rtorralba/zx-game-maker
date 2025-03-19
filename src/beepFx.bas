@@ -3,7 +3,7 @@ SUB FASTCALL BeepFX_Play(sound as ubyte)
     ASM
       push af
     END ASM
-    PaginarMemoria(3)
+    PaginarMemoria(4)
     ASM
       pop af
     END ASM
@@ -22,7 +22,7 @@ END SUB
 #ifdef NEW_BEEPER_PLAYER
   SUB FASTCALL BeepFX_NextNote()
     #ifdef ENABLED_128k
-      PaginarMemoria(3)
+      PaginarMemoria(4)
     #endif
     ASM
       call 49169 ; Siguiente nota
@@ -34,7 +34,7 @@ END SUB
 
   SUB FASTCALL BeepFX_Reset()
     #ifdef ENABLED_128k
-      PaginarMemoria(3)
+      PaginarMemoria(4)
     #endif
     ASM
       call 49361 ; Reset
