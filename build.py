@@ -14,7 +14,7 @@ verbose = False
 python_executable = str(Path(sys.executable)) + " "
 
 TILED_SCRIPT = python_executable + str(Path("src/bin/tiled-build.py"))
-SCREENS_BUILD_SCRIPT = python_executable + str(Path("src/bin/screens-build.py"))
+SCREENS_BUILD_SCRIPT = python_executable + str(Path("src/bin/screensBuild/main.py"))
 MAPS_FILE = str(Path("assets/map/maps.tmx"))
 
 def get_project_name():
