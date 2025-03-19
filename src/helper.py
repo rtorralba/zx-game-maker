@@ -83,3 +83,12 @@ def concatenateFiles(output_file, input_files):
         for file in input_files:
             with open(file, "rb") as in_file:
                 out_file.write(in_file.read())
+
+def getFileSize(file):
+    return os.path.getsize(Path(file))
+
+def getOutputFileSize(file):
+    return getFileSize(OUTPUT_FOLDER + file)
+
+def screenExists(screen_name):  
+    return os.path.isfile(SCREENS_FOLDER + screen_name + ".scr")

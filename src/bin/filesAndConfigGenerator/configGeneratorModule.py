@@ -6,71 +6,62 @@ def generateMemoryConfigAndCharts():
     enabled128K = getEnabled128K()
     useBreakableTile = getUseBreakableTile()
 
-    SIZE0 = 49152
-    SIZEFX = os.path.getsize("assets/fx/fx.tap")
+    INITIAL_ADDRESS = 49152
+    SIZE_FX = getFileSize("assets/fx/fx.tap")
+    SIZE_TITLE = getOutputFileSize("title.scr.zx0")
+    SIZE_ENDING = getOutputFileSize("ending.scr.zx0")
+    SIZE_HUD = getOutputFileSize("hud.scr.zx0")
 
     config_bas_path = OUTPUT_FOLDER + "config.bas"
 
     with open(config_bas_path, 'a') as config_bas:
-        config_bas.write("const BEEP_FX_ADDRESS as uinteger={}\n".format(SIZE0))
-
-    if enabled128K:
-        pngPrefix = "128K-"
-    else:
-        pngPrefix = "48K-"
+        config_bas.write("const BEEP_FX_ADDRESS as uinteger={}\n".format(INITIAL_ADDRESS))
 
     if enabled128K:
         SIZE1 = 0
         SIZE2 = 0
         SIZE3 = 0
-        
-        S1 = os.path.getsize(Path("output/title.png.scr.zx0"))
-        S2 = os.path.getsize(Path("output/ending.png.scr.zx0"))
-        S3 = os.path.getsize(Path("output/hud.png.scr.zx0"))
-        params = "Init-Screen:" + str(S1) + ",End-Screen:" + str(S2) + ",HUD:" + str(S3)
+        pngPrefix = "128K-"
+        params = "Init-Screen:" + str(SIZE_TITLE) + ",End-Screen:" + str(SIZE_ENDING) + ",HUD:" + str(SIZE_HUD)
 
-        if os.path.isfile(SCREENS_FOLDER + "intro.scr"):
-            runCommand(BIN_FOLDER + getZx0() + " -f " + SCREENS_FOLDER + "intro.scr " + OUTPUT_FOLDER + "intro.scr.zx0")
-            S4 = os.path.getsize(OUTPUT_FOLDER + "intro.scr.zx0")
-            params = "{},Intro-Screen:{}".format(params, S4)
+        if screenExists("intro"):
+            params = "{},Intro-Screen:{}".format(params, getOutputFileSize("intro.scr.zx0"))
         
         if os.path.isfile(SCREENS_FOLDER + "gameover.scr"):
-            runCommand(BIN_FOLDER + getZx0() + " -f " + SCREENS_FOLDER + "gameover.scr " + OUTPUT_FOLDER + "gameover.scr.zx0")
-            S5 = os.path.getsize(OUTPUT_FOLDER + "gameover.scr.zx0")
-            params = "{},GameOver-Screen:{}".format(params, S5)
+            params = "{},GameOver-Screen:{}".format(params, getOutputFileSize("gameover.scr.zx0"))
         
         generateMemoryChart(params + " " + pngPrefix + "memory-bank-3.png")
 
-        SFX = os.path.getsize(Path("assets/fx/fx.tap"))
-        SMusic = os.path.getsize(Path("assets/music/music.tap"))
+        SIZE_MUSIC = getFileSize("assets/music/music.tap")
 
-        params = "FX:" + str(SFX) + ",Music:" + str(SMusic) + " " + pngPrefix + "memory-bank-4.png"
+        params = "FX:" + str(SIZE_FX) + ",Music:" + str(SIZE_MUSIC) + " " + pngPrefix + "memory-bank-4.png"
         generateMemoryChart(params)
     else:
-        SIZE0 = SIZEFX + SIZE0
-        SIZE1 = os.path.getsize(Path(OUTPUT_FOLDER + "title.png.scr.zx0"))
-        SIZE2 = os.path.getsize(Path(OUTPUT_FOLDER + "ending.png.scr.zx0"))
-        SIZE3 = os.path.getsize(Path(OUTPUT_FOLDER + "hud.png.scr.zx0"))
+        pngPrefix = "48K-"
+        INITIAL_ADDRESS = SIZE_FX + INITIAL_ADDRESS
+        SIZE1 = getOutputFileSize("title.scr.zx0")
+        SIZE2 = getOutputFileSize("ending.scr.zx0")
+        SIZE3 = getOutputFileSize("hud.scr.zx0")
 
-    SIZE4 = os.path.getsize(Path(OUTPUT_FOLDER + "map.bin.zx0"))
-    SIZE5 = os.path.getsize(Path(OUTPUT_FOLDER + "enemies.bin.zx0"))
-    SIZE6 = os.path.getsize(Path(OUTPUT_FOLDER + "tiles.bin"))
-    SIZE7 = os.path.getsize(Path(OUTPUT_FOLDER + "attrs.bin"))
-    SIZE8 = os.path.getsize(Path(OUTPUT_FOLDER + "sprites.bin"))
-    SIZE9 = os.path.getsize(Path(OUTPUT_FOLDER + "objectsInScreen.bin"))
-    SIZE10 = os.path.getsize(Path(OUTPUT_FOLDER + "screenOffsets.bin"))
-    SIZE11 = os.path.getsize(Path(OUTPUT_FOLDER + "enemiesInScreenOffsets.bin"))
-    SIZE12 = os.path.getsize(Path(OUTPUT_FOLDER + "animatedTilesInScreen.bin"))
-    SIZE13 = os.path.getsize(Path(OUTPUT_FOLDER + "damageTiles.bin"))
-    SIZE14 = os.path.getsize(Path(OUTPUT_FOLDER + "enemiesPerScreen.bin"))
-    SIZE15 = os.path.getsize(Path(OUTPUT_FOLDER + "enemiesPerScreen.bin"))
-    SIZE16 = os.path.getsize(Path(OUTPUT_FOLDER + "screenObjects.bin"))
-    SIZE17 = os.path.getsize(Path(OUTPUT_FOLDER + "screensWon.bin"))
-    SIZE18 = os.path.getsize(Path(OUTPUT_FOLDER + "decompressedEnemiesScreen.bin"))
+    SIZE4 = getOutputFileSize("map.bin.zx0")
+    SIZE5 = getOutputFileSize("enemies.bin.zx0")
+    SIZE6 = getOutputFileSize("tiles.bin")
+    SIZE7 = getOutputFileSize("attrs.bin")
+    SIZE8 = getOutputFileSize("sprites.bin")
+    SIZE9 = getOutputFileSize("objectsInScreen.bin")
+    SIZE10 = getOutputFileSize("screenOffsets.bin")
+    SIZE11 = getOutputFileSize("enemiesInScreenOffsets.bin")
+    SIZE12 = getOutputFileSize("animatedTilesInScreen.bin")
+    SIZE13 = getOutputFileSize("damageTiles.bin")
+    SIZE14 = getOutputFileSize("enemiesPerScreen.bin")
+    SIZE15 = getOutputFileSize("enemiesPerScreen.bin")
+    SIZE16 = getOutputFileSize("screenObjects.bin")
+    SIZE17 = getOutputFileSize("screensWon.bin")
+    SIZE18 = getOutputFileSize("decompressedEnemiesScreen.bin")
     if useBreakableTile:
-        SIZE19 = os.path.getsize(Path(OUTPUT_FOLDER + "brokenTiles.bin"))
+        SIZE19 = getOutputFileSize("brokenTiles.bin")
 
-    tilesetAddress = SIZE0 + SIZE1 + SIZE2 + SIZE3 + SIZE4 + SIZE5
+    tilesetAddress = INITIAL_ADDRESS + SIZE1 + SIZE2 + SIZE3 + SIZE4 + SIZE5
     attrAddress = tilesetAddress + SIZE6
     spriteAddress = attrAddress + SIZE7
     screenObjectsInitialAddress = spriteAddress + SIZE8
@@ -92,9 +83,9 @@ def generateMemoryConfigAndCharts():
 
     if not enabled128K:
         with open(config_bas_path, 'a') as config_bas:
-            config_bas.write("const TITLE_SCREEN_ADDRESS as uinteger={}\n".format(SIZE0))
+            config_bas.write("const TITLE_SCREEN_ADDRESS as uinteger={}\n".format(INITIAL_ADDRESS))
 
-    address = SIZE0 + SIZE1
+    address = INITIAL_ADDRESS + SIZE1
 
     if not enabled128K:
         with open(config_bas_path, 'a') as config_bas:
@@ -132,29 +123,29 @@ def generateMemoryConfigAndCharts():
     if enabled128K:
         with open(config_bas_path, 'a') as config_bas:
             config_bas.write("\n' Memory bank 3\n")
-            baseAddress = SIZE0
+            baseAddress = INITIAL_ADDRESS
             config_bas.write("const TITLE_SCREEN_ADDRESS as uinteger={}\n".format(baseAddress))
-            titleAddress = os.path.getsize(Path(OUTPUT_FOLDER + "title.png.scr.zx0"))
+            titleAddress = getOutputFileSize("title.scr.zx0")
             baseAddress += titleAddress
             config_bas.write("const ENDING_SCREEN_ADDRESS as uinteger={}\n".format(baseAddress))
-            endingAddress = os.path.getsize(Path(OUTPUT_FOLDER + "ending.png.scr.zx0"))
+            endingAddress = getOutputFileSize("ending.scr.zx0")
             baseAddress += endingAddress
             config_bas.write("const HUD_SCREEN_ADDRESS as uinteger={}\n".format(baseAddress))
 
             if os.path.isfile(SCREENS_FOLDER + "intro.scr"):
-                hudAddress = os.path.getsize(OUTPUT_FOLDER + "hud.png.scr.zx0")
+                hudAddress = getOutputFileSize("hud.scr.zx0")
                 baseAddress += hudAddress
                 config_bas.write("const INTRO_SCREEN_ADDRESS as uinteger={}\n".format(baseAddress))
                 config_bas.write("#DEFINE INTRO_SCREEN_ENABLED\n")
             
             if os.path.isfile(SCREENS_FOLDER + "gameover.scr"):
-                introAddress = os.path.getsize(OUTPUT_FOLDER + "intro.scr.zx0")
+                introAddress = getOutputFileSize("intro.scr.zx0")
                 baseAddress += introAddress
                 config_bas.write("const GAMEOVER_SCREEN_ADDRESS as uinteger={}\n".format(baseAddress))
                 config_bas.write("#DEFINE GAMEOVER_SCREEN_ENABLED\n")
             
         params = "Maps:" + str(mapsSize) + ",Enemies:" + str(enemiesSize) + ",Tileset:" + str(SIZE6) + ",Attributes:" + str(SIZE7) + ",Sprites:" + str(SIZE8) + ",Objects:" + str(SIZE9) + ",Damage-Tiles:" + str(SIZE13) + ",Animated-Tiles:" + str(SIZE12) + " " + pngPrefix + "memory-bank-0.png"
     else:
-        params = "FX:" + str(SIZEFX) + ",Init-Screen:" + str(SIZE1) + ",End-Screen:" + str(SIZE2) + ",HUD:" + str(SIZE3) + ",Maps:" + str(mapsSize) + ",Enemies:" + str(enemiesSize) + ",Tileset:" + str(SIZE6) + ",Attributes:" + str(SIZE7) + ",Sprites:" + str(SIZE8) + ",Objects:" + str(SIZE9) + ",Damage-Tiles:" + str(SIZE13) + ",Animated-Tiles:" + str(SIZE12) + " " + pngPrefix + "memory-bank-0.png"
+        params = "FX:" + str(SIZE_FX) + ",Init-Screen:" + str(SIZE1) + ",End-Screen:" + str(SIZE2) + ",HUD:" + str(SIZE3) + ",Maps:" + str(mapsSize) + ",Enemies:" + str(enemiesSize) + ",Tileset:" + str(SIZE6) + ",Attributes:" + str(SIZE7) + ",Sprites:" + str(SIZE8) + ",Objects:" + str(SIZE9) + ",Damage-Tiles:" + str(SIZE13) + ",Animated-Tiles:" + str(SIZE12) + " " + pngPrefix + "memory-bank-0.png"
 
     generateMemoryChart(params)

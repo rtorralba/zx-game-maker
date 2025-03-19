@@ -9,12 +9,19 @@ from helper import *
 START_ADDRESS = 49152
 
 def compressScreen(screen_name):
-    runCommand(BIN_FOLDER + getZx0() + " -f " + SCREENS_FOLDER + screen_name + ".scr " + OUTPUT_FOLDER + screen_name + ".png.scr.zx0")
+    runCommand(BIN_FOLDER + getZx0() + " -f " + SCREENS_FOLDER + screen_name + ".scr " + OUTPUT_FOLDER + screen_name + ".scr.zx0")
 
 def generateScreensFiles():
     compressScreen("title")
     compressScreen("ending")
     compressScreen("hud")
+
+    if getEnabled128K():
+        if screenExists("intro"):
+            compressScreen("intro")
+        if screenExists("gameover"):
+            compressScreen("gameover")
+
 
     shutil.copy(SCREENS_FOLDER + "loading.scr", OUTPUT_FOLDER + "loading.bin")
 
@@ -37,9 +44,9 @@ def concatenateBinariesIntoFileAndGenerateTap():
         sizeFx = os.path.getsize(Path("assets/fx/fx.tap"))
         tapAddress = START_ADDRESS + sizeFx
         input_files = [
-            OUTPUT_FOLDER + "title.png.scr.zx0",
-            OUTPUT_FOLDER + "ending.png.scr.zx0",
-            OUTPUT_FOLDER + "hud.png.scr.zx0",
+            OUTPUT_FOLDER + "title.scr.zx0",
+            OUTPUT_FOLDER + "ending.scr.zx0",
+            OUTPUT_FOLDER + "hud.scr.zx0",
         ]
     else:
         tapAddress = START_ADDRESS
