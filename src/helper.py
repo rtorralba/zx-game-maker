@@ -17,6 +17,7 @@ SCREENS_FOLDER = str(Path("assets/screens/")) + getOsSeparator()
 MAP_FOLDER = str(Path("assets/map/")) + getOsSeparator()
 MAPS_FILE = str(Path("assets/map/maps.tmx"))
 DIST_FOLDER = str(Path("dist/")) + getOsSeparator()
+INITIAL_ADDRESS = 49152
 
 def getZx0():
     if os.name == "nt":
