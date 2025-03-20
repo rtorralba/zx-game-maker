@@ -123,7 +123,7 @@ if enabled128K:
     S1 = os.path.getsize(Path("output/title.png.scr.zx0"))
     S2 = os.path.getsize(Path("output/ending.png.scr.zx0"))
     S3 = os.path.getsize(Path("output/hud.png.scr.zx0"))
-    params = "Init-Screen:" + str(S1) + ",End-Screen:" + str(S2) + ",HUD:" + str(S3) + " " + pngPrefix + "memory-bank-3.png"
+    params = "Init-Screen:" + str(S1) + ",End-Screen:" + str(S2) + ",HUD:" + str(S3)
 
     if os.path.isfile(SCREENS_FOLDER + "intro.scr"):
         run_command(BIN_FOLDER + ZX0 + " -f " + SCREENS_FOLDER + "intro.scr " + OUTPUT_FOLDER + "intro.scr.zx0")
@@ -135,7 +135,7 @@ if enabled128K:
         S5 = os.path.getsize(OUTPUT_FOLDER + "gameover.scr.zx0")
         params = "{},GameOver-Screen:{}".format(params, S5)
     
-    run_command(python_executable + BIN_FOLDER + "memoryImageGenerator.py " + params)
+    run_command(python_executable + BIN_FOLDER + "memoryImageGenerator.py " + params + " " + pngPrefix + "memory-bank-3.png")
 
     SFX = os.path.getsize(Path("assets/fx/fx.tap"))
     SMusic = os.path.getsize(Path("assets/music/music.tap"))
