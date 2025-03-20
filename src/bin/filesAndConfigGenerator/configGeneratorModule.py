@@ -1,5 +1,3 @@
-import os
-
 from helper import *
 
 def getDeclaration(name, address):
