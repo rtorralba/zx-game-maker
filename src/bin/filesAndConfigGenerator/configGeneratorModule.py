@@ -2,150 +2,103 @@ import os
 
 from helper import *
 
+def getDeclaration(name, address):
+    return "const {}_ADDRESS as uinteger={}\n".format(name, address)
+
+def writeConfigDeclaration(config_bas, name, address):
+    config_bas.write(getDeclaration(name, address))
+
+sizes = {}
+
 def generateMemoryConfigAndCharts():
     enabled128K = getEnabled128K()
     useBreakableTile = getUseBreakableTile()
 
     INITIAL_ADDRESS = 49152
-    SIZE_FX = getFileSize("assets/fx/fx.tap")
-    SIZE_TITLE = getOutputFileSize("title.scr.zx0")
-    SIZE_ENDING = getOutputFileSize("ending.scr.zx0")
-    SIZE_HUD = getOutputFileSize("hud.scr.zx0")
+
+    sizes["BEEP_FX"] = getFileSize("assets/fx/fx.tap")
+    sizes["TITLE_SCREEN"] = getOutputFileSize("title.scr.zx0")
+    sizes["ENDING_SCREEN"] = getOutputFileSize("ending.scr.zx0")
+    sizes["HUD_SCREEN"] = getOutputFileSize("hud.scr.zx0")
+    sizes["MAPS_DATA"] = getOutputFileSize("map.bin.zx0")
+    sizes["ENEMIES_DATA"] = getOutputFileSize("enemies.bin.zx0")
+    sizes["TILESET_DATA"] = getOutputFileSize("tiles.bin")
+    sizes["ATTR_DATA"] = getOutputFileSize("attrs.bin")
+    sizes["SPRITES_DATA"] = getOutputFileSize("sprites.bin")
+    sizes["SCREEN_OBJECTS_INITIAL_DATA"] = getOutputFileSize("objectsInScreen.bin")
+    sizes["SCREEN_OFFSETS_DATA"] = getOutputFileSize("screenOffsets.bin")
+    sizes["ENEMIES_IN_SCREEN_OFFSETS_DATA"] = getOutputFileSize("enemiesInScreenOffsets.bin")
+    sizes["ANIMATED_TILES_IN_SCREEN_DATA"] = getOutputFileSize("animatedTilesInScreen.bin")
+    sizes["DAMAGE_TILES_DATA"] = getOutputFileSize("damageTiles.bin")
+    sizes["ENEMIES_PER_SCREEN_DATA"] = getOutputFileSize("enemiesPerScreen.bin")
+    sizes["ENEMIES_PER_SCREEN_INITIAL_DATA"] = getOutputFileSize("enemiesPerScreen.bin")
+    sizes["SCREEN_OBJECTS_DATA"] = getOutputFileSize("screenObjects.bin")
+    sizes["SCREENS_WON_DATA"] = getOutputFileSize("screensWon.bin")
+    sizes["DECOMPRESSED_ENEMIES_SCREEN_DATA"] = getOutputFileSize("decompressedEnemiesScreen.bin")
+
+    if useBreakableTile:
+        sizes["SIZE_BROKEN_TILES"] = getOutputFileSize("brokenTiles.bin")
+    
+    if enabled128K:
+        sizes["MUSIC"] = getFileSize("assets/music/music.tap")
+        sizes["INTRO"] = getOutputFileSize("intro.scr.zx0") if screenExists("intro") else 0
+        sizes["GAME_OVER"] = getOutputFileSize("gameover.scr.zx0") if screenExists("gameover") else 0
+    
+    enemiesSize = sizes["ENEMIES_DATA"] + sizes["ENEMIES_IN_SCREEN_OFFSETS_DATA"] + sizes["ENEMIES_PER_SCREEN_DATA"] + sizes["ENEMIES_PER_SCREEN_INITIAL_DATA"] + sizes["DECOMPRESSED_ENEMIES_SCREEN_DATA"]
+    mapsSize = sizes["MAPS_DATA"] + sizes["SCREEN_OFFSETS_DATA"] + sizes["SCREEN_OBJECTS_DATA"] + sizes["SCREENS_WON_DATA"]
+
+    if enabled128K:
+        paramsMap0 = "Maps:" + str(mapsSize) + ",Enemies:" + str(enemiesSize) + ",Tileset:" + str(sizes["TILESET_DATA"]) + ",Attributes:" + str(sizes["ATTR_DATA"]) + ",Sprites:" + str(sizes["SPRITES_DATA"]) + ",Objects:" + str(sizes["SCREEN_OBJECTS_INITIAL_DATA"]) + ",Damage-Tiles:" + str(sizes["DAMAGE_TILES_DATA"]) + ",Animated-Tiles:" + str(sizes["ANIMATED_TILES_IN_SCREEN_DATA"]) + " memory-bank-0-128K.png"
+        paramsMap3 = "Title-Screen:" + str(sizes["TITLE_SCREEN"]) + ",End-Screen:" + str(sizes["ENDING_SCREEN"]) + ",HUD:" + str(sizes["HUD_SCREEN"]) + ",Intro-Screen:" + str(sizes["INTRO"]) + ",GameOver-Screen:" + str(sizes["GAME_OVER"]) + " memory-bank-3.png"
+        paramsMap4 = "FX:" + str(sizes["BEEP_FX"]) + ",Music:" + str(sizes["MUSIC"]) + " memory-bank-4.png"
+
+        generateMemoryChart(paramsMap3)
+        generateMemoryChart(paramsMap4)
+    else:
+        paramsMap0 = "FX:" + str(sizes["BEEP_FX"]) + ",Title-Screen:" + str(sizes["TITLE_SCREEN"]) + ",End-Screen:" + str(sizes["ENDING_SCREEN"]) + ",HUD:" + str(sizes["HUD_SCREEN"]) + ",Maps:" + str(mapsSize) + ",Enemies:" + str(enemiesSize) + ",Tileset:" + str(sizes["TILESET_DATA"]) + ",Attributes:" + str(sizes["ATTR_DATA"]) + ",Sprites:" + str(sizes["SPRITES_DATA"]) + ",Objects:" + str(sizes["SCREEN_OBJECTS_INITIAL_DATA"]) + ",Damage-Tiles:" + str(sizes["DAMAGE_TILES_DATA"]) + ",Animated-Tiles:" + str(sizes["ANIMATED_TILES_IN_SCREEN_DATA"]) + " memory-bank-0-48K.png"
+
+    generateMemoryChart(paramsMap0)
+
+    currentAddress = INITIAL_ADDRESS
 
     config_bas_path = OUTPUT_FOLDER + "config.bas"
 
     with open(config_bas_path, 'a') as config_bas:
-        config_bas.write("const BEEP_FX_ADDRESS as uinteger={}\n".format(INITIAL_ADDRESS))
+        if enabled128K:
+            config_bas.write("\n' Memory bank 3\n")
+            writeConfigDeclaration(config_bas, "TITLE_SCREEN", currentAddress)
+            currentAddress += sizes["TITLE_SCREEN"]
+            writeConfigDeclaration(config_bas, "ENDING_SCREEN", currentAddress)
+            currentAddress += sizes["ENDING_SCREEN"]
+            writeConfigDeclaration(config_bas, "HUD_SCREEN", currentAddress)
+            currentAddress += sizes["HUD_SCREEN"]
 
-    if enabled128K:
-        SIZE1 = 0
-        SIZE2 = 0
-        SIZE3 = 0
-        pngPrefix = "128K-"
-        params = "Init-Screen:" + str(SIZE_TITLE) + ",End-Screen:" + str(SIZE_ENDING) + ",HUD:" + str(SIZE_HUD)
+            if screenExists("intro"):
+                writeConfigDeclaration(config_bas, "INTRO_SCREEN", currentAddress)
+                config_bas.write("#DEFINE INTRO_SCREEN_ENABLED\n")
+                currentAddress += sizes["INTRO"]
+            
+            if screenExists("gameover"):
+                writeConfigDeclaration(config_bas, "GAMEOVER_SCREEN", currentAddress)
+                config_bas.write("#DEFINE GAMEOVER_SCREEN_ENABLED\n")
+                currentAddress += sizes["GAME_OVER"]
+            
+            config_bas.write("\n")
+            currentAddress = INITIAL_ADDRESS
+        else:
+            currentAddress += sizes["BEEP_FX"]
+            writeConfigDeclaration(config_bas, "TITLE_SCREEN", currentAddress)
+            currentAddress += sizes["TITLE_SCREEN"]
+            writeConfigDeclaration(config_bas, "ENDING_SCREEN", currentAddress)
+            currentAddress += sizes["ENDING_SCREEN"]
+            writeConfigDeclaration(config_bas, "HUD_SCREEN", currentAddress)
+            currentAddress += sizes["HUD_SCREEN"]
 
-        if screenExists("intro"):
-            params = "{},Intro-Screen:{}".format(params, getOutputFileSize("intro.scr.zx0"))
-        
-        if os.path.isfile(SCREENS_FOLDER + "gameover.scr"):
-            params = "{},GameOver-Screen:{}".format(params, getOutputFileSize("gameover.scr.zx0"))
-        
-        generateMemoryChart(params + " " + pngPrefix + "memory-bank-3.png")
-
-        SIZE_MUSIC = getFileSize("assets/music/music.tap")
-
-        params = "FX:" + str(SIZE_FX) + ",Music:" + str(SIZE_MUSIC) + " " + pngPrefix + "memory-bank-4.png"
-        generateMemoryChart(params)
-    else:
-        pngPrefix = "48K-"
-        INITIAL_ADDRESS = SIZE_FX + INITIAL_ADDRESS
-        SIZE1 = getOutputFileSize("title.scr.zx0")
-        SIZE2 = getOutputFileSize("ending.scr.zx0")
-        SIZE3 = getOutputFileSize("hud.scr.zx0")
-
-    SIZE4 = getOutputFileSize("map.bin.zx0")
-    SIZE5 = getOutputFileSize("enemies.bin.zx0")
-    SIZE6 = getOutputFileSize("tiles.bin")
-    SIZE7 = getOutputFileSize("attrs.bin")
-    SIZE8 = getOutputFileSize("sprites.bin")
-    SIZE9 = getOutputFileSize("objectsInScreen.bin")
-    SIZE10 = getOutputFileSize("screenOffsets.bin")
-    SIZE11 = getOutputFileSize("enemiesInScreenOffsets.bin")
-    SIZE12 = getOutputFileSize("animatedTilesInScreen.bin")
-    SIZE13 = getOutputFileSize("damageTiles.bin")
-    SIZE14 = getOutputFileSize("enemiesPerScreen.bin")
-    SIZE15 = getOutputFileSize("enemiesPerScreen.bin")
-    SIZE16 = getOutputFileSize("screenObjects.bin")
-    SIZE17 = getOutputFileSize("screensWon.bin")
-    SIZE18 = getOutputFileSize("decompressedEnemiesScreen.bin")
-    if useBreakableTile:
-        SIZE19 = getOutputFileSize("brokenTiles.bin")
-
-    tilesetAddress = INITIAL_ADDRESS + SIZE1 + SIZE2 + SIZE3 + SIZE4 + SIZE5
-    attrAddress = tilesetAddress + SIZE6
-    spriteAddress = attrAddress + SIZE7
-    screenObjectsInitialAddress = spriteAddress + SIZE8
-    screenOffsetsAddress = screenObjectsInitialAddress + SIZE9
-    enemiesInScreenOffsetsAddress = screenOffsetsAddress + SIZE10
-    animatedTilesInScreenAddress = enemiesInScreenOffsetsAddress + SIZE11
-    damageTilesAddress = animatedTilesInScreenAddress + SIZE12
-    enemiesPerScreenAddress = damageTilesAddress + SIZE13
-    enemiesPerScreenInitialAddress = enemiesPerScreenAddress + SIZE14
-    screenObjectsAddress = enemiesPerScreenInitialAddress + SIZE15
-    screensWonAddress = screenObjectsAddress + SIZE16
-    decompressedEnemiesScreenAddress = screensWonAddress + SIZE17
-
-    enemiesSize = SIZE5 + SIZE11 + SIZE14 + SIZE15 + SIZE18
-    mapsSize = SIZE4 + SIZE10 + SIZE16 + SIZE17
-
-    if useBreakableTile:
-        brokenTilesAddress = decompressedEnemiesScreenAddress + SIZE18
-
-    if not enabled128K:
-        with open(config_bas_path, 'a') as config_bas:
-            config_bas.write("const TITLE_SCREEN_ADDRESS as uinteger={}\n".format(INITIAL_ADDRESS))
-
-    address = INITIAL_ADDRESS + SIZE1
-
-    if not enabled128K:
-        with open(config_bas_path, 'a') as config_bas:
-            config_bas.write("const ENDING_SCREEN_ADDRESS as uinteger={}\n".format(address))
-
-    address += SIZE2
-
-    if not enabled128K:
-        with open(config_bas_path, 'a') as config_bas:
-            config_bas.write("const HUD_SCREEN_ADDRESS as uinteger={}\n".format(address))
-
-    address += SIZE3
-
-    with open(config_bas_path, 'a') as config_bas:
-        config_bas.write("const MAPS_DATA_ADDRESS as uinteger={}\n".format(address))
-        address += SIZE4
-        config_bas.write("const ENEMIES_DATA_ADDRESS as uinteger={}\n".format(address))
-        config_bas.write("const TILESET_DATA_ADDRESS as uinteger={}\n".format(tilesetAddress))
-        config_bas.write("const ATTR_DATA_ADDRESS as uinteger={}\n".format(attrAddress))
-        config_bas.write("const SPRITES_DATA_ADDRESS as uinteger={}\n".format(spriteAddress))
-        config_bas.write("const SCREEN_OBJECTS_INITIAL_DATA_ADDRESS as uinteger={}\n".format(screenObjectsInitialAddress))
-        config_bas.write("const SCREEN_OFFSETS_DATA_ADDRESS as uinteger={}\n".format(screenOffsetsAddress))
-        config_bas.write("const ENEMIES_IN_SCREEN_OFFSETS_DATA_ADDRESS as uinteger={}\n".format(enemiesInScreenOffsetsAddress))
-        config_bas.write("const ANIMATED_TILES_IN_SCREEN_DATA_ADDRESS as uinteger={}\n".format(animatedTilesInScreenAddress))
-        config_bas.write("const DAMAGE_TILES_DATA_ADDRESS as uinteger={}\n".format(damageTilesAddress))
-        config_bas.write("const ENEMIES_PER_SCREEN_DATA_ADDRESS as uinteger={}\n".format(enemiesPerScreenAddress))
-        config_bas.write("const ENEMIES_PER_SCREEN_INITIAL_DATA_ADDRESS as uinteger={}\n".format(enemiesPerScreenInitialAddress))
-        config_bas.write("const SCREEN_OBJECTS_DATA_ADDRESS as uinteger={}\n".format(screenObjectsAddress))
-        config_bas.write("const SCREENS_WON_DATA_ADDRESS as uinteger={}\n".format(screensWonAddress))
-        config_bas.write("const DECOMPRESSED_ENEMIES_SCREEN_DATA_ADDRESS as uinteger={}\n".format(decompressedEnemiesScreenAddress))
+        for key in sizes:
+            if key == "BEEP_FX" or key == "TITLE_SCREEN" or key == "ENDING_SCREEN" or key == "HUD_SCREEN" or key == "INTRO_SCREEN" or key == "GAMEOVER_SCREEN" or key == "BROKEN_TILES_DATA":
+                continue
+            writeConfigDeclaration(config_bas, key, currentAddress)
+            currentAddress += sizes[key]
 
         if useBreakableTile:
-            config_bas.write("const BROKEN_TILES_DATA_ADDRESS as uinteger={}\n".format(brokenTilesAddress))
-
-    if enabled128K:
-        with open(config_bas_path, 'a') as config_bas:
-            config_bas.write("\n' Memory bank 3\n")
-            baseAddress = INITIAL_ADDRESS
-            config_bas.write("const TITLE_SCREEN_ADDRESS as uinteger={}\n".format(baseAddress))
-            titleAddress = getOutputFileSize("title.scr.zx0")
-            baseAddress += titleAddress
-            config_bas.write("const ENDING_SCREEN_ADDRESS as uinteger={}\n".format(baseAddress))
-            endingAddress = getOutputFileSize("ending.scr.zx0")
-            baseAddress += endingAddress
-            config_bas.write("const HUD_SCREEN_ADDRESS as uinteger={}\n".format(baseAddress))
-
-            if os.path.isfile(SCREENS_FOLDER + "intro.scr"):
-                hudAddress = getOutputFileSize("hud.scr.zx0")
-                baseAddress += hudAddress
-                config_bas.write("const INTRO_SCREEN_ADDRESS as uinteger={}\n".format(baseAddress))
-                config_bas.write("#DEFINE INTRO_SCREEN_ENABLED\n")
-            
-            if os.path.isfile(SCREENS_FOLDER + "gameover.scr"):
-                introAddress = getOutputFileSize("intro.scr.zx0")
-                baseAddress += introAddress
-                config_bas.write("const GAMEOVER_SCREEN_ADDRESS as uinteger={}\n".format(baseAddress))
-                config_bas.write("#DEFINE GAMEOVER_SCREEN_ENABLED\n")
-            
-        params = "Maps:" + str(mapsSize) + ",Enemies:" + str(enemiesSize) + ",Tileset:" + str(SIZE6) + ",Attributes:" + str(SIZE7) + ",Sprites:" + str(SIZE8) + ",Objects:" + str(SIZE9) + ",Damage-Tiles:" + str(SIZE13) + ",Animated-Tiles:" + str(SIZE12) + " " + pngPrefix + "memory-bank-0.png"
-    else:
-        params = "FX:" + str(SIZE_FX) + ",Init-Screen:" + str(SIZE1) + ",End-Screen:" + str(SIZE2) + ",HUD:" + str(SIZE3) + ",Maps:" + str(mapsSize) + ",Enemies:" + str(enemiesSize) + ",Tileset:" + str(SIZE6) + ",Attributes:" + str(SIZE7) + ",Sprites:" + str(SIZE8) + ",Objects:" + str(SIZE9) + ",Damage-Tiles:" + str(SIZE13) + ",Animated-Tiles:" + str(SIZE12) + " " + pngPrefix + "memory-bank-0.png"
-
-    generateMemoryChart(params)
+            writeConfigDeclaration(config_bas, "BROKEN_TILES_DATA", currentAddress)
