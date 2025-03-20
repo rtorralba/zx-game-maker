@@ -47,8 +47,9 @@ def writeConfig(sizes):
             writeConfigDeclaration(config_bas, "HUD_SCREEN", currentAddress)
             currentAddress += sizes["HUD_SCREEN"]
 
+        keysToExclude = ["BEEP_FX", "TITLE_SCREEN", "ENDING_SCREEN", "HUD_SCREEN", "INTRO", "GAME_OVER", "MUSIC", "BROKEN_TILES_DATA"]
         for key in sizes:
-            if key == "BEEP_FX" or key == "TITLE_SCREEN" or key == "ENDING_SCREEN" or key == "HUD_SCREEN" or key == "INTRO_SCREEN" or key == "GAMEOVER_SCREEN" or key == "BROKEN_TILES_DATA":
+            if key in keysToExclude:
                 continue
             writeConfigDeclaration(config_bas, key, currentAddress)
             currentAddress += sizes[key]
@@ -80,7 +81,7 @@ def calculateSizes():
     sizes["DECOMPRESSED_ENEMIES_SCREEN_DATA"] = getOutputFileSize("decompressedEnemiesScreen.bin")
 
     if getUseBreakableTile():
-        sizes["SIZE_BROKEN_TILES"] = getOutputFileSize("brokenTiles.bin")
+        sizes["BROKEN_TILES_DATA"] = getOutputFileSize("brokenTiles.bin")
     
     if getEnabled128K():
         sizes["MUSIC"] = getFileSize("assets/music/music.tap")
