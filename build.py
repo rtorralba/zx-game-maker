@@ -4,7 +4,8 @@ import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parent / 'src'))
 
-from helper import *
+from builder.Builder import Builder 
+from builder.helper import *
 
 if os.getenv('VIRTUAL_ENV') is None:
     print("Please activate the virtual environment before running this script.")
@@ -15,7 +16,6 @@ verbose = False
 python_executable = str(Path(sys.executable)) + " "
 
 TILED_SCRIPT = str(Path("src/bin/tiled-build.py"))
-FILES_AND_CONFIG_SCRIPT = str(Path("src/bin/filesAndConfigGenerator/main.py"))
 
 DEFAULT_FX = str(Path("src/default/fx.tap"))
 
@@ -41,7 +41,7 @@ def check_fx():
 
 def screens_build():
     print("Building screens... ", end="")
-    runPythonScript(FILES_AND_CONFIG_SCRIPT)
+    Builder().execute()
     print("OK!")
 
 def compiling_game():
