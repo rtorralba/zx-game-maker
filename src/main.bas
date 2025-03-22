@@ -62,7 +62,7 @@ dim inMenu as ubyte = 1
     dim noKeyPressedForShoot as UBYTE = 1
 #endif
 #ifdef ENABLED_128k
-    PaginarMemoria(4)
+    PaginarMemoria(6)
     load "" CODE $c000 ' Load fx
     PaginarMemoria(0)
 #else
@@ -79,7 +79,7 @@ load "" CODE ' Load files
     load "" CODE ' Load vtplayer
     load "" CODE ' Load music
     PaginarMemoria(0)
-    PaginarMemoria(1)
+    PaginarMemoria(4)
     load "" CODE ' Load vtplayer
     load "" CODE ' Load music
     PaginarMemoria(0)

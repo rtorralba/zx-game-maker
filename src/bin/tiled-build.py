@@ -90,10 +90,6 @@ vtplayerInit = 'EFAD'
 vtplayerMute = 'EFB5'
 vtplayerNextNote = 'EFB2'
 
-vtmenuInit = 'EBB0'
-vtmenuMute = 'EBB5'
-vtmenuNextNote = 'EBB8'
-
 initialScreen = 2
 initialMainCharacterX = 8
 initialMainCharacterY = 8
@@ -167,12 +163,6 @@ if 'properties' in data:
             vtplayerMute = property['value']
         elif property['name'] == 'VTPLAYER_NEXTNOTE':
             vtplayerNextNote = property['value']
-        elif property['name'] == 'VTMENU_INIT':
-            vtmenuInit = property['value']
-        elif property['name'] == 'VTMENU_MUTE':
-            vtmenuMute = property['value']
-        elif property['name'] == 'VTMENU_NEXTNOTE':
-            vtmenuNextNote = property['value']
         elif property['name'] == 'maxEnemiesPerScreen':
             if property['value'] < 7:
                 maxEnemiesPerScreen = property['value']
@@ -276,9 +266,6 @@ if enabled128K == 1:
     configStr += "#DEFINE VTPLAYER_INIT $" + str(vtplayerInit) + "\n"
     configStr += "#DEFINE VTPLAYER_MUTE $" + str(vtplayerMute) + "\n"
     configStr += "#DEFINE VTPLAYER_NEXTNOTE $" + str(vtplayerNextNote) + "\n\n"
-    configStr += "#DEFINE VTMENU_INIT $" + str(vtmenuInit) + "\n"
-    configStr += "#DEFINE VTMENU_MUTE $" + str(vtmenuMute) + "\n"
-    configStr += "#DEFINE VTMENU_NEXTNOTE $" + str(vtmenuNextNote) + "\n\n"
 
 if newBeeperPlayer == 1:
     configStr += "#DEFINE NEW_BEEPER_PLAYER\n"
