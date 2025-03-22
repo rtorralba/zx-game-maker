@@ -13,3 +13,4 @@ venv/*
 Spectral.sav
 *.z80
 src/bin/.Spectral/*
+**/__pycache__/*
