@@ -23,6 +23,7 @@ class Sizes:
         self.MUSIC = 0
         self.INTRO_SCREEN = 0
         self.GAMEOVER_SCREEN = 0
+        self.MENU_MUSIC = 0
     
     @staticmethod
     def BEEP_FX_STRING():
@@ -117,5 +118,9 @@ class Sizes:
         return "GAMEOVER_SCREEN"
     
     @staticmethod
+    def MENU_MUSIC_STRING():
+        return "MENU_MUSIC"
+    
+    @staticmethod
     def getKeysToMemoryBank():
-        return ["BEEP_FX", "TITLE_SCREEN", "ENDING_SCREEN", "HUD_SCREEN", "INTRO_SCREEN", "GAMEOVER_SCREEN", "MUSIC", "BROKEN_TILES_DATA"]
+        return ["BEEP_FX", "TITLE_SCREEN", "ENDING_SCREEN", "HUD_SCREEN", "INTRO_SCREEN", "GAMEOVER_SCREEN", "MUSIC", "BROKEN_TILES_DATA", "MENU_MUSIC"]

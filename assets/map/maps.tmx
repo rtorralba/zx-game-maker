@@ -5,6 +5,9 @@
  </editorsettings>
  <properties>
   <property name="128Kenabled" type="bool" value="true"/>
+  <property name="VTMENU_INIT" value="EBB0"/>
+  <property name="VTMENU_MUTE" value="EBB8"/>
+  <property name="VTMENU_NEXTNOTE" value="EBB5"/>
   <property name="VTPLAYER_INIT" value="EFAD"/>
   <property name="VTPLAYER_MUTE" value="EFB5"/>
   <property name="VTPLAYER_NEXTNOTE" value="EFB2"/>
@@ -31,6 +34,7 @@
   <property name="shooting" type="bool" value="true"/>
   <property name="shouldKillEnemies" type="bool" value="true"/>
   <property name="useBreakableTile" type="bool" value="true"/>
+  <property name="waitPressKeyAfterLoad" type="bool" value="true"/>
  </properties>
  <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="192" columns="32">
   <image source="tiles.png" width="256" height="48"/>

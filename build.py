@@ -72,6 +72,7 @@ def taps_build():
             str(Path("assets/fx/fx.tap")),
             str(Path("output/files.tap")),
             str(Path("assets/music/music.tap")),
+            str(Path("assets/music/menu.tap")),
             str(Path("output/title.tap")),
             str(Path("output/ending.tap")),
             str(Path("output/hud.tap"))

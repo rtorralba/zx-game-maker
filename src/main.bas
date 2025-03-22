@@ -56,6 +56,8 @@ dim protaDirection as ubyte
 dim soundToPlay as ubyte = 1
 dim animatedFrame as ubyte = 0
 
+dim inMenu as ubyte = 1
+
 #ifdef SHOOTING_ENABLED
     dim noKeyPressedForShoot as UBYTE = 1
 #endif
@@ -74,6 +76,10 @@ load "" CODE ' Load files
     #include "128/vortexTracker.bas"
     #include "128/functions.bas"
     PaginarMemoria(4)
+    load "" CODE ' Load vtplayer
+    load "" CODE ' Load music
+    PaginarMemoria(0)
+    PaginarMemoria(1)
     load "" CODE ' Load vtplayer
     load "" CODE ' Load music
     PaginarMemoria(0)
@@ -145,14 +151,20 @@ menu:
             LOOP UNTIL GetKeyScanCode()
         end if
     #endif
-    INK 7: PAPER 0: BORDER 0: BRIGHT 0: FLASH 0: CLS
     #ifdef ENABLED_128k
         #ifdef MUSIC_ENABLED
             VortexTracker_Stop()
         #endif
+    #endif
+    inMenu = 1
+    INK 7: PAPER 0: BORDER 0: BRIGHT 0: FLASH 0: CLS
+    #ifdef ENABLED_128k
         PaginarMemoria(3)
             dzx0Standard(TITLE_SCREEN_ADDRESS, $4000)
         PaginarMemoria(0)
+        #ifdef MUSIC_ENABLED
+            VortexTracker_Inicializar(1)
+        #endif
     #else
         dzx0Standard(TITLE_SCREEN_ADDRESS, $4000)
     #endif
@@ -171,6 +183,12 @@ menu:
         loop until keyOption = "1" OR keyOption = "2" OR keyOption = "3" OR keyOption = "4"
     #else
         loop until keyOption = "1" OR keyOption = "2" OR keyOption = "3"
+    #endif
+
+    #ifdef ENABLED_128k
+        #ifdef MUSIC_ENABLED
+            VortexTracker_Stop()
+        #endif
     #endif
 
     if keyOption = "1"
@@ -299,6 +317,7 @@ end sub
 #endif
 
 playGame:
+    inMenu = 0
     INK INK_VALUE: PAPER PAPER_VALUE: BORDER BORDER_VALUE
     currentScreen = INITIAL_SCREEN
 

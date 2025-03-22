@@ -14,15 +14,28 @@ DIM VortexTracker_Status AS UByte = 0
 '
 '' solo inicializa el motor de Vortex
 SUB VortexTracker_Inicializar(usarIM2 AS UByte)
-  PaginarMemoria(4)
-    ASM
-        push ix
-        ; Guardamos ix
-        call VTPLAYER_INIT ; Inicializamos el motor
-        pop ix
-        ; Recuperamos ix
-    END ASM
-  PaginarMemoria(0)
+  if inMenu
+    PaginarMemoria(1)
+      ASM
+          push ix
+          ; Guardamos ix
+          call VTMENU_INIT ; Inicializamos el motor
+          pop ix
+          ; Recuperamos ix
+      END ASM
+    PaginarMemoria(0)
+  else
+    PaginarMemoria(4)
+      ASM
+          push ix
+          ; Guardamos ix
+          call VTPLAYER_INIT ; Inicializamos el motor
+          pop ix
+          ; Recuperamos ix
+      END ASM
+    PaginarMemoria(0)
+  end if
+
   ' Si usamos interrupciones...
   IF usarIM2 = 1 THEN
       ' Inicializamos el motor de interrupciones para
@@ -41,21 +54,39 @@ END SUB
 SUB FASTCALL VortexTracker_NextNote()
   ' Solo toca si el estado es 1 (sonando)
   if VortexTracker_Status = 1 THEN
-    ASM
-      ld a,($5b5c)
-      push af
-      AND %11111000
-      OR          4; PaginarMemoria(4)
-      ld bc,$7ffd
-      OUT (c),a
-      push ix ; Guardamos ix
-      call VTPLAYER_NEXTNOTE ; Reproducimos una nota
-      pop ix ; Recuperamos ix
-      pop af
-      ld bc,$7ffd
-      ld ($5b5c),a
-      OUT (c),a
-    END ASM
+    if inMenu
+      ASM
+        ld a,($5b5c)
+        push af
+        AND %11111000
+        OR          1; PaginarMemoria(1)
+        ld bc,$7ffd
+        OUT (c),a
+        push ix ; Guardamos ix
+        call VTMENU_NEXTNOTE ; Reproducimos una nota
+        pop ix ; Recuperamos ix
+        pop af
+        ld bc,$7ffd
+        ld ($5b5c),a
+        OUT (c),a
+      END ASM
+    else
+      ASM
+        ld a,($5b5c)
+        push af
+        AND %11111000
+        OR          4; PaginarMemoria(4)
+        ld bc,$7ffd
+        OUT (c),a
+        push ix ; Guardamos ix
+        call VTPLAYER_NEXTNOTE ; Reproducimos una nota
+        pop ix ; Recuperamos ix
+        pop af
+        ld bc,$7ffd
+        ld ($5b5c),a
+        OUT (c),a
+      END ASM
+    end if
   end if
   ' framec = framec + 1
 END SUB
@@ -63,13 +94,25 @@ END SUB
 SUB VortexTracker_Stop()
   ' Estado igual a 0 (detenido)
   VortexTracker_Status = 0
-  PaginarMemoria(4)
-    ASM
-        push ix
-        ; Guardamos ix
-        call VTPLAYER_MUTE ; Bajamos el volumen a 0
-        pop ix
-        ; Recuperamos ix
-    END ASM
-  PaginarMemoria(0)
+  if inMenu
+    PaginarMemoria(1)
+      ASM
+          push ix
+          ; Guardamos ix
+          call VTMENU_MUTE ; Bajamos el volumen a 0
+          pop ix
+          ; Recuperamos ix
+      END ASM
+    PaginarMemoria(1)
+  else
+    PaginarMemoria(4)
+      ASM
+          push ix
+          ; Guardamos ix
+          call VTPLAYER_MUTE ; Bajamos el volumen a 0
+          pop ix
+          ; Recuperamos ix
+      END ASM
+    PaginarMemoria(0)
+  end if
 END SUB

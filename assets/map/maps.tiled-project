@@ -32,6 +32,21 @@
                     "value": false
                 },
                 {
+                    "name": "VTMENU_INIT",
+                    "type": "string",
+                    "value": ""
+                },
+                {
+                    "name": "VTMENU_MUTE",
+                    "type": "string",
+                    "value": ""
+                },
+                {
+                    "name": "VTMENU_NEXTNOTE",
+                    "type": "string",
+                    "value": ""
+                },
+                {
                     "name": "VTPLAYER_INIT",
                     "type": "string",
                     "value": "EFAD"
