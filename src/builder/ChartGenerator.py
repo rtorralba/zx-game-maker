@@ -9,10 +9,12 @@ class ChartGenerator:
         if is128k:
             paramsMap0 = "Maps:" + str(mapsSize) + ",Enemies:" + str(enemiesSize) + ",Tileset:" + str(sizes.TILESET_DATA) + ",Attributes:" + str(sizes.ATTR_DATA) + ",Sprites:" + str(sizes.SPRITES_DATA) + ",Objects:" + str(sizes.SCREEN_OBJECTS_INITIAL_DATA) + ",Damage-Tiles:" + str(sizes.DAMAGE_TILES_DATA) + ",Animated-Tiles:" + str(sizes.ANIMATED_TILES_IN_SCREEN_DATA) + " memory-bank-0-128K.png"
             paramsMap3 = "Title-Screen:" + str(sizes.TITLE_SCREEN) + ",End-Screen:" + str(sizes.ENDING_SCREEN) + ",HUD:" + str(sizes.HUD_SCREEN) + ",Intro-Screen:" + str(sizes.INTRO_SCREEN) + ",GameOver-Screen:" + str(sizes.GAMEOVER_SCREEN) + " memory-bank-3.png"
-            paramsMap4 = "FX:" + str(sizes.BEEP_FX) + ",Music:" + str(sizes.MUSIC) + " memory-bank-4.png"
+            paramsMap4 = "Menu-Music:" + str(sizes.MENU_MUSIC) + ",Ingame-Music:" + str(sizes.MUSIC) + " memory-bank-4.png"
+            paramsMap6 = "FX:" + str(sizes.BEEP_FX) + " memory-bank-6.png"
 
             self.__generateMemoryChart(paramsMap3)
             self.__generateMemoryChart(paramsMap4)
+            self.__generateMemoryChart(paramsMap6)
         else:
             paramsMap0 = "FX:" + str(sizes.BEEP_FX) + ",Title-Screen:" + str(sizes.TITLE_SCREEN) + ",End-Screen:" + str(sizes.ENDING_SCREEN) + ",HUD:" + str(sizes.HUD_SCREEN) + ",Maps:" + str(mapsSize) + ",Enemies:" + str(enemiesSize) + ",Tileset:" + str(sizes.TILESET_DATA) + ",Attributes:" + str(sizes.ATTR_DATA) + ",Sprites:" + str(sizes.SPRITES_DATA) + ",Objects:" + str(sizes.SCREEN_OBJECTS_INITIAL_DATA) + ",Damage-Tiles:" + str(sizes.DAMAGE_TILES_DATA) + ",Animated-Tiles:" + str(sizes.ANIMATED_TILES_IN_SCREEN_DATA) + " memory-bank-0-48K.png"
 
