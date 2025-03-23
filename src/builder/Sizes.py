@@ -1,3 +1,6 @@
+from builder.helper import MEMORY_BANK_SIZE
+
+
 class Sizes:
     def __init__(self):
         self.BEEP_FX = 0
@@ -124,3 +127,61 @@ class Sizes:
     @staticmethod
     def getKeysToMemoryBank():
         return ["BEEP_FX", "TITLE_SCREEN", "ENDING_SCREEN", "HUD_SCREEN", "INTRO_SCREEN", "GAMEOVER_SCREEN", "MUSIC", "BROKEN_TILES_DATA", "TITLE_MUSIC"]
+    
+    def printAllSizesByMemoryBankFor128(self):
+
+        self.__printSizesArraySum([
+            self.MAPS_DATA_STRING(),
+            self.SCREEN_OFFSETS_DATA_STRING(),
+            self.SCREEN_OBJECTS_DATA_STRING(),
+            self.SCREENS_WON_DATA_STRING(),
+            self.ENEMIES_DATA_STRING(),
+            self.ENEMIES_IN_SCREEN_OFFSETS_DATA_STRING(),
+            self.ENEMIES_PER_SCREEN_DATA_STRING(),
+            self.ENEMIES_PER_SCREEN_INITIAL_DATA_STRING(),
+            self.DECOMPRESSED_ENEMIES_SCREEN_DATA_STRING(),
+            self.TILESET_DATA_STRING(),
+            self.ATTR_DATA_STRING(),
+            self.SPRITES_DATA_STRING(),
+            self.SCREEN_OBJECTS_INITIAL_DATA_STRING(),
+            self.DAMAGE_TILES_DATA_STRING(),
+            self.ANIMATED_TILES_IN_SCREEN_DATA_STRING()
+        ], "0")
+
+        self.__printSizesArraySum([self.TITLE_SCREEN_STRING(), self.ENDING_SCREEN_STRING(), self.HUD_SCREEN_STRING(), self.GAMEOVER_SCREEN_STRING(), self.INTRO_SCREEN_STRING()], "3")
+        self.__printSizesArraySum([self.TITLE_MUSIC_STRING(), self.MUSIC_STRING()], "4")
+        self.__printSizesArraySum([self.BEEP_FX_STRING()], "6")
+
+
+    def printAllSizesByMemoryBankFor48(self):
+        self.__printSizesArraySum([
+            self.MAPS_DATA_STRING(),
+            self.SCREEN_OFFSETS_DATA_STRING(),
+            self.SCREEN_OBJECTS_DATA_STRING(),
+            self.SCREENS_WON_DATA_STRING(),
+            self.ENEMIES_DATA_STRING(),
+            self.ENEMIES_IN_SCREEN_OFFSETS_DATA_STRING(),
+            self.ENEMIES_PER_SCREEN_DATA_STRING(),
+            self.ENEMIES_PER_SCREEN_INITIAL_DATA_STRING(),
+            self.DECOMPRESSED_ENEMIES_SCREEN_DATA_STRING(),
+            self.TILESET_DATA_STRING(),
+            self.ATTR_DATA_STRING(),
+            self.SPRITES_DATA_STRING(),
+            self.SCREEN_OBJECTS_INITIAL_DATA_STRING(),
+            self.DAMAGE_TILES_DATA_STRING(),
+            self.ANIMATED_TILES_IN_SCREEN_DATA_STRING(),
+            self.BEEP_FX_STRING(),
+            self.TITLE_SCREEN_STRING(),
+            self.ENDING_SCREEN_STRING(),
+            self.HUD_SCREEN_STRING(),
+        ], "0")
+
+    def __printSizesArraySum(self, sizesArray, name):
+        memoryBankSize = 0
+        for key in sizesArray:
+            memoryBankSize += getattr(self, key)
+        
+        memoryBankSizeStr = str(memoryBankSize).rjust(5)
+        freeMemoryStr = str(MEMORY_BANK_SIZE - memoryBankSize).rjust(5)
+        
+        print("Bank " + name + ".." + memoryBankSizeStr + "/" + str(MEMORY_BANK_SIZE) + " bytes. Free: " + freeMemoryStr + " bytes")
