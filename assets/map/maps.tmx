@@ -5,9 +5,6 @@
  </editorsettings>
  <properties>
   <property name="128Kenabled" type="bool" value="true"/>
-  <property name="VTMENU_INIT" value="EBB0"/>
-  <property name="VTMENU_MUTE" value="EBB8"/>
-  <property name="VTMENU_NEXTNOTE" value="EBB5"/>
   <property name="VTPLAYER_INIT" value="EFAD"/>
   <property name="VTPLAYER_MUTE" value="EFB5"/>
   <property name="VTPLAYER_NEXTNOTE" value="EFB2"/>
