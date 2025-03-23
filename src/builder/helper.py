@@ -84,3 +84,6 @@ def concatenateFiles(output_file, input_files):
 
 def screenExists(screen_name):  
     return os.path.isfile(SCREENS_FOLDER + screen_name + ".scr")
+
+def musicExists(music_name):
+    return os.path.isfile("assets/music/" + music_name + ".tap")

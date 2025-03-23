@@ -78,10 +78,11 @@ load "" CODE ' Load files
     PaginarMemoria(4)
     load "" CODE ' Load vtplayer
     load "" CODE ' Load music
-    PaginarMemoria(0)
-    PaginarMemoria(4)
-    load "" CODE ' Load vtplayer
-    load "" CODE ' Load music
+
+    #ifdef MENU_MUSIC_ENABLED
+        load "" CODE ' Load vtplayer
+        load "" CODE ' Load music
+    #endif
     PaginarMemoria(0)
     PaginarMemoria(3)
     load "" CODE TITLE_SCREEN_ADDRESS ' Load title screen
@@ -162,7 +163,7 @@ menu:
         PaginarMemoria(3)
             dzx0Standard(TITLE_SCREEN_ADDRESS, $4000)
         PaginarMemoria(0)
-        #ifdef MUSIC_ENABLED
+        #ifdef MENU_MUSIC_ENABLED
             VortexTracker_Inicializar(1)
         #endif
     #else
@@ -186,7 +187,7 @@ menu:
     #endif
 
     #ifdef ENABLED_128k
-        #ifdef MUSIC_ENABLED
+        #ifdef MENU_MUSIC_ENABLED
             VortexTracker_Stop()
         #endif
     #endif

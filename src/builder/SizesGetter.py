@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from builder.Sizes import Sizes
-from builder.helper import screenExists
+from builder.helper import musicExists, screenExists
 
 class SizesGetter:
     def __init__(self, outputFolder, is128k, useBreakableTile):
@@ -37,7 +37,7 @@ class SizesGetter:
         
         if self.is128k:
             sizes.MUSIC = self.__getFileSize("assets/music/music.tap")
-            sizes.MENU_MUSIC = self.__getFileSize("assets/music/menu.tap")
+            sizes.MENU_MUSIC = self.__getFileSize("assets/music/menu.tap") if musicExists("menu") else 0
             sizes.INTRO_SCREEN = self.__getOutputFileSize("intro.scr.zx0") if screenExists("intro") else 0
             sizes.GAMEOVER_SCREEN = self.__getOutputFileSize("gameover.scr.zx0") if screenExists("gameover") else 0
 

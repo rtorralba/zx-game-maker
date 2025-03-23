@@ -78,6 +78,9 @@ def taps_build():
             str(Path("output/hud.tap"))
         ]
 
+        if not musicExists("menu"):
+            input_files.remove(str(Path("assets/music/menu.tap")))
+
         if os.path.isfile("output/intro.scr.zx0"):
             runCommand("bin2tap " + str(Path("output/intro.scr.zx0")) + " " + str(Path("output/intro.tap")) + " 49152")
             input_files.append("output/intro.tap")
