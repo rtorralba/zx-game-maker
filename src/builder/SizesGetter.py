@@ -37,7 +37,7 @@ class SizesGetter:
         
         if self.is128k:
             sizes.MUSIC = self.__getFileSize("assets/music/music.tap")
-            sizes.MENU_MUSIC = self.__getFileSize("assets/music/menu.tap") if musicExists("menu") else 0
+            sizes.TITLE_MUSIC = self.__getFileSize("assets/music/title.tap") if musicExists("title") else 0
             sizes.INTRO_SCREEN = self.__getOutputFileSize("intro.scr.zx0") if screenExists("intro") else 0
             sizes.GAMEOVER_SCREEN = self.__getOutputFileSize("gameover.scr.zx0") if screenExists("gameover") else 0
 

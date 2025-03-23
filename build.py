@@ -71,15 +71,15 @@ def taps_build():
             str(Path("output/main.tap")),
             str(Path("assets/fx/fx.tap")),
             str(Path("output/files.tap")),
-            str(Path("assets/music/menu.tap")),
+            str(Path("assets/music/title.tap")),
             str(Path("assets/music/music.tap")),
             str(Path("output/title.tap")),
             str(Path("output/ending.tap")),
             str(Path("output/hud.tap"))
         ]
 
-        if not musicExists("menu"):
-            input_files.remove(str(Path("assets/music/menu.tap")))
+        if not musicExists("title"):
+            input_files.remove(str(Path("assets/music/title.tap")))
 
         if os.path.isfile("output/intro.scr.zx0"):
             runCommand("bin2tap " + str(Path("output/intro.scr.zx0")) + " " + str(Path("output/intro.tap")) + " 49152")
