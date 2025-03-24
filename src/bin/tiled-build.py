@@ -133,7 +133,9 @@ newBeeperPlayer = 1
 
 redefineKeysEnabled = 0
 
-mainCharacterExtraFrame = 0
+mainCharacterExtraFrame = 1
+
+idleTime = 0
 
 if 'properties' in data:
     for property in data['properties']:
@@ -220,6 +222,8 @@ if 'properties' in data:
             redefineKeysEnabled = 1 if property['value'] else 0
         elif property['name'] == 'mainCharacterExtraFrame':
             mainCharacterExtraFrame = 1 if property['value'] else 0
+        elif property['name'] == 'idleTime':
+            idleTime = property['value']
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -340,6 +344,10 @@ if redefineKeysEnabled == 1:
 
 if mainCharacterExtraFrame == 1:
     configStr += "#DEFINE MAIN_CHARACTER_EXTRA_FRAME\n"
+
+if idleTime > 0:
+    configStr += "#DEFINE IDLE_ENABLED\n"
+    configStr += "const IDLE_TIME as ubyte = " + str(idleTime) + "\n"
 
 for layer in data['layers']:
     if layer['type'] == 'tilelayer':

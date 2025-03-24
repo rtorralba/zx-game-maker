@@ -58,6 +58,13 @@ dim animatedFrame as ubyte = 0
 
 dim inMenu as ubyte = 1
 
+#ifdef IDLE_ENABLED
+    dim idleCounter as ubyte = 0
+    dim protaIdle as ubyte = 0
+    dim protaIdling as ubyte = 0
+    dim idle
+#endif
+
 #ifdef SHOOTING_ENABLED
     dim noKeyPressedForShoot as UBYTE = 1
 #endif
@@ -83,7 +90,6 @@ load "" CODE ' Load files
         load "" CODE ' Load vtplayer
         load "" CODE ' Load music
     #endif
-    PaginarMemoria(0)
     PaginarMemoria(3)
     load "" CODE TITLE_SCREEN_ADDRESS ' Load title screen
     load "" CODE ENDING_SCREEN_ADDRESS ' Load ending screen
