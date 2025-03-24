@@ -127,7 +127,7 @@ def build():
     executeFunction(compilingGame, "Compiling game")
     executeFunction(checkMemory, "Checking memory")
     executeFunction(distBuild, "Building TAP, Z80 and EXE files")
-    executeFunction(removeTempFiles, "Removing temporary files")
+    #executeFunction(removeTempFiles, "Removing temporary files")
 
     print("\nTotal execution time: " + f"{totalExecutionTime:.2f}s")
 
