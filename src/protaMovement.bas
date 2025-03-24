@@ -99,19 +99,39 @@ end function
 
 function getNextFrameRunning() as UBYTE
 	#ifdef SIDE_VIEW
-		if protaDirection = 1 ' right
-			if protaFrame = 0
-				return 1
+		#ifdef MAIN_CHARACTER_EXTRA_FRAME
+			if protaDirection = 1 ' right
+				if protaFrame = 0
+					return 1
+				else if protaFrame = 1
+					return 2
+				else
+					return 0
+				end if
 			else
-				return 0
+				if protaFrame = 4
+					return 5
+				else if protaFrame = 5
+					return 6
+				else
+					return 4
+				end if
 			end if
-		else
-			if protaFrame = 4
-				return 5
+		#else
+			if protaDirection = 1 ' right
+				if protaFrame = 0
+					return 1
+				else
+					return 0
+				end if
 			else
-				return 4
+				if protaFrame = 4
+					return 5
+				else
+					return 4
+				end if
 			end if
-		end if
+		#endif
 	#else
 		if protaDirection = 1 ' right
 			if protaFrame = 0

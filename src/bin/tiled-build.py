@@ -133,6 +133,8 @@ newBeeperPlayer = 1
 
 redefineKeysEnabled = 0
 
+mainCharacterExtraFrame = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -216,6 +218,8 @@ if 'properties' in data:
             newBeeperPlayer = 1 if property['value'] else 0
         elif property['name'] == 'redefineKeysEnabled':
             redefineKeysEnabled = 1 if property['value'] else 0
+        elif property['name'] == 'mainCharacterExtraFrame':
+            mainCharacterExtraFrame = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -333,6 +337,9 @@ if waitPressKeyAfterLoad == 1:
 
 if redefineKeysEnabled == 1:
     configStr += "#DEFINE REDEFINE_KEYS_ENABLED\n"
+
+if mainCharacterExtraFrame == 1:
+    configStr += "#DEFINE MAIN_CHARACTER_EXTRA_FRAME\n"
 
 for layer in data['layers']:
     if layer['type'] == 'tilelayer':
