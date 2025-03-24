@@ -1,6 +1,6 @@
 
 from builder.Sizes import Sizes
-from builder.helper import getEnabled128K, getUseBreakableTile, screenExists
+from builder.helper import getEnabled128K, getUseBreakableTile, musicExists, screenExists
 
 class ConfigWriter:
     def __init__(self, basicConfigPath, initialAddress, sizes: Sizes):
@@ -25,6 +25,9 @@ class ConfigWriter:
                 if screenExists("gameover"):
                     currentAddress = self.__writeDeclarationAndIncrement(Sizes.GAMEOVER_SCREEN_STRING(), currentAddress)
                     self.__write("#DEFINE GAMEOVER_SCREEN_ENABLED\n")
+                
+                if musicExists("title"):
+                    self.__write("#DEFINE TITLE_MUSIC_ENABLED\n")
                 
                 self.__write("\n")
                 currentAddress = self.initialAddress

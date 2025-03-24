@@ -2,6 +2,7 @@ import os
 import shutil
 import sys
 from pathlib import Path
+import time
 sys.path.append(str(Path(__file__).resolve().parent / 'src'))
 
 from builder.Builder import Builder 
@@ -13,48 +14,35 @@ if os.getenv('VIRTUAL_ENV') is None:
 
 verbose = False
 
+totalExecutionTime = 0
+
 python_executable = str(Path(sys.executable)) + " "
 
 TILED_SCRIPT = str(Path("src/bin/tiled-build.py"))
 
 DEFAULT_FX = str(Path("src/default/fx.tap"))
 
-def tiled_export():
-    print("Exporting game from Tiled... ", end="")
-    tiledExport()
-    print("OK!")
-
-def tiled_build():
-    print("Building tiled into code... ", end="")
+def tiledBuild():
     runPythonScript(TILED_SCRIPT)
-    print("OK!")
 
-def check_fx():
+def checkFx():
     if not os.path.isdir("assets/fx"):
         print("FX folder not detected, creating... ", end="")
         os.makedirs(str(Path("assets/fx")))
-        print("OK!")
     if not os.path.isfile("assets/fx/fx.tap"):
         print("FX not detected. Applying default... ", end="")
         shutil.copy(DEFAULT_FX, str(Path("assets/fx/fx.tap")))
-        print("OK!")
 
-def screens_build():
-    print("Building screens... ", end="")
-    Builder().execute()
-    print("OK!")
+def buildingFilesAndConfig():
+    return Builder().execute()
 
-def compiling_game():
-    print("Compiling game... ", end="")
+def compilingGame():
     runCommand("zxbc -H 128 --heap-address 23755 -S 24576 -O 4 " + str(Path("src/main.bas")) + " --mmap " + str(Path("output/map.txt")) + " -D HIDE_LOAD_MSG -o " + str(Path("output/main.bin")))
-    print("OK!")
 
-def check_memory():
-    print("Checking memory... ", end="")
+def checkMemory():
     runPythonScript("src/bin/check-memory.py")
-    print("OK!")
 
-def taps_build():
+def tapsBuild():
     OUTPUT_FILE = str(Path("dist/" + getProjectFileName() + ".tap"))
     
     runCommand("bin2tap " + str(Path("src/bin/loader.bin")) + " " + str(Path("output/loader.tap")) + " 10 --header \"" + getProjectName() + "\" --block_type 1")
@@ -71,11 +59,15 @@ def taps_build():
             str(Path("output/main.tap")),
             str(Path("assets/fx/fx.tap")),
             str(Path("output/files.tap")),
+            str(Path("assets/music/title.tap")),
             str(Path("assets/music/music.tap")),
             str(Path("output/title.tap")),
             str(Path("output/ending.tap")),
             str(Path("output/hud.tap"))
         ]
+
+        if not musicExists("title"):
+            input_files.remove(str(Path("assets/music/title.tap")))
 
         if os.path.isfile("output/intro.scr.zx0"):
             runCommand("bin2tap " + str(Path("output/intro.scr.zx0")) + " " + str(Path("output/intro.tap")) + " 49152")
@@ -95,62 +87,86 @@ def taps_build():
 
     concatenateFiles(OUTPUT_FILE, input_files)
 
-def sna_build():
+def snaBuild():
     runCommand("tap2sna.py --sim-load-config machine=128 " + str(Path("dist/" + getProjectFileName() + ".tap")) + " " + str(Path("dist/" + getProjectFileName() + ".z80")))
 
-def exe_build():
+def exeBuild():
     concatenateFiles(str(Path("dist/" + getProjectFileName() + ".exe")), [str(Path("src/bin/spectral.exe")), str(Path("dist/" + getProjectFileName() + ".z80"))])
     concatenateFiles(str(Path("dist/" + getProjectFileName() + "-RF.exe")), [str(Path("src/bin/spectral-rf.exe")), str(Path("dist/" + getProjectFileName() + ".z80"))])
 
-def linux_build():
+def linuxBuild():
     concatenateFiles(str(Path("dist/" + getProjectFileName() + "-RF.linux")), [str(Path("src/bin/spectral-rf.linux")), str(Path("dist/" + getProjectFileName() + ".z80"))])
     concatenateFiles(str(Path("dist/" + getProjectFileName() + ".linux")), [str(Path("src/bin/spectral.linux")), str(Path("dist/" + getProjectFileName() + ".z80"))])
     # run_command("chmod +x " + str(Path("dist/" + getProjectFileName() + "-RF.linux")))
     # run_command("chmod +x " + str(Path("dist/" + getProjectFileName() + ".linux")))
 
-def dist_build():
-    print("Building TAP, Z80 and EXE files... ", end="")
-    taps_build()
-    sna_build()
-    exe_build()
-    linux_build()
-    print("OK!")
+def distBuild():
+    tapsBuild()
+    snaBuild()
+    exeBuild()
+    linuxBuild()
 
 
-def remove_temp_files():
-    print("Removing temporary files... ", end="")
+def removeTempFiles():
     for file in os.listdir("output"):
         if file.endswith(".zx0") or file.endswith(".bin") or file.endswith(".tap") or file.endswith(".bas"):
             os.remove(os.path.join("output", file))
-    print("OK!\n")
 
 def build():
+    global totalExecutionTime
+    totalExecutionTime = 0
+
     print("============================================")
     print("=          ZX SPECTRUM GAME MAKER          =")
     print("============================================")
 
-    tiled_export()
+    executeFunction(tiledExport, "Exporting game from Tiled")
+    executeFunction(tiledBuild, "Building Tiled maps")
+    executeFunction(checkFx, "Checking FX")
+    sizes = executeFunction(buildingFilesAndConfig, "Building files and config")
+    executeFunction(compilingGame, "Compiling game")
+    executeFunction(checkMemory, "Checking memory")
+    executeFunction(distBuild, "Building TAP, Z80 and EXE files")
+    executeFunction(removeTempFiles, "Removing temporary files")
+
+    print("\nTotal execution time: " + f"{totalExecutionTime:.2f}s")
+
+    print("============================================\n")
+
+    print("MEMORY USAGE:\n")
 
     if getEnabled128K():
-        print("Mode 128K enabled!")
+        sizes.printAllSizesByMemoryBankFor128()
+        mode = "128K"
     else:
-        print("Mode 48K enabled!")
+        sizes.printAllSizesByMemoryBankFor48()
+        mode = "48K"
+    
+    print("\nFor more detailed information about memory check bank charts (png) in dist folder.\n")
 
-    tiled_build()
+    print("Game compiled for " + mode + " successfully at dist/" + getProjectFileName() + ".tap!.\n")
 
-    check_fx()
+def executeFunction(function, message):
+    global totalExecutionTime
 
-    screens_build()
+    print(message, end="")
+    start_time = time.time()
+    result = function()
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    totalExecutionTime += elapsed_time
+    padding = 33 - len(message)
 
-    compiling_game()
+    elapsedTimeLenght = len(f"{elapsed_time:.2f}s")
 
-    check_memory()
+    paddingElapsed = 8 - elapsedTimeLenght
 
-    dist_build()
+    print("." * padding + "OK!" + " " * paddingElapsed + f"{elapsed_time:.2f}s")
 
-    remove_temp_files()
+    return result
 
-    print("Game compiled successfully! You can find it at dist/" + getProjectFileName() + ".tap.\n")
+def printSizes(sizes):
+    print("Sizes:")
 
 def main():
     global verbose

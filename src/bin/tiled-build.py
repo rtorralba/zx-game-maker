@@ -262,9 +262,10 @@ configStr += "const DAMAGE_TILES_COUNT as ubyte = " + str(damageTilesCount) + "\
 if shooting == 1:
     configStr += "#DEFINE SHOOTING_ENABLED\n"
 
-configStr += "#DEFINE VTPLAYER_INIT $" + str(vtplayerInit) + "\n"
-configStr += "#DEFINE VTPLAYER_MUTE $" + str(vtplayerMute) + "\n"
-configStr += "#DEFINE VTPLAYER_NEXTNOTE $" + str(vtplayerNextNote) + "\n\n"
+if enabled128K == 1:
+    configStr += "#DEFINE VTPLAYER_INIT $" + str(vtplayerInit) + "\n"
+    configStr += "#DEFINE VTPLAYER_MUTE $" + str(vtplayerMute) + "\n"
+    configStr += "#DEFINE VTPLAYER_NEXTNOTE $" + str(vtplayerNextNote) + "\n\n"
 
 if newBeeperPlayer == 1:
     configStr += "#DEFINE NEW_BEEPER_PLAYER\n"

@@ -18,6 +18,7 @@ MAP_FOLDER = str(Path("assets/map/")) + getOsSeparator()
 MAPS_FILE = str(Path("assets/map/maps.tmx"))
 DIST_FOLDER = str(Path("dist/")) + getOsSeparator()
 INITIAL_ADDRESS = 49152
+MEMORY_BANK_SIZE = 16384
 
 def getZx0():
     if os.name == "nt":
@@ -84,3 +85,6 @@ def concatenateFiles(output_file, input_files):
 
 def screenExists(screen_name):  
     return os.path.isfile(SCREENS_FOLDER + screen_name + ".scr")
+
+def musicExists(music_name):
+    return os.path.isfile("assets/music/" + music_name + ".tap")
