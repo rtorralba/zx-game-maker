@@ -11,6 +11,11 @@ from PIL import Image, ImageTk
 from builder.SpritesPreviewGenerator import SpritesPreviewGenerator
 from builder.helper import DIST_FOLDER, getProjectFileName
 
+import os
+
+# Establecer el directorio de trabajo al directorio del script
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 def run_script(script_name, output_text):
     def execute(script_name):
         try:
@@ -28,9 +33,6 @@ def run_script(script_name, output_text):
 
             # Construir la ruta completa del script en la carpeta src/scripts
             script_path = os.path.join(os.getcwd(), "scripts", script_name)
-
-            # Depuración: Imprimir la ruta completa del script
-            print(f"Intentando ejecutar el script en: {script_path}")
 
             # Verificar si el script existe
             if not os.path.exists(script_path):
