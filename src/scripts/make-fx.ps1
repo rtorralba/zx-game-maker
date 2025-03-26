@@ -1,4 +1,4 @@
-$filePath = "..\..\pasmo.exe"
+$filePath = "..\pasmo.exe"
 
 if (-not (Test-Path $filePath)) {
     Write-Host "El fichero $filePath existe."
