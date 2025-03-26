@@ -79,14 +79,19 @@ def run_script(script_name, output_text):
 
     threading.Thread(target=execute, args=(script_name,)).start()
 
-def open_game():
+def open_game_variant(variant):
+    """Abre el juego en su variante 'Normal' o 'RF'."""
     try:
-        projectName = getProjectFileName()
+        project_name = getProjectFileName()
+
+        if variant == "rf":
+            project_name += "-RF"
+            
         # Detectar el sistema operativo y seleccionar el archivo ejecutable
         if platform.system() == "Windows":
-            game_path = os.path.join(os.getcwd(), DIST_FOLDER, projectName + ".exe")
+            game_path = os.path.join(os.getcwd(), DIST_FOLDER, f"{project_name}.exe")
         elif platform.system() in ["Linux", "Darwin"]:
-            game_path = os.path.join(os.getcwd(), DIST_FOLDER, projectName + ".linux")
+            game_path = os.path.join(os.getcwd(), DIST_FOLDER, f"{project_name}.linux")
         else:
             messagebox.showerror("Error", "El sistema operativo no es compatible.")
             return
@@ -223,6 +228,52 @@ def show_sprites_menu(event):
     # Mostrar el menú en la posición del cursor
     sprites_menu.post(event.x_root, event.y_root)
 
+def open_memory_bank_image(image):
+    """Abre la imagen de uso de memoria para el banco especificado."""
+    try:
+        # Construir la ruta de la imagen
+        image_path = os.path.join(os.getcwd(), "output", image)
+
+        # Verificar si la imagen existe
+        if not os.path.exists(image_path):
+            messagebox.showerror("Error", f"No se encontró la imagen: {image_path}")
+            return
+
+        # Abrir la imagen con el visor predeterminado del sistema
+        if platform.system() == "Windows":
+            os.startfile(image_path)
+        elif platform.system() == "Linux":
+            subprocess.Popen(["xdg-open", image_path])
+        elif platform.system() == "Darwin":  # macOS
+            subprocess.Popen(["open", image_path])
+        else:
+            messagebox.showerror("Error", "El sistema operativo no es compatible.")
+    except Exception as e:
+        messagebox.showerror("Error", f"No se pudo abrir la imagen: {e}")
+
+def open_map_with_tiled():
+    """Abre el mapa en Tiled."""
+    try:
+        # Construir la ruta del archivo del mapa
+        map_path = os.path.join(os.getcwd(), "../assets", "map", "maps.tiled-project")
+
+        # Verificar si el archivo del mapa existe
+        if not os.path.exists(map_path):
+            messagebox.showerror("Error", f"No se encontró el archivo del mapa: {map_path}")
+            return
+
+        # Abrir el archivo del mapa con Tiled según el sistema operativo
+        if platform.system() == "Windows":
+            subprocess.Popen(["tiled", map_path], shell=True)
+        elif platform.system() == "Linux":
+            subprocess.Popen(["tiled", map_path])
+        elif platform.system() == "Darwin":  # macOS
+            subprocess.Popen(["open", "-a", "Tiled", map_path])
+        else:
+            messagebox.showerror("Error", "El sistema operativo no es compatible.")
+    except Exception as e:
+        messagebox.showerror("Error", f"No se pudo abrir el mapa: {e}")
+
 # Crear la ventana principal
 root = tk.Tk()
 root.title("ZX Spectrum Game Maker")
@@ -255,6 +306,11 @@ build_menu.add_separator()
 build_menu.add_command(label="Exit", command=root.quit)
 menu_bar.add_cascade(label="Build", menu=build_menu)
 
+# Menú "Map"
+map_menu = tk.Menu(menu_bar, tearoff=0)
+map_menu.add_command(label="Open Map", command=open_map_with_tiled)
+menu_bar.add_cascade(label="Map", menu=map_menu)
+
 # Menú "Sprites"
 sprites_menu = tk.Menu(menu_bar, tearoff=0)
 
@@ -277,6 +333,21 @@ for i in range(1, 9):  # Generar dinámicamente las opciones de enemigos del 1 a
 sprites_menu.add_cascade(label="Enemies", menu=enemies_menu)
 
 menu_bar.add_cascade(label="Sprites Preview", menu=sprites_menu)
+
+# Menú "Game"
+game_menu = tk.Menu(menu_bar, tearoff=0)
+game_menu.add_command(label="Normal", command=lambda: open_game_variant("normal"))
+game_menu.add_command(label="RF", command=lambda: open_game_variant("rf"))
+menu_bar.add_cascade(label="Game", menu=game_menu)
+
+# Menú "Memory Usage"
+memory_menu = tk.Menu(menu_bar, tearoff=0)
+memory_menu.add_command(label="Bank 0 48k", command=lambda: open_memory_bank_image("memory-bank-0-48K.png"))
+memory_menu.add_command(label="Bank 0 128k", command=lambda: open_memory_bank_image("memory-bank-0-128K.png"))
+memory_menu.add_command(label="Bank 3", command=lambda: open_memory_bank_image("memory-bank-3.png"))
+memory_menu.add_command(label="Bank 4", command=lambda: open_memory_bank_image("memory-bank-4.png"))
+memory_menu.add_command(label="Bank 6", command=lambda: open_memory_bank_image("memory-bank-6.png"))
+menu_bar.add_cascade(label="Memory Usage", menu=memory_menu)
 
 # Menú "Help"
 help_menu = tk.Menu(menu_bar, tearoff=0)
