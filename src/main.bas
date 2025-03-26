@@ -1,5 +1,12 @@
 #include "output/config.bas"
 
+' #ifdef ENABLED_128k
+'     dim isAmstrad as ubyte = 0
+'     if peek(23312) = 1
+'         isAmstrad = 1
+'     end if
+' #endif
+
 const PROTA_SPRITE as ubyte = 5
 const BULLET_SPRITE_RIGHT_ID as ubyte = 48
 const BULLET_SPRITE_LEFT_ID as ubyte = 49

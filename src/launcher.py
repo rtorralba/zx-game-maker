@@ -16,7 +16,7 @@ import os
 # Establecer el directorio de trabajo al directorio del script
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-def run_script(script_name, output_text):
+def run_script(script_name, output_text, extra_args=None):
     def execute(script_name):
         try:
             # Limpiar la ventana de salida
@@ -39,10 +39,15 @@ def run_script(script_name, output_text):
                 output_text.insert(tk.END, f"No se encontró el script: {script_path}\n")
                 return
 
+            # Construir el comando con parámetros adicionales
+            command = [script_path]
+            if extra_args:
+                command.extend(extra_args)
+
             # Ejecutar el script según el sistema operativo
             if platform.system() == "Windows":
                 process = subprocess.Popen(
-                    ["powershell", "-ExecutionPolicy", "Bypass", "-File", script_path],
+                    ["powershell", "-ExecutionPolicy", "Bypass", "-File"] + command,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
                     text=True,
@@ -50,7 +55,7 @@ def run_script(script_name, output_text):
                 )
             elif platform.system() in ["Linux", "Darwin"]:
                 process = subprocess.Popen(
-                    ["stdbuf", "-oL", "-eL", "bash", script_path],
+                    ["bash"] + command,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
                     text=True,
@@ -298,9 +303,10 @@ else:
 # Crear el menú de barras
 menu_bar = tk.Menu(root)
 
-# Menú "File"
+# Menú "Build"
 build_menu = tk.Menu(menu_bar, tearoff=0)
 build_menu.add_command(label="Game", command=lambda: run_script("make-game", output_text))
+build_menu.add_command(label="Game (verbose)", command=lambda: run_script("make-game", output_text, ["--verbose"]))
 build_menu.add_command(label="FX", command=lambda: run_script("make-fx", output_text))
 build_menu.add_separator()
 build_menu.add_command(label="Exit", command=root.quit)

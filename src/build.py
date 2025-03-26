@@ -178,7 +178,6 @@ def main():
     
     args = parser.parse_args()
     verbose = args.verbose
-    # verbose = True
 
     setVerbose(verbose) 
 
