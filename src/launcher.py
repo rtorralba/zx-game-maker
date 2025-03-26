@@ -5,6 +5,7 @@ from tkinter import messagebox
 from tkinter import PhotoImage
 import platform
 import threading
+import webbrowser
 from PIL import Image, ImageTk
 
 from builder.SpritesPreviewGenerator import SpritesPreviewGenerator
@@ -101,7 +102,7 @@ def open_game():
 def show_modal_with_gif(gif_path):
     """Abre un modal para mostrar el GIF animado redimensionado al doble de su tamaño."""
     modal = tk.Toplevel(root)
-    modal.title("Preview Result")
+    modal.title("Preview")
     modal.geometry("200x200")  # Ajustar el tamaño del modal para acomodar el GIF redimensionado
     modal.resizable(False, False)
 
@@ -223,7 +224,14 @@ def show_sprites_menu(event):
 # Crear la ventana principal
 root = tk.Tk()
 root.title("ZX Spectrum Game Maker")
-root.geometry("600x800")
+root.geometry("600x750")
+
+# Establecer el icono de la aplicación
+icon_path = os.path.join(os.getcwd(), "ui/logo.png")
+if os.path.exists(icon_path):
+    root.iconphoto(True, PhotoImage(file=icon_path))
+else:
+    messagebox.showwarning("Advertencia", "No se encontró el icono en 'ui/logo.png'.")
 
 # Cargar el logo
 logo_path = os.path.join(os.getcwd(), "ui/logo.png")
@@ -234,45 +242,49 @@ if os.path.exists(logo_path):
 else:
     messagebox.showwarning("Advertencia", "No se encontró el logo en 'ui/logo.png'.")
 
-# Crear un contenedor para los botones
-button_frame = tk.Frame(root)
-button_frame.pack(pady=10)
+# Crear el menú de barras
+menu_bar = tk.Menu(root)
 
-# Botón para ejecutar make-game
-make_game_button = tk.Button(
-    button_frame,
-    text="Make Game",
-    command=lambda: run_script("make-game", output_text),
-    width=15
-)
-make_game_button.pack(side=tk.LEFT, padx=5)
+# Menú "File"
+build_menu = tk.Menu(menu_bar, tearoff=0)
+build_menu.add_command(label="Game", command=lambda: run_script("make-game", output_text))
+build_menu.add_command(label="FX", command=lambda: run_script("make-fx", output_text))
+build_menu.add_separator()
+build_menu.add_command(label="Exit", command=root.quit)
+menu_bar.add_cascade(label="Build", menu=build_menu)
 
-# Botón para ejecutar make-fx
-make_fx_button = tk.Button(
-    button_frame,
-    text="Make FX",
-    command=lambda: run_script("make-fx", output_text),
-    width=15
-)
-make_fx_button.pack(side=tk.LEFT, padx=5)
+# Menú "Sprites"
+sprites_menu = tk.Menu(menu_bar, tearoff=0)
 
-# Botón para mostrar el menú de Sprites Preview
-sprites_preview_button = tk.Button(
-    button_frame,
-    text="Sprites Preview",
-    width=15
-)
-sprites_preview_button.pack(side=tk.LEFT, padx=5)
-sprites_preview_button.bind("<Button-1>", show_sprites_menu)
+# Submenú para "Main Character"
+main_character_menu = tk.Menu(sprites_menu, tearoff=0)
+main_character_menu.add_command(label="Running", command=open_main_character_running_preview)
+main_character_menu.add_command(label="Idle", command=open_main_character_idle_preview)
+sprites_menu.add_cascade(label="Main Character", menu=main_character_menu)
 
-# Botón para abrir el juego
-open_game_button = tk.Button(
-    button_frame,
-    text="Open Game",
-    command=open_game,
-    width=15
-)
-open_game_button.pack(side=tk.LEFT, padx=5)
+# Submenú para "Platforms"
+platforms_menu = tk.Menu(sprites_menu, tearoff=0)
+platforms_menu.add_command(label="Platform 1", command=open_first_platform_preview)
+platforms_menu.add_command(label="Platform 2", command=open_second_platform_preview)
+sprites_menu.add_cascade(label="Platforms", menu=platforms_menu)
+
+# Submenú para "Enemies"
+enemies_menu = tk.Menu(sprites_menu, tearoff=0)
+for i in range(1, 9):  # Generar dinámicamente las opciones de enemigos del 1 al 8
+    enemies_menu.add_command(label=f"Enemy {i}", command=lambda i=i: open_enemy_preview(i))
+sprites_menu.add_cascade(label="Enemies", menu=enemies_menu)
+
+menu_bar.add_cascade(label="Sprites Preview", menu=sprites_menu)
+
+# Menú "Help"
+help_menu = tk.Menu(menu_bar, tearoff=0)
+help_menu.add_command(label="Documentation", command=lambda: webbrowser.open("https://gm.retrojuegos.org/"))
+help_menu.add_command(label="Telegram", command=lambda: webbrowser.open("https://t.me/zx_spectrum_game_maker"))
+help_menu.add_command(label="GitHub", command=lambda: webbrowser.open("https://github.com/rtorralba/zx-game-maker"))
+menu_bar.add_cascade(label="Help", menu=help_menu)
+
+# Configurar el menú en la ventana principal
+root.config(menu=menu_bar)
 
 # Área de texto para mostrar la salida de los scripts
 output_text = tk.Text(root, height=30, width=70)
