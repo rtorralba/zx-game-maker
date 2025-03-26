@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from builder.Sizes import Sizes
-from builder.helper import musicExists, screenExists
+from builder.helper import ASSETS_FOLDER, musicExists, screenExists
 
 class SizesGetter:
     def __init__(self, outputFolder, is128k, useBreakableTile):
@@ -12,7 +12,7 @@ class SizesGetter:
     def execute(self):
         sizes = Sizes()
 
-        sizes.BEEP_FX = self.__getFileSize("assets/fx/fx.tap")
+        sizes.BEEP_FX = self.__getFileSize(ASSETS_FOLDER + "fx/fx.tap")
         sizes.TITLE_SCREEN = self.__getOutputFileSize("title.scr.zx0")
         sizes.ENDING_SCREEN = self.__getOutputFileSize("ending.scr.zx0")
         sizes.HUD_SCREEN = self.__getOutputFileSize("hud.scr.zx0")
@@ -36,8 +36,8 @@ class SizesGetter:
             sizes.BROKEN_TILES_DATA = self.__getOutputFileSize("brokenTiles.bin")
         
         if self.is128k:
-            sizes.MUSIC = self.__getFileSize("assets/music/music.tap")
-            sizes.TITLE_MUSIC = self.__getFileSize("assets/music/title.tap") if musicExists("title") else 0
+            sizes.MUSIC = self.__getFileSize(ASSETS_FOLDER + "music/music.tap")
+            sizes.TITLE_MUSIC = self.__getFileSize(ASSETS_FOLDER + "music/title.tap") if musicExists("title") else 0
             sizes.INTRO_SCREEN = self.__getOutputFileSize("intro.scr.zx0") if screenExists("intro") else 0
             sizes.GAMEOVER_SCREEN = self.__getOutputFileSize("gameover.scr.zx0") if screenExists("gameover") else 0
 

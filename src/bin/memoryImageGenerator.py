@@ -59,6 +59,6 @@ output_file = sys.argv[2]
 if not output_file.endswith(".png"):
     output_file += ".png"
 
-plt.savefig(f"dist/{output_file}", format='png', dpi=150, bbox_inches="tight")
+plt.savefig(f"../dist/{output_file}", format='png', dpi=150, bbox_inches="tight")
 
 print(f"Gráfico guardado en dist/{output_file}")

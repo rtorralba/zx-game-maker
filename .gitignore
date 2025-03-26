@@ -1,4 +1,4 @@
-output/*
+**/output/*
 *.zx0
 *.bin
 *.tap
@@ -9,7 +9,7 @@ src/bin/zxbasic/*
 dist
 *.tiled-session
 .vscode
-venv/*
+**/venv/*
 Spectral.sav
 *.z80
 src/bin/.Spectral/*

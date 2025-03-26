@@ -1,0 +1,11 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ZX Spectrum Game Maker
+Comment=ZX Spectrum Game Maker
+Exec=bash -c "cd $(dirname %k)/src && python3 launcher.py"
+Icon=ui/logo.png
+Terminal=false
+Categories=Development;
+Path=.

@@ -10,7 +10,7 @@ class BinaryFilesToTapMerger:
             os.remove(output_file)
 
         if not is128k:
-            sizeFx = os.path.getsize(Path("assets/fx/fx.tap"))
+            sizeFx = os.path.getsize(Path(ASSETS_FOLDER + "fx/fx.tap"))
             tapAddress = INITIAL_ADDRESS + sizeFx
             input_files = [
                 OUTPUT_FOLDER + "title.scr.zx0",

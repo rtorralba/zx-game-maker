@@ -1,4 +1,4 @@
-#include "../output/config.bas"
+#include "output/config.bas"
 
 const PROTA_SPRITE as ubyte = 5
 const BULLET_SPRITE_RIGHT_ID as ubyte = 48

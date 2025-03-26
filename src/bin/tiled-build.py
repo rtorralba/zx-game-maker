@@ -447,7 +447,7 @@ for idx, screen in enumerate(screens):
     label = 'screen' + str(idx).zfill(3)
     with open(outputDir + label + '.bin', 'wb') as f:
         screen.tofile(f)
-    subprocess.run(['src/bin/zx0', '-f', outputDir + label + '.bin', outputDir + label + '.bin.zx0'])
+    subprocess.run(['bin/zx0', '-f', outputDir + label + '.bin', outputDir + label + '.bin.zx0'])
     currentOffset += os.path.getsize(outputDir + label + '.bin.zx0')
     screenOffsets.append(currentOffset)
 
@@ -593,7 +593,7 @@ for idx, enemiesScreen in enumerate(enemiesArray):
     label = 'enemiesInScreen' + str(idx).zfill(3)
     with open(outputDir + label + '.bin', 'wb') as f:
         enemiesScreen.tofile(f)
-    subprocess.run(['src/bin/zx0', '-f', outputDir + label + '.bin', outputDir + label + '.bin.zx0'])
+    subprocess.run(['bin/zx0', '-f', outputDir + label + '.bin', outputDir + label + '.bin.zx0'])
     currentOffset += os.path.getsize(outputDir + label + '.bin.zx0')
     enemiesInScreenOffsets.append(currentOffset)
 
