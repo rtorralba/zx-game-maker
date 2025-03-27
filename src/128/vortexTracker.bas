@@ -45,7 +45,7 @@ sub fastcall callVtAddress(address as uinteger)
     ld a,($5b5c)
     push af
     AND %1111100
-    OR          4; PaginarMemoria(4)
+    OR          3; PaginarMemoria(3)
     ld bc,$7ffd
     OUT (c),a
     push ix ; Guardamos ix

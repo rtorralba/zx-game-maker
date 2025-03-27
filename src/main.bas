@@ -76,6 +76,9 @@ dim inMenu as ubyte = 1
     dim noKeyPressedForShoot as UBYTE = 1
 #endif
 #ifdef ENABLED_128k
+    const DATA_BANK = 4
+    const MUSIC_BANK = 3
+
     PaginarMemoria(6)
     load "" CODE $c000 ' Load fx
     PaginarMemoria(0)
@@ -89,7 +92,7 @@ load "" CODE ' Load files
     #include "128/im2.bas"
     #include "128/vortexTracker.bas"
     #include "128/functions.bas"
-    PaginarMemoria(4)
+    PaginarMemoria(MUSIC_BANK)
     load "" CODE ' Load vtplayer
     load "" CODE ' Load music
 
@@ -97,7 +100,7 @@ load "" CODE ' Load files
         load "" CODE ' Load vtplayer
         load "" CODE ' Load music
     #endif
-    PaginarMemoria(3)
+    PaginarMemoria(DATA_BANK)
     load "" CODE TITLE_SCREEN_ADDRESS ' Load title screen
     load "" CODE ENDING_SCREEN_ADDRESS ' Load ending screen
     load "" CODE HUD_SCREEN_ADDRESS ' Load hud screen
@@ -173,7 +176,7 @@ menu:
     inMenu = 1
     INK 7: PAPER 0: BORDER 0: BRIGHT 0: FLASH 0: CLS
     #ifdef ENABLED_128k
-        PaginarMemoria(3)
+        PaginarMemoria(DATA_BANK)
             dzx0Standard(TITLE_SCREEN_ADDRESS, $4000)
         PaginarMemoria(0)
         #ifdef TITLE_MUSIC_ENABLED
@@ -322,7 +325,7 @@ end sub
 
 #ifdef ENABLED_128k
     #ifdef INTRO_SCREEN_ENABLED
-        PaginarMemoria(3)
+        PaginarMemoria(DATA_BANK)
             dzx0Standard(INTRO_SCREEN_ADDRESS, $4000)
         PaginarMemoria(0)
         DO
@@ -342,7 +345,7 @@ playGame:
     #endif
 
     #ifdef ENABLED_128k
-        PaginarMemoria(3)
+        PaginarMemoria(DATA_BANK)
         dzx0Standard(HUD_SCREEN_ADDRESS, $4000)
         PaginarMemoria(0)
         #ifdef MUSIC_ENABLED
@@ -417,7 +420,7 @@ ending:
         #ifdef MUSIC_ENABLED
             VortexTracker_Stop()
         #endif
-        PaginarMemoria(3)
+        PaginarMemoria(DATA_BANK)
             dzx0Standard(ENDING_SCREEN_ADDRESS, $4000)
         PaginarMemoria(0)
     #else
@@ -440,7 +443,7 @@ gameOver:
 
     #ifdef ENABLED_128k
         #ifdef GAMEOVER_SCREEN_ENABLED
-            PaginarMemoria(3)
+            PaginarMemoria(DATA_BANK)
                 dzx0Standard(GAMEOVER_SCREEN_ADDRESS, $4000)
             PaginarMemoria(0)
         #else
