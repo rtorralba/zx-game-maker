@@ -354,9 +354,6 @@ sub fireKey()
 end sub
 
 sub keyboardListen()
-	#ifdef IDLE_ENABLED
-		protaIdle = 0
-	#endif
 	if kempston
 		dim n as ubyte = IN(31)
 		if n bAND %10 then leftKey()
@@ -366,11 +363,9 @@ sub keyboardListen()
 		if n bAND %10000 then fireKey()
 		#ifdef IDLE_ENABLED
 			if n = 0
-				protaIdle = 1
-				if idleCounter < IDLE_TIME then idleCounter = idleCounter + 1
+				if protaLoopCounter < IDLE_TIME then protaLoopCounter = protaLoopCounter + 1
 			else
-				protaIdle = 0
-				protaIdling = 0
+				protaLoopCounter = 0
 			end if
 		#endif
 	else
@@ -381,11 +376,9 @@ sub keyboardListen()
 		if MultiKeys(keyArray(FIRE))<>0 then fireKey()
 		#ifdef IDLE_ENABLED
 			if MultiKeys(keyArray(LEFT))=0 and MultiKeys(keyArray(RIGHT))=0 and MultiKeys(keyArray(UP))=0 and MultiKeys(keyArray(DOWN))=0 and MultiKeys(keyArray(FIRE))=0
-				protaIdle = 1
-				if idleCounter < IDLE_TIME then idleCounter = idleCounter + 1
+				if protaLoopCounter < IDLE_TIME then protaLoopCounter = protaLoopCounter + 1
 			else
-				protaIdle = 0
-				protaIdling = 0
+				protaLoopCounter = 0
 			end if
 		#endif
 	end if
@@ -485,20 +478,15 @@ sub protaMovement()
 		gravity()
 
 		#ifdef IDLE_ENABLED
-			if protaIdle
+			if protaLoopCounter >= IDLE_TIME
 				if jumpCurrentKey <> jumpStopValue then return
 				if isFalling() then return
 
-				if idleCounter >= IDLE_TIME or protaIdling
-					protaIdling	= 1
-					idleCounter = 0
-
-					if framec - lastFrameTiles = ANIMATE_PERIOD_TILE - 2
-						if getSpriteTile(PROTA_SPRITE) = 12
-							saveSprite(PROTA_SPRITE, protaY, protaX, 13, protaDirection)
-						else
-							saveSprite(PROTA_SPRITE, protaY, protaX, 12, protaDirection)
-						end if
+				if framec - lastFrameTiles = ANIMATE_PERIOD_TILE - 2
+					if getSpriteTile(PROTA_SPRITE) = 12
+						saveSprite(PROTA_SPRITE, protaY, protaX, 13, protaDirection)
+					else
+						saveSprite(PROTA_SPRITE, protaY, protaX, 12, protaDirection)
 					end if
 				end if
 			end if

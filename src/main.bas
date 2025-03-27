@@ -66,10 +66,7 @@ dim animatedFrame as ubyte = 0
 dim inMenu as ubyte = 1
 
 #ifdef IDLE_ENABLED
-    dim idleCounter as ubyte = 0
-    dim protaIdle as ubyte = 0
-    dim protaIdling as ubyte = 0
-    dim idle
+    dim protaLoopCounter as ubyte = 0
 #endif
 
 #ifdef SHOOTING_ENABLED
