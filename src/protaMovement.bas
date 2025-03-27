@@ -102,18 +102,30 @@ function getNextFrameRunning() as UBYTE
 		#ifdef MAIN_CHARACTER_EXTRA_FRAME
 			if protaDirection = 1 ' right
 				if protaFrame = 0
+					protaLastFrame = protaFrame
 					return 1
-				else if protaFrame = 1
+				else if protaFrame = 1 and protaLastFrame = 0
+					protaLastFrame = protaFrame
 					return 2
-				else
+				else if protaFrame = 2
+					protaLastFrame = protaFrame
+					return 1
+				else if protaFrame = 1 and protaLastFrame = 2
+					protaLastFrame = protaFrame
 					return 0
 				end if
-			else
+			else ' left
 				if protaFrame = 4
+					protaLastFrame = protaFrame
 					return 5
-				else if protaFrame = 5
+				else if protaFrame = 5 and protaLastFrame = 4
+					protaLastFrame = protaFrame
 					return 6
-				else
+				else if protaFrame = 6
+					protaLastFrame = protaFrame
+					return 5
+				else if protaFrame = 5 and protaLastFrame = 6
+					protaLastFrame = protaFrame
 					return 4
 				end if
 			end if

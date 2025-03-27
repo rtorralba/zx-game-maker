@@ -44,8 +44,8 @@ sub fastcall callVtAddress(address as uinteger)
   ASM
     ld a,($5b5c)
     push af
-    AND %1111100
-    OR          3; PaginarMemoria(3)
+    AND %11111000
+    OR          MUSIC_BANK; Memory Bank
     ld bc,$7ffd
     OUT (c),a
     push ix ; Guardamos ix
@@ -55,7 +55,6 @@ callhl:
     pop ix ; Recuperamos ix
     pop af
     ld bc,$7ffd
-    ld ($5b5c),a
     OUT (c),a
   END ASM
 end sub

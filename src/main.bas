@@ -21,6 +21,9 @@ const BULLET_SPRITE_LEFT_ID as ubyte = 49
     dim jumpCurrentKey as ubyte = jumpStopValue
     dim jumpArray(jumpStepsCount - 1) AS byte = {-2, -2, -2, -2, -2}
 #endif
+
+dim protaLastFrame as ubyte
+
 const LEFT as uByte = 0
 const RIGHT as uByte = 1
 const UP as uByte = 2
@@ -43,7 +46,7 @@ dim keyArray(4) as uInteger
 dim framec AS ubyte AT 23672
 
 #ifdef NEW_BEEPER_PLAYER
-    const BEEP_PERIOD = 1
+    const BEEP_PERIOD as ubyte = 1
     dim lastFrameBeep as ubyte = 0
 #endif
 
@@ -60,7 +63,6 @@ dim protaX as ubyte
 dim protaY as ubyte
 dim protaDirection as ubyte
 
-dim soundToPlay as ubyte = 1
 dim animatedFrame as ubyte = 0
 
 dim inMenu as ubyte = 1
@@ -73,8 +75,8 @@ dim inMenu as ubyte = 1
     dim noKeyPressedForShoot as UBYTE = 1
 #endif
 #ifdef ENABLED_128k
-    const DATA_BANK = 4
-    const MUSIC_BANK = 3
+    #define DATA_BANK 4
+    #define MUSIC_BANK 3
 
     PaginarMemoria(6)
     load "" CODE $c000 ' Load fx

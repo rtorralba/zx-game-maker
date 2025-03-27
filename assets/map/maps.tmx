@@ -4,12 +4,12 @@
   <chunksize width="32" height="22"/>
  </editorsettings>
  <properties>
-  <property name="128Kenabled" type="bool" value="false"/>
+  <property name="128Kenabled" type="bool" value="true"/>
   <property name="VTPLAYER_INIT" value="EFAD"/>
   <property name="VTPLAYER_MUTE" value="EFB5"/>
   <property name="VTPLAYER_NEXTNOTE" value="EFB2"/>
   <property name="ammo" type="int" value="-1"/>
-  <property name="animatePeriodMain" type="int" value="3"/>
+  <property name="animatePeriodMain" type="int" value="1"/>
   <property name="animatePeriodTile" type="int" value="10"/>
   <property name="backgroundAttribute" type="int" value="7"/>
   <property name="bulletDistance" type="int" value="0"/>
