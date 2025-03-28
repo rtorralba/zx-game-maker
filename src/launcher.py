@@ -72,10 +72,10 @@ def run_script(script_name, output_text, extra_args=None):
                 output_text.see(tk.END)
 
             process.wait()
-            if process.returncode == 0:
-                output_text.insert(tk.END, f"\nEl script {script_name} se ejecutó correctamente.\n")
-            else:
-                output_text.insert(tk.END, f"\nEl script {script_name} terminó con errores.\n")
+            # if process.returncode == 0:
+            #     output_text.insert(tk.END, f"\nEl script {script_name} se ejecutó correctamente.\n")
+            # else:
+            #     output_text.insert(tk.END, f"\nEl script {script_name} terminó con errores.\n")
 
         except FileNotFoundError:
             output_text.insert(tk.END, f"No se encontró el script {script_name}\n")
