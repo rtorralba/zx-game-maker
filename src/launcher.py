@@ -260,7 +260,7 @@ def open_map_with_tiled():
     """Abre el mapa en Tiled."""
     try:
         # Construir la ruta del archivo del mapa
-        map_path = os.path.join(os.getcwd(), "../assets", "map", "maps.tiled-project")
+        map_path = os.path.join(os.getcwd(), "..", "assets", "map", "maps.tiled-project")
 
         # Verificar si el archivo del mapa existe
         if not os.path.exists(map_path):
