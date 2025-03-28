@@ -133,6 +133,10 @@ newBeeperPlayer = 1
 
 redefineKeysEnabled = 0
 
+mainCharacterExtraFrame = 1
+
+idleTime = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -216,6 +220,10 @@ if 'properties' in data:
             newBeeperPlayer = 1 if property['value'] else 0
         elif property['name'] == 'redefineKeysEnabled':
             redefineKeysEnabled = 1 if property['value'] else 0
+        elif property['name'] == 'mainCharacterExtraFrame':
+            mainCharacterExtraFrame = 1 if property['value'] else 0
+        elif property['name'] == 'idleTime':
+            idleTime = property['value']
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -334,6 +342,13 @@ if waitPressKeyAfterLoad == 1:
 if redefineKeysEnabled == 1:
     configStr += "#DEFINE REDEFINE_KEYS_ENABLED\n"
 
+if mainCharacterExtraFrame == 1:
+    configStr += "#DEFINE MAIN_CHARACTER_EXTRA_FRAME\n"
+
+if idleTime > 0:
+    configStr += "#DEFINE IDLE_ENABLED\n"
+    configStr += "const IDLE_TIME as ubyte = " + str(idleTime) + "\n"
+
 for layer in data['layers']:
     if layer['type'] == 'tilelayer':
         screensCount = len(layer['chunks'])
@@ -432,7 +447,7 @@ for idx, screen in enumerate(screens):
     label = 'screen' + str(idx).zfill(3)
     with open(outputDir + label + '.bin', 'wb') as f:
         screen.tofile(f)
-    subprocess.run(['src/bin/zx0', '-f', outputDir + label + '.bin', outputDir + label + '.bin.zx0'])
+    subprocess.run(['bin/zx0', '-f', outputDir + label + '.bin', outputDir + label + '.bin.zx0'])
     currentOffset += os.path.getsize(outputDir + label + '.bin.zx0')
     screenOffsets.append(currentOffset)
 
@@ -578,7 +593,7 @@ for idx, enemiesScreen in enumerate(enemiesArray):
     label = 'enemiesInScreen' + str(idx).zfill(3)
     with open(outputDir + label + '.bin', 'wb') as f:
         enemiesScreen.tofile(f)
-    subprocess.run(['src/bin/zx0', '-f', outputDir + label + '.bin', outputDir + label + '.bin.zx0'])
+    subprocess.run(['bin/zx0', '-f', outputDir + label + '.bin', outputDir + label + '.bin.zx0'])
     currentOffset += os.path.getsize(outputDir + label + '.bin.zx0')
     enemiesInScreenOffsets.append(currentOffset)
 

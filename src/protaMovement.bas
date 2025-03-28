@@ -99,19 +99,51 @@ end function
 
 function getNextFrameRunning() as UBYTE
 	#ifdef SIDE_VIEW
-		if protaDirection = 1 ' right
-			if protaFrame = 0
-				return 1
-			else
-				return 0
+		#ifdef MAIN_CHARACTER_EXTRA_FRAME
+			if protaDirection = 1 ' right
+				if protaFrame = 0
+					protaLastFrame = protaFrame
+					return 1
+				else if protaFrame = 1 and protaLastFrame = 0
+					protaLastFrame = protaFrame
+					return 2
+				else if protaFrame = 2
+					protaLastFrame = protaFrame
+					return 1
+				else if protaFrame = 1 and protaLastFrame = 2
+					protaLastFrame = protaFrame
+					return 0
+				end if
+			else ' left
+				if protaFrame = 4
+					protaLastFrame = protaFrame
+					return 5
+				else if protaFrame = 5 and protaLastFrame = 4
+					protaLastFrame = protaFrame
+					return 6
+				else if protaFrame = 6
+					protaLastFrame = protaFrame
+					return 5
+				else if protaFrame = 5 and protaLastFrame = 6
+					protaLastFrame = protaFrame
+					return 4
+				end if
 			end if
-		else
-			if protaFrame = 4
-				return 5
+		#else
+			if protaDirection = 1 ' right
+				if protaFrame = 0
+					return 1
+				else
+					return 0
+				end if
 			else
-				return 4
+				if protaFrame = 4
+					return 5
+				else
+					return 4
+				end if
 			end if
-		end if
+		#endif
 	#else
 		if protaDirection = 1 ' right
 			if protaFrame = 0
@@ -340,13 +372,27 @@ sub keyboardListen()
 		if n bAND %1 then rightKey()
 		if n bAND %1000 then upKey()
 		if n bAND %100 then downKey()
-		if n bAND %10000 then fireKey() 
+		if n bAND %10000 then fireKey()
+		#ifdef IDLE_ENABLED
+			if n = 0
+				if protaLoopCounter < IDLE_TIME then protaLoopCounter = protaLoopCounter + 1
+			else
+				protaLoopCounter = 0
+			end if
+		#endif
 	else
 		if MultiKeys(keyArray(LEFT))<>0 then leftKey()
 		if MultiKeys(keyArray(RIGHT))<>0 then rightKey()
 		if MultiKeys(keyArray(UP))<>0 then upKey()
 		if MultiKeys(keyArray(DOWN))<>0 then downKey()
 		if MultiKeys(keyArray(FIRE))<>0 then fireKey()
+		#ifdef IDLE_ENABLED
+			if MultiKeys(keyArray(LEFT))=0 and MultiKeys(keyArray(RIGHT))=0 and MultiKeys(keyArray(UP))=0 and MultiKeys(keyArray(DOWN))=0 and MultiKeys(keyArray(FIRE))=0
+				if protaLoopCounter < IDLE_TIME then protaLoopCounter = protaLoopCounter + 1
+			else
+				protaLoopCounter = 0
+			end if
+		#endif
 	end if
 end sub
 
@@ -442,5 +488,20 @@ sub protaMovement()
 	#ifdef SIDE_VIEW
 		checkIsJumping()
 		gravity()
+
+		#ifdef IDLE_ENABLED
+			if protaLoopCounter >= IDLE_TIME
+				if jumpCurrentKey <> jumpStopValue then return
+				if isFalling() then return
+
+				if framec - lastFrameTiles = ANIMATE_PERIOD_TILE - 2
+					if getSpriteTile(PROTA_SPRITE) = 12
+						saveSprite(PROTA_SPRITE, protaY, protaX, 13, protaDirection)
+					else
+						saveSprite(PROTA_SPRITE, protaY, protaX, 12, protaDirection)
+					end if
+				end if
+			end if
+		#endif
 	#endif
 end sub

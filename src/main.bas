@@ -1,4 +1,11 @@
-#include "../output/config.bas"
+#include "output/config.bas"
+
+' #ifdef ENABLED_128k
+'     dim isAmstrad as ubyte = 0
+'     if peek(23312) = 1
+'         isAmstrad = 1
+'     end if
+' #endif
 
 const PROTA_SPRITE as ubyte = 5
 const BULLET_SPRITE_RIGHT_ID as ubyte = 48
@@ -14,6 +21,9 @@ const BULLET_SPRITE_LEFT_ID as ubyte = 49
     dim jumpCurrentKey as ubyte = jumpStopValue
     dim jumpArray(jumpStepsCount - 1) AS byte = {-2, -2, -2, -2, -2}
 #endif
+
+dim protaLastFrame as ubyte
+
 const LEFT as uByte = 0
 const RIGHT as uByte = 1
 const UP as uByte = 2
@@ -36,7 +46,7 @@ dim keyArray(4) as uInteger
 dim framec AS ubyte AT 23672
 
 #ifdef NEW_BEEPER_PLAYER
-    const BEEP_PERIOD = 1
+    const BEEP_PERIOD as ubyte = 1
     dim lastFrameBeep as ubyte = 0
 #endif
 
@@ -53,15 +63,21 @@ dim protaX as ubyte
 dim protaY as ubyte
 dim protaDirection as ubyte
 
-dim soundToPlay as ubyte = 1
 dim animatedFrame as ubyte = 0
 
 dim inMenu as ubyte = 1
+
+#ifdef IDLE_ENABLED
+    dim protaLoopCounter as ubyte = 0
+#endif
 
 #ifdef SHOOTING_ENABLED
     dim noKeyPressedForShoot as UBYTE = 1
 #endif
 #ifdef ENABLED_128k
+    #define DATA_BANK 4
+    #define MUSIC_BANK 3
+
     PaginarMemoria(6)
     load "" CODE $c000 ' Load fx
     PaginarMemoria(0)
@@ -75,7 +91,7 @@ load "" CODE ' Load files
     #include "128/im2.bas"
     #include "128/vortexTracker.bas"
     #include "128/functions.bas"
-    PaginarMemoria(4)
+    PaginarMemoria(MUSIC_BANK)
     load "" CODE ' Load vtplayer
     load "" CODE ' Load music
 
@@ -83,8 +99,7 @@ load "" CODE ' Load files
         load "" CODE ' Load vtplayer
         load "" CODE ' Load music
     #endif
-    PaginarMemoria(0)
-    PaginarMemoria(3)
+    PaginarMemoria(DATA_BANK)
     load "" CODE TITLE_SCREEN_ADDRESS ' Load title screen
     load "" CODE ENDING_SCREEN_ADDRESS ' Load ending screen
     load "" CODE HUD_SCREEN_ADDRESS ' Load hud screen
@@ -160,7 +175,7 @@ menu:
     inMenu = 1
     INK 7: PAPER 0: BORDER 0: BRIGHT 0: FLASH 0: CLS
     #ifdef ENABLED_128k
-        PaginarMemoria(3)
+        PaginarMemoria(DATA_BANK)
             dzx0Standard(TITLE_SCREEN_ADDRESS, $4000)
         PaginarMemoria(0)
         #ifdef TITLE_MUSIC_ENABLED
@@ -309,7 +324,7 @@ end sub
 
 #ifdef ENABLED_128k
     #ifdef INTRO_SCREEN_ENABLED
-        PaginarMemoria(3)
+        PaginarMemoria(DATA_BANK)
             dzx0Standard(INTRO_SCREEN_ADDRESS, $4000)
         PaginarMemoria(0)
         DO
@@ -329,7 +344,7 @@ playGame:
     #endif
 
     #ifdef ENABLED_128k
-        PaginarMemoria(3)
+        PaginarMemoria(DATA_BANK)
         dzx0Standard(HUD_SCREEN_ADDRESS, $4000)
         PaginarMemoria(0)
         #ifdef MUSIC_ENABLED
@@ -404,7 +419,7 @@ ending:
         #ifdef MUSIC_ENABLED
             VortexTracker_Stop()
         #endif
-        PaginarMemoria(3)
+        PaginarMemoria(DATA_BANK)
             dzx0Standard(ENDING_SCREEN_ADDRESS, $4000)
         PaginarMemoria(0)
     #else
@@ -427,7 +442,7 @@ gameOver:
 
     #ifdef ENABLED_128k
         #ifdef GAMEOVER_SCREEN_ENABLED
-            PaginarMemoria(3)
+            PaginarMemoria(DATA_BANK)
                 dzx0Standard(GAMEOVER_SCREEN_ADDRESS, $4000)
             PaginarMemoria(0)
         #else

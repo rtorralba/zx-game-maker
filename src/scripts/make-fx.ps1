@@ -1,4 +1,4 @@
-$filePath = ".\pasmo.exe"
+$filePath = "..\pasmo.exe"
 
 if (-not (Test-Path $filePath)) {
     Write-Host "El fichero $filePath existe."
@@ -7,7 +7,7 @@ if (-not (Test-Path $filePath)) {
     exit 1
 }
 
-.\pasmo.exe --tap .\src\player.asm .\assets\fx\fx.tap
+.\pasmo.exe --tap ..\player.asm ..\assets\fx\fx.tap
 
 Write-Host "FX creado correctamente."
 

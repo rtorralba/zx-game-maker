@@ -11,12 +11,13 @@ def getOsSeparator():
     else:
         return "/"
 
-BIN_FOLDER = str(Path("src/bin/")) + getOsSeparator()
+ASSETS_FOLDER = str(Path("../assets/")) + getOsSeparator()
+BIN_FOLDER = str(Path("../src/bin/")) + getOsSeparator()
 OUTPUT_FOLDER = str(Path("output/")) + getOsSeparator()
-SCREENS_FOLDER = str(Path("assets/screens/")) + getOsSeparator()
-MAP_FOLDER = str(Path("assets/map/")) + getOsSeparator()
-MAPS_FILE = str(Path("assets/map/maps.tmx"))
-DIST_FOLDER = str(Path("dist/")) + getOsSeparator()
+SCREENS_FOLDER = str(Path(ASSETS_FOLDER + "screens/")) + getOsSeparator()
+MAP_FOLDER = str(Path(ASSETS_FOLDER + "map/")) + getOsSeparator()
+MAPS_FILE = str(Path(ASSETS_FOLDER + "map/maps.tmx"))
+DIST_FOLDER = str(Path("../dist/")) + getOsSeparator()
 INITIAL_ADDRESS = 49152
 MEMORY_BANK_SIZE = 16384
 
@@ -87,4 +88,4 @@ def screenExists(screen_name):
     return os.path.isfile(SCREENS_FOLDER + screen_name + ".scr")
 
 def musicExists(music_name):
-    return os.path.isfile("assets/music/" + music_name + ".tap")
+    return os.path.isfile(ASSETS_FOLDER + "music/" + music_name + ".tap")

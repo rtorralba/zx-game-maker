@@ -185,13 +185,13 @@ sfxRN3:
   jp   nextData
 
 ResetPlayer:
-  ld   hl, FX
-  ld   (hl), $1e00      ; Inicializa el reproductor con ningún sonido cargado
+  ld   hl, $001e
+  ld   (FX), hl         ; Inicializa el reproductor con ningún sonido cargado
   ret
 
 FX:
-  dw   $001E            ; Se inicializa a $001E para que desde la primera vez salga de NextNote si no tiene que reproducir nada (líneas 29 a 32)
+  dw   $001e            ; Se inicializa a $001E para que desde la primera vez salga de NextNote si no tiene que reproducir nada (líneas 29 a 32)
 
 FXAddress:
 ; Archivo asm generado por BeepFX sin reproductor
-include "assets/fx/fx.asm"
+include "../assets/fx/fx.asm"

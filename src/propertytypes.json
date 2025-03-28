@@ -107,6 +107,11 @@
                 "value": false
             },
             {
+                "name": "idleTime",
+                "type": "int",
+                "value": 0
+            },
+            {
                 "name": "initialLife",
                 "type": "int",
                 "value": 50
@@ -140,6 +145,11 @@
                 "name": "lifeAmount",
                 "type": "int",
                 "value": 5
+            },
+            {
+                "name": "mainCharacterExtraFrame",
+                "type": "bool",
+                "value": true
             },
             {
                 "name": "maxAnimatedTilesPerScreen",
