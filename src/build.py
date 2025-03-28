@@ -25,14 +25,6 @@ DEFAULT_FX = str(Path("default/fx.tap"))
 def tiledBuild():
     runPythonScript(TILED_SCRIPT)
 
-def checkFx():
-    if not os.path.isdir(ASSETS_FOLDER + "fx"):
-        print("FX folder not detected, creating... ", end="")
-        os.makedirs(str(Path(ASSETS_FOLDER + "fx")))
-    if not os.path.isfile(ASSETS_FOLDER + "fx/fx.tap"):
-        print("FX not detected. Applying default... ", end="")
-        shutil.copy(DEFAULT_FX, str(Path(ASSETS_FOLDER + "fx/fx.tap")))
-
 def buildingFilesAndConfig():
     return Builder().execute()
 
@@ -122,7 +114,6 @@ def build():
 
     executeFunction(tiledExport, "Exporting game from Tiled")
     executeFunction(tiledBuild, "Building Tiled maps")
-    executeFunction(checkFx, "Checking FX")
     sizes = executeFunction(buildingFilesAndConfig, "Building files and config")
     executeFunction(compilingGame, "Compiling game")
     executeFunction(checkMemory, "Checking memory")
