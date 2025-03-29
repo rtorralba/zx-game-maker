@@ -1,7 +1,8 @@
 #!/bin/bash
 
-if ! command -v python &> /dev/null
-then
+if command -v python &> /dev/null; then
+    echo "Python está instalado."
+else
     echo "Python no está instalado. Por favor, instala Python antes de continuar."
     read -p "Pulse una tecla para cerrar..."
     exit 1
