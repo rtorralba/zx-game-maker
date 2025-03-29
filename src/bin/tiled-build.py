@@ -8,7 +8,6 @@ import os
 from pprint import pprint
 import subprocess
 import sys
-import numpy as np
 
 def exitWithErrorMessage(message):
     print('\n\n=====================================================================================')

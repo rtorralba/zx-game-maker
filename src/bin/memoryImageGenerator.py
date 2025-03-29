@@ -3,7 +3,6 @@
 import os
 import sys
 import hashlib
-import numpy as np
 import matplotlib.pyplot as plt
 
 # Función que genera un color hex a partir de una cadena
@@ -22,23 +21,23 @@ for bar in bars:
     if int(values[1]) == 0:
         continue
     total += int(values[1])
-    weight_counts[values[0]] = np.array([int(values[1])])
+    weight_counts[values[0]] = int(values[1])
 
 bankMemory = 16383
 free = bankMemory - total
 
-weight_counts["Free-Memory"] = np.array([free])
+weight_counts["Free-Memory"] = free
 
 colors = []
 labels = []
 values = []
-for label in weight_counts.keys():
+for label, value in weight_counts.items():
     if label == "Free-Memory":
         colors.append("#999999")
     else:
         colors.append(stringToColor(label))
-    labels.append(label + " (" + str(weight_counts[label][0]) + " bytes)")
-    values.append(weight_counts[label][0])
+    labels.append(f"{label} ({value} bytes)")
+    values.append(value)
 
 # Crear gráfico de pastel
 fig, ax = plt.subplots()
