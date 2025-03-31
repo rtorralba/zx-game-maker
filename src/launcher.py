@@ -283,6 +283,7 @@ def open_map_with_tiled():
 root = tk.Tk()
 root.title("ZX Spectrum Game Maker")
 root.geometry("600x750")
+root.resizable(False, False)
 
 # Establecer el icono de la aplicación
 icon_path = os.path.join(os.getcwd(), "ui/logo.png")
