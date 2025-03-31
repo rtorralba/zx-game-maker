@@ -3,4 +3,4 @@
 cd /d "%~dp0\src"
 
 :: Ejecutar el script de Python
-python launcher.py
+py launcher.py
