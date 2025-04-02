@@ -3,13 +3,13 @@ sub pauseUntilPressKey()
     WHILE INKEY$="":WEND
 end sub
 
-sub decrementLife()
+sub decrementLife(damage as ubyte)
 	if (currentLife = 0)
 		return
 	end if
 
-	if currentLife > DAMAGE_AMOUNT then
-		currentLife = currentLife - DAMAGE_AMOUNT
+	if currentLife > damage then
+		currentLife = currentLife - damage
 	else
 		currentLife = 0
 	end if
@@ -70,10 +70,11 @@ function isSolidTileByColLin(col as ubyte, lin as ubyte) as ubyte
 	return 1
 end function
 
-sub protaTouch()
+sub protaTouch(damage as ubyte)
+    movementTime = 0
     invincible = 1
     invincibleFrame = framec
-    decrementLife()
+    decrementLife(damage)
     BeepFX_Play(1)
 end sub
 

@@ -69,7 +69,11 @@ dim inMenu as ubyte = 1
 
 #ifdef IDLE_ENABLED
     dim protaLoopCounter as ubyte = 0
+    #ifdef DAMAGE_TIME_ENABLED
+        dim movementTime as ubyte = 0
+    #endif
 #endif
+
 
 #ifdef SHOOTING_ENABLED
     dim noKeyPressedForShoot as UBYTE = 1
@@ -494,6 +498,12 @@ sub resetValues()
 
     currentAmmo = INITIAL_AMMO
     
+    #ifdef DAMAGE_TIME_ENABLED
+        #ifdef IDLE_ENABLED
+            movementTime = 0
+        #endif
+    #endif
+
     redrawScreen()
     ' drawSprites()
 end sub
