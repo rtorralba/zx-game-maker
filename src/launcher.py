@@ -1,14 +1,55 @@
 import os
+import platform
 import subprocess
+import sys
+
+def install_requirements():
+    """Ejecuta el script de instalación de dependencias según el sistema operativo."""
+    try:
+        # Detectar el sistema operativo
+        current_os = platform.system()
+        script_name = ""
+
+        if current_os == "Windows":
+            script_name = "install-requeriments.ps1"
+        elif current_os in ["Linux", "Darwin"]:  # Linux o macOS
+            script_name = "install-requeriments.sh"
+        else:
+            print(f"Sistema operativo no soportado: {current_os}")
+            sys.exit(1)
+
+        # Construir la ruta completa del script
+        script_path = os.path.join(os.path.dirname(__file__), "scripts", script_name)
+
+        # Verificar si el script existe
+        if not os.path.exists(script_path):
+            print(f"No se encontró el script: {script_path}")
+            sys.exit(1)
+
+        # Ejecutar el script
+        if current_os == "Windows":
+            subprocess.run(["powershell", "-ExecutionPolicy", "Bypass", "-File", script_path], check=True)
+        else:
+            subprocess.run(["bash", script_path], check=True)
+
+    except subprocess.CalledProcessError as e:
+        print(f"Error al ejecutar el script de instalación de dependencias: {e}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Error inesperado: {e}")
+        sys.exit(1)
+
+# Ejecutar la instalación de dependencias antes de importar cualquier módulo
+install_requirements()
+
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import PhotoImage
-import platform
 import threading
 import webbrowser
 
-# from builder.SpritesPreviewGenerator import SpritesPreviewGenerator
-from builder.helper import DIST_FOLDER, getProjectFileName
+from builder.SpritesPreviewGenerator import SpritesPreviewGenerator
+from builder.helper import DIST_FOLDER, MAPS_FILE, getProjectFileName
 
 import os
 
@@ -123,90 +164,90 @@ def show_modal_with_animation(gif_path):
     except Exception as e:
         messagebox.showerror("Error", f"No se pudo abrir el GIF: {e}")
 
-# def open_main_character_running_preview():
-#     """Ejecuta la función y muestra el resultado en un modal."""
-#     try:
-#         # Llamar a la función que genera el preview
-#         result = SpritesPreviewGenerator.generateMainPreview()
-#         if result:
-#             show_modal_with_animation(result)
-#         else:
-#             messagebox.showerror("Error", "No se generó ningún resultado.")
-#     except Exception as e:
-#         messagebox.showerror("Error", f"Error al generar el preview: {e}")
+def open_main_character_running_preview():
+    """Ejecuta la función y muestra el resultado en un modal."""
+    try:
+        # Llamar a la función que genera el preview
+        result = SpritesPreviewGenerator.generateMainPreview()
+        if result:
+            show_modal_with_animation(result)
+        else:
+            messagebox.showerror("Error", "No se generó ningún resultado.")
+    except Exception as e:
+        messagebox.showerror("Error", f"Error al generar el preview: {e}")
 
-# def open_main_character_idle_preview():
-#     """Ejecuta la función y muestra el resultado en un modal."""
-#     try:
-#         # Llamar a la función que genera el preview
-#         result = SpritesPreviewGenerator.generateIdlePreview()
-#         if result:
-#             show_modal_with_animation(result)
-#         else:
-#             messagebox.showerror("Error", "No se generó ningún resultado.")
-#     except Exception as e:
-#         messagebox.showerror("Error", f"Error al generar el preview: {e}")
+def open_main_character_idle_preview():
+    """Ejecuta la función y muestra el resultado en un modal."""
+    try:
+        # Llamar a la función que genera el preview
+        result = SpritesPreviewGenerator.generateIdlePreview()
+        if result:
+            show_modal_with_animation(result)
+        else:
+            messagebox.showerror("Error", "No se generó ningún resultado.")
+    except Exception as e:
+        messagebox.showerror("Error", f"Error al generar el preview: {e}")
 
-# def open_first_platform_preview():
-#     """Ejecuta la función y muestra el resultado en un modal."""
-#     try:
-#         # Llamar a la función que genera el preview
-#         result = SpritesPreviewGenerator.generateFirstPreview()
-#         if result:
-#             show_modal_with_animation(result)
-#         else:
-#             messagebox.showerror("Error", "No se generó ningún resultado.")
-#     except Exception as e:
-#         messagebox.showerror("Error", f"Error al generar el preview: {e}")
+def open_first_platform_preview():
+    """Ejecuta la función y muestra el resultado en un modal."""
+    try:
+        # Llamar a la función que genera el preview
+        result = SpritesPreviewGenerator.generateFirstPreview()
+        if result:
+            show_modal_with_animation(result)
+        else:
+            messagebox.showerror("Error", "No se generó ningún resultado.")
+    except Exception as e:
+        messagebox.showerror("Error", f"Error al generar el preview: {e}")
 
-# def open_second_platform_preview():
-#     """Ejecuta la función y muestra el resultado en un modal."""
-#     try:
-#         # Llamar a la función que genera el preview
-#         result = SpritesPreviewGenerator.generateSecondPreview()
-#         if result:
-#             show_modal_with_animation(result)
-#         else:
-#             messagebox.showerror("Error", "No se generó ningún resultado.")
-#     except Exception as e:
-#         messagebox.showerror("Error", f"Error al generar el preview: {e}")
+def open_second_platform_preview():
+    """Ejecuta la función y muestra el resultado en un modal."""
+    try:
+        # Llamar a la función que genera el preview
+        result = SpritesPreviewGenerator.generateSecondPreview()
+        if result:
+            show_modal_with_animation(result)
+        else:
+            messagebox.showerror("Error", "No se generó ningún resultado.")
+    except Exception as e:
+        messagebox.showerror("Error", f"Error al generar el preview: {e}")
 
-# def open_enemy_preview(enemy_number):
-#     """Ejecuta la función y muestra el resultado en un modal."""
-#     try:
-#         # Llamar a la función que genera el preview
-#         result = SpritesPreviewGenerator.generateEnemy(enemy_number)
-#         if result:
-#             show_modal_with_animation(result)
-#         else:
-#             messagebox.showerror("Error", "No se generó ningún resultado.")
-#     except Exception as e:
-#         messagebox.showerror("Error", f"Error al generar el preview: {e}")
+def open_enemy_preview(enemy_number):
+    """Ejecuta la función y muestra el resultado en un modal."""
+    try:
+        # Llamar a la función que genera el preview
+        result = SpritesPreviewGenerator.generateEnemy(enemy_number)
+        if result:
+            show_modal_with_animation(result)
+        else:
+            messagebox.showerror("Error", "No se generó ningún resultado.")
+    except Exception as e:
+        messagebox.showerror("Error", f"Error al generar el preview: {e}")
 
-# def show_sprites_menu(event):
-#     # Crear un menú emergente
-#     sprites_menu = tk.Menu(root, tearoff=0)
+def show_sprites_menu(event):
+    # Crear un menú emergente
+    sprites_menu = tk.Menu(root, tearoff=0)
 
-#     # Submenú para "Main Character"
-#     main_character_menu = tk.Menu(sprites_menu, tearoff=0)
-#     main_character_menu.add_command(label="Running", command=open_main_character_running_preview)
-#     main_character_menu.add_command(label="Idle", command=lambda: open_main_character_idle_preview())
-#     sprites_menu.add_cascade(label="Main Character", menu=main_character_menu)
+    # Submenú para "Main Character"
+    main_character_menu = tk.Menu(sprites_menu, tearoff=0)
+    main_character_menu.add_command(label="Running", command=open_main_character_running_preview)
+    main_character_menu.add_command(label="Idle", command=lambda: open_main_character_idle_preview())
+    sprites_menu.add_cascade(label="Main Character", menu=main_character_menu)
 
-#     # Submenú para "Platforms"
-#     platforms_menu = tk.Menu(sprites_menu, tearoff=0)
-#     platforms_menu.add_command(label="Platform 1", command=lambda: open_first_platform_preview())
-#     platforms_menu.add_command(label="Platform 2", command=lambda: open_second_platform_preview())
-#     sprites_menu.add_cascade(label="Platforms", menu=platforms_menu)
+    # Submenú para "Platforms"
+    platforms_menu = tk.Menu(sprites_menu, tearoff=0)
+    platforms_menu.add_command(label="Platform 1", command=lambda: open_first_platform_preview())
+    platforms_menu.add_command(label="Platform 2", command=lambda: open_second_platform_preview())
+    sprites_menu.add_cascade(label="Platforms", menu=platforms_menu)
 
-#     # Submenú para "Enemies"
-#     enemies_menu = tk.Menu(sprites_menu, tearoff=0)
-#     for i in range(1, 9):  # Generar dinámicamente las opciones de enemigos del 1 al 8
-#         enemies_menu.add_command(label=f"Enemy {i}", command=lambda i=i: open_enemy_preview(i))
-#     sprites_menu.add_cascade(label="Enemies", menu=enemies_menu)
+    # Submenú para "Enemies"
+    enemies_menu = tk.Menu(sprites_menu, tearoff=0)
+    for i in range(1, 9):  # Generar dinámicamente las opciones de enemigos del 1 al 8
+        enemies_menu.add_command(label=f"Enemy {i}", command=lambda i=i: open_enemy_preview(i))
+    sprites_menu.add_cascade(label="Enemies", menu=enemies_menu)
 
-#     # Mostrar el menú en la posición del cursor
-#     sprites_menu.post(event.x_root, event.y_root)
+    # Mostrar el menú en la posición del cursor
+    sprites_menu.post(event.x_root, event.y_root)
 
 def open_memory_bank_image(image):
     """Abre la imagen de uso de memoria para el banco especificado."""
@@ -233,26 +274,25 @@ def open_memory_bank_image(image):
 
 def open_map_with_tiled():
     """Abre el mapa en Tiled."""
-    try:
-        # Construir la ruta del archivo del mapa
-        map_path = os.path.join(os.getcwd(), "..", "assets", "map", "maps.tiled-project")
+    # Verificar si la variable MAPS_FILE está definida
+    if not MAPS_FILE:
+        messagebox.showerror("Error", "No se especificó el archivo del mapa.")
+        return
 
-        # Verificar si el archivo del mapa existe
-        if not os.path.exists(map_path):
-            messagebox.showerror("Error", f"No se encontró el archivo del mapa: {map_path}")
-            return
-
-        # Abrir el archivo del mapa con Tiled según el sistema operativo
-        if platform.system() == "Windows":
-            subprocess.Popen(["tiled", map_path], shell=True)
-        elif platform.system() == "Linux":
-            subprocess.Popen(["tiled", map_path])
-        elif platform.system() == "Darwin":  # macOS
-            subprocess.Popen(["open", "-a", "Tiled", map_path])
-        else:
-            messagebox.showerror("Error", "El sistema operativo no es compatible.")
-    except Exception as e:
-        messagebox.showerror("Error", f"No se pudo abrir el mapa: {e}")
+    # Verificar si el archivo del mapa existe
+    if not os.path.exists(MAPS_FILE):
+        messagebox.showerror("Error", f"No se encontró el archivo del mapa: {MAPS_FILE}")
+        return
+    
+    if os.name == "nt":
+        program_files = os.environ["ProgramFiles"]
+        command = "\"" + program_files + "\\Tiled\\tiled.exe\" " + MAPS_FILE
+    else:
+        command = "tiled " + MAPS_FILE
+    
+    subprocess.Popen(command, shell=True)
+    
+    # Ejecutar el comando
 
 # Crear la ventana principal
 root = tk.Tk()
@@ -293,28 +333,28 @@ map_menu = tk.Menu(menu_bar, tearoff=0)
 map_menu.add_command(label="Open Map", command=open_map_with_tiled)
 menu_bar.add_cascade(label="Map", menu=map_menu)
 
-# # Menú "Sprites"
-# sprites_menu = tk.Menu(menu_bar, tearoff=0)
+# Menú "Sprites"
+sprites_menu = tk.Menu(menu_bar, tearoff=0)
 
-# # Submenú para "Main Character"
-# main_character_menu = tk.Menu(sprites_menu, tearoff=0)
-# main_character_menu.add_command(label="Running", command=open_main_character_running_preview)
-# main_character_menu.add_command(label="Idle", command=open_main_character_idle_preview)
-# sprites_menu.add_cascade(label="Main Character", menu=main_character_menu)
+# Submenú para "Main Character"
+main_character_menu = tk.Menu(sprites_menu, tearoff=0)
+main_character_menu.add_command(label="Running", command=open_main_character_running_preview)
+main_character_menu.add_command(label="Idle", command=open_main_character_idle_preview)
+sprites_menu.add_cascade(label="Main Character", menu=main_character_menu)
 
-# # Submenú para "Platforms"
-# platforms_menu = tk.Menu(sprites_menu, tearoff=0)
-# platforms_menu.add_command(label="Platform 1", command=open_first_platform_preview)
-# platforms_menu.add_command(label="Platform 2", command=open_second_platform_preview)
-# sprites_menu.add_cascade(label="Platforms", menu=platforms_menu)
+# Submenú para "Platforms"
+platforms_menu = tk.Menu(sprites_menu, tearoff=0)
+platforms_menu.add_command(label="Platform 1", command=open_first_platform_preview)
+platforms_menu.add_command(label="Platform 2", command=open_second_platform_preview)
+sprites_menu.add_cascade(label="Platforms", menu=platforms_menu)
 
-# # Submenú para "Enemies"
-# enemies_menu = tk.Menu(sprites_menu, tearoff=0)
-# for i in range(1, 9):  # Generar dinámicamente las opciones de enemigos del 1 al 8
-#     enemies_menu.add_command(label=f"Enemy {i}", command=lambda i=i: open_enemy_preview(i))
-# sprites_menu.add_cascade(label="Enemies", menu=enemies_menu)
+# Submenú para "Enemies"
+enemies_menu = tk.Menu(sprites_menu, tearoff=0)
+for i in range(1, 9):  # Generar dinámicamente las opciones de enemigos del 1 al 8
+    enemies_menu.add_command(label=f"Enemy {i}", command=lambda i=i: open_enemy_preview(i))
+sprites_menu.add_cascade(label="Enemies", menu=enemies_menu)
 
-# menu_bar.add_cascade(label="Sprites Preview", menu=sprites_menu)
+menu_bar.add_cascade(label="Sprites Preview", menu=sprites_menu)
 
 # Menú "Game"
 game_menu = tk.Menu(menu_bar, tearoff=0)
