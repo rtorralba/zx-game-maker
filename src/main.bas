@@ -63,6 +63,12 @@ dim protaX as ubyte
 dim protaY as ubyte
 dim protaDirection as ubyte
 
+#ifdef DAMAGE_RESPAWN_ENABLED
+    dim protaXRespawn as ubyte
+    dim protaYRespawn as ubyte
+    dim protaDirectionRespawn as ubyte
+#endif
+
 dim animatedFrame as ubyte = 0
 
 dim inMenu as ubyte = 1

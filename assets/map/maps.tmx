@@ -14,6 +14,7 @@
   <property name="backgroundAttribute" type="int" value="7"/>
   <property name="bulletDistance" type="int" value="0"/>
   <property name="damageAmount" type="int" value="10"/>
+  <property name="damageRespawn" type="bool" value="false"/>
   <property name="tileDamageAmount" type="int" value="0"/>
   <property name="enemiesRespawn" type="bool" value="true"/>
   <property name="gameName" value="Game Name"/>

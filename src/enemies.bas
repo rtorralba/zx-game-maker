@@ -135,6 +135,10 @@ sub checkProtaCollision(enemyId as ubyte)
     if protaY > enemyY1 then return
 
     protaTouch(DAMAGE_AMOUNT)
+
+    #ifdef DAMAGE_RESPAWN_ENABLED
+        saveSprite(PROTA_SPRITE, protaYRespawn, protaXRespawn, getSpriteTile(PROTA_SPRITE), protaDirectionRespawn)
+    #endif
 end sub
 
 #ifdef SIDE_VIEW

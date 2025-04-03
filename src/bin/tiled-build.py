@@ -139,6 +139,8 @@ idleTime = 0
 
 damageTime = 0
 
+damageRespawn = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -230,6 +232,8 @@ if 'properties' in data:
             idleTime = property['value']
         elif property['name'] == 'damageTime':
             damageTime = property['value']
+        elif property['name'] == 'damageRespawn':
+            damageRespawn = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -359,6 +363,9 @@ if idleTime > 0:
     if damageTime > 0:
         configStr += "#DEFINE DAMAGE_TIME_ENABLED\n"
         configStr += "const MAX_DAMAGE_TIME as ubyte = " + str(damageTime*10) + "\n"
+
+if damageRespawn == 1:
+    configStr += "#DEFINE DAMAGE_RESPAWN_ENABLED\n"
 
 for layer in data['layers']:
     if layer['type'] == 'tilelayer':
