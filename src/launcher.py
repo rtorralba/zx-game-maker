@@ -6,9 +6,8 @@ from tkinter import PhotoImage
 import platform
 import threading
 import webbrowser
-from PIL import Image, ImageTk
 
-from builder.SpritesPreviewGenerator import SpritesPreviewGenerator
+# from builder.SpritesPreviewGenerator import SpritesPreviewGenerator
 from builder.helper import DIST_FOLDER, getProjectFileName
 
 import os
@@ -111,127 +110,103 @@ def open_game_variant(variant):
     except Exception as e:
         messagebox.showerror("Error", f"No se pudo abrir el juego: {e}")
 
-def show_modal_with_gif(gif_path):
-    """Abre un modal para mostrar el GIF animado redimensionado al doble de su tamaño."""
-    modal = tk.Toplevel(root)
-    modal.title("Preview")
-    modal.geometry("200x200")  # Ajustar el tamaño del modal para acomodar el GIF redimensionado
-    modal.resizable(False, False)
-
-    # Etiqueta para mostrar el GIF
+def show_modal_with_animation(gif_path):
+    """Abre el GIF en el navegador predeterminado."""
     try:
-        # Cargar el GIF usando Pillow
-        gif = Image.open(gif_path)
+        # Verificar si el archivo existe
+        if not os.path.exists(gif_path):
+            messagebox.showerror("Error", f"No se encontró el archivo: {gif_path}")
+            return
 
-        # Crear un widget Label para mostrar el GIF
-        gif_label = tk.Label(modal)
-        gif_label.pack(pady=10)
-
-        # Función para actualizar los frames del GIF
-        def update_frame(frame_index):
-            try:
-                gif.seek(frame_index)  # Mover al frame actual
-                # Redimensionar el frame al doble de su tamaño
-                frame = gif.resize((gif.width * 2, gif.height * 2), Image.Resampling.NEAREST)
-                frame = ImageTk.PhotoImage(frame)
-                gif_label.config(image=frame)
-                gif_label.image = frame  # Mantener referencia para evitar recolección de basura
-                modal.after(200, update_frame, (frame_index + 1) % gif.n_frames)  # Actualizar al siguiente frame
-            except Exception as e:
-                print(f"Error al actualizar el frame: {e}")
-
-        # Iniciar la animación del GIF
-        update_frame(0)
-
+        # Abrir el archivo GIF en el navegador predeterminado
+        webbrowser.open(f"file://{os.path.abspath(gif_path)}")
     except Exception as e:
-        messagebox.showerror("Error", f"No se pudo cargar el GIF: {e}")
-        modal.destroy()
-        return
+        messagebox.showerror("Error", f"No se pudo abrir el GIF: {e}")
 
-def open_main_character_running_preview():
-    """Ejecuta la función y muestra el resultado en un modal."""
-    try:
-        # Llamar a la función que genera el preview
-        result = SpritesPreviewGenerator.generateMainPreview()
-        if result:
-            show_modal_with_gif(result)
-        else:
-            messagebox.showerror("Error", "No se generó ningún resultado.")
-    except Exception as e:
-        messagebox.showerror("Error", f"Error al generar el preview: {e}")
+# def open_main_character_running_preview():
+#     """Ejecuta la función y muestra el resultado en un modal."""
+#     try:
+#         # Llamar a la función que genera el preview
+#         result = SpritesPreviewGenerator.generateMainPreview()
+#         if result:
+#             show_modal_with_animation(result)
+#         else:
+#             messagebox.showerror("Error", "No se generó ningún resultado.")
+#     except Exception as e:
+#         messagebox.showerror("Error", f"Error al generar el preview: {e}")
 
-def open_main_character_idle_preview():
-    """Ejecuta la función y muestra el resultado en un modal."""
-    try:
-        # Llamar a la función que genera el preview
-        result = SpritesPreviewGenerator.generateIdlePreview()
-        if result:
-            show_modal_with_gif(result)
-        else:
-            messagebox.showerror("Error", "No se generó ningún resultado.")
-    except Exception as e:
-        messagebox.showerror("Error", f"Error al generar el preview: {e}")
+# def open_main_character_idle_preview():
+#     """Ejecuta la función y muestra el resultado en un modal."""
+#     try:
+#         # Llamar a la función que genera el preview
+#         result = SpritesPreviewGenerator.generateIdlePreview()
+#         if result:
+#             show_modal_with_animation(result)
+#         else:
+#             messagebox.showerror("Error", "No se generó ningún resultado.")
+#     except Exception as e:
+#         messagebox.showerror("Error", f"Error al generar el preview: {e}")
 
-def open_first_platform_preview():
-    """Ejecuta la función y muestra el resultado en un modal."""
-    try:
-        # Llamar a la función que genera el preview
-        result = SpritesPreviewGenerator.generateFirstPreview()
-        if result:
-            show_modal_with_gif(result)
-        else:
-            messagebox.showerror("Error", "No se generó ningún resultado.")
-    except Exception as e:
-        messagebox.showerror("Error", f"Error al generar el preview: {e}")
+# def open_first_platform_preview():
+#     """Ejecuta la función y muestra el resultado en un modal."""
+#     try:
+#         # Llamar a la función que genera el preview
+#         result = SpritesPreviewGenerator.generateFirstPreview()
+#         if result:
+#             show_modal_with_animation(result)
+#         else:
+#             messagebox.showerror("Error", "No se generó ningún resultado.")
+#     except Exception as e:
+#         messagebox.showerror("Error", f"Error al generar el preview: {e}")
 
-def open_second_platform_preview():
-    """Ejecuta la función y muestra el resultado en un modal."""
-    try:
-        # Llamar a la función que genera el preview
-        result = SpritesPreviewGenerator.generateSecondPreview()
-        if result:
-            show_modal_with_gif(result)
-        else:
-            messagebox.showerror("Error", "No se generó ningún resultado.")
-    except Exception as e:
-        messagebox.showerror("Error", f"Error al generar el preview: {e}")
+# def open_second_platform_preview():
+#     """Ejecuta la función y muestra el resultado en un modal."""
+#     try:
+#         # Llamar a la función que genera el preview
+#         result = SpritesPreviewGenerator.generateSecondPreview()
+#         if result:
+#             show_modal_with_animation(result)
+#         else:
+#             messagebox.showerror("Error", "No se generó ningún resultado.")
+#     except Exception as e:
+#         messagebox.showerror("Error", f"Error al generar el preview: {e}")
 
-def open_enemy_preview(enemy_number):
-    """Ejecuta la función y muestra el resultado en un modal."""
-    try:
-        # Llamar a la función que genera el preview
-        result = SpritesPreviewGenerator.generateEnemy(enemy_number)
-        if result:
-            show_modal_with_gif(result)
-        else:
-            messagebox.showerror("Error", "No se generó ningún resultado.")
-    except Exception as e:
-        messagebox.showerror("Error", f"Error al generar el preview: {e}")
+# def open_enemy_preview(enemy_number):
+#     """Ejecuta la función y muestra el resultado en un modal."""
+#     try:
+#         # Llamar a la función que genera el preview
+#         result = SpritesPreviewGenerator.generateEnemy(enemy_number)
+#         if result:
+#             show_modal_with_animation(result)
+#         else:
+#             messagebox.showerror("Error", "No se generó ningún resultado.")
+#     except Exception as e:
+#         messagebox.showerror("Error", f"Error al generar el preview: {e}")
 
-def show_sprites_menu(event):
-    # Crear un menú emergente
-    sprites_menu = tk.Menu(root, tearoff=0)
+# def show_sprites_menu(event):
+#     # Crear un menú emergente
+#     sprites_menu = tk.Menu(root, tearoff=0)
 
-    # Submenú para "Main Character"
-    main_character_menu = tk.Menu(sprites_menu, tearoff=0)
-    main_character_menu.add_command(label="Running", command=open_main_character_running_preview)
-    main_character_menu.add_command(label="Idle", command=lambda: open_main_character_idle_preview())
-    sprites_menu.add_cascade(label="Main Character", menu=main_character_menu)
+#     # Submenú para "Main Character"
+#     main_character_menu = tk.Menu(sprites_menu, tearoff=0)
+#     main_character_menu.add_command(label="Running", command=open_main_character_running_preview)
+#     main_character_menu.add_command(label="Idle", command=lambda: open_main_character_idle_preview())
+#     sprites_menu.add_cascade(label="Main Character", menu=main_character_menu)
 
-    # Submenú para "Platforms"
-    platforms_menu = tk.Menu(sprites_menu, tearoff=0)
-    platforms_menu.add_command(label="Platform 1", command=lambda: open_first_platform_preview())
-    platforms_menu.add_command(label="Platform 2", command=lambda: open_second_platform_preview())
-    sprites_menu.add_cascade(label="Platforms", menu=platforms_menu)
+#     # Submenú para "Platforms"
+#     platforms_menu = tk.Menu(sprites_menu, tearoff=0)
+#     platforms_menu.add_command(label="Platform 1", command=lambda: open_first_platform_preview())
+#     platforms_menu.add_command(label="Platform 2", command=lambda: open_second_platform_preview())
+#     sprites_menu.add_cascade(label="Platforms", menu=platforms_menu)
 
-    # Submenú para "Enemies"
-    enemies_menu = tk.Menu(sprites_menu, tearoff=0)
-    for i in range(1, 9):  # Generar dinámicamente las opciones de enemigos del 1 al 8
-        enemies_menu.add_command(label=f"Enemy {i}", command=lambda i=i: open_enemy_preview(i))
-    sprites_menu.add_cascade(label="Enemies", menu=enemies_menu)
+#     # Submenú para "Enemies"
+#     enemies_menu = tk.Menu(sprites_menu, tearoff=0)
+#     for i in range(1, 9):  # Generar dinámicamente las opciones de enemigos del 1 al 8
+#         enemies_menu.add_command(label=f"Enemy {i}", command=lambda i=i: open_enemy_preview(i))
+#     sprites_menu.add_cascade(label="Enemies", menu=enemies_menu)
 
-    # Mostrar el menú en la posición del cursor
-    sprites_menu.post(event.x_root, event.y_root)
+#     # Mostrar el menú en la posición del cursor
+#     sprites_menu.post(event.x_root, event.y_root)
 
 def open_memory_bank_image(image):
     """Abre la imagen de uso de memoria para el banco especificado."""
@@ -318,28 +293,28 @@ map_menu = tk.Menu(menu_bar, tearoff=0)
 map_menu.add_command(label="Open Map", command=open_map_with_tiled)
 menu_bar.add_cascade(label="Map", menu=map_menu)
 
-# Menú "Sprites"
-sprites_menu = tk.Menu(menu_bar, tearoff=0)
+# # Menú "Sprites"
+# sprites_menu = tk.Menu(menu_bar, tearoff=0)
 
-# Submenú para "Main Character"
-main_character_menu = tk.Menu(sprites_menu, tearoff=0)
-main_character_menu.add_command(label="Running", command=open_main_character_running_preview)
-main_character_menu.add_command(label="Idle", command=open_main_character_idle_preview)
-sprites_menu.add_cascade(label="Main Character", menu=main_character_menu)
+# # Submenú para "Main Character"
+# main_character_menu = tk.Menu(sprites_menu, tearoff=0)
+# main_character_menu.add_command(label="Running", command=open_main_character_running_preview)
+# main_character_menu.add_command(label="Idle", command=open_main_character_idle_preview)
+# sprites_menu.add_cascade(label="Main Character", menu=main_character_menu)
 
-# Submenú para "Platforms"
-platforms_menu = tk.Menu(sprites_menu, tearoff=0)
-platforms_menu.add_command(label="Platform 1", command=open_first_platform_preview)
-platforms_menu.add_command(label="Platform 2", command=open_second_platform_preview)
-sprites_menu.add_cascade(label="Platforms", menu=platforms_menu)
+# # Submenú para "Platforms"
+# platforms_menu = tk.Menu(sprites_menu, tearoff=0)
+# platforms_menu.add_command(label="Platform 1", command=open_first_platform_preview)
+# platforms_menu.add_command(label="Platform 2", command=open_second_platform_preview)
+# sprites_menu.add_cascade(label="Platforms", menu=platforms_menu)
 
-# Submenú para "Enemies"
-enemies_menu = tk.Menu(sprites_menu, tearoff=0)
-for i in range(1, 9):  # Generar dinámicamente las opciones de enemigos del 1 al 8
-    enemies_menu.add_command(label=f"Enemy {i}", command=lambda i=i: open_enemy_preview(i))
-sprites_menu.add_cascade(label="Enemies", menu=enemies_menu)
+# # Submenú para "Enemies"
+# enemies_menu = tk.Menu(sprites_menu, tearoff=0)
+# for i in range(1, 9):  # Generar dinámicamente las opciones de enemigos del 1 al 8
+#     enemies_menu.add_command(label=f"Enemy {i}", command=lambda i=i: open_enemy_preview(i))
+# sprites_menu.add_cascade(label="Enemies", menu=enemies_menu)
 
-menu_bar.add_cascade(label="Sprites Preview", menu=sprites_menu)
+# menu_bar.add_cascade(label="Sprites Preview", menu=sprites_menu)
 
 # Menú "Game"
 game_menu = tk.Menu(menu_bar, tearoff=0)
