@@ -63,13 +63,23 @@ dim protaX as ubyte
 dim protaY as ubyte
 dim protaDirection as ubyte
 
+#ifdef DAMAGE_RESPAWN_ENABLED
+    dim protaXRespawn as ubyte
+    dim protaYRespawn as ubyte
+    dim protaDirectionRespawn as ubyte
+#endif
+
 dim animatedFrame as ubyte = 0
 
 dim inMenu as ubyte = 1
 
 #ifdef IDLE_ENABLED
     dim protaLoopCounter as ubyte = 0
+    #ifdef DAMAGE_TIME_ENABLED
+        dim movementTime as ubyte = 0
+    #endif
 #endif
+
 
 #ifdef SHOOTING_ENABLED
     dim noKeyPressedForShoot as UBYTE = 1
@@ -494,6 +504,12 @@ sub resetValues()
 
     currentAmmo = INITIAL_AMMO
     
+    #ifdef DAMAGE_TIME_ENABLED
+        #ifdef IDLE_ENABLED
+            movementTime = 0
+        #endif
+    #endif
+
     redrawScreen()
     ' drawSprites()
 end sub

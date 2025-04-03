@@ -77,6 +77,7 @@ gameName = 'Game Name'
 initialLife = 40
 goalItems = 2
 damageAmount = 5
+tileDamageAmount = 5
 lifeAmount = 5
 bulletDistance = 0
 enemiesRespawn = 0
@@ -136,6 +137,10 @@ mainCharacterExtraFrame = 1
 
 idleTime = 0
 
+damageTime = 0
+
+damageRespawn = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -144,6 +149,8 @@ if 'properties' in data:
             goalItems = property['value']
         elif property['name'] == 'damageAmount':
             damageAmount = property['value']
+        elif property['name'] == 'tileDamageAmount':
+            tileDamageAmount = property['value']
         elif property['name'] == 'lifeAmount':
             lifeAmount = property['value']
         elif property['name'] == 'initialLife':
@@ -223,6 +230,10 @@ if 'properties' in data:
             mainCharacterExtraFrame = 1 if property['value'] else 0
         elif property['name'] == 'idleTime':
             idleTime = property['value']
+        elif property['name'] == 'damageTime':
+            damageTime = property['value']
+        elif property['name'] == 'damageRespawn':
+            damageRespawn = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -237,6 +248,7 @@ configStr += "const screenHeight as ubyte = " + str(screenHeight) + "\n"
 configStr += "const INITIAL_LIFE as ubyte = " + str(initialLife) + "\n"
 configStr += "const MAX_LINE as ubyte = " + str(screenHeight * 2 - 4) + "\n"
 configStr += "const DAMAGE_AMOUNT as ubyte = " + str(damageAmount) + "\n"
+configStr += "const TILE_DAMAGE_AMOUNT as ubyte = " + str(tileDamageAmount) + "\n"
 configStr += "const LIFE_AMOUNT as ubyte = " + str(lifeAmount) + "\n"
 configStr += "const BULLET_DISTANCE as ubyte = " + str(bulletDistance) + "\n"
 configStr += "const SHOULD_KILL_ENEMIES as ubyte = " + str(shouldKillEnemies) + "\n"
@@ -347,6 +359,13 @@ if mainCharacterExtraFrame == 1:
 if idleTime > 0:
     configStr += "#DEFINE IDLE_ENABLED\n"
     configStr += "const IDLE_TIME as ubyte = " + str(idleTime) + "\n"
+
+    if damageTime > 0:
+        configStr += "#DEFINE DAMAGE_TIME_ENABLED\n"
+        configStr += "const MAX_DAMAGE_TIME as ubyte = " + str(damageTime*10) + "\n"
+
+if damageRespawn == 1:
+    configStr += "#DEFINE DAMAGE_RESPAWN_ENABLED\n"
 
 for layer in data['layers']:
     if layer['type'] == 'tilelayer':

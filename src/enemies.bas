@@ -134,11 +134,11 @@ sub checkProtaCollision(enemyId as ubyte)
     if protaY1 < enemyY0 then return
     if protaY > enemyY1 then return
 
-    invincible = 1
-    invincibleFrame = framec
-    decrementLife()
-    BeepFX_Play(1)
+    protaTouch(DAMAGE_AMOUNT)
 
+    #ifdef DAMAGE_RESPAWN_ENABLED
+        saveSprite(PROTA_SPRITE, protaYRespawn, protaXRespawn, getSpriteTile(PROTA_SPRITE), protaDirectionRespawn)
+    #endif
 end sub
 
 #ifdef SIDE_VIEW

@@ -81,6 +81,11 @@
                 "value": 10
             },
             {
+                "name": "tileDamageAmount",
+                "type": "int",
+                "value": 0
+            },
+            {
                 "name": "enemiesRespawn",
                 "type": "bool",
                 "value": true
@@ -108,6 +113,11 @@
             },
             {
                 "name": "idleTime",
+                "type": "int",
+                "value": 0
+            },
+            {
+                "name": "damageTime",
                 "type": "int",
                 "value": 0
             },

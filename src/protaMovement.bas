@@ -386,6 +386,7 @@ sub keyboardListen()
 		if MultiKeys(keyArray(UP))<>0 then upKey()
 		if MultiKeys(keyArray(DOWN))<>0 then downKey()
 		if MultiKeys(keyArray(FIRE))<>0 then fireKey()
+		
 		#ifdef IDLE_ENABLED
 			if MultiKeys(keyArray(LEFT))=0 and MultiKeys(keyArray(RIGHT))=0 and MultiKeys(keyArray(UP))=0 and MultiKeys(keyArray(DOWN))=0 and MultiKeys(keyArray(FIRE))=0
 				if protaLoopCounter < IDLE_TIME then protaLoopCounter = protaLoopCounter + 1
@@ -461,19 +462,19 @@ sub checkDamageByTile()
     Dim lin as uByte = protaY >> 1
 
 	if isADamageTile(GetTile(col, lin))
-		protaTouch()
+		protaTouch(TILE_DAMAGE_AMOUNT)
 		return
 	end if
 	if isADamageTile(GetTile(col + 1, lin))
-		protaTouch()
+		protaTouch(TILE_DAMAGE_AMOUNT)
 		return
 	end if
 	if isADamageTile(GetTile(col, lin + 1))
-		protaTouch()
+		protaTouch(TILE_DAMAGE_AMOUNT)
 		return
 	end if
 	if isADamageTile(GetTile(col + 1, lin + 1))
-		protaTouch()
+		protaTouch(TILE_DAMAGE_AMOUNT)
 		return
 	end if
 end sub
@@ -490,7 +491,7 @@ sub protaMovement()
 		gravity()
 
 		#ifdef IDLE_ENABLED
-			if protaLoopCounter >= IDLE_TIME
+			if protaLoopCounter = IDLE_TIME
 				if jumpCurrentKey <> jumpStopValue then return
 				if isFalling() then return
 
@@ -500,6 +501,30 @@ sub protaMovement()
 					else
 						saveSprite(PROTA_SPRITE, protaY, protaX, 12, protaDirection)
 					end if
+				end if
+			end if
+		#endif
+	#else
+		#ifdef IDLE_ENABLED
+			if protaLoopCounter = IDLE_TIME
+				if framec - lastFrameTiles = ANIMATE_PERIOD_TILE - 2
+					if getSpriteTile(PROTA_SPRITE) = 12
+						saveSprite(PROTA_SPRITE, protaY, protaX, 13, protaDirection)
+					else
+						saveSprite(PROTA_SPRITE, protaY, protaX, 12, protaDirection)
+					end if
+				end if
+			end if
+		#endif
+	#endif
+
+	#ifdef IDLE_ENABLED
+		#ifdef DAMAGE_TIME_ENABLED
+			if protaLoopCounter = 0
+				movementTime = movementTime + 1
+
+				if movementTime = MAX_DAMAGE_TIME
+					protaTouch(1)
 				end if
 			end if
 		#endif
