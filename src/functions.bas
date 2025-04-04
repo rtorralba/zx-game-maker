@@ -4,7 +4,7 @@ sub pauseUntilPressKey()
 end sub
 
 sub decrementLife()
-	if (currentLife = 0)
+	if (currentLife = 0) then
 		return
 	end if
 
@@ -37,7 +37,7 @@ end sub
 
 function isADamageTile(tile as ubyte) as UBYTE
     for i = 0 to DAMAGE_TILES_COUNT
-        if peek(@damageTiles + i) = tile
+        if peek(@damageTiles + i) = tile then
             return 1
         end if
     next i
@@ -48,11 +48,11 @@ function allEnemiesKilled() as ubyte
     if enemiesPerScreen(currentScreen) = 0 then return 1
 
     for enemyId=0 TO enemiesPerScreen(currentScreen) - 1
-        if decompressedEnemiesScreen(enemyId, 0) < 16
+        if decompressedEnemiesScreen(enemyId, 0) < 16 then
             continue for
         end if
-        if decompressedEnemiesScreen(enemyId, 8) <> 99 'is not invincible'
-            if decompressedEnemiesScreen(enemyId, 8) > 0 'In the screen and still live
+        if decompressedEnemiesScreen(enemyId, 8) <> 99 then  'is not invincible'
+            if decompressedEnemiesScreen(enemyId, 8) > 0 then 'In the screen and still live
                 return 0
             end if
         end if
@@ -84,7 +84,7 @@ end sub
 
         dim tile as ubyte = GetTile(col, lin)
 
-        if tile > 63 and tile < 80 return 1
+        if tile > 63 and tile < 80 then return 1
 
         return 0
     end function
@@ -101,17 +101,17 @@ function CheckCollision(x as uByte, y as uByte) as uByte
     if isSolidTileByColLin(col, lin + 1) then return 1
     if isSolidTileByColLin(col + 1, lin + 1) then return 1
     
-    if not yIsEven
+    if not yIsEven then
         if isSolidTileByColLin(col, lin + 2) then return 1
         if isSolidTileByColLin(col + 1, lin + 2) then return 1
     end if
 
-    if not xIsEven
+    if not xIsEven then
         if isSolidTileByColLin(col + 2, lin) then return 1
         if isSolidTileByColLin(col + 2, lin + 1) then return 1
     end if
 
-    if not xIsEven and not yIsEven
+    if not xIsEven and not yIsEven then
 		if isSolidTileByColLin(col + 2, lin + 2) then return 1
     end if
 
@@ -137,12 +137,12 @@ sub removeTilesFromScreen(tile as ubyte)
 	y = 0
 	
 	for index=0 to SCREEN_LENGTH
-		if peek(@decompressedMap + index) - 1 = tile
+		if peek(@decompressedMap + index) - 1 = tile then
 			SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
 		end if
 
 		x = x + 1
-		if x = screenWidth
+		if x = screenWidth then
 			x = 0
 			y = y + 1
 		end if
@@ -151,7 +151,7 @@ end sub
 
 #ifdef SIDE_VIEW
 	sub jump()
-        if jumpCurrentKey = jumpStopValue and landed
+        if jumpCurrentKey = jumpStopValue and landed then
             landed = 0
             jumpCurrentKey = 0
         end if

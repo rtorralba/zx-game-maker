@@ -28,16 +28,16 @@ sub moveEnemies()
 
     if enemiesPerScreen(currentScreen) > 0 then maxEnemiesCount = enemiesPerScreen(currentScreen) - 1
     for enemyId=0 TO maxEnemiesCount
-        if decompressedEnemiesScreen(enemyId, ENEMY_TILE) = 0
+        if decompressedEnemiesScreen(enemyId, ENEMY_TILE) = 0 then
             continue for
         end if
         #ifdef ENEMIES_NOT_RESPAWN_ENABLED
-            if decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <> 99 and decompressedEnemiesScreen(enemyId, ENEMY_TILE) > 15
+            if decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <> 99 and decompressedEnemiesScreen(enemyId, ENEMY_TILE) > 15 then
                 if screensWon(currentScreen) then continue for
             end if
         #endif
         
-        if decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) > 0 'In the screen and still live
+        if decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) > 0 then 'In the screen and still live
             dim tile as BYTE
             dim enemyCol as BYTE = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) 
             dim enemyLin as BYTE = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
@@ -47,24 +47,24 @@ sub moveEnemies()
             if decompressedEnemiesScreen(enemyId, ENEMY_COL_INI) = decompressedEnemiesScreen(enemyId, ENEMY_COL_END) then decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 0
             if decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) then decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = 0
 
-            if decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION)
-                if decompressedEnemiesScreen(enemyId, ENEMY_COL_INI) = enemyCol or decompressedEnemiesScreen(enemyId, ENEMY_COL_END) = enemyCol
+            if decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) then
+                if decompressedEnemiesScreen(enemyId, ENEMY_COL_INI) = enemyCol or decompressedEnemiesScreen(enemyId, ENEMY_COL_END) = enemyCol then
                     decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) * -1
                 end if
             end if
             
             decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) + decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION)
 
-            if decompressedEnemiesScreen(enemyId, ENEMY_TILE) < 16 ' Is a platform not an enemy, only 2 frames, 1 direction
+            if decompressedEnemiesScreen(enemyId, ENEMY_TILE) < 16 then ' Is a platform not an enemy, only 2 frames, 1 direction
                 #ifdef SIDE_VIEW
-                    if checkPlatformHasProtaOnTop(decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
-                        if decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 1
-                            if not CheckCollision(protaX + 1, protaY)
+                    if checkPlatformHasProtaOnTop(decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)) then
+                        if decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 1 then
+                            if not CheckCollision(protaX + 1, protaY) then
                                 spritesLinColTileAndFrame(PROTA_SPRITE, 1) = protaX + decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION)
                                 protaX = spritesLinColTileAndFrame(PROTA_SPRITE, 1)
                             end if
                         elseif decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = -1
-                            if not CheckCollision(protaX - 1, protaY)
+                            if not CheckCollision(protaX - 1, protaY) then
                                 spritesLinColTileAndFrame(PROTA_SPRITE, 1) = protaX + decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION)                       
                                 protaX = spritesLinColTileAndFrame(PROTA_SPRITE, 1)
                             end if
@@ -78,8 +78,8 @@ sub moveEnemies()
                 tile = decompressedEnemiesScreen(enemyId, ENEMY_TILE) + 16
             end if
 
-            if decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION)
-                if decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = enemyLin or decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = enemyLin
+            if decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) then
+                if decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = enemyLin or decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = enemyLin then
                     decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) * -1
                 end if
             end if
@@ -90,13 +90,13 @@ sub moveEnemies()
             '     saveSpriteLin(PROTA_SPRITE, protaY + decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION))
             ' end if
 
-            if enemFrame
+            if enemFrame then
                 tile = tile + 1
             end if
 
             saveSprite(enemyId, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), tile, decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION))
 
-            if decompressedEnemiesScreen(enemyId, ENEMY_TILE) > 15
+            if decompressedEnemiesScreen(enemyId, ENEMY_TILE) > 15 then
                 checkProtaCollision(enemyId)
             end if
         end if
@@ -116,9 +116,9 @@ sub checkProtaCollision(enemyId as ubyte)
 
     #ifdef SIDE_VIEW
         #ifdef KILL_JUMPING_ON_TOP
-            if not landed
-                if (protaY1 + 2) = enemyY0
-                    if protaX >= (enemyX0-1) and protaX <= (enemyX1+1)
+            if not landed then
+                if (protaY1 + 2) = enemyY0 then
+                    if protaX >= (enemyX0-1) and protaX <= (enemyX1+1) then
                         damageEnemy(enemyId)
                         landed = 1
                         jump()

@@ -7,7 +7,7 @@ SUB VortexTracker_Inicializar(usarIM2 AS UByte)
   ASM
     di
   END ASM
-  if inMenu
+  if inMenu then
     callVtAddress($C000)
   else
     callVtAddress(VTPLAYER_INIT)
@@ -32,7 +32,7 @@ END SUB
 SUB FASTCALL VortexTracker_NextNote()
   if VortexTracker_Status <> 1 THEN return
 
-  if inMenu
+  if inMenu then
     callVtAddress($C005)
   else
     callVtAddress(VTPLAYER_NEXTNOTE)
@@ -47,7 +47,7 @@ SUB VortexTracker_Stop()
   ASM
     di
   END ASM
-  if inMenu
+  if inMenu then
     callVtAddress($C008)
   else
     callVtAddress(VTPLAYER_MUTE)

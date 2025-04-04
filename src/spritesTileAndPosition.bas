@@ -4,7 +4,7 @@ const FIRST_RUNNING_PROTA_SPRITE_LEFT as ubyte = 4
 DIM spritesLinColTileAndFrame(MAX_ENEMIES_PER_SCREEN, 4) as ubyte
 
 sub saveSprite(sprite as ubyte, lin as ubyte, col as ubyte, tile as ubyte, directionRight as ubyte)
-    if sprite = PROTA_SPRITE
+    if sprite = PROTA_SPRITE then
         protaX = col
         protaY = lin
         protaDirection = directionRight
@@ -13,7 +13,7 @@ sub saveSprite(sprite as ubyte, lin as ubyte, col as ubyte, tile as ubyte, direc
     spritesLinColTileAndFrame(sprite, 1) = col
     spritesLinColTileAndFrame(sprite, 2) = tile
     spritesLinColTileAndFrame(sprite, 3) = directionRight
-    if spritesLinColTileAndFrame(sprite, 4) = 6
+    if spritesLinColTileAndFrame(sprite, 4) = 6 then
         spritesLinColTileAndFrame(sprite, 4) = 0
     else
         spritesLinColTileAndFrame(sprite, 4) = spritesLinColTileAndFrame(sprite, 4) + 1
@@ -21,14 +21,14 @@ sub saveSprite(sprite as ubyte, lin as ubyte, col as ubyte, tile as ubyte, direc
 end sub
 
 function getSpriteLin(sprite as ubyte) as ubyte
-    if sprite = PROTA_SPRITE
+    if sprite = PROTA_SPRITE then
         return protaY
     end if
     return spritesLinColTileAndFrame(sprite, 0)
 end function
 
 function getSpriteCol(sprite as ubyte) as ubyte
-    if sprite = PROTA_SPRITE
+    if sprite = PROTA_SPRITE then
         return protaX
     end if
     return spritesLinColTileAndFrame(sprite, 1)
@@ -44,7 +44,7 @@ end function
 
 #ifdef SIDE_VIEW
     sub resetProtaSpriteToRunning()
-        if protaDirection
+        if protaDirection then
             saveSprite(PROTA_SPRITE, protaY, protaX, FIRST_RUNNING_PROTA_SPRITE_RIGHT, protaDirection)
         else
             saveSprite(PROTA_SPRITE, protaY, protaX, FIRST_RUNNING_PROTA_SPRITE_LEFT, protaDirection)

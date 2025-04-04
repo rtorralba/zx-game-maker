@@ -161,7 +161,7 @@ next i
 
 menu:
     #ifdef WAIT_PRESS_KEY_AFTER_LOAD
-        if firstLoad
+        if firstLoad then
             firstLoad = 0
             DO
             LOOP UNTIL GetKeyScanCode()
@@ -186,7 +186,7 @@ menu:
     #endif
 
     #ifdef HISCORE_ENABLED
-        if score > hiScore
+        if score > hiScore then
             hiScore = score
         end if
         PRINT AT 0, 22; "HI:"
@@ -207,7 +207,7 @@ menu:
         #endif
     #endif
 
-    if keyOption = "1"
+    if keyOption = "1" then
         if not keyArray(LEFT)
             let keyArray(LEFT) = KEYO
             let keyArray(RIGHT) = KEYP
@@ -215,16 +215,16 @@ menu:
             let keyArray(DOWN) = KEYA
             let keyArray(FIRE) = KEYSPACE
         end if
-    elseif keyOption = "2"
+    elseif keyOption = "2" then
         kempston = 1
-    elseif keyOption = "3"
+    elseif keyOption = "3" then
         let keyArray(LEFT)=KEY6
         let keyArray(RIGHT)=KEY7
         let keyArray(UP)=KEY9
         let keyArray(DOWN)=KEY8
         let keyArray(FIRE)=KEY0
     #ifdef REDEFINE_KEYS_ENABLED
-    elseif keyOption = "4"
+    elseif keyOption = "4" then
         redefineKeys()
     #endif
     end if
@@ -258,7 +258,7 @@ passwordScreen:
     next i
 
     for i=0 to 7
-        if chr(pass(i)) <> password(i)
+        if chr(pass(i)) <> password(i) then
             go to passwordScreen
         end if
     next i
@@ -371,17 +371,17 @@ playGame:
     do
         waitretrace
 
-        if framec - lastFrameProta >= ANIMATE_PERIOD_MAIN
+        if framec - lastFrameProta >= ANIMATE_PERIOD_MAIN then
             protaFrame = getNextFrameRunning()
             let lastFrameProta = framec
         end if
 
-        if framec - lastFrameEnemies >= ANIMATE_PERIOD_ENEMY
+        if framec - lastFrameEnemies >= ANIMATE_PERIOD_ENEMY then
             animateEnemies()
             let lastFrameEnemies = framec
         end if
 
-        if framec - lastFrameTiles >= ANIMATE_PERIOD_TILE
+        if framec - lastFrameTiles >= ANIMATE_PERIOD_TILE then
             animateAnimatedTiles()
             let lastFrameTiles = framec
         end if
@@ -392,22 +392,22 @@ playGame:
         moveBullet()
         drawSprites()
 
-        if moveScreen <> 0
+        if moveScreen <> 0 then
             moveToScreen(moveScreen)
             moveScreen = 0
         end if
 
         if currentLife = 0 then go to gameOver
 
-        if invincible = 1
-            if framec - invincibleFrame >= INVINCIBLE_FRAMES
+        if invincible = 1 then
+            if framec - invincibleFrame >= INVINCIBLE_FRAMES then
                 invincible = 0
                 invincibleFrame = 0
             end if
         end if
 
         #ifdef NEW_BEEPER_PLAYER
-            if framec - lastFrameBeep >= BEEP_PERIOD
+            if framec - lastFrameBeep >= BEEP_PERIOD then
                 BeepFX_NextNote()
                 let lastFrameBeep = framec
             end if
@@ -471,7 +471,7 @@ sub resetValues()
     currentLife = INITIAL_LIFE
     currentKeys = 2 mod 2
     currentKeys = 0
-    if ITEMS_COUNTDOWN
+    if ITEMS_COUNTDOWN then
         currentItems = ITEMS_TO_FIND
     else
         currentItems = 0
@@ -510,7 +510,7 @@ end sub
 
 sub animateAnimatedTiles()
     for i=0 to MAX_ANIMATED_TILES_PER_SCREEN:
-        if animatedTilesInScreen(currentScreen, i, 0) <> 0
+        if animatedTilesInScreen(currentScreen, i, 0) <> 0 then
             dim tile as ubyte = animatedTilesInScreen(currentScreen, i, 0) + animatedFrame + 1
             SetTile(tile, attrSet(tile), animatedTilesInScreen(currentScreen, i, 1), animatedTilesInScreen(currentScreen, i, 2))
         end if

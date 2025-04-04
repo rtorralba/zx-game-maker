@@ -132,16 +132,16 @@ end function
 
 sub moveToScreen(direction as Ubyte)
 	' removeAllObjects()
-	if direction = 6
+	if direction = 6 then
 		saveSprite(PROTA_SPRITE, protaY, 0, getSpriteTile(PROTA_SPRITE), protaDirection)
 		currentScreen = currentScreen + 1
-	elseif direction = 4
+	elseif direction = 4 then
 		saveSprite(PROTA_SPRITE, protaY, 60, getSpriteTile(PROTA_SPRITE), protaDirection)
 		currentScreen = currentScreen - 1
-	elseif direction = 2
+	elseif direction = 2 then
 		saveSprite(PROTA_SPRITE, 0, protaX, getSpriteTile(PROTA_SPRITE), protaDirection)
 		currentScreen = currentScreen + MAP_SCREENS_WIDTH_COUNT
-	elseif direction = 8
+	elseif direction = 8 then
 		saveSprite(PROTA_SPRITE, MAX_LINE, protaX, getSpriteTile(PROTA_SPRITE), protaDirection)
 		#ifdef SIDE_VIEW
 			jumpCurrentKey = 0
@@ -155,11 +155,11 @@ sub moveToScreen(direction as Ubyte)
 end sub
 
 sub drawSprites()
-	if (protaY < 41)
-		if not invincible
+	if (protaY < 41) then
+		if not invincible then
 			Draw2x2Sprite(spritesSet(getSpriteTile(PROTA_SPRITE)), protaX, protaY)
 		else
-			if invincibleBlink
+			if invincibleBlink then
 				invincibleBlink = not invincibleBlink
 				Draw2x2Sprite(spritesSet(getSpriteTile(PROTA_SPRITE)), protaX, protaY)
 			else
@@ -167,12 +167,12 @@ sub drawSprites()
 			end if
 		end if
 	end if
-	if enemiesPerScreen(currentScreen) > 0
+	if enemiesPerScreen(currentScreen) > 0 then
 		for i = 0 to enemiesPerScreen(currentScreen) - 1
 			if not getSpriteLin(i) then continue for
 			
 			#ifdef ENEMIES_NOT_RESPAWN_ENABLED
-				if decompressedEnemiesScreen(i, ENEMY_ALIVE) <> 99 and decompressedEnemiesScreen(i, ENEMY_TILE) > 15
+				if decompressedEnemiesScreen(i, ENEMY_ALIVE) <> 99 and decompressedEnemiesScreen(i, ENEMY_TILE) > 15 then
 					if screensWon(currentScreen) then continue for
 				end if
 			#endif
@@ -180,7 +180,7 @@ sub drawSprites()
 		next i
 	end if
 
-	if bulletPositionX <> 0
+	if bulletPositionX <> 0 then
 		Draw1x1Sprite(spritesSet(currentBulletSpriteId), bulletPositionX, bulletPositionY)
 	end if
 
