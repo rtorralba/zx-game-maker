@@ -159,14 +159,17 @@ next i
 #include "draw.bas"
 #include "protaMovement.bas"
 
-menu:
-    #ifdef WAIT_PRESS_KEY_AFTER_LOAD
-        if firstLoad then
-            firstLoad = 0
-            DO
-            LOOP UNTIL GetKeyScanCode()
-        end if
-    #endif
+#ifdef WAIT_PRESS_KEY_AFTER_LOAD
+    if firstLoad then
+        firstLoad = 0
+        DO
+        LOOP UNTIL GetKeyScanCode()
+    end if
+#endif
+
+menu()
+
+sub menu()
     #ifdef ENABLED_128k
         #ifdef MUSIC_ENABLED
             VortexTracker_Stop()
@@ -194,51 +197,43 @@ menu:
     #endif
 
     do
-        let keyOption = Inkey$
-    #ifdef REDEFINE_KEYS_ENABLED
-        loop until keyOption = "1" OR keyOption = "2" OR keyOption = "3" OR keyOption = "4"
-    #else
-        loop until keyOption = "1" OR keyOption = "2" OR keyOption = "3"
-    #endif
-
-    #ifdef ENABLED_128k
-        #ifdef TITLE_MUSIC_ENABLED
-            VortexTracker_Stop()
+        if MultiKeys(KEY1) then
+            if not keyArray(LEFT) then
+                let keyArray(LEFT) = KEYO
+                let keyArray(RIGHT) = KEYP
+                let keyArray(UP) = KEYQ
+                let keyArray(DOWN) = KEYA
+                let keyArray(FIRE) = KEYSPACE
+            end if
+            playGame()
+        elseif MultiKeys(KEY2) then
+            kempston = 1
+            playGame()
+        elseif MultiKeys(KEY3) then
+            let keyArray(LEFT)=KEY6
+            let keyArray(RIGHT)=KEY7
+            let keyArray(UP)=KEY9
+            let keyArray(DOWN)=KEY8
+            let keyArray(FIRE)=KEY0
+            playGame()
+        #ifdef REDEFINE_KEYS_ENABLED
+        elseif MultiKeys(KEY4) then
+            redefineKeys()
         #endif
-    #endif
-
-    if keyOption = "1" then
-        if not keyArray(LEFT)
-            let keyArray(LEFT) = KEYO
-            let keyArray(RIGHT) = KEYP
-            let keyArray(UP) = KEYQ
-            let keyArray(DOWN) = KEYA
-            let keyArray(FIRE) = KEYSPACE
         end if
-    elseif keyOption = "2" then
-        kempston = 1
-    elseif keyOption = "3" then
-        let keyArray(LEFT)=KEY6
-        let keyArray(RIGHT)=KEY7
-        let keyArray(UP)=KEY9
-        let keyArray(DOWN)=KEY8
-        let keyArray(FIRE)=KEY0
-    #ifdef REDEFINE_KEYS_ENABLED
-    elseif keyOption = "4" then
-        redefineKeys()
-    #endif
-    end if
+    LOOP
+end sub
 
 
 #ifdef PASSWORD_ENABLED
 function readKey() as ubyte
     let k = GetKey
     let keyOption = chr(k)
-    if keyOption = " " then go to menu
+    if keyOption = " " then menu()
     return k
 end function
 
-passwordScreen:
+sub passwordScreen()
     INK 7: PAPER 0: BORDER 0: BRIGHT 0: FLASH 0: CLS
     PRINT AT 10, 10; "INSERT PASSWORD"
     PRINT AT 18, 0; "PRESS SPACE TO RETURN TO MENU"
@@ -259,11 +254,12 @@ passwordScreen:
 
     for i=0 to 7
         if chr(pass(i)) <> password(i) then
-            go to passwordScreen
+            passwordScreen()
         end if
     next i
 
-    go to playGame
+    playGame()
+end sub
 #endif
 
 #ifdef REDEFINE_KEYS_ENABLED
@@ -284,6 +280,12 @@ END FUNCTION
 
 sub redefineKeys()
     INK 7: PAPER 0: BORDER 0: BRIGHT 0: FLASH 0: CLS
+
+    #ifdef ENABLED_128k
+        #ifdef TITLE_MUSIC_ENABLED
+            VortexTracker_Stop()
+        #endif
+    #endif
 
     PRINT AT 5,5;"Press key for:";
 
@@ -318,22 +320,29 @@ sub redefineKeys()
     DO
     LOOP UNTIL MultiKeys(KEYENTER)
 
-    go to menu
+    menu()
 end sub
 #endif
 
-#ifdef ENABLED_128k
-    #ifdef INTRO_SCREEN_ENABLED
-        PaginarMemoria(DATA_BANK)
-            dzx0Standard(INTRO_SCREEN_ADDRESS, $4000)
-        PaginarMemoria(0)
-        DO
-        LOOP UNTIL MultiKeys(KEYENTER)
-    #endif
-#endif
-
-playGame:
+sub playGame()
     inMenu = 0
+
+    #ifdef ENABLED_128k
+        #ifdef TITLE_MUSIC_ENABLED
+            VortexTracker_Stop()
+        #endif
+    #endif
+
+    #ifdef ENABLED_128k
+        #ifdef INTRO_SCREEN_ENABLED
+            PaginarMemoria(DATA_BANK)
+                dzx0Standard(INTRO_SCREEN_ADDRESS, $4000)
+            PaginarMemoria(0)
+            DO
+            LOOP UNTIL MultiKeys(KEYENTER)
+        #endif
+    #endif
+
     INK INK_VALUE: PAPER PAPER_VALUE: BORDER BORDER_VALUE
     currentScreen = INITIAL_SCREEN
 
@@ -397,7 +406,7 @@ playGame:
             moveScreen = 0
         end if
 
-        if currentLife = 0 then go to gameOver
+        if currentLife = 0 then gameOver()
 
         if invincible = 1 then
             if framec - invincibleFrame >= INVINCIBLE_FRAMES then
@@ -413,8 +422,9 @@ playGame:
             end if
         #endif
     loop
+end sub
 
-ending:
+sub ending()
     #ifdef ENABLED_128k
         #ifdef MUSIC_ENABLED
             VortexTracker_Stop()
@@ -427,9 +437,10 @@ ending:
     #endif
     DO
     LOOP UNTIL MultiKeys(KEYENTER)
-    go to menu
+    menu()
+end sub
 
-gameOver:
+sub gameOver()
     #ifdef ENABLED_128k
         #ifdef MUSIC_ENABLED
             VortexTracker_Stop()
@@ -451,10 +462,11 @@ gameOver:
     #else
         print at 7, 12; "GAME OVER"
     #endif
+end sub
     
     DO
     LOOP UNTIL MultiKeys(KEYENTER)
-    go to menu
+    menu()
 
 sub resetValues()
     swapScreen()
