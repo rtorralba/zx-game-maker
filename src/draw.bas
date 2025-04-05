@@ -9,7 +9,7 @@ sub mapDraw()
 		drawTile(peek(@decompressedMap + index) - 1, x, y)
 
 		x = x + 1
-		if x = screenWidth
+		if x = screenWidth then
 			x = 0
 			y = y + 1
 		end if
@@ -20,8 +20,8 @@ sub drawTile(tile as ubyte, x as ubyte, y as ubyte)
 	if tile < 2 then return
 
 	#ifdef SHOULD_KILL_ENEMIES_ENABLED
-		if tile = 63 ' if is background, bullet or enemy kill door dont draw
-			if screensWon(currentScreen)
+		if tile = 63 then ' if is background, bullet or enemy kill door dont draw
+			if screensWon(currentScreen) then
 				SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
 			else
 				SetTile(tile, attrSet(tile), x, y)
@@ -29,15 +29,15 @@ sub drawTile(tile as ubyte, x as ubyte, y as ubyte)
 			return
 		end if
 	#else
-		if tile = 63 ' if is background, bullet or enemy kill door dont draw
+		if tile = 63 then ' if is background, bullet or enemy kill door dont draw
 			SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
 			return
 		end if
 	#endif
 
 	#ifdef USE_BREAKABLE_TILE
-		if tile = 62
-			if brokenTiles(currentScreen)
+		if tile = 62 then
+			if brokenTiles(currentScreen) then
 				SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
 			else
 				SetTileChecked(tile, attrSet(tile), x, y)
@@ -46,31 +46,31 @@ sub drawTile(tile as ubyte, x as ubyte, y as ubyte)
 		end if
 	#endif
 
-	if tile < 187
+	if tile < 187 then
 		SetTile(tile, attrSet(tile), x, y)
 		return
 	end if
 	
-	if tile = ITEM_TILE
-		if screenObjects(currentScreen, SCREEN_OBJECT_ITEM_INDEX)
+	if tile = ITEM_TILE then
+		if screenObjects(currentScreen, SCREEN_OBJECT_ITEM_INDEX) then
 			SetTileChecked(tile, attrSet(tile), x, y)
 		end if
 	elseif tile = KEY_TILE
-		if screenObjects(currentScreen, SCREEN_OBJECT_KEY_INDEX)
+		if screenObjects(currentScreen, SCREEN_OBJECT_KEY_INDEX) then
 			SetTileChecked(tile, attrSet(tile), x, y)
 		end if
 	#ifdef KEYS_ENABLED
 	elseif tile = DOOR_TILE
-		if screenObjects(currentScreen, SCREEN_OBJECT_DOOR_INDEX)
+		if screenObjects(currentScreen, SCREEN_OBJECT_DOOR_INDEX) then
 			SetTile(tile, attrSet(tile), x, y)
 		end if
 	#endif
 	elseif tile = LIFE_TILE
-		if screenObjects(currentScreen, SCREEN_OBJECT_LIFE_INDEX)
+		if screenObjects(currentScreen, SCREEN_OBJECT_LIFE_INDEX) then
 			SetTileChecked(tile, attrSet(tile), x, y)
 		end if
 	elseif tile = AMMO_TILE
-		if screenObjects(currentScreen, SCREEN_OBJECT_AMMO_INDEX)
+		if screenObjects(currentScreen, SCREEN_OBJECT_AMMO_INDEX) then
 			SetTileChecked(tile, attrSet(tile), x, y)
 		end if
 	end if
@@ -90,8 +90,8 @@ end sub
 
 #ifdef KEYS_ENABLED
 function checkTileIsDoor(col as ubyte, lin as ubyte) as ubyte
-	if GetTile(col, lin) = DOOR_TILE
-		if currentKeys <> 0
+	if GetTile(col, lin) = DOOR_TILE then
+		if currentKeys <> 0 then
 			currentKeys = currentKeys - 1
 			printLife()
 			screenObjects(currentScreen, SCREEN_OBJECT_DOOR_INDEX) = 0
@@ -112,17 +112,17 @@ function CheckDoor(x as uByte, y as uByte) as uByte
     Dim col as uByte = x >> 1
     Dim lin as uByte = y >> 1
 
-    if xIsEven and yIsEven
+    if xIsEven and yIsEven then
         return checkTileIsDoor(col, lin) or checkTileIsDoor(col + 1, lin) _
             or checkTileIsDoor(col, lin + 1) or checkTileIsDoor(col + 1, lin + 1)
-    elseif xIsEven and not yIsEven
+    elseif xIsEven and not yIsEven then
         return checkTileIsDoor(col, lin) or checkTileIsDoor(col + 1, lin) _
             or checkTileIsDoor(col, lin + 1) or checkTileIsDoor(col + 1, lin + 1) _
             or checkTileIsDoor(col, lin + 2) or checkTileIsDoor(col + 1, lin + 2)
-	elseif not xIsEven and yIsEven
+	elseif not xIsEven and yIsEven then
 		return checkTileIsDoor(col, lin) or checkTileIsDoor(col + 1, lin) or checkTileIsDoor(col + 2, lin) _
 			or checkTileIsDoor(col, lin + 1) or checkTileIsDoor(col + 1, lin + 1) or checkTileIsDoor(col + 2, lin + 1)
-    elseif not xIsEven and not yIsEven
+    elseif not xIsEven and not yIsEven then
         return checkTileIsDoor(col, lin) or checkTileIsDoor(col + 1, lin) or checkTileIsDoor(col + 2, lin) _
             or checkTileIsDoor(col, lin + 1) or checkTileIsDoor(col + 1, lin + 1) or checkTileIsDoor(col + 2, lin + 1) _
             or checkTileIsDoor(col, lin + 2) or checkTileIsDoor(col + 1, lin + 2) or checkTileIsDoor(col + 2, lin + 2)
