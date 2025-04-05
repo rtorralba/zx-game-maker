@@ -404,7 +404,7 @@ function checkTileObject(tile as ubyte) as ubyte
 		#endif
 		printLife()
 		if currentItems = GOAL_ITEMS then
-			go to ending
+			ending()
 		end if
 		screenObjects(currentScreen, SCREEN_OBJECT_ITEM_INDEX) = 0
 		BeepFX_Play(5)
