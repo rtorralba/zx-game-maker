@@ -27,7 +27,7 @@
   <property name="lifeAmount" type="int" value="5"/>
   <property name="mainCharacterExtraFrame" type="bool" value="true"/>
   <property name="maxAnimatedTilesPerScreen" type="int" value="10"/>
-  <property name="maxEnemiesPerScreen" type="int" value="5"/>
+  <property name="maxEnemiesPerScreen" type="int" value="3"/>
   <property name="musicEnabled" type="bool" value="true"/>
   <property name="newBeeperPlayer" type="bool" value="true"/>
   <property name="redefineKeysEnabled" type="bool" value="true"/>
