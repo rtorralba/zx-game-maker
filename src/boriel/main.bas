@@ -1,5 +1,5 @@
 #include "definitions.bas"
-#include "loader.bas"
+#include "dataLoader.bas"
 #ifdef ENABLED_128k
     #include "128/im2.bas"
     #include "128/vortexTracker.bas"
