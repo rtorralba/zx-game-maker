@@ -1,3 +1,6 @@
+#include <zx0.bas>
+#include <retrace.bas>
+#include <keys.bas>
 #include "definitions.bas"
 #include "dataLoader.bas"
 #ifdef ENABLED_128k
@@ -11,9 +14,6 @@ loadDataFromTape()
 #include "lib/GuSprites.zxbas"
 #include "graphicsInitializer.bas"
 #include "beepFx.bas"
-#include <zx0.bas>
-#include <retrace.bas>
-#include <keys.bas>
 #include "functions.bas"
 #include "spritesTileAndPosition.bas"
 #include "enemies.bas"
