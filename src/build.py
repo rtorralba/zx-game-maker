@@ -29,7 +29,7 @@ def buildingFilesAndConfig():
     return Builder().execute()
 
 def compilingGame():
-    runCommand("zxbc -W160 -W170 -W130 -W190 -W150 -W100 -H 128 --heap-address 23755 -S 24576 -O 4 " + str(Path("main.bas")) + " --mmap " + str(Path("output/map.txt")) + " -D HIDE_LOAD_MSG -o " + str(Path("output/main.bin")))
+    runCommand("zxbc -W160 -W170 -W130 -W190 -W150 -W100 -H 128 --heap-address 23755 -S 24576 -O 4 " + str(Path("boriel/main.bas")) + " --mmap " + str(Path("output/map.txt")) + " -D HIDE_LOAD_MSG -o " + str(Path("output/main.bin")))
 
 def checkMemory():
     runPythonScript("bin/check-memory.py")

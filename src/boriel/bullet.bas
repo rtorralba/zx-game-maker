@@ -7,54 +7,6 @@ dim bulletDirection as ubyte = 0
 dim bulletEndPositionX as ubyte = 0
 dim bulletEndPositionY as ubyte = 0
 
-dim bullet(7) as ubyte
-
-bullet(0) = tileSet(1, 0)
-bullet(1) = tileSet(1, 1)
-bullet(2) = tileSet(1, 2)
-bullet(3) = tileSet(1, 3)
-bullet(4) = tileSet(1, 4)
-bullet(5) = tileSet(1, 5)
-bullet(6) = tileSet(1, 6)
-bullet(7) = tileSet(1, 7)
-
-spritesSet(BULLET_SPRITE_RIGHT_ID) = Create1x1Sprite(@bullet)
-
-bullet(0) = tileSet(192, 0)
-bullet(1) = tileSet(192, 1)
-bullet(2) = tileSet(192, 2)
-bullet(3) = tileSet(192, 3)
-bullet(4) = tileSet(192, 4)
-bullet(5) = tileSet(192, 5)
-bullet(6) = tileSet(192, 6)
-bullet(7) = tileSet(192, 7)
-
-spritesSet(BULLET_SPRITE_LEFT_ID) = Create1x1Sprite(@bullet)
-
-#ifdef OVERHEAD_VIEW
-    bullet(0) = tileSet(193, 0)
-    bullet(1) = tileSet(193, 1)
-    bullet(2) = tileSet(193, 2)
-    bullet(3) = tileSet(193, 3)
-    bullet(4) = tileSet(193, 4)
-    bullet(5) = tileSet(193, 5)
-    bullet(6) = tileSet(193, 6)
-    bullet(7) = tileSet(193, 7)
-
-    spritesSet(BULLET_SPRITE_UP_ID) = Create1x1Sprite(@bullet)
-
-    bullet(0) = tileSet(194, 0)
-    bullet(1) = tileSet(194, 1)
-    bullet(2) = tileSet(194, 2)
-    bullet(3) = tileSet(194, 3)
-    bullet(4) = tileSet(194, 4)
-    bullet(5) = tileSet(194, 5)
-    bullet(6) = tileSet(194, 6)
-    bullet(7) = tileSet(194, 7)
-
-    spritesSet(BULLET_SPRITE_DOWN_ID) = Create1x1Sprite(@bullet)
-#endif
-
 ' sub createBullet(directionRight as ubyte)
 '     if directionRight
 '         spritesSet(BULLET_SPRITE_RIGHT_ID) = Create1x1Sprite(@bulletRight)
