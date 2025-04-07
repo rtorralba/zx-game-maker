@@ -9,6 +9,8 @@ from pprint import pprint
 import subprocess
 import sys
 
+import pystache
+
 def exitWithErrorMessage(message):
     print('\n\n=====================================================================================')
     sys.exit('ERROR: ' + message + '\n=====================================================================================\n\n')
@@ -16,6 +18,9 @@ def exitWithErrorMessage(message):
 outputDir = 'output/'
 
 f = open(outputDir + 'maps.json')
+
+srcDir = 'src/'
+gameConsts = {}
 
 data = json.load(f)
 
@@ -245,7 +250,10 @@ configStr = "const MAX_ENEMIES_PER_SCREEN as ubyte = " + str(maxEnemiesPerScreen
 configStr += "const MAX_ANIMATED_TILES_PER_SCREEN as ubyte = " + str(maxAnimatedTilesPerScreen - 1) + "\n"
 configStr += "const screenWidth as ubyte = " + str(screenWidth) + "\n"
 configStr += "const screenHeight as ubyte = " + str(screenHeight) + "\n"
-configStr += "const INITIAL_LIFE as ubyte = " + str(initialLife) + "\n"
+
+# configStr += "const INITIAL_LIFE as ubyte = " + str(initialLife) + "\n"
+gameConsts["INITIAL_LIFE"] = initialLife
+
 configStr += "const MAX_LINE as ubyte = " + str(screenHeight * 2 - 4) + "\n"
 configStr += "const DAMAGE_AMOUNT as ubyte = " + str(damageAmount) + "\n"
 configStr += "const TILE_DAMAGE_AMOUNT as ubyte = " + str(tileDamageAmount) + "\n"
@@ -645,3 +653,9 @@ with open(outputDir + 'enemies.bin.zx0', 'wb') as outfile:
         label = 'enemiesInScreen' + str(idx).zfill(3)
         with open(outputDir + label + '.bin.zx0', 'rb') as infile:
             outfile.write(infile.read())
+
+with open("main.bas.mustache", "rb") as text_file:
+    renderer = pystache.Renderer()
+    mainBasFinal = renderer.render_path("main.bas.mustache", gameConsts)
+    with open("mi_main.bas", "w") as text_file:
+        print(mainBasFinal, file=text_file)

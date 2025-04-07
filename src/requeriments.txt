@@ -4,3 +4,4 @@ bin2tap
 zxp2gus
 zxbasic
 skoolkit
+pystache
