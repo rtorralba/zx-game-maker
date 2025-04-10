@@ -2,5 +2,5 @@ matplotlib
 Pillow
 bin2tap
 zxp2gus
-zxbasic==1.17.3
+zxbasic
 skoolkit

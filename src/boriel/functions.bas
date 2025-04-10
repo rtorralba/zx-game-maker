@@ -1,6 +1,6 @@
 sub pauseUntilPressKey()
-    WHILE INKEY$<>"":WEND
-    WHILE INKEY$="":WEND
+    DO
+    LOOP UNTIL GetKeyScanCode()
 end sub
 
 sub decrementLife()
@@ -196,3 +196,23 @@ end sub
         while INKEY$="":wend
     end sub
 #endif
+
+sub debugA(value as UBYTE)
+    PRINT AT 18, 10; "----"
+    PRINT AT 18, 10; value
+end sub
+
+sub debugB(value as UBYTE)
+    PRINT AT 18, 15; "  "
+    PRINT AT 18, 15; value
+end sub
+
+' sub debugC(value as UBYTE)
+'     PRINT AT 18, 20; "  "
+'     PRINT AT 18, 20; value
+' end sub
+
+' sub debugD(value as UBYTE)
+'     PRINT AT 18, 25; "  "
+'     PRINT AT 18, 25; value
+' end sub

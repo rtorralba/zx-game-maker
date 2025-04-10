@@ -1,7 +1,3 @@
-const FIRST_RUNNING_PROTA_SPRITE_RIGHT as ubyte = 0
-const FIRST_RUNNING_PROTA_SPRITE_LEFT as ubyte = 4
-
-DIM spritesLinColTileAndFrame(MAX_ENEMIES_PER_SCREEN, 4) as ubyte
 
 sub saveSprite(sprite as ubyte, lin as ubyte, col as ubyte, tile as ubyte, directionRight as ubyte)
     if sprite = PROTA_SPRITE then

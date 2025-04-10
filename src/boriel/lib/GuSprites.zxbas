@@ -9,7 +9,7 @@
 'Remember to modify also the include that is defined at the bottom of the 
 'assembler variable declarations if your file is not named "Sprites.zxbas".
 
-'#define PRECOMPUTED_SPRITES
+#define PRECOMPUTED_SPRITES
 
 'Enabling this define changes the merge of the sprites and tiles to be a XOR instead of an OR
 '#define MERGE_WITH_XOR

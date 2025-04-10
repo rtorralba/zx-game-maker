@@ -29,7 +29,7 @@ def buildingFilesAndConfig():
     return Builder().execute()
 
 def compilingGame():
-    runCommand("zxbc -W160 -W170 -W130 -W190 -W150 -W100 -H 128 --heap-address 23755 -S 24576 -O 4 " + str(Path("main.bas")) + " --mmap " + str(Path("output/map.txt")) + " -D HIDE_LOAD_MSG -o " + str(Path("output/main.bin")))
+    runCommand("zxbc -W160 -W170 -W130 -W190 -W150 -W100 -H 128 --heap-address 23755 -S 24576 -O 4 " + str(Path("boriel/main.bas")) + " --mmap " + str(Path("output/map.txt")) + " -D HIDE_LOAD_MSG -o " + str(Path("output/main.bin")))
 
 def checkMemory():
     runPythonScript("bin/check-memory.py")
@@ -116,7 +116,8 @@ def build():
     executeFunction(tiledBuild, "Building Tiled maps")
     sizes = executeFunction(buildingFilesAndConfig, "Building files and config")
     executeFunction(compilingGame, "Compiling game")
-    executeFunction(checkMemory, "Checking memory")
+    if getEnabled128K():
+        executeFunction(checkMemory, "Checking memory")
     executeFunction(distBuild, "Building TAP, Z80 and EXE files")
     if not verbose:
         executeFunction(removeTempFiles, "Removing temporary files")
