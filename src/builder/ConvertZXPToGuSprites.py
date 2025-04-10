@@ -1,6 +1,6 @@
 from pathlib import Path
 from PIL import Image
-from generateShiftedData import generate_shifted_data  # Import the new function
+from GenerateShiftedData import generate_shifted_data  # Import the new function
 
 def generate_charset(sprite):
     """
@@ -27,7 +27,7 @@ def generate_charset(sprite):
     return charset
 
 # Leer el archivo ZXP
-inFile = str(Path("/home/raul/dev/spectrum/zxbasic/zx-game-maker/assets/map/sprites.zxp"))
+inFile = str(Path("../assets/map/sprites.zxp"))
 with open(inFile, 'r') as f:
     lines = f.readlines()
 
@@ -86,8 +86,6 @@ def write_shifted_sprites_to_file(sprites, output_file):
 
             shifted_data = generate_shifted_data(charset_object)  # Use the new function
 
-            print(f"Sprite {sprite_index}: {shifted_data}")  # Debug print
-
             for i in range(0, len(shifted_data), 8):  # Write 8 bytes per line
                 f.write("    DEFB " + ", ".join(f"{byte:03X}h" for byte in shifted_data[i:i+8]) + "\n")
             if sprite_index < len(sprites) - 1:  # Add a blank line between sprites
@@ -105,5 +103,5 @@ def write_shifted_sprites_to_file(sprites, output_file):
         f.write("\nend asm\n")
 
 # Replace the existing call to write the sprites
-output_file = "/home/raul/dev/spectrum/zxbasic/zx-game-maker/src/boriel/lib/Sprites.zxbas"
+output_file = "boriel/lib/Sprites.zxbas"
 write_shifted_sprites_to_file(sprites, output_file)
