@@ -157,11 +157,11 @@ End Sub
 Sub drawSprites()
     If (protaY < 41) Then
         If Not invincible Then
-            Draw2x2Sprite(spritesSet(getSpriteTile(PROTA_SPRITE)), protaX, protaY)
+            Draw2x2Sprite(getSpriteTile(PROTA_SPRITE), protaX, protaY)
         Else
             If invincibleBlink Then
                 invincibleBlink = Not invincibleBlink
-                Draw2x2Sprite(spritesSet(getSpriteTile(PROTA_SPRITE)), protaX, protaY)
+                Draw2x2Sprite(getSpriteTile(PROTA_SPRITE), protaX, protaY)
             Else
                 invincibleBlink = Not invincibleBlink
             End If
@@ -176,12 +176,12 @@ Sub drawSprites()
                     If screensWon(currentScreen) Then continue For
                 End If
             #endif
-            Draw2x2Sprite(spritesSet(getSpriteTile(i)), getSpriteCol(i), getSpriteLin(i))
+            Draw2x2Sprite(getSpriteTile(i), getSpriteCol(i), getSpriteLin(i))
         Next i
     End If
     
     If bulletPositionX <> 0 Then
-        Draw1x1Sprite(spritesSet(currentBulletSpriteId), bulletPositionX, bulletPositionY)
+        Draw1x1Sprite(currentBulletSpriteId, bulletPositionX, bulletPositionY)
     End If
     
     RenderFrame()

@@ -44,9 +44,9 @@ end function
 #ifdef SIDE_VIEW
 	function getNextFrameJumpingFalling() as ubyte
 		if (protaDirection) then
-			return 3
+			return 4
 		else
-			return 7
+			return 8
 		end if
 	end function
 
@@ -305,7 +305,7 @@ sub leftKey()
 	if onFirstColumn(PROTA_SPRITE) then
 		moveScreen = 4
 	elseif canMoveLeft()
-		saveSprite(PROTA_SPRITE, protaY, protaX - 1, protaFrame, 0)
+		saveSprite(PROTA_SPRITE, protaY, protaX - 1, protaFrame + 1, 0)
 	end if
 end sub
 
@@ -318,7 +318,7 @@ sub rightKey()
 	if onLastColumn(PROTA_SPRITE) then
 		moveScreen = 6
 	elseif canMoveRight()
-		saveSprite(PROTA_SPRITE, protaY, protaX + 1, protaFrame, 1)
+		saveSprite(PROTA_SPRITE, protaY, protaX + 1, protaFrame + 1, 1)
 	end if
 end sub
 
@@ -331,7 +331,7 @@ sub upKey()
 			spritesLinColTileAndFrame(PROTA_SPRITE, 3) = 8
 		end if
 		if canMoveUp() then
-			saveSprite(PROTA_SPRITE, protaY - 1, protaX, protaFrame, 8)
+			saveSprite(PROTA_SPRITE, protaY - 1, protaX, protaFrame + 1, 8)
 			if protaY < 2 then
 				moveScreen = 8
 			end if
@@ -349,7 +349,7 @@ sub downKey()
 			if protaY >= MAX_LINE then
 				moveScreen = 2
 			else
-				saveSprite(PROTA_SPRITE, protaY + 1, protaX, protaFrame, 2)
+				saveSprite(PROTA_SPRITE, protaY + 1, protaX, protaFrame + 1, 2)
 			end if
 		end if
 	#else
@@ -495,10 +495,10 @@ sub protaMovement()
 				if isFalling() then return
 
 				if framec - lastFrameTiles = ANIMATE_PERIOD_TILE - 2 then
-					if getSpriteTile(PROTA_SPRITE) = 12 then
-						saveSprite(PROTA_SPRITE, protaY, protaX, 13, protaDirection)
+					if getSpriteTile(PROTA_SPRITE) = 13 then
+						saveSprite(PROTA_SPRITE, protaY, protaX, 14, protaDirection)
 					else
-						saveSprite(PROTA_SPRITE, protaY, protaX, 12, protaDirection)
+						saveSprite(PROTA_SPRITE, protaY, protaX, 13, protaDirection)
 					end if
 				end if
 			end if

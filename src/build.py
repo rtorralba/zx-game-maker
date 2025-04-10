@@ -116,7 +116,8 @@ def build():
     executeFunction(tiledBuild, "Building Tiled maps")
     sizes = executeFunction(buildingFilesAndConfig, "Building files and config")
     executeFunction(compilingGame, "Compiling game")
-    executeFunction(checkMemory, "Checking memory")
+    if getEnabled128K():
+        executeFunction(checkMemory, "Checking memory")
     executeFunction(distBuild, "Building TAP, Z80 and EXE files")
     if not verbose:
         executeFunction(removeTempFiles, "Removing temporary files")

@@ -318,7 +318,7 @@ Sub resetValues()
         currentItems = 0
     End If
     ' removeScreenObjectFromBuffer()
-    saveSprite(PROTA_SPRITE, INITIAL_MAIN_CHARACTER_Y, INITIAL_MAIN_CHARACTER_X, 0, 1)
+    saveSprite(PROTA_SPRITE, INITIAL_MAIN_CHARACTER_Y, INITIAL_MAIN_CHARACTER_X, 1, 1)
     screenObjects = screenObjectsInitial
     enemiesPerScreen = enemiesPerScreenInitial
     For i = 0 To SCREENS_COUNT

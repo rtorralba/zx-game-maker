@@ -1,4 +1,4 @@
-const BURST_SPRITE_ID as ubyte = 15
+const BURST_SPRITE_ID as ubyte = 16
 const BULLET_SPEED as ubyte = 2
 
 dim bulletPositionX as ubyte = 0
@@ -156,7 +156,7 @@ sub damageEnemy(enemyToKill as Ubyte)
         x = decompressedEnemiesScreen(enemyToKill, ENEMY_CURRENT_COL)
         y = decompressedEnemiesScreen(enemyToKill, ENEMY_CURRENT_LIN)
         saveSprite(enemyToKill, 0, 0, 0, 0)
-        Draw2x2Sprite(spritesSet(BURST_SPRITE_ID), x, y)
+        Draw2x2Sprite(BURST_SPRITE_ID, x, y)
         
         BeepFX_Play(0)
 

@@ -8,11 +8,11 @@
 ' #endif
 
 const PROTA_SPRITE as ubyte = 5
-const BULLET_SPRITE_RIGHT_ID as ubyte = 48
-const BULLET_SPRITE_LEFT_ID as ubyte = 49
+const BULLET_SPRITE_RIGHT_ID as ubyte = 49
+const BULLET_SPRITE_LEFT_ID as ubyte = 50
 #ifdef OVERHEAD_VIEW
-    const BULLET_SPRITE_UP_ID as ubyte = 50
-    const BULLET_SPRITE_DOWN_ID as ubyte = 51
+    const BULLET_SPRITE_UP_ID as ubyte = 51
+    const BULLET_SPRITE_DOWN_ID as ubyte = 52
 #endif
 #ifdef SIDE_VIEW
     const jumpStopValue as ubyte = 255
@@ -85,7 +85,7 @@ dim inMenu as ubyte = 1
     dim tileSet(194, 7) as ubyte at TILESET_DATA_ADDRESS
 #endif
 dim attrSet(191) as ubyte at ATTR_DATA_ADDRESS
-dim sprites(47, 31) as ubyte at SPRITES_DATA_ADDRESS
+' dim sprites(47, 31) as ubyte at SPRITES_DATA_ADDRESS
 dim screenObjectsInitial(SCREENS_COUNT, 4) as ubyte at SCREEN_OBJECTS_INITIAL_DATA_ADDRESS
 dim screensOffsets(SCREENS_COUNT) as uInteger at SCREEN_OFFSETS_DATA_ADDRESS
 dim enemiesInScreenOffsets(SCREENS_COUNT) as uInteger at ENEMIES_IN_SCREEN_OFFSETS_DATA_ADDRESS
@@ -106,8 +106,8 @@ dim spriteAddressIndex as uInteger = 0
 
 Dim bullet(7) As Ubyte
 
-const FIRST_RUNNING_PROTA_SPRITE_RIGHT as ubyte = 0
-const FIRST_RUNNING_PROTA_SPRITE_LEFT as ubyte = 4
+const FIRST_RUNNING_PROTA_SPRITE_RIGHT as ubyte = 1
+const FIRST_RUNNING_PROTA_SPRITE_LEFT as ubyte = 5
 
 DIM spritesLinColTileAndFrame(MAX_ENEMIES_PER_SCREEN, 4) as ubyte
 

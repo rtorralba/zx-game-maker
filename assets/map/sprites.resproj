@@ -1,0 +1,995 @@
+{
+  "Name": "sprites",
+  "Sprites": [
+    {
+      "Id": "4f8698e4-34d4-4986-8a88-e08ec1ac0314",
+      "Name": "S00",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "AAcPHx8/Hx0=",
+        "LkdQSDhAQU8=",
+        "AEDgUPBQUPA=",
+        "aMYSDAgE4jI="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "10526322-38d2-4d73-b561-c41c26f2a65a",
+      "Name": "S01",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "AAcPHx8/Hx0=",
+        "LkdQSDgQISM=",
+        "AEDgUPBQUPA=",
+        "aMYSDAgIxEI="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "37313478-1d2c-465d-af9c-c795174993e8",
+      "Name": "S02",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "AAcPHx8/Hx0=",
+        "DhcgICgYBAQ=",
+        "AEDgUPBQUPA=",
+        "YNAIFBwQEJA="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "0f6a2140-5763-4036-b57b-3ffea33c6cbf",
+      "Name": "S03",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "Bw4eHx0+Hw8=",
+        "BwgICgoEBAc=",
+        "wKCw8PBw8OA=",
+        "wCAgICAgoOA="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "295ba361-b9c1-4279-a763-a4e99bc5542d",
+      "Name": "S04",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "AAIHCg8KCg8=",
+        "FmNIMBAgR0w=",
+        "AODw+Pj8+Lg=",
+        "dOIKEhwCgvI="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "7b8ec682-0218-444e-831d-a7cdae94e09f",
+      "Name": "S05",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "AAIHCg8KCg8=",
+        "FmNIMBAQI0I=",
+        "AODw+Pj8+Lg=",
+        "dOIKEhwIhMQ="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "bc064f6e-efe7-445c-8239-8c8b72d67446",
+      "Name": "S06",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "AAIHCg8KCg8=",
+        "BgsQKDgICAk=",
+        "AODw+Pj8+Lg=",
+        "cOgEBBQYICA="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "faa5ca6c-0344-4932-a33b-30fcb675fae8",
+      "Name": "S03Copy",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "AwUNDw8ODwc=",
+        "AwQEBAQEBQc=",
+        "4HB4+Lh8+PA=",
+        "4BAQUFAgIOA="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "1e25b600-e262-4f12-93cd-1c7ef387d0d8",
+      "Name": "S07",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "Di9///9/f38=",
+        "LgAAAAAAAAA=",
+        "YPT+///+/vQ=",
+        "8AAAAAAAAAA="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "b84381af-fc35-41ba-ac63-5e014f7fe99c",
+      "Name": "S08",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "Di8/fz8/Hw4=",
+        "AAAAAAAAAAA=",
+        "dPz+/vz89PA=",
+        "AAAAAAAAAAA="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "1e9be5ea-ee3f-427f-a9f1-caacbcb0616c",
+      "Name": "S09",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "//////////8=",
+        "//////////8=",
+        "//////////8=",
+        "//////////8="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "a244dd8f-1746-43e4-824f-4fe4d7b797dc",
+      "Name": "S10",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "//////////8=",
+        "//////////8=",
+        "//////////8=",
+        "//////////8="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "d6767524-a360-4449-a462-ccc90a9ecd91",
+      "Name": "S11",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "AAcNHxkXFRs=",
+        "DgcYKC8IEyI=",
+        "AMBg8DDTVbo=",
+        "5MgQUPAQyEQ="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "7a0d5385-b9d8-4056-a79b-666b00f791af",
+      "Name": "S12",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "AAcNHxkXFRs=",
+        "DgcYKC8IEyI=",
+        "AMBg7irOSqo=",
+        "5MgQUPAQyEQ="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "582c471d-f453-4a1e-acb0-535886adb808",
+      "Name": "S13",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "//////////8=",
+        "//////////8=",
+        "//////////8=",
+        "//////////8="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "157bb33a-4d0e-49c0-b9df-f23faab6d337",
+      "Name": "S14",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "AAAAIBkIBAg=",
+        "ABAMGCEBAAA=",
+        "ACAgIMBAQCA=",
+        "gCAADBgAAAA="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "ebc9e2ab-fe52-456c-a16d-6151fba2f063",
+      "Name": "S15",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "P39/XwBxv+M=",
+        "fYDdWQAdOXE=",
+        "wODg4ADA4CA=",
+        "IAB1QBiAgMA="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "3ca67846-4486-49f4-83bb-6d54c567015b",
+      "Name": "S16",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "P39/XwBxv+M=",
+        "fYDdWQANDQ8=",
+        "wODg4ADA4CA=",
+        "IAB1QBiAgMA="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "d196d500-1591-4077-90ed-08fe0e85cab1",
+      "Name": "S17",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "BwhQNxUTWEk=",
+        "xLuA8AgYIEE=",
+        "4BAKbChIGtI=",
+        "I90BHyAwCAQ="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "76563f13-66c6-4e91-beda-a280fb21c718",
+      "Name": "S18",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "BwhQMBUTGAk=",
+        "BDtAQMhYMBE=",
+        "4BAKDChIGNA=",
+        "INgEBCcyHBA="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "c1b3b4b8-1e6f-44f6-904c-ba56c74ca4db",
+      "Name": "S19",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "MwcXFsTnRBU=",
+        "JCgtJwARMyc=",
+        "/HLy3gCAcrI=",
+        "0h6AkgbYmBw="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "f5b40c14-4b1f-47a9-a6d5-141a83aaa273",
+      "Name": "S20",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "MwcXFsTnRBU=",
+        "JCgtJwAQMCA=",
+        "/HLy3gCAcrI=",
+        "0h6AkgbY2Pw="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "09d78368-1751-4920-aaf9-212e13bd811f",
+      "Name": "S21",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "//////////8=",
+        "//j07t6Ph4M=",
+        "//////////8=",
+        "/x8PBwMBAYE="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "96e48c94-d521-479f-a1d6-0a4736b10cd9",
+      "Name": "S22",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "//////////8=",
+        "//j358ODgYE=",
+        "//////////8=",
+        "/x/v58PBgYE="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "410869ed-9394-4488-bc27-6b8e7ad639a9",
+      "Name": "S24",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "/Pv39/bu7e8=",
+        "07e2ur+9vb0=",
+        "D/f/E+397dc=",
+        "fdd9ef/72+0="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "2a28cdcf-9e8a-499a-bfc1-ef499bb78b13",
+      "Name": "S23",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "/Pv39/bu7e8=",
+        "07e2ur+9u3c=",
+        "D/f/E+397dc=",
+        "fdd9ef/7250="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "5f79ef65-fd73-4ae4-9942-cf2159b58479",
+      "Name": "S25",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "+vTp6unp9fQ=",
+        "/vPv6fH+8eM=",
+        "Hw/fJ99X3w8=",
+        "P/cbU/Ofn48="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "2c17048a-5966-4c14-b0ef-e2b492e863ff",
+      "Name": "S26",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "+vTp6unp9fQ=",
+        "/vPv6fH+/Pw=",
+        "Hw/fJ99X3w8=",
+        "P/cbU/Ofnw8="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "cfbfd195-8714-47ee-b402-3959dd3e422d",
+      "Name": "S27",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "/Pv39/f19vs=",
+        "79rX1NjP2/c=",
+        "B/v7B28nH48=",
+        "/w8v+/Oftzc="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "f2cbf6d0-5db7-46de-a145-78ebc8850279",
+      "Name": "S28",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "/Pv39/f19vs=",
+        "79rX1NjP2/s=",
+        "B/v7B28nH48=",
+        "/w8v+/Oft7s="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "9aeb43f1-f6fe-4c25-9d7b-4e11de155cf7",
+      "Name": "S29",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "//////////8=",
+        "//j07t6Ph4M=",
+        "//////////8=",
+        "/x8PBwMBAYE="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "af71bb07-3583-4bb1-b48c-279a6aefdbb2",
+      "Name": "S30",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "//////////8=",
+        "//j358ODgYE=",
+        "//////////8=",
+        "/x/v58PBgYE="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "b9878830-834f-4647-b38c-fefcc0d68eee",
+      "Name": "S31",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "/Pj4+P/8+Ps=",
+        "+/9R/ef+/vw=",
+        "AwEBBf9xAjg=",
+        "Qf5EZf9HY3E="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "8ce08ad5-7901-404c-8480-8e2d3c4eaf18",
+      "Name": "S32",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "/Pj4+P/8+Ps=",
+        "+/9R/ef+/vw=",
+        "AwEBBf9xAjg=",
+        "Qf5EZf9PTw8="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "a8b60b3e-b4ad-4a1e-be35-a32cfa4be0b4",
+      "Name": "S34",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "+Pevyevtp7Q=",
+        "O0R/B/vz798=",
+        "H+/1E1c35W0=",
+        "3CL+8O/n+30="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "77ec7c2d-5f69-4bb6-b87c-cb67a9e49153",
+      "Name": "S35",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "+Pevz+vt5/Q=",
+        "++Tf3xuzx/c=",
+        "H+/181c3528=",
+        "3yP9/ezl83c="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "31430668-931d-4f0e-a75a-377bfd9ab91f",
+      "Name": "S36",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "wLGwhP/+sbI=",
+        "tIf+tp/k5sc=",
+        "Mx8Xl9wY3Vc=",
+        "2+tLG/93Mxs="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "631de0e2-19bf-4708-9e8e-4827286b1eb0",
+      "Name": "S37",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "wLGwhP/+sbI=",
+        "tIf+tp/k5MA=",
+        "Mx8Xl9wY3Vc=",
+        "2+tLG//38/s="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "72f8f5b1-bbff-4f61-bd6d-0cde6aab1b47",
+      "Name": "S38",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "//////////8=",
+        "//j07t6Ph4M=",
+        "//////////8=",
+        "/x8PBwMBAYE="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "49b7a574-5adf-4018-bca3-8862f3aaf487",
+      "Name": "S39",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "//////////8=",
+        "//j358ODgYE=",
+        "//////////8=",
+        "/x/v58PBgYE="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "4ff54f32-adbe-4e42-a5f8-3e14b3cdd23a",
+      "Name": "S40",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "8O//yLe/t+s=",
+        "vuu+nv/f27k=",
+        "P9/v7293t/c=",
+        "y+1tXf293e4="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "928d0eb1-a554-4e74-af6c-53f90085ca6b",
+      "Name": "S41",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "8O//yLe/t+s=",
+        "vuu+nv/f27c=",
+        "P9/v7293t/c=",
+        "y+1tXf29vb0="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "44fe2c00-c636-4087-a306-9624914a503e",
+      "Name": "S42",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "+PD75Pvq+/A=",
+        "/O/Yys/5+fE=",
+        "Xy+XV5eXry8=",
+        "f8/3l49/j8c="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "af152c72-ba52-48ad-980e-020d5eaf815a",
+      "Name": "S43",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "+PD75Pvq+/A=",
+        "/O/Yys/5+fA=",
+        "Xy+XV5eXry8=",
+        "f8/3l49/Pz8="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "e6a54ed8-c2a7-4363-ad1c-2cfa0336ca42",
+      "Name": "S44",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "4N/f4Pbk+PE=",
+        "//D038/57ew=",
+        "P9/v7++vb98=",
+        "91vrKxvz2+8="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "9fb6a051-8d61-470f-bb68-e6ab522c2de1",
+      "Name": "S45",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "4N/f4Pbk+PE=",
+        "//D038/57d0=",
+        "P9/v7++vb98=",
+        "91vrKxvz298="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "646b366d-6740-4e32-bc85-30ed057220fe",
+      "Name": "S46",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "//////////8=",
+        "//j07t6Ph4M=",
+        "//////////8=",
+        "/x8PBwMBAYE="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "3bd3afc9-a05f-439f-9319-e95fc392e3d4",
+      "Name": "S47",
+      "Width": 2,
+      "Height": 2,
+      "Data": [
+        "//////////8=",
+        "//j358ODgYE=",
+        "//////////8=",
+        "/x/v58PBgYE="
+      ],
+      "ColorData": [
+        56,
+        56,
+        56,
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "1f737d1e-6955-430c-8a8b-190a01ba888e",
+      "Name": "S48",
+      "Width": 1,
+      "Height": 1,
+      "Data": [
+        "AOD8///84AA="
+      ],
+      "ColorData": [
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    },
+    {
+      "Id": "b4b4000c-3c6b-4159-9fee-7049d9a80790",
+      "Name": "S49",
+      "Width": 1,
+      "Height": 1,
+      "Data": [
+        "AAc///8/BwA="
+      ],
+      "ColorData": [
+        56
+      ],
+      "Sort": 0,
+      "SetType": 0
+    }
+  ],
+  "Tiles": [],
+  "StoredData": []
+}

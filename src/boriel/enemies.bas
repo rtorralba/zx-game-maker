@@ -81,7 +81,7 @@ Sub moveEnemies()
         tile = tile + 1
     End If
     
-    saveSprite(enemyId, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), tile, decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION))
+    saveSprite(enemyId, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), tile + 1, decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION))
     
     If decompressedEnemiesScreen(enemyId, ENEMY_TILE) > 15 Then
         checkProtaCollision(enemyId)
