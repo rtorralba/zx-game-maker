@@ -1,3 +1,5 @@
+from Sprite import Sprite
+
 class ZXPToSpritesConversor:
     @staticmethod
     def convert(zxp_file, num_sprites_per_row = 16, sprite_size = 16, rows_per_sprite_group = 16):
@@ -21,6 +23,6 @@ class ZXPToSpritesConversor:
                     # Extraer los 16 bits correspondientes a la columna actual
                     sprite_row = [int(bit) for bit in line[col * sprite_size:(col + 1) * sprite_size]]
                     sprite.append(sprite_row)
-                sprites.append(sprite)
+                sprites.append(Sprite(sprite, sprite_size, sprite_size))
         
         return sprites
