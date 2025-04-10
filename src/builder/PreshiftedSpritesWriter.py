@@ -1,5 +1,3 @@
-from Charset import CharSet
-
 class PreshiftedSpritesWriter:
     @staticmethod
     def write(preshiftedSprites, outputFile):

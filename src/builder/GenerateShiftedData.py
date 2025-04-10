@@ -1,4 +1,4 @@
-from PreshiftedSprite import PreshiftedSprite
+from builder.PreshiftedSprite import PreshiftedSprite
 
 class GenerateShiftedData:
     @staticmethod

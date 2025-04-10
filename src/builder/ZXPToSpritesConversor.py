@@ -1,4 +1,4 @@
-from Sprite import Sprite
+from builder.Sprite import Sprite
 
 class ZXPToSpritesConversor:
     @staticmethod
