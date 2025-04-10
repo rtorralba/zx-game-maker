@@ -1,4 +1,5 @@
 from pathlib import Path
+from builder import helper
 from builder.GenerateShiftedData import GenerateShiftedData
 from builder.Charset import CharSet
 from builder.ZXPToSpritesConversor import ZXPToSpritesConversor
@@ -19,7 +20,9 @@ class ConvertZXPToGuSprites:
         output_file = "boriel/lib/Sprites.zxbas"
 
         sprites = ZXPToSpritesConversor.convert(str(Path("../assets/map/sprites.zxp")))
-        sprites.extend(ZXPToSpritesConversor.convert(str(Path("../assets/map/bullet.zxp")), 2, 8, 8))  # Use extend instead of append
+
+        bulletCount = 2 if helper.getGameView() == "side" else 4
+        sprites.extend(ZXPToSpritesConversor.convert(str(Path("../assets/map/bullet.zxp")), bulletCount, 8, 8))  # Use extend instead of append
 
         preshiftedSprites = ConvertZXPToGuSprites.preshiftSprites(sprites)
 
