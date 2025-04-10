@@ -22,8 +22,11 @@ class PreshiftedSpritesWriter:
 
             # Write SPRITE_INDEX
             f.write("\nSPRITE_INDEX:\n")
-            for i in range(len(preshiftedSprites)):
-                f.write(f"    DEFW (SPRITE_BUFFER + {i * 120})\n")  # 120 bytes per sprite
+            sprite_offset = 0
+            for sprite in preshiftedSprites:
+                sprite_size = len(sprite.pixels)  # Calculate the size of the sprite in bytes
+                f.write(f"    DEFW (SPRITE_BUFFER + {sprite_offset})\n")
+                sprite_offset += sprite_size  # Increment the offset by the size of the current sprite
 
             # Write SPRITE_COUNT
             f.write("\nSPRITE_COUNT:\n")
