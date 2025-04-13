@@ -123,3 +123,8 @@ CONST ENEMY_ALIVE as UBYTE = 8
 ' CONST ENEMY_SPRITE as UBYTE = 9
 CONST ENEMY_VERTICAL_DIRECTION as UBYTE = 10
 'CONST ENEMY_COLOR as UBYTE = 11
+
+#ifdef ARCADE_MODE
+    dim currentScreenKeyX as ubyte
+    dim currentScreenKeyY as ubyte
+#endif

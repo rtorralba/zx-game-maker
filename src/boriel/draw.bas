@@ -56,9 +56,14 @@ If tile = ITEM_TILE Then
         SetTileChecked(tile, attrSet(tile), x, y)
     End If
 Elseif tile = KEY_TILE
-    If screenObjects(currentScreen, SCREEN_OBJECT_KEY_INDEX) Then
-        SetTileChecked(tile, attrSet(tile), x, y)
-    End If
+		#ifdef ARCADE_MODE
+			currentScreenKeyX = x
+			currentScreenKeyY = y
+		#else
+			if screenObjects(currentScreen, SCREEN_OBJECT_KEY_INDEX) then
+				SetTileChecked(tile, attrSet(tile), x, y)
+			end if
+		#endif
     #ifdef KEYS_ENABLED
     Elseif tile = DOOR_TILE
         If screenObjects(currentScreen, SCREEN_OBJECT_DOOR_INDEX) Then
@@ -75,6 +80,12 @@ Elseif tile = AMMO_TILE
     End If
 End If
 End Sub
+
+#ifdef ARCADE_MODE
+	sub drawKey()
+		SetTile(KEY_TILE, attrSet(KEY_TILE), currentScreenKeyX, currentScreenKeyY)
+	end sub
+#endif
 
 Sub redrawScreen()
     ' memset(22527,0,768)

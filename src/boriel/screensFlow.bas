@@ -18,9 +18,6 @@ Sub showMenu()
     #endif
     
     #ifdef HISCORE_ENABLED
-        If score > hiScore Then
-            hiScore = score
-        End If
         Print AT 0, 22; "HI:"
         Print AT 0, 26; hiScore
     #endif
@@ -173,7 +170,12 @@ Sub playGame()
     #endif
     
     Ink INK_VALUE: Paper PAPER_VALUE: Border BORDER_VALUE
-    currentScreen = INITIAL_SCREEN
+    
+    #ifdef ARCADE_MODE
+        currentScreen = 0
+    #Else
+        currentScreen = INITIAL_SCREEN
+    #endif
     
     #ifdef INIT_TEXTS
         For i=0 To 2
@@ -203,6 +205,8 @@ Sub playGame()
     #endif
     
     #ifdef HISCORE_ENABLED
+        Print AT 22, 20; "00000"
+        PRINT AT 22, 25 - LEN(STR$(hiScore)); hiScore
         Print AT 23, 20; "00000"
     #endif
     
@@ -299,6 +303,10 @@ End Sub
 
 Sub resetValues()
     swapScreen()
+
+    #ifdef ARCADE_MODE
+        saveSprite(PROTA_SPRITE, INITIAL_MAIN_CHARACTER_Y, INITIAL_MAIN_CHARACTER_X, 0, 1)
+    #endif
     
     bulletPositionX = 0
     #ifdef SIDE_VIEW
@@ -312,11 +320,16 @@ Sub resetValues()
     currentLife = INITIAL_LIFE
     currentKeys = 2 Mod 2
     currentKeys = 0
-    If ITEMS_COUNTDOWN Then
-        currentItems = ITEMS_TO_FIND
-    Else
+    
+    #ifdef ARCADE_MODE
         currentItems = 0
-    End If
+    #Else
+        If ITEMS_COUNTDOWN Then
+            currentItems = itemsToFind
+        Else
+            currentItems = 0
+        End If
+    #endif
     ' removeScreenObjectFromBuffer()
     saveSprite(PROTA_SPRITE, INITIAL_MAIN_CHARACTER_Y, INITIAL_MAIN_CHARACTER_X, 1, 1)
     screenObjects = screenObjectsInitial
@@ -343,4 +356,8 @@ Sub swapScreen()
     dzx0Standard(MAPS_DATA_ADDRESS + screensOffsets(currentScreen), @decompressedMap)
     dzx0Standard(ENEMIES_DATA_ADDRESS + enemiesInScreenOffsets(currentScreen), @decompressedEnemiesScreen)
     bulletPositionX = 0
+    #ifdef ARCADE_MODE
+        countItemsOnTheScreen()
+        saveSprite(PROTA_SPRITE, mainCharactersArray(currentScreen, 1), mainCharactersArray(currentScreen, 0), 1, 1)
+    #endif
 End Sub

@@ -136,6 +136,8 @@ mainCharacterExtraFrame = 1
 
 idleTime = 0
 
+arcadeMode = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -223,6 +225,8 @@ if 'properties' in data:
             mainCharacterExtraFrame = 1 if property['value'] else 0
         elif property['name'] == 'idleTime':
             idleTime = property['value']
+        elif property['name'] == 'arcadeMode':
+            arcadeMode = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -249,8 +253,8 @@ configStr += "const ANIMATE_PERIOD_ENEMY as ubyte = " + str(animatePeriodEnemy) 
 configStr += "const ANIMATE_PERIOD_TILE as ubyte = " + str(animatePeriodTile) + "\n\n"
 
 configStr += "const ITEMS_COUNTDOWN as ubyte = " + str(itemsCountdown) + "\n"
-configStr += "const ITEMS_TO_FIND as ubyte = " + str(goalItems) + "\n"
-if itemsCountdown == 1:
+configStr += "dim itemsToFind as ubyte = " + str(goalItems) + "\n"
+if itemsCountdown == 1 and not arcadeMode:
     configStr += "const ITEMS_INCREMENT as ubyte = -1\n"
     configStr += "const GOAL_ITEMS as ubyte = 0 \n"
     configStr += "dim currentItems as ubyte = " + str(goalItems) + "\n"
@@ -286,6 +290,9 @@ if itemsEnabled == 1:
     configStr += "#DEFINE ITEMS_ENABLED\n"
 
 configStr += "const BACKGROUND_ATTRIBUTE as ubyte = " + str(backgroundAttribute) + "\n"
+
+if arcadeMode == 1:
+    configStr += "#DEFINE ARCADE_MODE\n"
 
 if len(initTexts) > 0:
     configStr += "#DEFINE INIT_TEXTS\n"
@@ -504,9 +511,18 @@ for layer in data['layers']:
 
                     if int(initialMainCharacterX) < 2 or int(initialMainCharacterX) > 60 or int(initialMainCharacterY) < 0 or int(initialMainCharacterY) > 38:
                         exitWithErrorMessage('Main character initial position is out of bounds. X: ' + initialMainCharacterX + ', Y: ' + initialMainCharacterY)
+                    
+                    if arcadeMode == 1: # Voy guardando en un array cuyo indice sea la pantalla y el valor sea la posición de inicio
+                        keys[str(screenId)] = [int(initialMainCharacterX), int(initialMainCharacterY)]
                 else:
                     exitWithErrorMessage('Unknown object type. Only "enemy" and "mainCharacter" are allowed')   
                     
+if arcadeMode == 1: # Defino el array de posiciones iniciales del personaje principal
+    configStr += "dim mainCharactersArray(" + str(screensCount - 1) + ", 1) as ubyte = { _\n"
+    for key in keys:
+        configStr += '\t{' + str(keys[key][0]) + ', ' + str(keys[key][1]) + '}, _\n'
+    configStr = configStr[:-4]
+    configStr += " _\n}\n\n"
 
 screenEnemies = defaultdict(dict)
 

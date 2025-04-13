@@ -17,6 +17,12 @@ function canMoveRight() as ubyte
 end function
 
 function canMoveUp() as ubyte
+	#ifdef ARCADE_MODE
+		if protaY = 0 Then
+			protaY = 39
+			return 1
+		end if
+	#endif
 	#ifdef KEYS_ENABLED
 	if CheckDoor(protaX, protaY - 1) then
 		return 0
@@ -26,6 +32,13 @@ function canMoveUp() as ubyte
 end function
 
 function canMoveDown() as ubyte
+	if protaY > 39 then
+		#ifdef ARCADE_MODE
+			protaY = 0
+			return 1
+		#endif
+		return 0
+	end if
 	#ifdef KEYS_ENABLED
 	if CheckDoor(protaX, protaY + 1) then
 		return 0
@@ -53,7 +66,11 @@ end function
 	sub checkIsJumping()
 		if jumpCurrentKey <> jumpStopValue then
 			if protaY < 2 then
-				moveScreen = 8 ' stop jumping
+				#ifdef ARCADE_MODE
+					protaY = 39
+				#else
+					moveScreen = 8 ' stop jumping
+				#endif
 			elseif jumpCurrentKey < jumpStepsCount
 				if CheckStaticPlatform(protaX, protaY + jumpArray(jumpCurrentKey)) then
 					saveSprite(PROTA_SPRITE, protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
@@ -303,7 +320,12 @@ sub leftKey()
 	end if
 
 	if onFirstColumn(PROTA_SPRITE) then
-		moveScreen = 4
+		#ifdef ARCADE_MODE
+			protaX = 60
+			return
+		#else
+			moveScreen = 4
+		#endif
 	elseif canMoveLeft()
 		saveSprite(PROTA_SPRITE, protaY, protaX - 1, protaFrame + 1, 0)
 	end if
@@ -316,7 +338,12 @@ sub rightKey()
 	end if
 
 	if onLastColumn(PROTA_SPRITE) then
-		moveScreen = 6
+		#ifdef ARCADE_MODE
+			protaX = 0
+			return
+		#else
+			moveScreen = 6
+		#endif
 	elseif canMoveRight()
 		saveSprite(PROTA_SPRITE, protaY, protaX + 1, protaFrame + 1, 1)
 	end if
@@ -347,7 +374,9 @@ sub downKey()
 		end if
 		if canMoveDown() then
 			if protaY >= MAX_LINE then
-				moveScreen = 2
+				#ifndef ARCADE_MODE
+					moveScreen = 2
+				#endif
 			else
 				saveSprite(PROTA_SPRITE, protaY + 1, protaX, protaFrame + 1, 2)
 			end if
@@ -397,20 +426,42 @@ sub keyboardListen()
 end sub
 
 function checkTileObject(tile as ubyte) as ubyte
-	if tile = ITEM_TILE and screenObjects(currentScreen, SCREEN_OBJECT_ITEM_INDEX) then
+	if tile = ITEM_TILE then
+		#ifndef ARCADE_MODE
+			if not screenObjects(currentScreen, SCREEN_OBJECT_ITEM_INDEX) then
+				return 0
+			endif
+		#endif
 		currentItems = currentItems + ITEMS_INCREMENT
 		#ifdef HISCORE_ENABLED
 			score = score + 100
+			If score > hiScore Then
+            	hiScore = score
+        	End If
 		#endif
 		printLife()
-		if currentItems = GOAL_ITEMS then
-			ending()
-		end if
+		#ifdef ARCADE_MODE
+			if currentItems = itemsToFind then
+				drawKey()
+			end if
+		#else
+			if currentItems = GOAL_ITEMS then
+				ending()
+			end if
+		#endif
 		screenObjects(currentScreen, SCREEN_OBJECT_ITEM_INDEX) = 0
 		BeepFX_Play(5)
 		return 1
 	#ifdef KEYS_ENABLED
 	elseif tile = KEY_TILE and screenObjects(currentScreen, SCREEN_OBJECT_KEY_INDEX) then
+		#ifdef ARCADE_MODE
+			if currentScreen = SCREENS_COUNT then
+				ending()
+			else
+				moveScreen = 6
+				return 1
+			end if
+		#endif
 		currentKeys = currentKeys + 1
 		printLife()
 		screenObjects(currentScreen, SCREEN_OBJECT_KEY_INDEX) = 0
