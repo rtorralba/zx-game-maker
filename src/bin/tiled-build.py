@@ -96,8 +96,6 @@ initialMainCharacterY = 8
 spritesMergeModeXor = 0
 spritesWithColors = 0
 
-initTexts = ""
-
 backgroundAttribute = 7
 
 animatePeriodMain = 3
@@ -138,6 +136,8 @@ idleTime = 0
 
 arcadeMode = 0
 
+inGameTextsEnabled = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -177,8 +177,6 @@ if 'properties' in data:
             spritesMergeModeXor = 1 if property['value'] else 0
         elif property['name'] == 'spritesWithColors':
             spritesWithColors = 1 if property['value'] else 0
-        elif property['name'] == 'initTexts':
-            initTexts = property['value']
         elif property['name'] == 'backgroundAttribute':
             backgroundAttribute = property['value']
         elif property['name'] == 'animatePeriodMain':
@@ -227,6 +225,8 @@ if 'properties' in data:
             idleTime = property['value']
         elif property['name'] == 'arcadeMode':
             arcadeMode = 1 if property['value'] else 0
+        elif property['name'] == 'inGameTextsEnabled':
+            inGameTextsEnabled = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -294,12 +294,8 @@ configStr += "const BACKGROUND_ATTRIBUTE as ubyte = " + str(backgroundAttribute)
 if arcadeMode == 1:
     configStr += "#DEFINE ARCADE_MODE\n"
 
-if len(initTexts) > 0:
-    configStr += "#DEFINE INIT_TEXTS\n"
-    initTexts = initTexts.split("\n")
-    configStr += "dim initTexts(" + str(len(initTexts) - 1) + ") as string\n"
-    for idx, text in enumerate(initTexts):
-        configStr += "initTexts(" + str(idx) + ") = \"" + text + "\"\n"
+if inGameTextsEnabled == 1:
+    configStr += "#DEFINE IN_GAME_TEXTS_ENABLED\n"
 
 configStr += "\n"
 
@@ -468,6 +464,7 @@ with open(outputDir + "screenOffsets.bin", "wb") as f:
 objects = {}
 keys = {}
 items = {}
+texts = {}
 
 for layer in data['layers']:
     if layer['type'] == 'objectgroup':
@@ -514,8 +511,29 @@ for layer in data['layers']:
                     
                     if arcadeMode == 1: # Voy guardando en un array cuyo indice sea la pantalla y el valor sea la posición de inicio
                         keys[str(screenId)] = [int(initialMainCharacterX), int(initialMainCharacterY)]
+                elif object['type'] == 'text':
+                    xScreenPosition = str(int((object['x'] % (tileWidth * screenWidth))) // 4)
+                    yScreenPosition = str(int((object['y'] % (tileHeight * screenHeight))) // 4)
+                    screenId = xScreenPosition + (yScreenPosition * mapCols)
+                    texts[str(screenId)] = [xScreenPosition, yScreenPosition, object['properties'][0]['value']]
                 else:
-                    exitWithErrorMessage('Unknown object type. Only "enemy" and "mainCharacter" are allowed')   
+                    exitWithErrorMessage('Unknown object type. Only "enemy" and "mainCharacter" are allowed')
+
+if len(texts) > 0:
+    configStr += "#DEFINE IN_GAME_TEXT_ENABLED\n"
+
+# fill emty screen text with empty string
+for i in range(screensCount):
+    if str(i) not in texts:
+        texts[str(i)] = ['0', '0', '']
+
+# save texts into binary file
+with open("output/texts.bin", "wb") as f:
+    for screen in texts:
+        f.write(bytearray([int(texts[screen][0]), int(texts[screen][1])]))
+        f.write(texts[screen][2].encode('ascii'))
+        f.write(b'\x00')
+
                     
 if arcadeMode == 1: # Defino el array de posiciones iniciales del personaje principal
     configStr += "dim mainCharactersArray(" + str(screensCount - 1) + ", 1) as ubyte = { _\n"

@@ -186,8 +186,8 @@ end sub
     end sub
 #endif
 
-#ifdef INIT_TEXTS
-    sub showInitTexts(Text as String)
+#ifdef IN_GAME_TEXT_ENABLED
+    sub showText(Text as String)
         dim n as uByte
         dim line = ""
         dim word = ""
