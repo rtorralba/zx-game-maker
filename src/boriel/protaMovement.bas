@@ -32,13 +32,12 @@ function canMoveUp() as ubyte
 end function
 
 function canMoveDown() as ubyte
-	if protaY > 39 then
-		#ifdef ARCADE_MODE
+	#ifdef ARCADE_MODE
+		if protaY > 39 then
 			protaY = 0
 			return 1
-		#endif
-		return 0
-	end if
+		end if
+	#endif
 	#ifdef KEYS_ENABLED
 	if CheckDoor(protaX, protaY + 1) then
 		return 0
