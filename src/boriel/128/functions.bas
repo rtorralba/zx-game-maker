@@ -1,23 +1,23 @@
-SUB FASTCALL PaginarMemoria(banco AS UByte)
+Sub Fastcall PaginarMemoria(banco As Ubyte)
     ASM
         ld d,a
-        ; Con FASTCALL banco se coloca en A
+        ; Con Fastcall banco se coloca en A
         ld a,($5b5c)
         ; Leemos BANKM
-        AND %11111000
+        And %11111000
         ; Reseteamos los 3 primeros bits
-        OR d
+        Or d
         ; Ajustamos los 3 primeros bits con el
         ; "banco"
         ld bc,$7ffd
-        ; Puerto donde haremos el OUT
+        ; Puerto donde haremos el Out
         di
         ; Deshabilitamos las interrupciones
         ld ($5b5c),a
         ; Actualizamos BANKM
-        OUT (c),a
-        ; Hacemos el OUT
+        Out (c),a
+        ; Hacemos el Out
         ei
         ; Habilitamos las interrupciones
-    END ASM
-END SUB
+    End ASM
+End Sub

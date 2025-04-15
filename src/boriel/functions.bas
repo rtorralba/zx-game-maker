@@ -1,6 +1,6 @@
 sub pauseUntilPressKey()
-    WHILE INKEY$<>"":WEND
-    WHILE INKEY$="":WEND
+    DO
+    LOOP UNTIL GetKeyScanCode()
 end sub
 
 sub decrementLife()
@@ -23,15 +23,20 @@ sub printLife()
         PRINT AT 22, 10; "   "  
         PRINT AT 22, 10; currentAmmo
     #endif
-    #ifdef KEYS_ENABLED
-	    PRINT AT 22, 16; currentKeys
+    #ifndef ARCADE_MODE
+        #ifdef KEYS_ENABLED
+            PRINT AT 22, 16; currentKeys
+        #endif
     #endif
     #ifdef HISCORE_ENABLED
+        PRINT AT 22, 25 - LEN(STR$(hiScore)); hiScore
 	    PRINT AT 23, 25 - LEN(STR$(score)); score
     #endif
-    #ifdef ITEMS_ENABLED
-        PRINT AT 22, 30; "  "
-	    PRINT AT 22, 30; currentItems
+    #ifndef ARCADE_MODE
+        #ifdef ITEMS_ENABLED
+            PRINT AT 22, 30; "  "
+            PRINT AT 22, 30; currentItems
+        #endif
     #endif
 end sub
 
@@ -76,6 +81,29 @@ sub protaTouch()
     decrementLife()
     BeepFX_Play(1)
 end sub
+
+#ifdef ARCADE_MODE
+    sub countItemsOnTheScreen()
+        dim index, y, x as integer
+
+        x = 0
+        y = 0
+
+        itemsToFind = 0
+        currentItems = 0
+        for index=0 to SCREEN_LENGTH
+            if peek(@decompressedMap + index) - 1 = ITEM_TILE then
+                itemsToFind = itemsToFind + 1
+            end if
+
+            x = x + 1
+            if x = screenWidth then
+                x = 0
+                y = y + 1
+            end if
+        next index
+    end sub
+#endif
 
 #ifdef SIDE_VIEW
     function CheckStaticPlatform(x as uByte, y as uByte) as uByte
@@ -196,3 +224,23 @@ end sub
         while INKEY$="":wend
     end sub
 #endif
+
+sub debugA(value as UBYTE)
+    PRINT AT 18, 10; "----"
+    PRINT AT 18, 10; value
+end sub
+
+sub debugB(value as UBYTE)
+    PRINT AT 18, 15; "  "
+    PRINT AT 18, 15; value
+end sub
+
+' sub debugC(value as UBYTE)
+'     PRINT AT 18, 20; "  "
+'     PRINT AT 18, 20; value
+' end sub
+
+' sub debugD(value as UBYTE)
+'     PRINT AT 18, 25; "  "
+'     PRINT AT 18, 25; value
+' end sub
