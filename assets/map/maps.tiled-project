@@ -148,6 +148,11 @@
                     "value": true
                 },
                 {
+                    "name": "jetPackFuel",
+                    "type": "int",
+                    "value": 0
+                },
+                {
                     "name": "keysEnabled",
                     "type": "bool",
                     "value": true

@@ -362,8 +362,7 @@ if idleTime > 0:
     configStr += "const IDLE_TIME as ubyte = " + str(idleTime) + "\n"
     
 if jetPackFuel > 0:
-    configStr += "#DEFINE JETPACK_ENABLED\n"
-    configStr += "const JETPACK_FUEL as ubyte = " + str(jetPackFuel) + "\n"
+    configStr += "#DEFINE JETPACK_FUEL "  + str(jetPackFuel) + "\n"
 
 for layer in data['layers']:
     if layer['type'] == 'tilelayer':
