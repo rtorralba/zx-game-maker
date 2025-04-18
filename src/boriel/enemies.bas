@@ -91,9 +91,9 @@ Next enemyId
 End Sub
 
 Sub checkProtaCollision(enemyId As Ubyte)
-    If invincible = 1 Then Return
-
     If framec bAnd 1 = 0 Then Return
+    
+    If invincible = 1 Then Return
     
     Dim protaX1 As Ubyte = protaX + 2
     Dim protaY1 As Ubyte = protaY + 2
