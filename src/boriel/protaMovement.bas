@@ -415,6 +415,7 @@ sub downKey()
 		end if
 	#else
 		if CheckStaticPlatform(protaX, protaY + 4) or CheckStaticPlatform(protaX + 1, protaY + 4) or CheckStaticPlatform(protaX + 2, protaY + 4) then
+			print at 10,10;"llego aqui";
 			protaY = protaY + 2
 		end if
 	#endif
@@ -452,11 +453,7 @@ sub keyboardListen()
 		#endif
 		if MultiKeys(keyArray(FIRE))<>0 then fireKey()
 		#ifdef IDLE_ENABLED
-			#ifndef JETPACK_FUEL
-				if MultiKeys(keyArray(LEFT))=0 and MultiKeys(keyArray(RIGHT))=0 and MultiKeys(keyArray(UP))=0 and MultiKeys(keyArray(DOWN))=0 and MultiKeys(keyArray(FIRE))=0 then
-			#else
-				if MultiKeys(keyArray(LEFT))=0 and MultiKeys(keyArray(RIGHT))=0 and MultiKeys(keyArray(UP))=0 and MultiKeys(keyArray(FIRE))=0 then
-			#endif
+			if MultiKeys(keyArray(LEFT))=0 and MultiKeys(keyArray(RIGHT))=0 and MultiKeys(keyArray(UP))=0 and MultiKeys(keyArray(DOWN))=0 and MultiKeys(keyArray(FIRE))=0 then
 				if protaLoopCounter < IDLE_TIME then protaLoopCounter = protaLoopCounter + 1
 			else
 				protaLoopCounter = 0

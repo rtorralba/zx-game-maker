@@ -46,11 +46,7 @@ dim enemFrame as ubyte = 0
 
 dim kempston as uByte
 dim keyOption as String
-#ifndef JETPACK_FUEL
-    dim keyArray(4) as uInteger
-#else 
-    dim keyArray(3) as uInteger
-#endif
+dim keyArray(4) as uInteger
 
 dim framec AS ubyte AT 23672
 

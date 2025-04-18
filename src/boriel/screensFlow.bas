@@ -28,9 +28,7 @@ Sub showMenu()
                 Let keyArray(LEFT) = KEYO
                 Let keyArray(RIGHT) = KEYP
                 Let keyArray(UP) = KEYQ
-                #ifndef JETPACK_FUEL
-                    Let keyArray(DOWN) = KEYA
-                #endif
+                Let keyArray(DOWN) = KEYA
                 Let keyArray(FIRE) = KEYSPACE
             End If
             playGame()
@@ -41,9 +39,7 @@ Sub showMenu()
             Let keyArray(LEFT)=KEY6
             Let keyArray(RIGHT)=KEY7
             Let keyArray(UP)=KEY9
-            #ifndef JETPACK_FUEL
-                Let keyArray(DOWN)=KEY8
-            #endif
+            Let keyArray(DOWN)=KEY8
             Let keyArray(FIRE)=KEY0
             playGame()
             #ifdef REDEFINE_KEYS_ENABLED
@@ -134,12 +130,10 @@ End Sub
         ' keyOption = Inkey$
         ' Print AT 12,20; keyOption
         
-        #ifndef JETPACK_FUEL
-            Print AT 14,10;"Down"
-            keyArray(DOWN) = LeerTecla()
-            ' keyOption = Inkey$
-            ' Print AT 14,20; keyOption
-        #endif
+        Print AT 14,10;"Down"
+        keyArray(DOWN) = LeerTecla()
+        ' keyOption = Inkey$
+        ' Print AT 14,20; keyOption
         
         Print AT 16,10;"Fire"
         keyArray(FIRE) = LeerTecla()
