@@ -273,11 +273,6 @@ Sub playGame()
                 Let lastFrameBeep = framec
             End If
         #endif
-
-        #ifdef SHOW_FPS
-            debugA(framec - loopFrame)
-            loopFrame = framec
-        #endif
     Loop
 End Sub
 
