@@ -70,7 +70,7 @@ end function
 				#else
 					moveScreen = 8 ' stop jumping
 				#endif
-			#ifndef JETPACK_ENABLED
+			#ifndef JETPACK_FUEL
 				elseif jumpCurrentKey < jumpStepsCount
 					if CheckStaticPlatform(protaX, protaY + jumpArray(jumpCurrentKey)) then
 						saveSprite(PROTA_SPRITE, protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
@@ -107,7 +107,7 @@ end function
 
 	function isFalling() as UBYTE
 		if canMoveDown() then
-			#ifdef JETPACK_ENABLED
+			#ifdef JETPACK_FUEL
 				if (kempston = 0 and MultiKeys(keyArray(UP)) <> 0) or ( kempston = 1 and IN(31) bAND %1000 <> 0) then
 					jumpCurrentKey = 0
 				end if
@@ -116,7 +116,7 @@ end function
 		else
 			if landed = 0 then
 				landed = 1
-				#ifdef JETPACK_ENABLED
+				#ifdef JETPACK_FUEL
 					jumpEnergy = jumpStepsCount
 					printLife()
 				#endif
@@ -135,7 +135,7 @@ end function
 			if protaY >= MAX_LINE then
 				moveScreen = 2
 			else
-				#ifndef JETPACK_ENABLED
+				#ifndef JETPACK_FUEL
 					saveSprite(PROTA_SPRITE, protaY + 2, protaX, getNextFrameJumpingFalling(), protaDirection)
 				#else
 					saveSprite(PROTA_SPRITE, protaY + 1, protaX, getNextFrameJumpingFalling(), protaDirection)
@@ -432,7 +432,7 @@ sub keyboardListen()
 		if n bAND %10 then leftKey()
 		if n bAND %1 then rightKey()
 		if n bAND %1000 then upKey()
-		#ifndef JETPACK_ENABLED
+		#ifndef JETPACK_FUEL
 			if n bAND %100 then downKey()
 		#endif
 		if n bAND %10000 then fireKey()
@@ -447,12 +447,12 @@ sub keyboardListen()
 		if MultiKeys(keyArray(LEFT))<>0 then leftKey()
 		if MultiKeys(keyArray(RIGHT))<>0 then rightKey()
 		if MultiKeys(keyArray(UP))<>0 then upKey()
-		#ifndef JETPACK_ENABLED
+		#ifndef JETPACK_FUEL
 			if MultiKeys(keyArray(DOWN))<>0 then downKey()
 		#endif
 		if MultiKeys(keyArray(FIRE))<>0 then fireKey()
 		#ifdef IDLE_ENABLED
-			#ifndef JETPACK_ENABLED
+			#ifndef JETPACK_FUEL
 				if MultiKeys(keyArray(LEFT))=0 and MultiKeys(keyArray(RIGHT))=0 and MultiKeys(keyArray(UP))=0 and MultiKeys(keyArray(DOWN))=0 and MultiKeys(keyArray(FIRE))=0 then
 			#else
 				if MultiKeys(keyArray(LEFT))=0 and MultiKeys(keyArray(RIGHT))=0 and MultiKeys(keyArray(UP))=0 and MultiKeys(keyArray(FIRE))=0 then

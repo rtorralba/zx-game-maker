@@ -28,7 +28,7 @@ Sub showMenu()
                 Let keyArray(LEFT) = KEYO
                 Let keyArray(RIGHT) = KEYP
                 Let keyArray(UP) = KEYQ
-                #ifndef JETPACK_ENABLED
+                #ifndef JETPACK_FUEL
                     Let keyArray(DOWN) = KEYA
                 #endif
                 Let keyArray(FIRE) = KEYSPACE
@@ -41,7 +41,7 @@ Sub showMenu()
             Let keyArray(LEFT)=KEY6
             Let keyArray(RIGHT)=KEY7
             Let keyArray(UP)=KEY9
-            #ifndef JETPACK_ENABLED
+            #ifndef JETPACK_FUEL
                 Let keyArray(DOWN)=KEY8
             #endif
             Let keyArray(FIRE)=KEY0
@@ -134,7 +134,7 @@ End Sub
         ' keyOption = Inkey$
         ' Print AT 12,20; keyOption
         
-        #ifndef JETPACK_ENABLED
+        #ifndef JETPACK_FUEL
             Print AT 14,10;"Down"
             keyArray(DOWN) = LeerTecla()
             ' keyOption = Inkey$

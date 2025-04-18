@@ -19,7 +19,7 @@ end sub
 sub printLife()
 	PRINT AT 22, 5; "   "  
 	PRINT AT 22, 5; currentLife
-    #ifdef JETPACK_ENABLED
+    #ifdef JETPACK_FUEL
         PRINT AT 23, 5; "   "  
 	    PRINT AT 23, 5; jumpEnergy
     #endif

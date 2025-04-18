@@ -18,7 +18,7 @@ const BULLET_SPRITE_LEFT_ID as ubyte = 50
     const jumpStopValue as ubyte = 255
     dim landed as UBYTE = 1
     dim jumpCurrentKey as ubyte = jumpStopValue
-    #ifndef JETPACK_ENABLED
+    #ifndef JETPACK_FUEL
         const jumpStepsCount as ubyte = 5
         dim jumpArray(jumpStepsCount - 1) AS byte = {-2, -2, -2, -2, -2}
     #else 
@@ -46,7 +46,7 @@ dim enemFrame as ubyte = 0
 
 dim kempston as uByte
 dim keyOption as String
-#ifndef JETPACK_ENABLED
+#ifndef JETPACK_FUEL
     dim keyArray(4) as uInteger
 #else 
     dim keyArray(3) as uInteger
