@@ -210,6 +210,11 @@
                 "name": "waitPressKeyAfterLoad",
                 "type": "bool",
                 "value": false
+            },
+            {
+                "name": "jetPackFuel",
+                "type": "int",
+                "value": 40
             }
         ],
         "name": "ZXSpectrumGameMaker",

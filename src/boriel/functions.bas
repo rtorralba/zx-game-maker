@@ -19,6 +19,10 @@ end sub
 sub printLife()
 	PRINT AT 22, 5; "   "  
 	PRINT AT 22, 5; currentLife
+    #ifdef JETPACK_ENABLED
+        PRINT AT 23, 5; "   "  
+	    PRINT AT 23, 5; jumpEnergy
+    #endif
     #ifdef AMMO_ENABLED
         PRINT AT 22, 10; "   "  
         PRINT AT 22, 10; currentAmmo

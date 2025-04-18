@@ -138,6 +138,8 @@ idleTime = 0
 
 arcadeMode = 0
 
+jetPackFuel = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -227,6 +229,8 @@ if 'properties' in data:
             idleTime = property['value']
         elif property['name'] == 'arcadeMode':
             arcadeMode = 1 if property['value'] else 0
+        elif property['name'] == 'jetPackFuel':
+            jetPackFuel = property['value'] 
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -356,6 +360,10 @@ if mainCharacterExtraFrame == 1:
 if idleTime > 0:
     configStr += "#DEFINE IDLE_ENABLED\n"
     configStr += "const IDLE_TIME as ubyte = " + str(idleTime) + "\n"
+    
+if jetPackFuel > 0:
+    configStr += "#DEFINE JETPACK_ENABLED\n"
+    configStr += "const JETPACK_FUEL as ubyte = " + str(jetPackFuel) + "\n"
 
 for layer in data['layers']:
     if layer['type'] == 'tilelayer':
