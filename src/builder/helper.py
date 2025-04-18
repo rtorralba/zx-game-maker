@@ -17,6 +17,7 @@ OUTPUT_FOLDER = str(Path("output/")) + getOsSeparator()
 SCREENS_FOLDER = str(Path(ASSETS_FOLDER + "screens/")) + getOsSeparator()
 MAP_FOLDER = str(Path(ASSETS_FOLDER + "map/")) + getOsSeparator()
 MAPS_FILE = str(Path(ASSETS_FOLDER + "map/maps.tmx"))
+MAPS_PROJECT = str(Path(ASSETS_FOLDER + "map/maps.tiled-project"))
 DIST_FOLDER = str(Path("../dist/")) + getOsSeparator()
 INITIAL_ADDRESS = 49152
 MEMORY_BANK_SIZE = 16384

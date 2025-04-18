@@ -49,7 +49,7 @@ import threading
 import webbrowser
 
 from builder.SpritesPreviewGenerator import SpritesPreviewGenerator
-from builder.helper import DIST_FOLDER, MAPS_FILE, getProjectFileName
+from builder.helper import DIST_FOLDER, MAPS_PROJECT, getProjectFileName
 
 import os
 
@@ -274,21 +274,21 @@ def open_memory_bank_image(image):
 
 def open_map_with_tiled():
     """Abre el mapa en Tiled."""
-    # Verificar si la variable MAPS_FILE está definida
-    if not MAPS_FILE:
+    # Verificar si la variable MAPS_PROJECT está definida
+    if not MAPS_PROJECT:
         messagebox.showerror("Error", "No se especificó el archivo del mapa.")
         return
 
     # Verificar si el archivo del mapa existe
-    if not os.path.exists(MAPS_FILE):
-        messagebox.showerror("Error", f"No se encontró el archivo del mapa: {MAPS_FILE}")
+    if not os.path.exists(MAPS_PROJECT):
+        messagebox.showerror("Error", f"No se encontró el archivo del mapa: {MAPS_PROJECT}")
         return
     
     if os.name == "nt":
         program_files = os.environ["ProgramFiles"]
-        command = "\"" + program_files + "\\Tiled\\tiled.exe\" " + MAPS_FILE
+        command = "\"" + program_files + "\\Tiled\\tiled.exe\" " + MAPS_PROJECT
     else:
-        command = "tiled " + MAPS_FILE
+        command = "tiled " + MAPS_PROJECT
     
     subprocess.Popen(command, shell=True)
     
