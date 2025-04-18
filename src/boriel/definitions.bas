@@ -128,5 +128,3 @@ CONST ENEMY_SPEED as UBYTE = 11
     dim currentScreenKeyX as ubyte
     dim currentScreenKeyY as ubyte
 #endif
-
-#Define SHOW_FPS

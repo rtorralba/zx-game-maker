@@ -209,28 +209,9 @@ Sub playGame()
         PRINT AT 22, 25 - LEN(STR$(hiScore)); hiScore
         Print AT 23, 20; "00000"
     #endif
-
-    #ifdef SHOW_FPS
-        Dim lastSecondFrame As Uinteger = framec
-        Dim fpsCounter As Uinteger = 0
-        Dim fps As Uinteger = 0
-    #endif
     
     Do
         waitretrace
-
-        #ifdef SHOW_FPS
-            ' Increment the frame counter
-            fpsCounter = fpsCounter + 1
-
-            ' Calculate FPS every second
-            If framec - lastSecondFrame >= 50 Then  ' Assuming 50 frames per second (Spectrum standard)
-                fps = fpsCounter
-                fpsCounter = 0
-                lastSecondFrame = framec
-                Print AT 0, 0; "FPS: "; fps  ' Display FPS on the screen
-            End If
-        #endif
         
         If framec - lastFrameProta >= ANIMATE_PERIOD_MAIN Then
             protaFrame = getNextFrameRunning()
