@@ -128,3 +128,5 @@ CONST ENEMY_VERTICAL_DIRECTION as UBYTE = 10
     dim currentScreenKeyX as ubyte
     dim currentScreenKeyY as ubyte
 #endif
+
+#Define SHOW_FPS
