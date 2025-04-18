@@ -70,27 +70,56 @@ end function
 				#else
 					moveScreen = 8 ' stop jumping
 				#endif
-			elseif jumpCurrentKey < jumpStepsCount
-				if CheckStaticPlatform(protaX, protaY + jumpArray(jumpCurrentKey)) then
-					saveSprite(PROTA_SPRITE, protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
-				else
-					if not CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey)) then
+			#ifndef JETPACK_FUEL
+				elseif jumpCurrentKey < jumpStepsCount
+					if CheckStaticPlatform(protaX, protaY + jumpArray(jumpCurrentKey)) then
 						saveSprite(PROTA_SPRITE, protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
+					else
+						if not CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey)) then
+							saveSprite(PROTA_SPRITE, protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
+						end if
+					end if
+					jumpCurrentKey = jumpCurrentKey + 1
+				else
+					jumpCurrentKey = jumpStopValue ' stop jumping
+				end if
+			#else
+				elseif jumpCurrentKey < jumpStepsCount _ 
+				and ((kempston = 0 and MultiKeys(keyArray(UP)) <> 0) or (kempston = 1 and IN(31) bAND %1000 <> 0)) _ 
+				and jumpEnergy > 0 then
+					if not CheckCollision(protaX, protaY - 1) then
+						saveSprite(PROTA_SPRITE, protaY - 1, protaX, getNextFrameJumpingFalling(), protaDirection)
+					end if
+					jumpCurrentKey = jumpCurrentKey + 1
+					jumpEnergy = jumpEnergy - 1
+					if jumpEnergy MOD 5 = 0 then 
+						printLife()
+					end if
+				else
+					jumpCurrentKey = jumpStopValue ' stop jumping
+					if jumpEnergy = 0 then
+						printLife()
 					end if
 				end if
-				jumpCurrentKey = jumpCurrentKey + 1
-			else
-				jumpCurrentKey = jumpStopValue ' stop jumping
-			end if
+			#endif 
 		end if
 	end sub
 
 	function isFalling() as UBYTE
 		if canMoveDown() then
+			#ifdef JETPACK_FUEL
+				if (kempston = 0 and MultiKeys(keyArray(UP)) <> 0) or ( kempston = 1 and IN(31) bAND %1000 <> 0) then
+					jumpCurrentKey = 0
+				end if
+			#endif
 			return 1
 		else
 			if landed = 0 then
 				landed = 1
+				#ifdef JETPACK_FUEL
+					jumpEnergy = jumpStepsCount
+					printLife()
+				#endif
 				if protaY bAND 1 <> 0 then
 					' saveSpriteLin(PROTA_SPRITE, protaY - 1)
 					protaY = protaY - 1
@@ -106,7 +135,11 @@ end function
 			if protaY >= MAX_LINE then
 				moveScreen = 2
 			else
-				saveSprite(PROTA_SPRITE, protaY + 2, protaX, getNextFrameJumpingFalling(), protaDirection)
+				#ifndef JETPACK_FUEL
+					saveSprite(PROTA_SPRITE, protaY + 2, protaX, getNextFrameJumpingFalling(), protaDirection)
+				#else
+					saveSprite(PROTA_SPRITE, protaY + 1, protaX, getNextFrameJumpingFalling(), protaDirection)
+				#endif
 			end if
 			landed = 0
 		end if

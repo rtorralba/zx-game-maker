@@ -16,10 +16,15 @@ const BULLET_SPRITE_LEFT_ID as ubyte = 50
 #endif
 #ifdef SIDE_VIEW
     const jumpStopValue as ubyte = 255
-    const jumpStepsCount as ubyte = 5
     dim landed as UBYTE = 1
     dim jumpCurrentKey as ubyte = jumpStopValue
-    dim jumpArray(jumpStepsCount - 1) AS byte = {-2, -2, -2, -2, -2}
+    #ifndef JETPACK_FUEL
+        const jumpStepsCount as ubyte = 5
+        dim jumpArray(jumpStepsCount - 1) AS byte = {-2, -2, -2, -2, -2}
+    #else 
+        const jumpStepsCount as ubyte = JETPACK_FUEL
+        dim jumpEnergy as ubyte = jumpStepsCount
+    #endif
 #endif
 
 dim protaLastFrame as ubyte
