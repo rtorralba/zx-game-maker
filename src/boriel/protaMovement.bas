@@ -415,7 +415,6 @@ sub downKey()
 		end if
 	#else
 		if CheckStaticPlatform(protaX, protaY + 4) or CheckStaticPlatform(protaX + 1, protaY + 4) or CheckStaticPlatform(protaX + 2, protaY + 4) then
-			print at 10,10;"llego aqui";
 			protaY = protaY + 2
 		end if
 	#endif
