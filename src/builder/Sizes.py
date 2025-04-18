@@ -11,7 +11,6 @@ class Sizes:
         self.ENEMIES_DATA = 0
         self.TILESET_DATA = 0
         self.ATTR_DATA = 0
-        self.SPRITES_DATA = 0
         self.SCREEN_OBJECTS_INITIAL_DATA = 0
         self.SCREEN_OFFSETS_DATA = 0
         self.ENEMIES_IN_SCREEN_OFFSETS_DATA = 0
@@ -59,10 +58,6 @@ class Sizes:
     @staticmethod
     def ATTR_DATA_STRING():
         return "ATTR_DATA"
-    
-    @staticmethod
-    def SPRITES_DATA_STRING():
-        return "SPRITES_DATA"
     
     @staticmethod
     def SCREEN_OBJECTS_INITIAL_DATA_STRING():
@@ -142,7 +137,6 @@ class Sizes:
             self.DECOMPRESSED_ENEMIES_SCREEN_DATA_STRING(),
             self.TILESET_DATA_STRING(),
             self.ATTR_DATA_STRING(),
-            self.SPRITES_DATA_STRING(),
             self.SCREEN_OBJECTS_INITIAL_DATA_STRING(),
             self.DAMAGE_TILES_DATA_STRING(),
             self.ANIMATED_TILES_IN_SCREEN_DATA_STRING()
@@ -166,7 +160,6 @@ class Sizes:
             self.DECOMPRESSED_ENEMIES_SCREEN_DATA_STRING(),
             self.TILESET_DATA_STRING(),
             self.ATTR_DATA_STRING(),
-            self.SPRITES_DATA_STRING(),
             self.SCREEN_OBJECTS_INITIAL_DATA_STRING(),
             self.DAMAGE_TILES_DATA_STRING(),
             self.ANIMATED_TILES_IN_SCREEN_DATA_STRING(),

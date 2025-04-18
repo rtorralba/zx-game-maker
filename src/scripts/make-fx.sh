@@ -7,7 +7,7 @@ then
     exit 1
 fi
 
-pasmo --name "sound code" --tap player.asm ../assets/fx/fx.tap
+pasmo --name "sound code" --tap boriel/player.asm ../assets/fx/fx.tap
 
 pwd
 

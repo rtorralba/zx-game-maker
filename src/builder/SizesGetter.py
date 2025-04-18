@@ -20,7 +20,6 @@ class SizesGetter:
         sizes.ENEMIES_DATA = self.__getOutputFileSize("enemies.bin.zx0")
         sizes.TILESET_DATA = self.__getOutputFileSize("tiles.bin")
         sizes.ATTR_DATA = self.__getOutputFileSize("attrs.bin")
-        sizes.SPRITES_DATA = self.__getOutputFileSize("sprites.bin")
         sizes.SCREEN_OBJECTS_INITIAL_DATA = self.__getOutputFileSize("objectsInScreen.bin")
         sizes.SCREEN_OFFSETS_DATA = self.__getOutputFileSize("screenOffsets.bin")
         sizes.ENEMIES_IN_SCREEN_OFFSETS_DATA = self.__getOutputFileSize("enemiesInScreenOffsets.bin")

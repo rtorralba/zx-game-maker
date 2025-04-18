@@ -73,6 +73,11 @@ def getEnabled128K():
         maps_json = json.load(f)
     return any(prop["name"] == "128Kenabled" and prop["value"] for prop in maps_json["properties"])
 
+def getGameView():
+    with open(OUTPUT_FOLDER + "maps.json", "r") as f:
+        maps_json = json.load(f)
+    return next((prop["value"] for prop in maps_json["properties"] if prop["name"] == "gameView"), 'side')
+
 def getUseBreakableTile():
     with open(OUTPUT_FOLDER + "maps.json", "r") as f:
         maps_json = json.load(f)
