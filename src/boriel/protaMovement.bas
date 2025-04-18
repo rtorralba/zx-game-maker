@@ -432,9 +432,7 @@ sub keyboardListen()
 		if n bAND %10 then leftKey()
 		if n bAND %1 then rightKey()
 		if n bAND %1000 then upKey()
-		#ifndef JETPACK_FUEL
-			if n bAND %100 then downKey()
-		#endif
+		if n bAND %100 then downKey()
 		if n bAND %10000 then fireKey()
 		#ifdef IDLE_ENABLED
 			if n = 0 then
@@ -447,9 +445,7 @@ sub keyboardListen()
 		if MultiKeys(keyArray(LEFT))<>0 then leftKey()
 		if MultiKeys(keyArray(RIGHT))<>0 then rightKey()
 		if MultiKeys(keyArray(UP))<>0 then upKey()
-		#ifndef JETPACK_FUEL
-			if MultiKeys(keyArray(DOWN))<>0 then downKey()
-		#endif
+		if MultiKeys(keyArray(DOWN))<>0 then downKey()
 		if MultiKeys(keyArray(FIRE))<>0 then fireKey()
 		#ifdef IDLE_ENABLED
 			if MultiKeys(keyArray(LEFT))=0 and MultiKeys(keyArray(RIGHT))=0 and MultiKeys(keyArray(UP))=0 and MultiKeys(keyArray(DOWN))=0 and MultiKeys(keyArray(FIRE))=0 then
