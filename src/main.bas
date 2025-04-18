@@ -469,7 +469,6 @@ sub resetValues()
     invincibleBlink = 0
 
     currentLife = INITIAL_LIFE
-    currentKeys = 2 mod 2
     currentKeys = 0
     if ITEMS_COUNTDOWN then
         currentItems = ITEMS_TO_FIND
@@ -511,7 +510,7 @@ end sub
 sub animateAnimatedTiles()
     for i=0 to MAX_ANIMATED_TILES_PER_SCREEN:
         if animatedTilesInScreen(currentScreen, i, 0) <> 0 then
-            dim tile as ubyte = animatedTilesInScreen(currentScreen, i, 0) + animatedFrame + 1
+            dim tile as ubyte = animatedTilesInScreen(currentScreen, i, 0) + animatedFrame
             SetTile(tile, attrSet(tile), animatedTilesInScreen(currentScreen, i, 1), animatedTilesInScreen(currentScreen, i, 2))
         end if
     next i

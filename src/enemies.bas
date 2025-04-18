@@ -106,6 +106,8 @@ end sub
 sub checkProtaCollision(enemyId as ubyte)
     if invincible = 1 then return
 
+    if (framec bAnd 1) = 0 then return
+
     dim protaX1 as ubyte = protaX + 2
     dim protaY1 as ubyte = protaY + 2
 
