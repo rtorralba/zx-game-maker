@@ -1,5 +1,17 @@
 [
     {
+        "id": 3,
+        "name": "enemySpeed",
+        "storageType": "int",
+        "type": "enum",
+        "values": [
+            "1",
+            "2",
+            "3"
+        ],
+        "valuesAsFlags": false
+    },
+    {
         "id": 1,
         "name": "gameView",
         "storageType": "string",

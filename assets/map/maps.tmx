@@ -56,8 +56,8 @@
   <tile id="190" type="item"/>
   <tile id="191" type="key"/>
  </tileset>
- <tileset firstgid="193" name="sprites" tilewidth="16" tileheight="16" tilecount="32" columns="16" objectalignment="topleft">
-  <image source="sprites.png" width="256" height="32"/>
+ <tileset firstgid="193" name="sprites" tilewidth="16" tileheight="16" tilecount="48" columns="16" objectalignment="topleft">
+  <image source="sprites.png" width="256" height="48"/>
  </tileset>
  <layer id="1" name="map" width="132" height="116">
   <data encoding="csv">
@@ -163,6 +163,7 @@
   <object id="12" name="enemy_2" type="enemy" gid="209" x="376" y="320" width="16" height="16">
    <properties>
     <property name="life" type="int" value="3"/>
+    <property name="speed" type="int" propertytype="enemySpeed" value="0"/>
    </properties>
   </object>
   <object id="13" name="enemy_2_end" x="448" y="272">
