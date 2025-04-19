@@ -20,71 +20,71 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
     If tile < 2 Then Return
     
     #ifdef SHOULD_KILL_ENEMIES_ENABLED
-        If tile = 63 Then ' If is background, bullet Or enemy kill door dont draw
-        If screensWon(currentScreen) Then
-            SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
-        Else
-            SetTile(tile, attrSet(tile), x, y)
+        If tile = ENEMY_DOOR_TILE Then
+            If screensWon(currentScreen) Then
+                SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
+            Else
+                SetTile(tile, attrSet(tile), x, y)
+            End If
+            Return
         End If
-        Return
-    End If
-#Else
-    If tile = 63 Then ' If is background, bullet Or enemy kill door dont draw
-    SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
-    Return
-End If
-#endif
-
-#ifdef USE_BREAKABLE_TILE
-    If tile = 62 Then
-        If brokenTiles(currentScreen) Then
+    #Else
+        If tile = ENEMY_DOOR_TILE Then
             SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
-        Else
-            SetTileChecked(tile, attrSet(tile), x, y)
-        End If
-        Return
-    End If
-#endif
-
-If tile < 187 Then
-    SetTile(tile, attrSet(tile), x, y)
-    Return
-End If
-
-If tile = ITEM_TILE Then
-    If screenObjects(currentScreen, SCREEN_OBJECT_ITEM_INDEX) Then
-        SetTileChecked(tile, attrSet(tile), x, y)
-    End If
-Elseif tile = KEY_TILE
-		#ifdef ARCADE_MODE
-			currentScreenKeyX = x
-			currentScreenKeyY = y
-		#else
-			if screenObjects(currentScreen, SCREEN_OBJECT_KEY_INDEX) then
-				SetTileChecked(tile, attrSet(tile), x, y)
-			end if
-		#endif
-    #ifdef KEYS_ENABLED
-    Elseif tile = DOOR_TILE
-        If screenObjects(currentScreen, SCREEN_OBJECT_DOOR_INDEX) Then
-            SetTile(tile, attrSet(tile), x, y)
+            Return
         End If
     #endif
-Elseif tile = LIFE_TILE
-    If screenObjects(currentScreen, SCREEN_OBJECT_LIFE_INDEX) Then
-        SetTileChecked(tile, attrSet(tile), x, y)
+    
+    #ifdef USE_BREAKABLE_TILE
+        If tile = 62 Then
+            If brokenTiles(currentScreen) Then
+                SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
+            Else
+                SetTileChecked(tile, attrSet(tile), x, y)
+            End If
+            Return
+        End If
+    #endif
+    
+    If tile < 187 Then
+        SetTile(tile, attrSet(tile), x, y)
+        Return
     End If
-Elseif tile = AMMO_TILE
-    If screenObjects(currentScreen, SCREEN_OBJECT_AMMO_INDEX) Then
-        SetTileChecked(tile, attrSet(tile), x, y)
+    
+    If tile = ITEM_TILE Then
+        If screenObjects(currentScreen, SCREEN_OBJECT_ITEM_INDEX) Then
+            SetTileChecked(tile, attrSet(tile), x, y)
+        End If
+    Elseif tile = KEY_TILE
+        #ifdef ARCADE_MODE
+            currentScreenKeyX = x
+            currentScreenKeyY = y
+        #Else
+            If screenObjects(currentScreen, SCREEN_OBJECT_KEY_INDEX) Then
+                SetTileChecked(tile, attrSet(tile), x, y)
+            End If
+        #endif
+        #ifdef KEYS_ENABLED
+        Elseif tile = DOOR_TILE
+            If screenObjects(currentScreen, SCREEN_OBJECT_DOOR_INDEX) Then
+                SetTile(tile, attrSet(tile), x, y)
+            End If
+        #endif
+    Elseif tile = LIFE_TILE
+        If screenObjects(currentScreen, SCREEN_OBJECT_LIFE_INDEX) Then
+            SetTileChecked(tile, attrSet(tile), x, y)
+        End If
+    Elseif tile = AMMO_TILE
+        If screenObjects(currentScreen, SCREEN_OBJECT_AMMO_INDEX) Then
+            SetTileChecked(tile, attrSet(tile), x, y)
+        End If
     End If
-End If
 End Sub
 
 #ifdef ARCADE_MODE
-	sub drawKey()
-		SetTile(KEY_TILE, attrSet(KEY_TILE), currentScreenKeyX, currentScreenKeyY)
-	end sub
+    Sub drawKey()
+        SetTile(KEY_TILE, attrSet(KEY_TILE), currentScreenKeyX, currentScreenKeyY)
+    End Sub
 #endif
 
 Sub redrawScreen()

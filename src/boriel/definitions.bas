@@ -128,3 +128,5 @@ CONST ENEMY_SPEED as UBYTE = 11
     dim currentScreenKeyX as ubyte
     dim currentScreenKeyY as ubyte
 #endif
+
+CONST ENEMY_DOOR_TILE as ubyte = 63
