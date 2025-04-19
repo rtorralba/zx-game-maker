@@ -25,6 +25,11 @@ Sub moveEnemies()
         #endif
         
         If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) > 0 Then 'In the Screen And still live
+            If decompressedEnemiesScreen(enemyId, ENEMY_SPEED) = 1 Then
+                If (framec bAnd 1) = 0 Then continue For
+            ElseIf decompressedEnemiesScreen(enemyId, ENEMY_SPEED) = 2 Then
+                If (framec bAnd 3) = 0 Then continue For
+            End If
         Dim tile As Byte
         Dim enemyCol As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL)
         Dim enemyLin As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
