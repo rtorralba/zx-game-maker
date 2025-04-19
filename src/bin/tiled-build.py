@@ -485,7 +485,7 @@ for layer in data['layers']:
                     'colEnd': str(int((object['x'] % (tileWidth * screenWidth))) // 4),
                     'tile': str(object['gid'] - spriteTileOffset),
                     'life': '1',
-                    'speed': '1',
+                    'speed': '3',
                 }
 
                 if 'properties' in object and len(object['properties']) > 0:
@@ -493,7 +493,7 @@ for layer in data['layers']:
                         if property['name'] == 'life':
                             objects[str(object['id'])]['life'] = str(property['value'])
                         elif property['name'] == 'speed':
-                            if property['value'] in ['2', '3']:
+                            if property['value'] in ['1', '2', '3']:
                                 objects[str(object['id'])]['speed'] = str(property['value'])
 for layer in data['layers']:
     if layer['type'] == 'objectgroup':
