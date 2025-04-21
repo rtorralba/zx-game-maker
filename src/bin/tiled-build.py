@@ -243,11 +243,11 @@ configStr += "const screenWidth as ubyte = " + str(screenWidth) + "\n"
 configStr += "const screenHeight as ubyte = " + str(screenHeight) + "\n"
 configStr += "const INITIAL_LIFE as ubyte = " + str(initialLife) + "\n"
 configStr += "const MAX_LINE as ubyte = " + str(screenHeight * 2 - 4) + "\n"
-configStr += "const LIFE_AMOUNT as ubyte = " + str(lifeAmount) + "\n"
 
 if livesMode:
     configStr += "#DEFINE LIVES_MODE_ENABLED\n"
 else:
+    configStr += "const LIFE_AMOUNT as ubyte = " + str(lifeAmount) + "\n"
     configStr += "const DAMAGE_AMOUNT as ubyte = " + str(damageAmount) + "\n"
 
 configStr += "const BULLET_DISTANCE as ubyte = " + str(bulletDistance) + "\n"

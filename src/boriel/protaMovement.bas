@@ -468,7 +468,11 @@ Function checkTileObject(tile As Ubyte) As Ubyte
             Return 1
         #endif
     Elseif tile = LIFE_TILE And screenObjects(currentScreen, SCREEN_OBJECT_LIFE_INDEX) Then
-        currentLife = currentLife + LIFE_AMOUNT
+        #ifdef LIVES_MODE_ENABLED
+            currentLife = currentLife + 1
+        #else
+            currentLife = currentLife + LIFE_AMOUNT
+        #endif
         printLife()
         screenObjects(currentScreen, SCREEN_OBJECT_LIFE_INDEX) = 0
         BeepFX_Play(6)
