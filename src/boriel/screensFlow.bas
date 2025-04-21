@@ -365,5 +365,9 @@ Sub swapScreen()
     #ifdef ARCADE_MODE
         countItemsOnTheScreen()
         saveSprite(PROTA_SPRITE, mainCharactersArray(currentScreen, 1), mainCharactersArray(currentScreen, 0), 1, 1)
+         #ifdef LIVES_MODE_ENABLED
+            protaXRespawn = mainCharactersArray(currentScreen, 0)
+            protaYRespawn = mainCharactersArray(currentScreen, 1)
+        #endif
     #endif
 End Sub
