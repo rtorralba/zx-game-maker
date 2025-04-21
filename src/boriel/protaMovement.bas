@@ -553,5 +553,17 @@ Sub protaMovement()
                 End If
             End If
         #endif
+    #else
+        #ifdef IDLE_ENABLED
+            If protaLoopCounter >= IDLE_TIME Then
+                If framec - lastFrameTiles = ANIMATE_PERIOD_TILE - 2 Then
+                    If getSpriteTile(PROTA_SPRITE) = 13 Then
+                        saveSprite(PROTA_SPRITE, protaY, protaX, 14, protaDirection)
+                    Else
+                        saveSprite(PROTA_SPRITE, protaY, protaX, 13, protaDirection)
+                    End If
+                End If
+            End If
+        #endif
     #endif
 End Sub
