@@ -15,7 +15,7 @@ sub decrementLife()
             invincible = 1
             invincibleFrame = framec
 
-            
+            saveSprite(PROTA_SPRITE, protaYRespawn, protaXRespawn, getSpriteTile(PROTA_SPRITE), protaDirection)
         else
             currentLife = 0
         end if
