@@ -16,7 +16,7 @@ class ChartGenerator:
             self.__generateMemoryChart(paramsMap4)
             self.__generateMemoryChart(paramsMap6)
         else:
-            paramsMap0 = "FX:" + str(sizes.BEEP_FX) + ",Title-Screen:" + str(sizes.TITLE_SCREEN) + ",End-Screen:" + str(sizes.ENDING_SCREEN) + ",HUD:" + str(sizes.HUD_SCREEN) + ",Maps:" + str(mapsSize) + ",Enemies:" + str(enemiesSize) + ",Tileset:" + str(sizes.TILESET_DATA) + ",Attributes:" + str(sizes.ATTR_DATA) + ",Sprites:" + str(sizes.SPRITES_DATA) + ",Objects:" + str(sizes.SCREEN_OBJECTS_INITIAL_DATA) + ",Damage-Tiles:" + str(sizes.DAMAGE_TILES_DATA) + ",Animated-Tiles:" + str(sizes.ANIMATED_TILES_IN_SCREEN_DATA) + " memory-bank-0-48K.png"
+            paramsMap0 = "FX:" + str(sizes.BEEP_FX) + ",Title-Screen:" + str(sizes.TITLE_SCREEN) + ",End-Screen:" + str(sizes.ENDING_SCREEN) + ",HUD:" + str(sizes.HUD_SCREEN) + ",Maps:" + str(mapsSize) + ",Enemies:" + str(enemiesSize) + ",Tileset:" + str(sizes.TILESET_DATA) + ",Attributes:" + str(sizes.ATTR_DATA) + ",Objects:" + str(sizes.SCREEN_OBJECTS_INITIAL_DATA) + ",Damage-Tiles:" + str(sizes.DAMAGE_TILES_DATA) + ",Animated-Tiles:" + str(sizes.ANIMATED_TILES_IN_SCREEN_DATA) + " memory-bank-0-48K.png"
 
         self.__generateMemoryChart(paramsMap0)
     
