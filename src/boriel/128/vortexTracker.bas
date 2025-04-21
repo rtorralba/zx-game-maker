@@ -4,9 +4,9 @@ Dim VortexTracker_Status As Ubyte = 0
 ' Without PaginarMemoria, DI/EI *must* be done explicitly.
 'usarIM2 (Byte): 1 utiliza el motor de interrupciones
 Sub VortexTracker_Inicializar(usarIM2 As Ubyte)
-    ASM
+    Asm
         di
-    End ASM
+    End Asm
     If inMenu Then
         callVtAddress($C000)
     Else
@@ -19,9 +19,9 @@ Sub VortexTracker_Inicializar(usarIM2 As Ubyte)
         ' interrupción
         IM2_Inicializar(@VortexTracker_NextNote)
     End If
-    ASM
+    Asm
         ei
-    End ASM
+    End Asm
     ' Estado: 1 (sonando)
     VortexTracker_Status = 1
 End Sub
@@ -44,24 +44,24 @@ End Sub
 Sub VortexTracker_Stop()
     VortexTracker_Status = 0
     
-    ASM
+    Asm
         di
-    End ASM
+    End Asm
     If inMenu Then
         callVtAddress($C008)
     Else
         callVtAddress(VTPLAYER_MUTE)
     End If
-    ASM
+    Asm
         ei
-    End ASM
+    End Asm
 End Sub
 
 ' This Sub *must* be used with dissabled INTs:
 ' either inside an ISR (VortexTracker_NextNote),
 ' Or between DI/EI (VortexTracker_Inicializar And VortexTracker_Stop)
 Sub Fastcall callVtAddress(address As Uinteger)
-    ASM
+    Asm
         ld a,($5b5c)
         push af
         And %11111000
@@ -77,5 +77,5 @@ Sub Fastcall callVtAddress(address As Uinteger)
         pop bc
         pop af
         Out (c),a
-    End ASM
+    End Asm
 End Sub
