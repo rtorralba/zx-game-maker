@@ -25,11 +25,11 @@ Sub moveEnemies()
         #endif
         
         If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) > 0 Then 'In the Screen And still live
-            If decompressedEnemiesScreen(enemyId, ENEMY_SPEED) = 1 Then
-                If (framec bAnd 1) = 0 Then continue For
-            ElseIf decompressedEnemiesScreen(enemyId, ENEMY_SPEED) = 2 Then
-                If (framec bAnd 3) = 0 Then continue For
-            End If
+        If decompressedEnemiesScreen(enemyId, ENEMY_SPEED) = 1 Then
+            If (framec bAnd 1) = 0 Then continue For
+        ElseIf decompressedEnemiesScreen(enemyId, ENEMY_SPEED) = 2 Then
+            If (framec bAnd 3) = 0 Then continue For
+        End If
         Dim tile As Byte
         Dim enemyCol As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL)
         Dim enemyLin As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
@@ -96,7 +96,7 @@ Next enemyId
 End Sub
 
 Sub checkProtaCollision(enemyId As Ubyte)
-    If invincible = 1 Then Return
+    If invincible Then Return
     
     Dim protaX1 As Ubyte = protaX + 2
     Dim protaY1 As Ubyte = protaY + 2
@@ -126,11 +126,7 @@ Sub checkProtaCollision(enemyId As Ubyte)
     If protaY1 < enemyY0 Then Return
     If protaY > enemyY1 Then Return
     
-    invincible = 1
-    invincibleFrame = framec
     decrementLife()
-    BeepFX_Play(1)
-    
 End Sub
 
 #ifdef SIDE_VIEW

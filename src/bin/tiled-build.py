@@ -78,6 +78,7 @@ initialLife = 40
 goalItems = 2
 damageAmount = 5
 lifeAmount = 5
+livesMode = 0
 bulletDistance = 0
 enemiesRespawn = 0
 shooting = 1
@@ -148,6 +149,8 @@ if 'properties' in data:
             damageAmount = property['value']
         elif property['name'] == 'lifeAmount':
             lifeAmount = property['value']
+        elif property['name'] == 'livesMode':
+            livesMode = 1 if property['value'] else 0
         elif property['name'] == 'initialLife':
             initialLife = property['value']
         elif property['name'] == 'bulletDistance':
@@ -240,8 +243,13 @@ configStr += "const screenWidth as ubyte = " + str(screenWidth) + "\n"
 configStr += "const screenHeight as ubyte = " + str(screenHeight) + "\n"
 configStr += "const INITIAL_LIFE as ubyte = " + str(initialLife) + "\n"
 configStr += "const MAX_LINE as ubyte = " + str(screenHeight * 2 - 4) + "\n"
-configStr += "const DAMAGE_AMOUNT as ubyte = " + str(damageAmount) + "\n"
 configStr += "const LIFE_AMOUNT as ubyte = " + str(lifeAmount) + "\n"
+
+if livesMode:
+    configStr += "#DEFINE LIVES_MODE_ENABLED\n"
+else:
+    configStr += "const DAMAGE_AMOUNT as ubyte = " + str(damageAmount) + "\n"
+
 configStr += "const BULLET_DISTANCE as ubyte = " + str(bulletDistance) + "\n"
 configStr += "const SHOULD_KILL_ENEMIES as ubyte = " + str(shouldKillEnemies) + "\n"
 configStr += "const KEY_TILE as ubyte = " + keyTile + "\n"

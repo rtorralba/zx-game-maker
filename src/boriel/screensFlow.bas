@@ -247,7 +247,7 @@ Sub playGame()
                 invincibleFrame = 0
             End If
         End If
-        
+
         #ifdef NEW_BEEPER_PLAYER
             If framec - lastFrameBeep >= BEEP_PERIOD Then
                 BeepFX_NextNote()
@@ -331,6 +331,12 @@ Sub resetValues()
         End If
     #endif
     ' removeScreenObjectFromBuffer()
+    
+    #ifdef LIVES_MODE_ENABLED
+        protaXRespawn = INITIAL_MAIN_CHARACTER_X
+        protaYRespawn = INITIAL_MAIN_CHARACTER_Y
+    #endif
+
     saveSprite(PROTA_SPRITE, INITIAL_MAIN_CHARACTER_Y, INITIAL_MAIN_CHARACTER_X, 1, 1)
     screenObjects = screenObjectsInitial
     enemiesPerScreen = enemiesPerScreenInitial
