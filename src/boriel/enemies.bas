@@ -92,6 +92,11 @@ Sub moveEnemies()
                 End If
                 
                 #ifdef ENEMIES_ADVANCED_ENABLED
+                    If decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) Then
+                        If decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = enemyLin Or decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = enemyLin Then
+                            decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) * -1
+                        End If
+                    End If
                 End If
             #endif
             
@@ -101,13 +106,18 @@ Sub moveEnemies()
             If decompressedEnemiesScreen(enemyId, ENEMY_TILE) < 16 Then
                 #ifdef SIDE_VIEW
                     If checkPlatformHasProtaOnTop(decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)) Then
-                        If decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 1 Then
-                            If Not CheckCollision(protaX + 1, protaY) Then
+                        If decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) Then
+                            spritesLinColTileAndFrame(PROTA_SPRITE, 1) = protaY + decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION)
+                            protaY = spritesLinColTileAndFrame(PROTA_SPRITE, 1)
+                        End If
+                        
+                        If decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = -1 Then
+                            If Not CheckCollision(protaX - 1, protaY) Then
                                 spritesLinColTileAndFrame(PROTA_SPRITE, 1) = protaX + decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION)
                                 protaX = spritesLinColTileAndFrame(PROTA_SPRITE, 1)
                             End If
-                        Elseif decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = -1 Then
-                            If Not CheckCollision(protaX - 1, protaY) Then
+                        ElseIf decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 1 Then
+                            If Not CheckCollision(protaX + 1, protaY) Then
                                 spritesLinColTileAndFrame(PROTA_SPRITE, 1) = protaX + decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION)
                                 protaX = spritesLinColTileAndFrame(PROTA_SPRITE, 1)
                             End If
@@ -122,13 +132,13 @@ Sub moveEnemies()
             End If
             
             ' Movimiento vertical
-            #ifndef ENEMIES_ADVANCED_ENABLED
-                If decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) Then
-                    If decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = enemyLin Or decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = enemyLin Then
-                        decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) * -1
-                    End If
-                End If
-            #endif
+            ' #ifndef ENEMIES_ADVANCED_ENABLED
+            '     If decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) Then
+            '         If decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = enemyLin Or decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = enemyLin Then
+            '             decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) * -1
+            '         End If
+            '     End If
+            ' #endif
             
             decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) + decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION)
             
