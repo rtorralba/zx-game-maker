@@ -50,7 +50,7 @@ Sub moveEnemies()
                 decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) * -1
             End If
         End If
-        
+
         decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) + decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION)
         
         If decompressedEnemiesScreen(enemyId, ENEMY_TILE) < 16 Then ' Is a platform Not an enemy, only 2 frames, 1 direction
