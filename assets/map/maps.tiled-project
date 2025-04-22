@@ -92,6 +92,11 @@
                     "value": false
                 },
                 {
+                    "name": "enemiesPursuit",
+                    "type": "bool",
+                    "value": false
+                },
+                {
                     "name": "backgroundAttribute",
                     "type": "int",
                     "value": 7

@@ -138,7 +138,7 @@ idleTime = 0
 
 arcadeMode = 0
 
-enemiesAdvanced = 0
+enemiesPursuit = 0
 
 if 'properties' in data:
     for property in data['properties']:
@@ -229,8 +229,8 @@ if 'properties' in data:
             idleTime = property['value']
         elif property['name'] == 'arcadeMode':
             arcadeMode = 1 if property['value'] else 0
-        elif property['name'] == 'enemiesAdvanced':
-            enemiesAdvanced = 1 if property['value'] else 0
+        elif property['name'] == 'enemiesPursuit':
+            enemiesPursuit = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -279,8 +279,8 @@ configStr += "const DAMAGE_TILES_COUNT as ubyte = " + str(damageTilesCount) + "\
 if shooting == 1:
     configStr += "#DEFINE SHOOTING_ENABLED\n"
 
-if enemiesAdvanced == 1:
-    configStr += "#DEFINE ENEMIES_ADVANCED_ENABLED\n"
+if enemiesPursuit == 1:
+    configStr += "#DEFINE ENEMIES_PURSUIT_ENABLED\n"
 
 if enabled128K == 1:
     configStr += "#DEFINE VTPLAYER_INIT $" + str(vtplayerInit) + "\n"
