@@ -502,6 +502,9 @@ for layer in data['layers']:
                         elif property['name'] == 'speed':
                             if property['value'] in [0, 1, 2]:
                                 objects[str(object['id'])]['speed'] = str(property['value'] + 1)
+                            if property['value'] in [3, 4, 5]:
+                                objects[str(object['id'])]['speed'] = str(property['value'] - 6)    
+                                    
 for layer in data['layers']:
     if layer['type'] == 'objectgroup':
         for object in layer['objects']:
@@ -580,7 +583,7 @@ for layer in data['layers']:
                         arrayBuffer.append(int(enemy['life']))
                         arrayBuffer.append(i + 1)
                         arrayBuffer.append(int(verticalDirection))                  
-                        arrayBuffer.append(int(enemy['speed']))                  
+                        arrayBuffer.append(int(enemy['speed']))      
                     else:
                         arrayBuffer.append(0)
                         arrayBuffer.append(0)
