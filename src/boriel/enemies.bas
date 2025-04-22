@@ -42,48 +42,48 @@ Sub moveEnemies()
             If decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) Then decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = 0
             
             #ifdef ENEMIES_ADVANCED_ENABLED
-                If decompressedEnemiesScreen(enemyId, ENEMY_COL_END) > decompressedEnemiesScreen(enemyId, ENEMY_COL_INI) And decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) <> decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) Then
-                    If decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) > decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) Then
-                        ' clockwise
-                        If decompressedEnemiesScreen(enemyId, ENEMY_COL_END) = enemyCol Then
-                            If decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = enemyLin Then
-                                decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = 1
-                                decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 0
-                            ElseIf decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = enemyLin Then
-                                decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = 0
-                                decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = -1
-                            End If
-                        ElseIf decompressedEnemiesScreen(enemyId, ENEMY_COL_INI) = enemyCol Then
-                            If decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = enemyLin Then
-                                decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = -1
-                                decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 0
-                            ElseIf decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = enemyLin Then
-                                decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = 0
-                                decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 1
-                            End If
+            If decompressedEnemiesScreen(enemyId, ENEMY_COL_END) > decompressedEnemiesScreen(enemyId, ENEMY_COL_INI) And decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) <> decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) Then
+                If decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) > decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) Then
+                    ' clockwise
+                    If decompressedEnemiesScreen(enemyId, ENEMY_COL_END) = enemyCol Then
+                        If decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = enemyLin Then
+                            decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = 1
+                            decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 0
+                        ElseIf decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = enemyLin Then
+                            decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = 0
+                            decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = -1
                         End If
-                    ElseIf decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) > decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) Then
-                        ' reverse clockwise
-                        If decompressedEnemiesScreen(enemyId, ENEMY_COL_END) = enemyCol Then
-                            If decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = enemyLin Then
-                                decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = -1
-                                decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 0
-                            ElseIf decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = enemyLin Then
-                                decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = 0
-                                decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = -1
-                            End If
-                        ElseIf decompressedEnemiesScreen(enemyId, ENEMY_COL_INI) = enemyCol Then
-                            If decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = enemyLin Then
-                                decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = 1
-                                decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 0
-                            ElseIf decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = enemyLin Then
-                                decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = 0
-                                decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 1
-                            End If
+                    ElseIf decompressedEnemiesScreen(enemyId, ENEMY_COL_INI) = enemyCol Then
+                        If decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = enemyLin Then
+                            decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = -1
+                            decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 0
+                        ElseIf decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = enemyLin Then
+                            decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = 0
+                            decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 1
                         End If
                     End If
-                Else
-                #endif
+                ElseIf decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) > decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) Then
+                    ' reverse clockwise
+                    If decompressedEnemiesScreen(enemyId, ENEMY_COL_END) = enemyCol Then
+                        If decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = enemyLin Then
+                            decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = -1
+                            decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 0
+                        ElseIf decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = enemyLin Then
+                            decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = 0
+                            decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = -1
+                        End If
+                    ElseIf decompressedEnemiesScreen(enemyId, ENEMY_COL_INI) = enemyCol Then
+                        If decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = enemyLin Then
+                            decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = 1
+                            decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 0
+                        ElseIf decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = enemyLin Then
+                            decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = 0
+                            decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 1
+                        End If
+                    End If
+                End If
+            Else
+            #endif
                 ' movimiento aleatorio
                 If decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) Then
                     If decompressedEnemiesScreen(enemyId, ENEMY_COL_INI) = enemyCol Or decompressedEnemiesScreen(enemyId, ENEMY_COL_END) = enemyCol Then
@@ -91,13 +91,13 @@ Sub moveEnemies()
                     End If
                 End If
                 
-                #ifdef ENEMIES_ADVANCED_ENABLED
-                    If decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) Then
-                        If decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = enemyLin Or decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = enemyLin Then
-                            decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) * -1
-                        End If
+                If decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) Then
+                    If decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = enemyLin Or decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = enemyLin Then
+                        decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) * -1
                     End If
                 End If
+            #ifdef ENEMIES_ADVANCED_ENABLED
+            End If
             #endif
             
             decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) + decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION)
@@ -111,13 +111,8 @@ Sub moveEnemies()
                             protaY = spritesLinColTileAndFrame(PROTA_SPRITE, 1)
                         End If
                         
-                        If decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = -1 Then
-                            If Not CheckCollision(protaX - 1, protaY) Then
-                                spritesLinColTileAndFrame(PROTA_SPRITE, 1) = protaX + decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION)
-                                protaX = spritesLinColTileAndFrame(PROTA_SPRITE, 1)
-                            End If
-                        ElseIf decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 1 Then
-                            If Not CheckCollision(protaX + 1, protaY) Then
+                        If decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) Then
+                            If Not CheckCollision(protaX + decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION), protaY) Then
                                 spritesLinColTileAndFrame(PROTA_SPRITE, 1) = protaX + decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION)
                                 protaX = spritesLinColTileAndFrame(PROTA_SPRITE, 1)
                             End If
@@ -130,15 +125,6 @@ Sub moveEnemies()
             Elseif decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = -1 Then
                 tile = decompressedEnemiesScreen(enemyId, ENEMY_TILE) + 16
             End If
-            
-            ' Movimiento vertical
-            ' #ifndef ENEMIES_ADVANCED_ENABLED
-            '     If decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) Then
-            '         If decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = enemyLin Or decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = enemyLin Then
-            '             decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) * -1
-            '         End If
-            '     End If
-            ' #endif
             
             decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) + decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION)
             
