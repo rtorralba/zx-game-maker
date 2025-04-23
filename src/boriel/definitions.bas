@@ -1,78 +1,78 @@
 #include "../output/config.bas"
 
 ' #ifdef ENABLED_128k
-'     dim isAmstrad as ubyte = 0
-'     if peek(23312) = 1
+'     Dim isAmstrad As Ubyte = 0
+'     If Peek(23312) = 1
 '         isAmstrad = 1
-'     end if
+'     End If
 ' #endif
 
-const PROTA_SPRITE as ubyte = 5
-const BULLET_SPRITE_RIGHT_ID as ubyte = 49
-const BULLET_SPRITE_LEFT_ID as ubyte = 50
+Const PROTA_SPRITE As Ubyte = 5
+Const BULLET_SPRITE_RIGHT_ID As Ubyte = 49
+Const BULLET_SPRITE_LEFT_ID As Ubyte = 50
 #ifdef OVERHEAD_VIEW
-    const BULLET_SPRITE_UP_ID as ubyte = 51
-    const BULLET_SPRITE_DOWN_ID as ubyte = 52
+    Const BULLET_SPRITE_UP_ID As Ubyte = 51
+    Const BULLET_SPRITE_DOWN_ID As Ubyte = 52
 #endif
 #ifdef SIDE_VIEW
-    const jumpStopValue as ubyte = 255
-    const jumpStepsCount as ubyte = 5
-    dim landed as UBYTE = 1
-    dim jumpCurrentKey as ubyte = jumpStopValue
-    dim jumpArray(jumpStepsCount - 1) AS byte = {-2, -2, -2, -2, -2}
+    Const jumpStopValue As Ubyte = 255
+    Const jumpStepsCount As Ubyte = 5
+    Dim landed As Ubyte = 1
+    Dim jumpCurrentKey As Ubyte = jumpStopValue
+    Dim jumpArray(jumpStepsCount - 1) As Byte = {-2, -2, -2, -2, -2}
 #endif
 
-dim protaLastFrame as ubyte
+Dim protaLastFrame As Ubyte
 
-const LEFT as uByte = 0
-const RIGHT as uByte = 1
-const UP as uByte = 2
-const DOWN as uByte = 3
-const FIRE as uByte = 4
+Const LEFT As Ubyte = 0
+Const RIGHT As Ubyte = 1
+Const UP As Ubyte = 2
+Const DOWN As Ubyte = 3
+Const FIRE As Ubyte = 4
 
-dim currentLife as UBYTE = 100
-dim currentKeys as UBYTE = 0
-dim moveScreen as ubyte
-dim currentScreen as UBYTE = 0
-dim currentBulletSpriteId as ubyte
+Dim currentLife As Ubyte = 100
+Dim currentKeys As Ubyte = 0
+Dim moveScreen As Ubyte
+Dim currentScreen As Ubyte = 0
+Dim currentBulletSpriteId As Ubyte
 
-dim protaFrame as ubyte = 0 
-dim enemFrame as ubyte = 0 
+Dim protaFrame As Ubyte = 0
+Dim enemFrame As Ubyte = 0
 
-dim kempston as uByte
-dim keyOption as String
-dim keyArray(4) as uInteger
+Dim kempston As Ubyte
+Dim keyOption As String
+Dim keyArray(4) As Uinteger
 
-dim framec AS ubyte AT 23672
+Dim framec As Ubyte AT 23672
 
 #ifdef NEW_BEEPER_PLAYER
-    const BEEP_PERIOD as ubyte = 1
-    dim lastFrameBeep as ubyte = 0
+    Const BEEP_PERIOD As Ubyte = 1
+    Dim lastFrameBeep As Ubyte = 0
 #endif
 
-dim lastFrameProta as ubyte = 0
-dim lastFrameEnemies as ubyte = 0
-dim lastFrameTiles as ubyte = 0
+Dim lastFrameProta As Ubyte = 0
+Dim lastFrameEnemies As Ubyte = 0
+Dim lastFrameTiles As Ubyte = 0
 
-const INVINCIBLE_FRAMES as ubyte = 25
-dim invincible as ubyte = 0
-dim invincibleFrame as ubyte = 0
-dim invincibleBlink as ubyte = 0
+Const INVINCIBLE_FRAMES As Ubyte = 25
+Dim invincible As Ubyte = 0
+Dim invincibleFrame As Ubyte = 0
+Dim invincibleBlink As Ubyte = 0
 
-dim protaX as ubyte
-dim protaY as ubyte
-dim protaDirection as ubyte
+Dim protaX As Ubyte
+Dim protaY As Ubyte
+Dim protaDirection As Ubyte
 
-dim animatedFrame as ubyte = 0
+Dim animatedFrame As Ubyte = 0
 
-dim inMenu as ubyte = 1
+Dim inMenu As Ubyte = 1
 
 #ifdef IDLE_ENABLED
-    dim protaLoopCounter as ubyte = 0
+    Dim protaLoopCounter As Ubyte = 0
 #endif
 
 #ifdef SHOOTING_ENABLED
-    dim noKeyPressedForShoot as UBYTE = 1
+    Dim noKeyPressedForShoot As Ubyte = 1
 #endif
 #ifdef ENABLED_128k
     #define DATA_BANK 4
@@ -80,53 +80,53 @@ dim inMenu as ubyte = 1
 #endif
 
 #ifdef SIDE_VIEW
-    dim tileSet(192, 7) as ubyte at TILESET_DATA_ADDRESS
-#else
-    dim tileSet(194, 7) as ubyte at TILESET_DATA_ADDRESS
+    Dim tileSet(192, 7) As Ubyte at TILESET_DATA_ADDRESS
+#Else
+    Dim tileSet(194, 7) As Ubyte at TILESET_DATA_ADDRESS
 #endif
-dim attrSet(191) as ubyte at ATTR_DATA_ADDRESS
-' dim sprites(47, 31) as ubyte at SPRITES_DATA_ADDRESS
-dim screenObjectsInitial(SCREENS_COUNT, 4) as ubyte at SCREEN_OBJECTS_INITIAL_DATA_ADDRESS
-dim screensOffsets(SCREENS_COUNT) as uInteger at SCREEN_OFFSETS_DATA_ADDRESS
-dim enemiesInScreenOffsets(SCREENS_COUNT) as uInteger at ENEMIES_IN_SCREEN_OFFSETS_DATA_ADDRESS
-dim animatedTilesInScreen(SCREENS_COUNT, MAX_ANIMATED_TILES_PER_SCREEN, 2) as ubyte at ANIMATED_TILES_IN_SCREEN_DATA_ADDRESS
-dim damageTiles(DAMAGE_TILES_COUNT) as ubyte at DAMAGE_TILES_DATA_ADDRESS
-dim enemiesPerScreen(SCREENS_COUNT) as ubyte at ENEMIES_PER_SCREEN_DATA_ADDRESS
-dim enemiesPerScreenInitial(SCREENS_COUNT) as ubyte at ENEMIES_PER_SCREEN_INITIAL_DATA_ADDRESS
-dim screenObjects(SCREENS_COUNT, 4) as ubyte at SCREEN_OBJECTS_DATA_ADDRESS
-dim screensWon(SCREENS_COUNT) as ubyte at SCREENS_WON_DATA_ADDRESS
-dim decompressedEnemiesScreen(MAX_ENEMIES_PER_SCREEN, 11) as byte at DECOMPRESSED_ENEMIES_SCREEN_DATA_ADDRESS
+Dim attrSet(191) As Ubyte at ATTR_DATA_ADDRESS
+' Dim sprites(47, 31) As Ubyte at SPRITES_DATA_ADDRESS
+Dim screenObjectsInitial(SCREENS_COUNT, 4) As Ubyte at SCREEN_OBJECTS_INITIAL_DATA_ADDRESS
+Dim screensOffsets(SCREENS_COUNT) As Uinteger at SCREEN_OFFSETS_DATA_ADDRESS
+Dim enemiesInScreenOffsets(SCREENS_COUNT) As Uinteger at ENEMIES_IN_SCREEN_OFFSETS_DATA_ADDRESS
+Dim animatedTilesInScreen(SCREENS_COUNT, MAX_ANIMATED_TILES_PER_SCREEN, 2) As Ubyte at ANIMATED_TILES_IN_SCREEN_DATA_ADDRESS
+Dim damageTiles(DAMAGE_TILES_COUNT) As Ubyte at DAMAGE_TILES_DATA_ADDRESS
+Dim enemiesPerScreen(SCREENS_COUNT) As Ubyte at ENEMIES_PER_SCREEN_DATA_ADDRESS
+Dim enemiesPerScreenInitial(SCREENS_COUNT) As Ubyte at ENEMIES_PER_SCREEN_INITIAL_DATA_ADDRESS
+Dim screenObjects(SCREENS_COUNT, 4) As Ubyte at SCREEN_OBJECTS_DATA_ADDRESS
+Dim screensWon(SCREENS_COUNT) As Ubyte at SCREENS_WON_DATA_ADDRESS
+Dim decompressedEnemiesScreen(MAX_ENEMIES_PER_SCREEN, 11) As Byte at DECOMPRESSED_ENEMIES_SCREEN_DATA_ADDRESS
 
 #ifdef USE_BREAKABLE_TILE
-dim brokenTiles(SCREENS_COUNT) as ubyte at BROKEN_TILES_DATA_ADDRESS
+    Dim brokenTiles(SCREENS_COUNT) As Ubyte at BROKEN_TILES_DATA_ADDRESS
 #endif
 
-dim spritesSet(51) as ubyte
-dim spriteAddressIndex as uInteger = 0
+Dim spritesSet(51) As Ubyte
+Dim spriteAddressIndex As Uinteger = 0
 
 Dim bullet(7) As Ubyte
 
-const FIRST_RUNNING_PROTA_SPRITE_RIGHT as ubyte = 1
-const FIRST_RUNNING_PROTA_SPRITE_LEFT as ubyte = 5
+Const FIRST_RUNNING_PROTA_SPRITE_RIGHT As Ubyte = 1
+Const FIRST_RUNNING_PROTA_SPRITE_LEFT As Ubyte = 5
 
-DIM spritesLinColTileAndFrame(MAX_ENEMIES_PER_SCREEN, 4) as ubyte
+Dim spritesLinColTileAndFrame(MAX_ENEMIES_PER_SCREEN, 4) As Ubyte
 
-CONST ENEMY_TILE as UBYTE = 0
-CONST ENEMY_LIN_INI as UBYTE = 1
-CONST ENEMY_COL_INI as UBYTE = 2
-CONST ENEMY_LIN_END as UBYTE = 3
-CONST ENEMY_COL_END as UBYTE = 4
-CONST ENEMY_HORIZONTAL_DIRECTION as UBYTE = 5
-CONST ENEMY_CURRENT_LIN as UBYTE = 6
-CONST ENEMY_CURRENT_COL as UBYTE = 7
-CONST ENEMY_ALIVE as UBYTE = 8
-' CONST ENEMY_SPRITE as UBYTE = 9
-CONST ENEMY_VERTICAL_DIRECTION as UBYTE = 10
-CONST ENEMY_SPEED as UBYTE = 11
+Const ENEMY_TILE As Ubyte = 0
+Const ENEMY_LIN_INI As Ubyte = 1
+Const ENEMY_COL_INI As Ubyte = 2
+Const ENEMY_LIN_END As Ubyte = 3
+Const ENEMY_COL_END As Ubyte = 4
+Const ENEMY_HORIZONTAL_DIRECTION As Ubyte = 5
+Const ENEMY_CURRENT_LIN As Ubyte = 6
+Const ENEMY_CURRENT_COL As Ubyte = 7
+Const ENEMY_ALIVE As Ubyte = 8
+' Const ENEMY_SPRITE As Ubyte = 9
+Const ENEMY_VERTICAL_DIRECTION As Ubyte = 10
+Const ENEMY_SPEED As Ubyte = 11
 
 #ifdef ARCADE_MODE
-    dim currentScreenKeyX as ubyte
-    dim currentScreenKeyY as ubyte
+    Dim currentScreenKeyX As Ubyte
+    Dim currentScreenKeyY As Ubyte
 #endif
 
-CONST ENEMY_DOOR_TILE as ubyte = 63
+Const ENEMY_DOOR_TILE As Ubyte = 63
