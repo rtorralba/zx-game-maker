@@ -304,7 +304,7 @@ End Sub
 Sub resetValues()
     swapScreen()
 
-    #ifdef ARCADE_MODE
+    #ifndef ARCADE_MODE
         saveSprite(PROTA_SPRITE, INITIAL_MAIN_CHARACTER_Y, INITIAL_MAIN_CHARACTER_X, 0, 1)
     #endif
     
@@ -331,7 +331,9 @@ Sub resetValues()
         End If
     #endif
     ' removeScreenObjectFromBuffer()
-    saveSprite(PROTA_SPRITE, INITIAL_MAIN_CHARACTER_Y, INITIAL_MAIN_CHARACTER_X, 1, 1)
+	#ifndef ARCADE_MODE
+		saveSprite(PROTA_SPRITE, INITIAL_MAIN_CHARACTER_Y, INITIAL_MAIN_CHARACTER_X, 1, 1)
+	#endif
     screenObjects = screenObjectsInitial
     enemiesPerScreen = enemiesPerScreenInitial
     For i = 0 To SCREENS_COUNT
