@@ -241,11 +241,8 @@ Sub playGame()
         
         If currentLife = 0 Then gameOver()
         
-        If invincible = 1 Then
-            If framec - invincibleFrame >= INVINCIBLE_FRAMES Then
-                invincible = 0
-                invincibleFrame = 0
-            End If
+        If invincible Then
+            invincible = invincible - 1
         End If
 
         #ifdef NEW_BEEPER_PLAYER
@@ -314,8 +311,6 @@ Sub resetValues()
     #endif
     
     invincible = 0
-    invincibleFrame = 0
-    invincibleBlink = 0
     
     currentLife = INITIAL_LIFE
     currentKeys = 2 Mod 2

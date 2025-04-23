@@ -12,9 +12,7 @@ sub decrementLife()
         if currentLife > 1 then
             currentLife = currentLife - 1
 
-            invincible = 1
-            invincibleFrame = framec
-
+            invincible = INVINCIBLE_FRAMES
             saveSprite(PROTA_SPRITE, protaYRespawn, protaXRespawn, getSpriteTile(PROTA_SPRITE), protaDirection)
         else
             currentLife = 0
@@ -23,12 +21,10 @@ sub decrementLife()
         if currentLife > DAMAGE_AMOUNT then
             currentLife = currentLife - DAMAGE_AMOUNT
 
-            invincible = 1
-            invincibleFrame = framec
+            invincible = INVINCIBLE_FRAMES
         else
             currentLife = 0
         end if
-
     #endif
 	printLife()
     BeepFX_Play(1)
@@ -92,13 +88,6 @@ function isSolidTileByColLin(col as ubyte, lin as ubyte) as ubyte
 
 	return 1
 end function
-
-' sub protaTouch()
-    ' invincible = 1
-    ' invincibleFrame = framec
-    ' decrementLife()
-    ' BeepFX_Play(1)
-' end sub
 
 #ifdef ARCADE_MODE
     sub countItemsOnTheScreen()

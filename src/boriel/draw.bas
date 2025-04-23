@@ -187,15 +187,8 @@ End Sub
 
 Sub drawSprites()
     If (protaY < 41) Then
-        If Not invincible Then
+        If Not invincible Or framec mod 2 Then
             Draw2x2Sprite(getSpriteTile(PROTA_SPRITE), protaX, protaY)
-        Else
-            If invincibleBlink Then
-                invincibleBlink = Not invincibleBlink
-                Draw2x2Sprite(getSpriteTile(PROTA_SPRITE), protaX, protaY)
-            Else
-                invincibleBlink = Not invincibleBlink
-            End If
         End If
     End If
     If enemiesPerScreen(currentScreen) > 0 Then
