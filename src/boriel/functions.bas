@@ -18,7 +18,11 @@ sub decrementLife()
         else
             currentLife = 0
 
-            #ifndef ENABLED_128k
+            #ifdef ENABLED_128k
+                #ifndef GAMEOVER_SCREEN_ENABLED
+                    saveSprite(PROTA_SPRITE, protaY, protaX, 15, 0)
+                #endif
+            #else    
                 saveSprite(PROTA_SPRITE, protaY, protaX, 15, 0)
             #endif
         end if
@@ -29,7 +33,11 @@ sub decrementLife()
             invincible = INVINCIBLE_FRAMES
         else
             currentLife = 0
-            #ifndef ENABLED_128k
+            #ifdef ENABLED_128k
+                #ifndef GAMEOVER_SCREEN_ENABLED
+                    saveSprite(PROTA_SPRITE, protaY, protaX, 15, 0)
+                #endif
+            #else    
                 saveSprite(PROTA_SPRITE, protaY, protaX, 15, 0)
             #endif
         end if
