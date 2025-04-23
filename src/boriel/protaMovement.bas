@@ -204,6 +204,10 @@ End Function
         
         currentBulletSpriteId = BULLET_SPRITE_RIGHT_ID
         If protaDirection Then
+            #ifdef IDLE_ENABLED
+                saveSprite(PROTA_SPRITE, protaY, protaX, 1, 1)
+            #endif
+            
             currentBulletSpriteId = BULLET_SPRITE_RIGHT_ID
             bulletPositionX = protaX + 2
             If BULLET_DISTANCE <> 0 Then
@@ -216,6 +220,9 @@ End Function
                 bulletEndPositionX = maxXScreenRight
             End If
         Elseif protaDirection = 0
+            #ifdef IDLE_ENABLED
+                saveSprite(PROTA_SPRITE, protaY, protaX, 5, 0)
+            #endif
             currentBulletSpriteId = BULLET_SPRITE_LEFT_ID
             bulletPositionX = protaX
             If BULLET_DISTANCE <> 0 Then
