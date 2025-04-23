@@ -540,6 +540,10 @@ Sub checkDamageByTile()
 End Sub
 
 Sub protaMovement()
+    #ifdef LIVES_MODE_ENABLED
+        if invincible Then Return
+    #endif
+    
     If MultiKeys(keyArray(FIRE)) = 0 Then
         noKeyPressedForShoot = 1
     End If

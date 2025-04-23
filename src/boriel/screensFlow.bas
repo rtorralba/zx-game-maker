@@ -243,6 +243,10 @@ Sub playGame()
         
         If invincible Then
             invincible = invincible - 1
+
+            #ifdef LIVES_MODE_ENABLED
+                if Not invincible Then saveSprite(PROTA_SPRITE, protaYRespawn, protaXRespawn, 1, protaDirection)
+            #endif
         End If
 
         #ifdef NEW_BEEPER_PLAYER

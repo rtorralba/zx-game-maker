@@ -187,9 +187,13 @@ End Sub
 
 Sub drawSprites()
     If (protaY < 41) Then
-        If Not invincible Or framec mod 2 Then
+        #ifdef LIVES_MODE_ENABLED
             Draw2x2Sprite(getSpriteTile(PROTA_SPRITE), protaX, protaY)
-        End If
+        #else
+            If Not invincible Or framec mod 2 Then
+                Draw2x2Sprite(getSpriteTile(PROTA_SPRITE), protaX, protaY)
+            End If
+        #endif
     End If
     If enemiesPerScreen(currentScreen) > 0 Then
         For i = 0 To enemiesPerScreen(currentScreen) - 1

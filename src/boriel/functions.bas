@@ -13,9 +13,14 @@ sub decrementLife()
             currentLife = currentLife - 1
 
             invincible = INVINCIBLE_FRAMES
-            saveSprite(PROTA_SPRITE, protaYRespawn, protaXRespawn, getSpriteTile(PROTA_SPRITE), protaDirection)
+
+            saveSprite(PROTA_SPRITE, protaY, protaX, 15, 0)
         else
             currentLife = 0
+
+            #ifndef ENABLED_128k
+                saveSprite(PROTA_SPRITE, protaY, protaX, 15, 0)
+            #endif
         end if
     #else
         if currentLife > DAMAGE_AMOUNT then
@@ -24,6 +29,9 @@ sub decrementLife()
             invincible = INVINCIBLE_FRAMES
         else
             currentLife = 0
+            #ifndef ENABLED_128k
+                saveSprite(PROTA_SPRITE, protaY, protaX, 15, 0)
+            #endif
         end if
     #endif
 	printLife()
