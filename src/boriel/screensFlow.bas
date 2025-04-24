@@ -194,6 +194,15 @@ Sub playGame()
         dzx0Standard(HUD_SCREEN_ADDRESS, $4000)
     #endif
     
+    #ifndef ARCADE_MODE
+        #ifdef LIVES_MODE_ENABLED
+            protaXRespawn = INITIAL_MAIN_CHARACTER_X
+            protaYRespawn = INITIAL_MAIN_CHARACTER_Y
+        #endif
+        
+        saveSprite(PROTA_SPRITE, INITIAL_MAIN_CHARACTER_Y, INITIAL_MAIN_CHARACTER_X, 1, 1)
+    #endif
+    swapScreen()
     resetValues()
     
     Let lastFrameProta = framec
@@ -231,6 +240,7 @@ Sub playGame()
         protaMovement()
         checkDamageByTile()
         moveEnemies()
+        checkEnemiesCollection()
         moveBullet()
         drawSprites()
         
@@ -303,12 +313,6 @@ Sub gameOver()
 End Sub
 
 Sub resetValues()
-    swapScreen()
-
-    #ifdef ARCADE_MODE
-        saveSprite(PROTA_SPRITE, INITIAL_MAIN_CHARACTER_Y, INITIAL_MAIN_CHARACTER_X, 0, 1)
-    #endif
-    
     bulletPositionX = 0
     #ifdef SIDE_VIEW
         jumpCurrentKey = jumpStopValue
@@ -330,13 +334,7 @@ Sub resetValues()
         End If
     #endif
     ' removeScreenObjectFromBuffer()
-    
-    #ifdef LIVES_MODE_ENABLED
-        protaXRespawn = INITIAL_MAIN_CHARACTER_X
-        protaYRespawn = INITIAL_MAIN_CHARACTER_Y
-    #endif
 
-    saveSprite(PROTA_SPRITE, INITIAL_MAIN_CHARACTER_Y, INITIAL_MAIN_CHARACTER_X, 1, 1)
     screenObjects = screenObjectsInitial
     enemiesPerScreen = enemiesPerScreenInitial
     For i = 0 To SCREENS_COUNT
