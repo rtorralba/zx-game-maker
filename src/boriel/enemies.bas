@@ -98,6 +98,7 @@ Sub checkEnemiesCollection()
     For enemyId=0 To maxEnemiesCount
         If decompressedEnemiesScreen(enemyId, ENEMY_TILE) = 0 Then continue For
         If decompressedEnemiesScreen(enemyId, ENEMY_TILE) < 16 Then continue For
+        If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) = 0 Then continue For
         #ifdef ENEMIES_NOT_RESPAWN_ENABLED
             If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <> 99 Then
                 If screensWon(currentScreen) Then continue For
