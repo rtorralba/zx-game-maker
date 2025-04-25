@@ -138,6 +138,8 @@ idleTime = 0
 
 arcadeMode = 0
 
+enemiesPursuit = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -227,6 +229,8 @@ if 'properties' in data:
             idleTime = property['value']
         elif property['name'] == 'arcadeMode':
             arcadeMode = 1 if property['value'] else 0
+        elif property['name'] == 'enemiesPursuit':
+            enemiesPursuit = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -274,6 +278,9 @@ configStr += "const DAMAGE_TILES_COUNT as ubyte = " + str(damageTilesCount) + "\
 
 if shooting == 1:
     configStr += "#DEFINE SHOOTING_ENABLED\n"
+
+if enemiesPursuit == 1:
+    configStr += "#DEFINE ENEMIES_PURSUIT_ENABLED\n"
 
 if enabled128K == 1:
     configStr += "#DEFINE VTPLAYER_INIT $" + str(vtplayerInit) + "\n"
@@ -486,6 +493,7 @@ for layer in data['layers']:
                     'tile': str(object['gid'] - spriteTileOffset),
                     'life': '1',
                     'speed': '3',
+                    'follow': False
                 }
 
                 if 'properties' in object and len(object['properties']) > 0:
@@ -495,6 +503,13 @@ for layer in data['layers']:
                         elif property['name'] == 'speed':
                             if property['value'] in [0, 1, 2]:
                                 objects[str(object['id'])]['speed'] = str(property['value'] + 1)
+                    if enemiesPursuit == 1:
+                        for property in object['properties']:
+                            if property['name'] == 'followPlayer':
+                                if property['value'] == True:
+                                    # objects[str(object['id'])]['speed'] = '-' + objects[str(object['id'])]['speed']
+                                    objects[str(object['id'])]['follow'] = True
+
 for layer in data['layers']:
     if layer['type'] == 'objectgroup':
         for object in layer['objects']:
@@ -502,6 +517,8 @@ for layer in data['layers']:
                 if object['type'] == '' and 'properties' in object:
                     objects[str(object['properties'][0]['value'])]['linEnd'] = str(int((object['y'] % (tileHeight * screenHeight))) // 4)
                     objects[str(object['properties'][0]['value'])]['colEnd'] = str(int((object['x'] % (tileWidth * screenWidth))) // 4)
+                    if objects[str(object['properties'][0]['value'])]['follow'] == True:
+                        objects[str(object['properties'][0]['value'])]['follow'] = False
                 elif object['type'] == 'mainCharacter':
                     xScreenPosition = math.ceil(object['x'] / screenPixelsWidth) - 1
                     yScreenPosition = math.ceil(object['y'] / screenPixelsHeight) - 1
@@ -573,7 +590,10 @@ for layer in data['layers']:
                         arrayBuffer.append(int(enemy['life']))
                         arrayBuffer.append(i + 1)
                         arrayBuffer.append(int(verticalDirection))                  
-                        arrayBuffer.append(int(enemy['speed']))                  
+                        if enemy['follow'] == True:
+                            arrayBuffer.append(int(enemy['speed']) * -1)      
+                        else:
+                            arrayBuffer.append(int(enemy['speed']))
                     else:
                         arrayBuffer.append(0)
                         arrayBuffer.append(0)
