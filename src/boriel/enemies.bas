@@ -106,11 +106,25 @@ Sub moveEnemies()
             End If
             
             saveSprite(enemyId, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), tile + 1, decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION))
-            
-            If decompressedEnemiesScreen(enemyId, ENEMY_TILE) > 15 Then
-                checkProtaCollision(enemyId)
-            End If
         End If
+    Next enemyId
+End Sub
+
+Sub checkEnemiesCollection()
+    Dim maxEnemiesCount As Ubyte = 0
+    
+    If enemiesPerScreen(currentScreen) > 0 Then maxEnemiesCount = enemiesPerScreen(currentScreen) - 1
+    For enemyId=0 To maxEnemiesCount
+        If decompressedEnemiesScreen(enemyId, ENEMY_TILE) = 0 Then continue For
+        If decompressedEnemiesScreen(enemyId, ENEMY_TILE) < 16 Then continue For
+        If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) = 0 Then continue For
+        #ifdef ENEMIES_NOT_RESPAWN_ENABLED
+            If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <> 99 Then
+                If screensWon(currentScreen) Then continue For
+            End If
+        #endif
+        
+        checkProtaCollision(enemyId)
     Next enemyId
 End Sub
 
