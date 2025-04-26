@@ -190,7 +190,7 @@ Sub drawSprites()
         #ifdef LIVES_MODE_ENABLED
             Draw2x2Sprite(getSpriteTile(PROTA_SPRITE), protaX, protaY)
         #else
-            If Not invincible Or framec mod 2 Then
+            If Not invincible Or invincible bAnd 2 Then
                 Draw2x2Sprite(getSpriteTile(PROTA_SPRITE), protaX, protaY)
             End If
         #endif
