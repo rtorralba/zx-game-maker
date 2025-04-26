@@ -431,7 +431,8 @@ Sub keyboardListen()
     End If
 End Sub
 
-Function checkTileObject(tile As Ubyte) As Ubyte
+Function checkTileObject(x as Ubyte, y as Ubyte) As Ubyte
+    Dim tile As Ubyte = GetTile(x, y)
     If tile = ITEM_TILE Then
         #ifndef ARCADE_MODE
             If Not screenObjects(currentScreen, SCREEN_OBJECT_ITEM_INDEX) Then
@@ -496,16 +497,16 @@ Sub checkObjectContact()
     Dim col As Ubyte = protaX >> 1
     Dim lin As Ubyte = protaY >> 1
     
-    If checkTileObject(GetTile(col, lin)) Then
+    If checkTileObject(col, lin) Then
         FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col, lin)
         Return
-    Elseif checkTileObject(GetTile(col + 1, lin))
+    Elseif checkTileObject(col + 1, lin)
         FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col + 1, lin)
         Return
-    Elseif checkTileObject(GetTile(col, lin + 1))
+    Elseif checkTileObject(col, lin + 1)
         FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col, lin + 1)
         Return
-    Elseif checkTileObject(GetTile(col + 1, lin + 1))
+    Elseif checkTileObject(col + 1, lin + 1)
         FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col + 1, lin + 1)
         Return
     End If
