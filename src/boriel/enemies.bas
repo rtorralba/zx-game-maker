@@ -82,12 +82,9 @@ Sub moveEnemies()
         
         saveSprite(enemyId, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), tile + 1, decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION))
         End If
-    Next enemyId
-    End If
-End Sub
+        Next enemyId
 
-Sub checkEnemiesCollection()
-    If enemiesPerScreen(currentScreen) > 0 Then
+        ' checkEnemiesCollection()
         For enemyId=0 To enemiesPerScreen(currentScreen) - 1
             If decompressedEnemiesScreen(enemyId, ENEMY_TILE) < 16 Then continue For
             If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) = 0 Then continue For

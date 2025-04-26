@@ -235,7 +235,7 @@ Sub playGame()
         protaMovement()
         checkDamageByTile()
         moveEnemies()
-        checkEnemiesCollection()
+        ' checkEnemiesCollection()
         moveBullet()
         drawSprites()
         
