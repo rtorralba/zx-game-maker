@@ -129,6 +129,11 @@
                 "value": 0
             },
             {
+                "name": "livesMode",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "initialLife",
                 "type": "int",
                 "value": 50
