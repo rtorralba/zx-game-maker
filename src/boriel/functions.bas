@@ -40,9 +40,9 @@ sub printLife()
     #endif
 end sub
 
-function isADamageTile(tile as ubyte) as UBYTE
+function isADamageTile(x as ubyte, y as ubyte) as UBYTE
     for i = 0 to DAMAGE_TILES_COUNT
-        if peek(@damageTiles + i) = tile then
+        if peek(@damageTiles + i) = GetTile(x, y) then
             return 1
         end if
     next i
