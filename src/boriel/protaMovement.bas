@@ -64,7 +64,7 @@ end function
 
 	sub checkIsJumping()
 		if jumpCurrentKey <> jumpStopValue then
-			if protaY < 2 then
+			if protaY < 2 and jumpEnergy > 0 then
 				#ifdef ARCADE_MODE
 					protaY = 39
 				#else
