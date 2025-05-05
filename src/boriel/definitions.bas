@@ -14,13 +14,6 @@ Const BULLET_SPRITE_LEFT_ID As Ubyte = 50
     Const BULLET_SPRITE_UP_ID As Ubyte = 51
     Const BULLET_SPRITE_DOWN_ID As Ubyte = 52
 #endif
-#ifdef SIDE_VIEW
-    Const jumpStopValue As Ubyte = 255
-    Const jumpStepsCount As Ubyte = 5
-    Dim landed As Ubyte = 1
-    Dim jumpCurrentKey As Ubyte = jumpStopValue
-    Dim jumpArray(jumpStepsCount - 1) As Byte = {-2, -2, -2, -2, -2}
-#endif
 
 Dim protaLastFrame As Ubyte
 
