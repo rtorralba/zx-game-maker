@@ -64,7 +64,7 @@ end function
 
 	sub checkIsJumping()
 		if jumpCurrentKey <> jumpStopValue then
-			if protaY < 2 and jumpEnergy > 0 then
+			if protaY < 2 then
 				#ifdef JETPACK_FUEL
 		                    if jumpEnergy > 0 then
 		                #endif
