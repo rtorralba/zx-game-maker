@@ -65,11 +65,17 @@ end function
 	sub checkIsJumping()
 		if jumpCurrentKey <> jumpStopValue then
 			if protaY < 2 and jumpEnergy > 0 then
-				#ifdef ARCADE_MODE
-					protaY = 39
-				#else
-					moveScreen = 8 ' stop jumping
-				#endif
+				#ifdef JETPACK_FUEL
+		                    if jumpEnergy > 0 then
+		                #endif
+		                #ifdef ARCADE_MODE
+		                    protaY = 39
+		                #else
+		                    moveScreen = 8 ' stop jumping
+		                #endif
+		                #ifdef JETPACK_FUEL
+		                    end if
+		                #endif
 			#ifndef JETPACK_FUEL
 				elseif jumpCurrentKey < jumpStepsCount
 					if CheckStaticPlatform(protaX, protaY + jumpArray(jumpCurrentKey)) then
