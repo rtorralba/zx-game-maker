@@ -138,6 +138,8 @@ idleTime = 0
 
 arcadeMode = 0
 
+gravitySpeed = 2
+jumpArrayCount = 5
 jumpArray = "{-2, -2, -2, -2, -2}"
 
 if 'properties' in data:
@@ -231,7 +233,8 @@ if 'properties' in data:
             arcadeMode = 1 if property['value'] else 0
         elif property['name'] == 'jumpType':
             if property['value'] == 'accelerated':
-                jumpArray = "{-3, -3, -2, -2, 0}"
+                jumpArrayCount = 13
+                jumpArray = "{-2, -2, -2, -2, -1, -1, 0, 1, 1, 2, 2, 2, 2}"
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -414,7 +417,7 @@ configStr += "const SCREENS_COUNT as ubyte = " + str(screensCount - 1) + "\n\n"
 
 configStr += "#ifdef SIDE_VIEW\n"
 configStr += "Const jumpStopValue As Ubyte = 255\n"
-configStr += "Const jumpStepsCount As Ubyte = 5\n"
+configStr += "Const jumpStepsCount As Ubyte = " + str(jumpArrayCount) + "\n"
 configStr += "Dim landed As Ubyte = 1\n"
 configStr += "Dim jumpCurrentKey As Ubyte = jumpStopValue\n"
 configStr += "Dim jumpArray(jumpStepsCount - 1) As Byte = " + jumpArray + "\n"

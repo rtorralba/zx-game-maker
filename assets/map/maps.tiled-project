@@ -160,6 +160,12 @@
                     "value": true
                 },
                 {
+                    "name": "jumpType",
+                    "propertyType": "jumpType",
+                    "type": "string",
+                    "value": "constant"
+                },
+                {
                     "name": "keysEnabled",
                     "type": "bool",
                     "value": true
@@ -241,6 +247,17 @@
                 "map",
                 "project"
             ]
+        },
+        {
+            "id": 4,
+            "name": "jumpType",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "constant",
+                "accelerated"
+            ],
+            "valuesAsFlags": false
         }
     ]
 }

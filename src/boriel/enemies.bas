@@ -56,6 +56,7 @@ Sub moveEnemies()
         If decompressedEnemiesScreen(enemyId, ENEMY_TILE) < 16 Then ' Is a platform Not an enemy, only 2 frames, 1 direction
         #ifdef SIDE_VIEW
             If checkPlatformHasProtaOnTop(decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)) Then
+                jumpCurrentKey = jumpStopValue
                 If decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) Then
                     spritesLinColTileAndFrame(PROTA_SPRITE, 1) = protaY + decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION)
                     protaY = spritesLinColTileAndFrame(PROTA_SPRITE, 1)
@@ -127,6 +128,7 @@ Sub checkProtaCollision(enemyId As Ubyte)
                     If protaX >= (enemyX0-1) And protaX <= (enemyX1+1) Then
                         damageEnemy(enemyId)
                         landed = 1
+                        jumpCurrentKey = jumpStopValue
                         jump()
                         Return
                     End If
