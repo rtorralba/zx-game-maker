@@ -74,7 +74,7 @@ End Function
                 If CheckStaticPlatform(protaX, protaY + jumpArray(jumpCurrentKey)) Then
                     saveSprite(PROTA_SPRITE, protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
                 Else
-                    If Not CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey)) And Not CheckCollision(protaX + jumpXImpulse, protaY + jumpArray(jumpCurrentKey)) Then
+                    If Not CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey)) Then
                         saveSprite(PROTA_SPRITE, protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
                     Else
                         jumpCurrentKey = jumpStopValue
