@@ -72,7 +72,7 @@ function isSolidTileByColLin(col as ubyte, lin as ubyte) as ubyte
     if tile > 64 then return 0
     if tile < 1 then return 0
 
-	return 1
+	return tile
 end function
 
 sub protaTouch()
@@ -146,16 +146,16 @@ function CheckCollision(x as uByte, y as uByte) as uByte
 	return 0
 end function
 
-function isSolidTileByXY(x as ubyte, y as ubyte) as ubyte
-    dim col as uByte = x >> 1
-    dim lin as uByte = y >> 1
+' function isSolidTileByXY(x as ubyte, y as ubyte) as ubyte
+'     dim col as uByte = x >> 1
+'     dim lin as uByte = y >> 1
     
-    if GetTile(col, lin) = 0 then return 0
+'     if GetTile(col, lin) = 0 then return 0
 
-    if GetTile(col, lin) > 63 then return 0
+'     if GetTile(col, lin) > 63 then return 0
 
-    return GetTile(col, lin)
-end function
+'     return GetTile(col, lin)
+' end function
 
 sub removeTilesFromScreen(tile as ubyte)
 	dim index as uinteger

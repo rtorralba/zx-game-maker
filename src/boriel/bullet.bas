@@ -66,41 +66,43 @@ sub moveBullet()
     checkBulletCollision()
 end sub
 
-sub checkBulletCollision()
-    if bulletPositionY = maxYScreenTop or bulletPositionY = maxYScreenBottom then
-        resetBullet()
-        return
+#ifdef USE_BREAKABLE_TILE
+sub checkAndRemoveBreakableTile(tile as ubyte)
+    if tile = 62 then
+        brokenTiles(currentScreen) = 1
+        BeepFX_Play(0)
+        removeTilesFromScreen(62)
     end if
+end sub
+#EndIf
 
-    dim xToCheck as ubyte
+sub checkBulletCollision()
+    #ifdef OVERHEAD_VIEW
+        if bulletPositionY = maxYScreenTop or bulletPositionY = maxYScreenBottom then
+            resetBullet()
+            return
+        end if
+    #endif
+
+    dim xToCheck as ubyte = bulletPositionX
 
     if bulletDirection = 1 then
         xToCheck = bulletPositionX + 1
-    else
-        xToCheck = bulletPositionX
     end if
 
-    dim tile as ubyte = isSolidTileByXY(xToCheck, bulletPositionY)
+    dim tile as ubyte = isSolidTileByColLin(xToCheck >> 1, bulletPositionY >> 1)
     if tile then
         resetBullet()
         #ifdef USE_BREAKABLE_TILE
-            if tile = 62 then
-                brokenTiles(currentScreen) = 1
-                BeepFX_Play(0)
-                removeTilesFromScreen(62)
-            end if
+            checkAndRemoveBreakableTile(tile)
         #endif
         return
     else
-        tile = isSolidTileByXY(xToCheck, bulletPositionY + 1)
+        tile = isSolidTileByColLin(xToCheck >> 1, (bulletPositionY + 1) >> 1)
         if tile then
             resetBullet()
             #ifdef USE_BREAKABLE_TILE
-                if tile = 62 then
-                    brokenTiles(currentScreen) = 1
-                    BeepFX_Play(0)
-                    removeTilesFromScreen(62)
-                end if
+                checkAndRemoveBreakableTile(tile)
             #endif
             return
         end if
@@ -114,21 +116,10 @@ sub checkBulletCollision()
         if decompressedEnemiesScreen(enemyId, ENEMY_TILE) < 16 then continue for ' not enemy
         if decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) = 0 then continue for
 
-        dim bulletX0, bulletX1, bulletY0, bulletY1, enemyX0, enemyX1, enemyY0, enemyY1 as ubyte
-
-        bulletX0 = bulletPositionX
-        bulletX1 = bulletPositionX + 1
-        bulletY0 = bulletPositionY
-        bulletY1 = bulletPositionY + 1
-        enemyX0 = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL)
-        enemyX1 = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) + 2
-        enemyY0 = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
-        enemyY1 = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) + 2
-
-        if bulletX1 < enemyX0 then continue for
-        if bulletX0 > enemyX1 then continue for
-        if bulletY1 < enemyY0 then continue for
-        if bulletY0 > enemyY1 then continue for
+        if (bulletPositionX + 1) < decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) then continue for
+        if bulletPositionX > (decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) + 2) then continue for
+        if (bulletPositionY + 1) < decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) then continue for
+        if bulletPositionY > (decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)+2) then continue for
 
         damageEnemy(enemyId)
         resetBullet()
