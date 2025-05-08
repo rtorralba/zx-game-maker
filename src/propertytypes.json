@@ -23,6 +23,17 @@
         "valuesAsFlags": false
     },
     {
+        "id": 4,
+        "name": "jumpType",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "constant",
+            "accelerated"
+        ],
+        "valuesAsFlags": false
+    },
+    {
         "color": "#ffa0a0a4",
         "drawFill": true,
         "id": 2,
@@ -147,6 +158,12 @@
                 "name": "itemsEnabled",
                 "type": "bool",
                 "value": true
+            },
+            {
+                "name": "jumpType",
+                "propertyType": "jumpType",
+                "type": "string",
+                "value": "constant"
             },
             {
                 "name": "keysEnabled",

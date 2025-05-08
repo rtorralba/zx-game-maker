@@ -76,6 +76,9 @@ End Function
                 Else
                     If Not CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey)) Then
                         saveSprite(PROTA_SPRITE, protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
+                    Else
+                        jumpCurrentKey = jumpStopValue
+                        return
                     End If
                 End If
                 jumpCurrentKey = jumpCurrentKey + 1

@@ -138,6 +138,10 @@ idleTime = 0
 
 arcadeMode = 0
 
+gravitySpeed = 2
+jumpArrayCount = 5
+jumpArray = "{-2, -2, -2, -2, -2}"
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -227,6 +231,10 @@ if 'properties' in data:
             idleTime = property['value']
         elif property['name'] == 'arcadeMode':
             arcadeMode = 1 if property['value'] else 0
+        elif property['name'] == 'jumpType':
+            if property['value'] == 'accelerated':
+                jumpArrayCount = 13
+                jumpArray = "{-2, -2, -2, -2, -1, -1, 0, 1, 1, 2, 2, 2, 2}"
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -406,6 +414,14 @@ configStr += "const SCREEN_OBJECT_DOOR_INDEX as ubyte = 2 \n"
 configStr += "const SCREEN_OBJECT_LIFE_INDEX as ubyte = 3 \n"
 configStr += "const SCREEN_OBJECT_AMMO_INDEX as ubyte = 4 \n"
 configStr += "const SCREENS_COUNT as ubyte = " + str(screensCount - 1) + "\n\n"
+
+configStr += "#ifdef SIDE_VIEW\n"
+configStr += "Const jumpStopValue As Ubyte = 255\n"
+configStr += "Const jumpStepsCount As Ubyte = " + str(jumpArrayCount) + "\n"
+configStr += "Dim landed As Ubyte = 1\n"
+configStr += "Dim jumpCurrentKey As Ubyte = jumpStopValue\n"
+configStr += "Dim jumpArray(jumpStepsCount - 1) As Byte = " + jumpArray + "\n"
+configStr += "#endif\n"
 
 with open("output/screenObjects.bin", "wb") as f:
     for screen in screenObjects:
