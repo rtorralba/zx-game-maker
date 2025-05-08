@@ -138,6 +138,8 @@ idleTime = 0
 
 arcadeMode = 0
 
+jetPackFuel = 0
+
 gravitySpeed = 2
 jumpArrayCount = 5
 jumpArray = "{-2, -2, -2, -2, -2}"
@@ -231,6 +233,8 @@ if 'properties' in data:
             idleTime = property['value']
         elif property['name'] == 'arcadeMode':
             arcadeMode = 1 if property['value'] else 0
+        elif property['name'] == 'jetPackFuel':
+            jetPackFuel = property['value'] 
         elif property['name'] == 'jumpType':
             if property['value'] == 'accelerated':
                 jumpArrayCount = 13
@@ -358,6 +362,9 @@ if waitPressKeyAfterLoad == 1:
 if redefineKeysEnabled == 1:
     configStr += "#DEFINE REDEFINE_KEYS_ENABLED\n"
 
+if jetPackFuel > 0:
+    configStr += "#DEFINE JETPACK_FUEL "  + str(jetPackFuel) + "\n"
+
 if mainCharacterExtraFrame == 1:
     configStr += "#DEFINE MAIN_CHARACTER_EXTRA_FRAME\n"
 
@@ -416,11 +423,16 @@ configStr += "const SCREEN_OBJECT_AMMO_INDEX as ubyte = 4 \n"
 configStr += "const SCREENS_COUNT as ubyte = " + str(screensCount - 1) + "\n\n"
 
 configStr += "#ifdef SIDE_VIEW\n"
-configStr += "Const jumpStopValue As Ubyte = 255\n"
-configStr += "Const jumpStepsCount As Ubyte = " + str(jumpArrayCount) + "\n"
-configStr += "Dim landed As Ubyte = 1\n"
-configStr += "Dim jumpCurrentKey As Ubyte = jumpStopValue\n"
-configStr += "Dim jumpArray(jumpStepsCount - 1) As Byte = " + jumpArray + "\n"
+configStr += "  Const jumpStopValue As Ubyte = 255\n"
+configStr += "  Dim landed As Ubyte = 1\n"
+configStr += "  Dim jumpCurrentKey As Ubyte = jumpStopValue\n"
+configStr += "  #ifndef JETPACK_FUEL\n"
+configStr += "    Const jumpStepsCount As Ubyte = " + str(jumpArrayCount) + "\n"
+configStr += "    Dim jumpArray(jumpStepsCount - 1) As Byte = " + jumpArray + "\n"
+configStr += "  #else\n"
+configStr += "    Const jumpStepsCount As Ubyte = JETPACK_FUEL\n"
+configStr += "    Dim jumpEnergy As Ubyte = jumpStepsCount\n"
+configStr += "  #endif\n"
 configStr += "#endif\n"
 
 with open("output/screenObjects.bin", "wb") as f:
