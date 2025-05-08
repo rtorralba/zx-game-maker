@@ -160,6 +160,11 @@
                 "value": true
             },
             {
+                "name": "jetPackFuel",
+                "type": "int",
+                "value": 0
+            },
+            {
                 "name": "jumpType",
                 "propertyType": "jumpType",
                 "type": "string",

@@ -62,38 +62,87 @@ End Function
         End If
     End Function
     
-    Sub checkIsJumping()
-        If jumpCurrentKey <> jumpStopValue Then
-            If protaY < 2 Then
-                #ifdef ARCADE_MODE
-                    protaY = 39
-                #Else
-                    moveScreen = 8 ' stop jumping
-                #endif
-            Elseif jumpCurrentKey < jumpStepsCount
-                If CheckStaticPlatform(protaX, protaY + jumpArray(jumpCurrentKey)) Then
-                    saveSprite(PROTA_SPRITE, protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
-                Else
-                    If Not CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey)) Then
+    #ifndef JETPACK_FUEL
+        Sub checkIsJumping()
+            If jumpCurrentKey <> jumpStopValue Then
+                If protaY < 2 Then
+                    #ifdef ARCADE_MODE
+                        protaY = 39
+                    #Else
+                        moveScreen = 8 ' stop jumping
+                    #endif
+                Elseif jumpCurrentKey < jumpStepsCount
+                    If CheckStaticPlatform(protaX, protaY + jumpArray(jumpCurrentKey)) Then
                         saveSprite(PROTA_SPRITE, protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
                     Else
-                        jumpCurrentKey = jumpStopValue
-                        return
+                        If Not CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey)) Then
+                            saveSprite(PROTA_SPRITE, protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
+                        Else
+                            jumpCurrentKey = jumpStopValue
+                            return
+                        End If
                     End If
+                    jumpCurrentKey = jumpCurrentKey + 1
+                Else
+                    jumpCurrentKey = jumpStopValue ' stop jumping
                 End If
-                jumpCurrentKey = jumpCurrentKey + 1
-            Else
-                jumpCurrentKey = jumpStopValue ' stop jumping
             End If
-        End If
-    End Sub
-    
+        End Sub
+    #endif
+
+    #ifdef JETPACK_FUEL
+        Function pressingUp() As Ubyte
+            return ((kempston = 0 and MultiKeys(keyArray(UP)) <> 0) or (kempston = 1 and IN(31) bAND %1000 <> 0))
+        End Function
+
+        sub checkIsFlying()
+            if jumpCurrentKey = jumpStopValue then return
+
+            if protaY < 2 then
+                if jumpEnergy > 0 then
+                    #ifdef ARCADE_MODE
+                        protaY = 39
+                    #else
+                        moveScreen = 8 ' stop jumping
+                    #endif
+                end if  
+                Return            
+            end if    
+
+            if pressingUp() and jumpEnergy > 0 then
+                if not CheckCollision(protaX, protaY - 1) then
+                    saveSprite(PROTA_SPRITE, protaY - 1, protaX, getNextFrameJumpingFalling(), protaDirection)
+                end if
+                jumpCurrentKey = jumpCurrentKey + 1
+                jumpEnergy = jumpEnergy - 1
+                if jumpEnergy MOD 5 = 0 then 
+                    printLife()
+                end if
+                return
+            end if
+            
+            jumpCurrentKey = jumpStopValue ' stop jumping
+            if jumpEnergy = 0 then
+                printLife()
+            end if                     
+        end Sub
+    #endif
+
     Function isFalling() As Ubyte
         If canMoveDown() Then
+            #ifdef JETPACK_FUEL
+				if pressingUp() then
+					jumpCurrentKey = 0
+				end if
+			#endif
             Return 1
         Else
             If landed = 0 Then
                 landed = 1
+                #ifdef JETPACK_FUEL
+					jumpEnergy = jumpStepsCount
+					printLife()
+				#endif
                 If protaY bAND 1 <> 0 Then
                     ' saveSpriteLin(PROTA_SPRITE, protaY - 1)
                     protaY = protaY - 1
@@ -108,8 +157,12 @@ End Function
         If jumpCurrentKey = jumpStopValue And isFalling() Then
             If protaY >= MAX_LINE Then
                 moveScreen = 2
-            Else
-                saveSprite(PROTA_SPRITE, protaY + 2, protaX, getNextFrameJumpingFalling(), protaDirection)
+            Else                
+                #ifndef JETPACK_FUEL
+					saveSprite(PROTA_SPRITE, protaY + 2, protaX, getNextFrameJumpingFalling(), protaDirection)
+				#else
+					saveSprite(PROTA_SPRITE, protaY + 1, protaX, getNextFrameJumpingFalling(), protaDirection)
+				#endif
             End If
             landed = 0
         End If
@@ -546,7 +599,11 @@ Sub protaMovement()
     checkObjectContact()
     
     #ifdef SIDE_VIEW
-        checkIsJumping()
+        #ifndef JETPACK_FUEL
+            checkIsJumping()
+        #Else
+            checkIsFlying()
+        #endif
         gravity()
         
         #ifdef IDLE_ENABLED
