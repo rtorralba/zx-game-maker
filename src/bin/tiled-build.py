@@ -144,6 +144,8 @@ gravitySpeed = 2
 jumpArrayCount = 5
 jumpArray = "{-2, -2, -2, -2, -2}"
 
+livesMode = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -239,7 +241,11 @@ if 'properties' in data:
             if property['value'] == 'accelerated':
                 jumpArrayCount = 13
                 jumpArray = "{-2, -2, -2, -2, -1, -1, 0, 1, 1, 2, 2, 2, 2}"
-
+        elif property['name'] == 'livesMode':
+            if property['value'] == 'instant respawn':
+                livesMode = 1
+            elif property['value'] == 'show graveyard':
+                livesMode = 2
 if len(damageTiles) == 0:
     damageTiles.append('0')
  
@@ -252,7 +258,16 @@ configStr += "const screenWidth as ubyte = " + str(screenWidth) + "\n"
 configStr += "const screenHeight as ubyte = " + str(screenHeight) + "\n"
 configStr += "const INITIAL_LIFE as ubyte = " + str(initialLife) + "\n"
 configStr += "const MAX_LINE as ubyte = " + str(screenHeight * 2 - 4) + "\n"
-configStr += "const DAMAGE_AMOUNT as ubyte = " + str(damageAmount) + "\n"
+
+if livesMode == 1:
+    configStr += "#DEFINE LIVES_MODE_ENABLED\n"
+    configStr += "#DEFINE LIVES_MODE_RESPAWN\n"
+elif livesMode == 2:
+    configStr += "#DEFINE LIVES_MODE_ENABLED\n"
+    configStr += "#DEFINE LIVES_MODE_GRAVEYARD\n"
+else:
+    configStr += "const DAMAGE_AMOUNT as ubyte = " + str(damageAmount) + "\n"
+
 configStr += "const LIFE_AMOUNT as ubyte = " + str(lifeAmount) + "\n"
 configStr += "const BULLET_DISTANCE as ubyte = " + str(bulletDistance) + "\n"
 configStr += "const SHOULD_KILL_ENEMIES as ubyte = " + str(shouldKillEnemies) + "\n"

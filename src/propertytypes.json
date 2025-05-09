@@ -34,6 +34,18 @@
         "valuesAsFlags": false
     },
     {
+        "id": 5,
+        "name": "livesMode",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "disabled",
+            "instant respawn",
+            "show graveyard"
+        ],
+        "valuesAsFlags": false
+    },
+    {
         "color": "#ffa0a0a4",
         "drawFill": true,
         "id": 2,
@@ -169,6 +181,12 @@
                 "propertyType": "jumpType",
                 "type": "string",
                 "value": "constant"
+            },
+            {
+                "name": "livesMode",
+                "propertyType": "livesMode",
+                "type": "string",
+                "value": "disabled"
             },
             {
                 "name": "keysEnabled",
