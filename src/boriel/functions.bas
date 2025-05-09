@@ -4,16 +4,52 @@ sub pauseUntilPressKey()
 end sub
 
 sub decrementLife()
-	if (currentLife = 0) then
-		return
-	end if
+    if (currentLife = 0) then
+        return
+    end if
+    
+    #ifdef LIVES_MODE_ENABLED
+        if currentLife > 1 then
+            currentLife = currentLife - 1
 
-	if currentLife > DAMAGE_AMOUNT then
-		currentLife = currentLife - DAMAGE_AMOUNT
-	else
-		currentLife = 0
-	end if
+            invincible = INVINCIBLE_FRAMES
+            
+            #ifdef LIVES_MODE_GRAVEYARD
+                saveSprite(PROTA_SPRITE, protaY, protaX, 15, 0)
+            #endif
+
+            #ifdef LIVES_MODE_RESPAWN
+                saveSprite(PROTA_SPRITE, protaYRespawn, protaXRespawn, 1, protaDirection)
+            #endif
+        else
+            currentLife = 0
+
+            #ifdef ENABLED_128k
+                #ifndef GAMEOVER_SCREEN_ENABLED
+                    saveSprite(PROTA_SPRITE, protaY, protaX, 15, 0)
+                #endif
+            #else    
+                saveSprite(PROTA_SPRITE, protaY, protaX, 15, 0)
+            #endif
+        end if
+    #else
+        if currentLife > DAMAGE_AMOUNT then
+            currentLife = currentLife - DAMAGE_AMOUNT
+
+            invincible = INVINCIBLE_FRAMES
+        else
+            currentLife = 0
+            #ifdef ENABLED_128k
+                #ifndef GAMEOVER_SCREEN_ENABLED
+                    saveSprite(PROTA_SPRITE, protaY, protaX, 15, 0)
+                #endif
+            #else    
+                saveSprite(PROTA_SPRITE, protaY, protaX, 15, 0)
+            #endif
+        end if
+    #endif
 	printLife()
+    BeepFX_Play(1)
 end sub
 
 sub printLife()
@@ -78,13 +114,6 @@ function isSolidTileByColLin(col as ubyte, lin as ubyte) as ubyte
 
 	return 1
 end function
-
-sub protaTouch()
-    invincible = 1
-    invincibleFrame = framec
-    decrementLife()
-    BeepFX_Play(1)
-end sub
 
 #ifdef ARCADE_MODE
     sub countItemsOnTheScreen()
