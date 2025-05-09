@@ -301,9 +301,11 @@ Sub gameOver()
             dzx0Standard(GAMEOVER_SCREEN_ADDRESS, $4000)
             PaginarMemoria(0)
         #Else
+            saveSprite(PROTA_SPRITE, protaY, protaX, 15, 0)
             Print AT 7, 12; "GAME OVER"
         #endif
     #Else
+        saveSprite(PROTA_SPRITE, protaY, protaX, 15, 0)
         Print at 7, 12; "GAME OVER"
     #endif
     
@@ -319,6 +321,7 @@ Sub resetValues()
     #endif
     
     invincible = 0
+    invincibleBlink = 0
     
     currentLife = INITIAL_LIFE
     currentKeys = 2 Mod 2
