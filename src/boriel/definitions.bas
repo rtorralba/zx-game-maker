@@ -49,8 +49,6 @@ Dim lastFrameTiles As Ubyte = 0
 
 Const INVINCIBLE_FRAMES As Ubyte = 25
 Dim invincible As Ubyte = 0
-Dim invincibleFrame As Ubyte = 0
-Dim invincibleBlink As Ubyte = 0
 
 Dim protaX As Ubyte
 Dim protaY As Ubyte

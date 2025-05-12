@@ -252,11 +252,7 @@ Sub playGame()
         If currentLife = 0 Then gameOver()
         
         If invincible Then
-            If framec - invincibleFrame >= INVINCIBLE_FRAMES Then
-                invincible = 0
-                invincibleFrame = 0
-            End If
-
+            invincible = invincible - 1        
             #ifdef LIVES_MODE_GRAVEYARD
                 if Not invincible Then saveSprite(PROTA_SPRITE, protaYRespawn, protaXRespawn, 1, protaDirection)
             #endif
@@ -324,8 +320,6 @@ Sub resetValues()
     #endif
     
     invincible = 0
-    invincibleBlink = 0
-    invincibleFrame = 0
     
     currentLife = INITIAL_LIFE
     currentKeys = 0
