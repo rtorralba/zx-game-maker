@@ -573,19 +573,19 @@ Sub checkDamageByTile()
     Dim col As Ubyte = protaX >> 1
     Dim lin As Ubyte = protaY >> 1
     
-    If isADamageTile(GetTile(col, lin)) Then
+    If isADamageTile(col, lin) Then
         protaTouch()
         Return
     End If
-    If isADamageTile(GetTile(col + 1, lin)) Then
+    If isADamageTile(col + 1, lin) Then
         protaTouch()
         Return
     End If
-    If isADamageTile(GetTile(col, lin + 1)) Then
+    If isADamageTile(col, lin + 1) Then
         protaTouch()
         Return
     End If
-    If isADamageTile(GetTile(col + 1, lin + 1)) Then
+    If isADamageTile(col + 1, lin + 1) Then
         protaTouch()
         Return
     End If
