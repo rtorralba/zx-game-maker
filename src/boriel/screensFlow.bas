@@ -317,7 +317,6 @@ Sub resetValues()
     invincibleBlink = 0
     
     currentLife = INITIAL_LIFE
-    currentKeys = 2 Mod 2
     currentKeys = 0
     
     #ifdef ARCADE_MODE
