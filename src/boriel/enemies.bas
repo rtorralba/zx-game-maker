@@ -11,8 +11,6 @@
 #endif
 
 Sub moveEnemies()
-    Dim maxEnemiesCount As Ubyte = 0
-    
     If enemiesPerScreen(currentScreen) > 0 Then
         For enemyId=0 To enemiesPerScreen(currentScreen) - 1
             If decompressedEnemiesScreen(enemyId, ENEMY_TILE) = 0 Then continue For
