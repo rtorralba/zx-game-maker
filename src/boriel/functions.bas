@@ -12,7 +12,8 @@ sub decrementLife()
         if currentLife > 1 then
             currentLife = currentLife - 1
 
-            invincible = INVINCIBLE_FRAMES
+            invincible = 1
+            invincibleFrame = framec
             
             #ifdef LIVES_MODE_GRAVEYARD
                 saveSprite(PROTA_SPRITE, protaY, protaX, 15, 0)
@@ -28,7 +29,8 @@ sub decrementLife()
         if currentLife > DAMAGE_AMOUNT then
             currentLife = currentLife - DAMAGE_AMOUNT
 
-            invincible = INVINCIBLE_FRAMES
+            invincible = 1
+            invincibleFrame = framec
         else
             currentLife = 0
         end if
