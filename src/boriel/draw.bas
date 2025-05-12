@@ -146,18 +146,38 @@ Sub moveToScreen(direction As Ubyte)
     If direction = 6 Then
         saveSprite(PROTA_SPRITE, protaY, 0, getSpriteTile(PROTA_SPRITE), protaDirection)
         currentScreen = currentScreen + 1
+
+        #ifdef LIVES_MODE_ENABLED
+            protaXRespawn = 0
+            protaYRespawn = protaY
+        #endif
     Elseif direction = 4 Then
         saveSprite(PROTA_SPRITE, protaY, 60, getSpriteTile(PROTA_SPRITE), protaDirection)
         currentScreen = currentScreen - 1
+
+        #ifdef LIVES_MODE_ENABLED
+            protaXRespawn = 60
+            protaYRespawn = protaY
+        #endif
     Elseif direction = 2 Then
         saveSprite(PROTA_SPRITE, 0, protaX, getSpriteTile(PROTA_SPRITE), protaDirection)
         currentScreen = currentScreen + MAP_SCREENS_WIDTH_COUNT
+
+        #ifdef LIVES_MODE_ENABLED
+            protaXRespawn = protaX
+            protaYRespawn = 0
+        #endif
     Elseif direction = 8 Then
         saveSprite(PROTA_SPRITE, MAX_LINE, protaX, getSpriteTile(PROTA_SPRITE), protaDirection)
         #ifdef SIDE_VIEW
             jumpCurrentKey = 0
         #endif
         currentScreen = currentScreen - MAP_SCREENS_WIDTH_COUNT
+
+        #ifdef LIVES_MODE_ENABLED
+            protaXRespawn = protaX
+            protaYRespawn = MAX_LINE
+        #endif
     End If
     
     swapScreen()
@@ -167,17 +187,22 @@ End Sub
 
 Sub drawSprites()
     If (protaY < 41) Then
-        If Not invincible Then
+        #ifdef LIVES_MODE_GRAVEYARD
             Draw2x2Sprite(getSpriteTile(PROTA_SPRITE), protaX, protaY)
-        Else
-            If invincibleBlink Then
-                invincibleBlink = Not invincibleBlink
+        #else
+            If Not invincible Then
                 Draw2x2Sprite(getSpriteTile(PROTA_SPRITE), protaX, protaY)
             Else
-                invincibleBlink = Not invincibleBlink
+                If invincibleBlink Then
+                    invincibleBlink = Not invincibleBlink
+                    Draw2x2Sprite(getSpriteTile(PROTA_SPRITE), protaX, protaY)
+                Else
+                    invincibleBlink = Not invincibleBlink
+                End If
             End If
-        End If
+        #endif
     End If
+
     If enemiesPerScreen(currentScreen) > 0 Then
         For i = 0 To enemiesPerScreen(currentScreen) - 1
             If Not getSpriteLin(i) Then continue For

@@ -574,24 +574,28 @@ Sub checkDamageByTile()
     Dim lin As Ubyte = protaY >> 1
     
     If isADamageTile(col, lin) Then
-        protaTouch()
+        decrementLife()
         Return
     End If
     If isADamageTile(col + 1, lin) Then
-        protaTouch()
+        decrementLife()
         Return
     End If
     If isADamageTile(col, lin + 1) Then
-        protaTouch()
+        decrementLife()
         Return
     End If
     If isADamageTile(col + 1, lin + 1) Then
-        protaTouch()
+        decrementLife()
         Return
     End If
 End Sub
 
 Sub protaMovement()
+    #ifdef LIVES_MODE_GRAVEYARD
+        if invincible Then Return
+    #endif
+
     If MultiKeys(keyArray(FIRE)) = 0 Then
         noKeyPressedForShoot = 1
     End If

@@ -171,6 +171,12 @@
                     "value": "constant"
                 },
                 {
+                    "name": "livesMode",
+                    "propertyType": "livesMode",
+                    "type": "string",
+                    "value":"disabled"
+                },
+                {
                     "name": "keysEnabled",
                     "type": "bool",
                     "value": true
@@ -261,6 +267,18 @@
             "values": [
                 "constant",
                 "accelerated"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "id": 5,
+            "name": "livesMode",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "disabled",
+                "instant respawn",
+                "show graveyard"
             ],
             "valuesAsFlags": false
         }
