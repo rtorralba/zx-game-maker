@@ -73,7 +73,11 @@ End Function
                     #endif
                 Elseif jumpCurrentKey < jumpStepsCount
                     If CheckStaticPlatform(protaX, protaY + jumpArray(jumpCurrentKey)) Then
-                        saveSprite(PROTA_SPRITE, protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
+                        If jumpArray(jumpCurrentKey) < 0 Then
+                            saveSprite(PROTA_SPRITE, protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
+                        Else
+                            jumpCurrentKey = jumpStopValue
+                        End If
                     Else
                         If Not CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey)) Then
                             saveSprite(PROTA_SPRITE, protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
