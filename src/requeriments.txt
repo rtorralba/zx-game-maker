@@ -1,5 +1,5 @@
-matplotlib
 Pillow
+matplotlib
 bin2tap
 zxp2gus
 zxbasic
