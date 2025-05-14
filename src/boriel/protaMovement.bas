@@ -61,32 +61,131 @@ End Function
             Return 8
         End If
     End Function
+
+    Function getNextFrameRunning() As Ubyte
+        #ifdef SIDE_VIEW
+            #ifdef MAIN_CHARACTER_EXTRA_FRAME
+                If protaDirection = 1 Then
+                    If protaFrame = 0 Then
+                        protaLastFrame = protaFrame
+                        Return 1
+                    Else If protaFrame = 1 And protaLastFrame = 0 Then
+                        protaLastFrame = protaFrame
+                        Return 2
+                    Else If protaFrame = 2 Then
+                        protaLastFrame = protaFrame
+                        Return 1
+                    Else If protaFrame = 1 And protaLastFrame = 2 Then
+                        protaLastFrame = protaFrame
+                        Return 0
+                    End If
+                Else
+                    If protaFrame = 4 Then
+                        protaLastFrame = protaFrame
+                        Return 5
+                    Else If protaFrame = 5 And protaLastFrame = 4 Then
+                        protaLastFrame = protaFrame
+                        Return 6
+                    Else If protaFrame = 6 Then
+                        protaLastFrame = protaFrame
+                        Return 5
+                    Else If protaFrame = 5 And protaLastFrame = 6 Then
+                        protaLastFrame = protaFrame
+                        Return 4
+                    End If
+                End If
+            #Else
+                If protaDirection = 1 Then
+                    If protaFrame = 0 Then
+                        Return 1
+                    Else
+                        Return 0
+                    End If
+                Else
+                    If protaFrame = 4 Then
+                        Return 5
+                    Else
+                        Return 4
+                    End If
+                End If
+            #endif
+        #Else
+            If protaDirection = 1 Then
+                If protaFrame = 0 Then
+                    Return 1
+                Else
+                    Return 0
+                End If
+            Elseif protaDirection = 0 Then
+                If protaFrame = 2 Then
+                    Return 3
+                Else
+                    Return 2
+                End If
+            Elseif protaDirection = 8 Then
+                If protaFrame = 4 Then
+                    Return 5
+                Else
+                    Return 4
+                End If
+            Else ' down
+                If protaFrame = 6 Then
+                    Return 7
+                Else
+                    Return 6
+                End If
+            End If
+        #endif
+    End Function
     
     #ifndef JETPACK_FUEL
         Sub checkIsJumping()
-            If jumpCurrentKey <> jumpStopValue Then
-                If protaY < 2 Then
-                    #ifdef ARCADE_MODE
-                        protaY = 39
-                    #Else
-                        moveScreen = 8 ' stop jumping
-                    #endif
-                Elseif jumpCurrentKey < jumpStepsCount
-                    If CheckStaticPlatform(protaX, protaY + jumpArray(jumpCurrentKey)) Then
-                        saveSprite(PROTA_SPRITE, protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
-                    Else
-                        If Not CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey)) Then
-                            saveSprite(PROTA_SPRITE, protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
-                        Else
-                            jumpCurrentKey = jumpStopValue
-                            return
-                        End If
+            If jumpCurrentKey >= jumpStopValue Then Return
+            If jumpCurrentKey >= jumpStepsCount - 1 Then
+                jumpCurrentKey = jumpStopValue
+                Return
+            End If
+
+            If protaY < 2 Then
+                #ifdef ARCADE_MODE
+                    protaY = 39
+                #Else
+                    moveScreen = 8 ' stop jumping
+                #endif
+                jumpCurrentKey = jumpCurrentKey + 1
+                Return
+            End If
+
+            If CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey)) Then
+                jumpCurrentKey = jumpStopValue
+                Return
+            End If
+
+            If jumpArray(jumpCurrentKey) < 0 Then
+                If CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey) + 1) Then
+                    jumpCurrentKey = jumpStopValue
+                    Return
+                End If
+            Else
+                If CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey) - 1) Then
+                    jumpCurrentKey = jumpStopValue
+                    Return
+                End If
+                If CheckStaticPlatform(protaX, protaY + jumpArray(jumpCurrentKey)) Then
+                    jumpCurrentKey = jumpStopValue
+                    Return
+                End If
+                If jumpArray(jumpCurrentKey) = 2 Then
+                    If CheckStaticPlatform(protaX, protaY + jumpArray(jumpCurrentKey) + 2) Then
+                        jumpCurrentKey = jumpStopValue
+                        resetProtaSpriteToRunning()
+                        Return
                     End If
-                    jumpCurrentKey = jumpCurrentKey + 1
-                Else
-                    jumpCurrentKey = jumpStopValue ' stop jumping
                 End If
             End If
+
+            saveSprite(PROTA_SPRITE, protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
+            jumpCurrentKey = jumpCurrentKey + 1
         End Sub
     #endif
 
@@ -168,82 +267,6 @@ End Function
         End If
     End Sub
 #endif
-
-Function getNextFrameRunning() As Ubyte
-    #ifdef SIDE_VIEW
-        #ifdef MAIN_CHARACTER_EXTRA_FRAME
-            If protaDirection = 1 Then
-                If protaFrame = 0 Then
-                    protaLastFrame = protaFrame
-                    Return 1
-                Else If protaFrame = 1 And protaLastFrame = 0 Then
-                    protaLastFrame = protaFrame
-                    Return 2
-                Else If protaFrame = 2 Then
-                    protaLastFrame = protaFrame
-                    Return 1
-                Else If protaFrame = 1 And protaLastFrame = 2 Then
-                    protaLastFrame = protaFrame
-                    Return 0
-                End If
-            Else
-                If protaFrame = 4 Then
-                    protaLastFrame = protaFrame
-                    Return 5
-                Else If protaFrame = 5 And protaLastFrame = 4 Then
-                    protaLastFrame = protaFrame
-                    Return 6
-                Else If protaFrame = 6 Then
-                    protaLastFrame = protaFrame
-                    Return 5
-                Else If protaFrame = 5 And protaLastFrame = 6 Then
-                    protaLastFrame = protaFrame
-                    Return 4
-                End If
-            End If
-        #Else
-            If protaDirection = 1 Then
-                If protaFrame = 0 Then
-                    Return 1
-                Else
-                    Return 0
-                End If
-            Else
-                If protaFrame = 4 Then
-                    Return 5
-                Else
-                    Return 4
-                End If
-            End If
-        #endif
-    #Else
-        If protaDirection = 1 Then
-            If protaFrame = 0 Then
-                Return 1
-            Else
-                Return 0
-            End If
-        Elseif protaDirection = 0 Then
-            If protaFrame = 2 Then
-                Return 3
-            Else
-                Return 2
-            End If
-        Elseif protaDirection = 8 Then
-            If protaFrame = 4 Then
-                Return 5
-            Else
-                Return 4
-            End If
-        Else ' down
-            If protaFrame = 6 Then
-                Return 7
-            Else
-                Return 6
-            End If
-        End If
-    #endif
-End Function
 
 #ifdef SIDE_VIEW
     Sub shoot()
