@@ -111,7 +111,7 @@ Sub checkEnemiesCollection()
 End Sub
 
 Sub checkProtaCollision(enemyId As Ubyte)
-    If invincible = 1 Then Return
+    If invincible Then Return
     
     Dim protaX1 As Ubyte = protaX + 2
     Dim protaY1 As Ubyte = protaY + 2
@@ -142,11 +142,7 @@ Sub checkProtaCollision(enemyId As Ubyte)
     If protaY1 < enemyY0 Then Return
     If protaY > enemyY1 Then Return
     
-    invincible = 1
-    invincibleFrame = framec
     decrementLife()
-    BeepFX_Play(1)
-    
 End Sub
 
 #ifdef SIDE_VIEW

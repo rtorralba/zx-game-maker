@@ -195,6 +195,11 @@ Sub playGame()
     #endif
     
     #ifndef ARCADE_MODE
+        #ifdef LIVES_MODE_ENABLED
+            protaXRespawn = INITIAL_MAIN_CHARACTER_X
+            protaYRespawn = INITIAL_MAIN_CHARACTER_Y
+        #endif
+        
         saveSprite(PROTA_SPRITE, INITIAL_MAIN_CHARACTER_Y, INITIAL_MAIN_CHARACTER_X, 1, 1)
     #endif
     swapScreen()
@@ -246,11 +251,15 @@ Sub playGame()
         
         If currentLife = 0 Then gameOver()
         
-        If invincible = 1 Then
+        If invincible Then
             If framec - invincibleFrame >= INVINCIBLE_FRAMES Then
                 invincible = 0
                 invincibleFrame = 0
             End If
+
+            #ifdef LIVES_MODE_GRAVEYARD
+                if Not invincible Then saveSprite(PROTA_SPRITE, protaYRespawn, protaXRespawn, 1, protaDirection)
+            #endif
         End If
         
         #ifdef NEW_BEEPER_PLAYER
@@ -295,9 +304,11 @@ Sub gameOver()
             dzx0Standard(GAMEOVER_SCREEN_ADDRESS, $4000)
             PaginarMemoria(0)
         #Else
+            saveSprite(PROTA_SPRITE, protaY, protaX, 15, 0)
             Print AT 7, 12; "GAME OVER"
         #endif
     #Else
+        saveSprite(PROTA_SPRITE, protaY, protaX, 15, 0)
         Print at 7, 12; "GAME OVER"
     #endif
     
@@ -313,8 +324,8 @@ Sub resetValues()
     #endif
     
     invincible = 0
-    invincibleFrame = 0
     invincibleBlink = 0
+    invincibleFrame = 0
     
     currentLife = INITIAL_LIFE
     currentKeys = 2 Mod 2
@@ -329,6 +340,12 @@ Sub resetValues()
             currentItems = 0
         End If
     #endif
+
+    #ifdef LIVES_MODE_ENABLED
+        protaXRespawn = INITIAL_MAIN_CHARACTER_X
+        protaYRespawn = INITIAL_MAIN_CHARACTER_Y
+    #endif
+
     ' removeScreenObjectFromBuffer()
     screenObjects = screenObjectsInitial
     enemiesPerScreen = enemiesPerScreenInitial
@@ -357,5 +374,10 @@ Sub swapScreen()
     #ifdef ARCADE_MODE
         countItemsOnTheScreen()
         saveSprite(PROTA_SPRITE, mainCharactersArray(currentScreen, 1), mainCharactersArray(currentScreen, 0), 1, 1)
+
+        #ifdef LIVES_MODE_ENABLED
+            protaXRespawn = mainCharactersArray(currentScreen, 0)
+            protaYRespawn = mainCharactersArray(currentScreen, 1)
+        #endif
     #endif
 End Sub
