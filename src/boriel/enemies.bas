@@ -1,8 +1,6 @@
 #ifdef SIDE_VIEW
     Function checkPlatformHasProtaOnTop(x As Ubyte, y As Ubyte) As Ubyte
-        Dim protaX1 As Ubyte = protaX + 2
-        
-        If protaX1 < x Then Return 0
+        If (protaX + 2) < x Then Return 0 'Dim protaX1 As Ubyte = protaX + 2
         If protaX > x + 4 Then Return 0
         If protaY <> y - 4 Then Return 0
         
@@ -32,8 +30,7 @@ Sub moveEnemies()
                 Dim enemyCol As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL)
                 Dim enemyLin As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
                 
-                If decompressedEnemiesScreen(enemyId, ENEMY_COL_INI) = decompressedEnemiesScreen(enemyId, ENEMY_COL_END) Then decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 0
-                If decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) Then decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = 0
+                'ahora esto se calcula en tiled-build
                 
                 If decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) Then
                     If decompressedEnemiesScreen(enemyId, ENEMY_COL_INI) = enemyCol Or decompressedEnemiesScreen(enemyId, ENEMY_COL_END) = enemyCol Then
@@ -80,11 +77,8 @@ Sub moveEnemies()
                 saveSprite(enemyId, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), tile + 1, decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION))
             End If
         Next enemyId
-    End if
-End Sub
 
-Sub checkEnemiesCollection()
-    If enemiesPerScreen(currentScreen) > 0 Then
+        'checkEnemiesCollection()
         For enemyId=0 To enemiesPerScreen(currentScreen) - 1
             If decompressedEnemiesScreen(enemyId, ENEMY_TILE) < 16 Then continue For
             If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) = 0 Then continue For
@@ -102,13 +96,10 @@ End Sub
 Sub checkProtaCollision(enemyId As Ubyte)
     If invincible Then Return
     
-    Dim protaX1 As Ubyte = protaX + 2
     Dim protaY1 As Ubyte = protaY + 2
-    
     Dim enemyX0 As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL)
     Dim enemyY0 As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
     Dim enemyX1 As Ubyte = enemyX0 + 2
-    Dim enemyY1 As Ubyte = enemyY0 + 2
     
     #ifdef SIDE_VIEW
         #ifdef KILL_JUMPING_ON_TOP
@@ -126,10 +117,10 @@ Sub checkProtaCollision(enemyId As Ubyte)
         #endif
     #endif
     
-    If protaX1 < enemyX0 Then Return
+    If (protaX + 2) < enemyX0 Then Return 'Dim protaX1 As Ubyte = protaX + 2
     If protaX > enemyX1 Then Return
     If protaY1 < enemyY0 Then Return
-    If protaY > enemyY1 Then Return
+    If protaY > (enemyY0 + 2) Then Return  'Dim enemyY1 As Ubyte = enemyY0 + 2
     
     decrementLife()
 End Sub
@@ -141,12 +132,8 @@ End Sub
         For enemyId=0 To enemiesPerScreen(currentScreen) - 1
             If decompressedEnemiesScreen(enemyId, ENEMY_TILE) < 16 Then
                 Dim enemyCol As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL)
-                Dim enemyLin As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
                 
-                If x < enemyCol - 2 Then continue For
-                If x > enemyCol + 4 Then continue For
-                If y <> enemyLin Then continue For
-                
+                If x < enemyCol - 2 Or x > enemyCol + 4 Or y <> decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) Then continue For
                 Return 1
             End If
         Next enemyId

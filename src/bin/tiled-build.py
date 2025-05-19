@@ -140,7 +140,6 @@ arcadeMode = 0
 
 jetPackFuel = 0
 
-gravitySpeed = 2
 jumpArrayCount = 5
 jumpArray = "{-2, -2, -2, -2, -2}"
 
@@ -596,13 +595,17 @@ for layer in data['layers']:
                         enemy = screen[i]
                         if (int(enemy['colIni']) < int(enemy['colEnd'])):
                             horizontalDirection = '-1'
-                        else:
+                        elif (int(enemy['colIni']) > int(enemy['colEnd'])):
                             horizontalDirection = '1'
+                        else:
+                            horizontalDirection = '0'
 
-                        if (int(enemy['linIni']) > int(enemy['linEnd'])):
+                        if (int(enemy['linIni']) < int(enemy['linEnd'])):
+                            verticalDirection = '-1'
+                        elif (int(enemy['linIni']) > int(enemy['linEnd'])):
                             verticalDirection = '1'
                         else:
-                            verticalDirection = '-1'
+                            verticalDirection = '0'
 
                         enemiesPerScreen[idx] = enemiesPerScreen[idx] + 1
                         arrayBuffer.append(int(enemy['tile']))

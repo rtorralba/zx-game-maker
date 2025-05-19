@@ -240,7 +240,6 @@ Sub playGame()
         protaMovement()
         checkDamageByTile()
         moveEnemies()
-        checkEnemiesCollection()
         moveBullet()
         drawSprites()
         
