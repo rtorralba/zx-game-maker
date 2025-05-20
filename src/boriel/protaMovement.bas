@@ -53,62 +53,38 @@ Function canMoveDown() As Ubyte
     Return 1
 End Function
 
-#ifdef SIDE_VIEW
-    Function getNextFrameJumpingFalling() As Ubyte
-        If (protaDirection) Then
-            Return 4
-        Else
-            Return 8
-        End If
-    End Function
-
-    Function getNextFrameRunning() As Ubyte
-        #ifdef SIDE_VIEW
-            #ifdef MAIN_CHARACTER_EXTRA_FRAME
-                If protaDirection = 1 Then
-                    If protaFrame = 0 Then
-                        protaLastFrame = protaFrame
-                        Return 1
-                    Else If protaFrame = 1 And protaLastFrame = 0 Then
-                        protaLastFrame = protaFrame
-                        Return 2
-                    Else If protaFrame = 2 Then
-                        protaLastFrame = protaFrame
-                        Return 1
-                    Else If protaFrame = 1 And protaLastFrame = 2 Then
-                        protaLastFrame = protaFrame
-                        Return 0
-                    End If
-                Else
-                    If protaFrame = 4 Then
-                        protaLastFrame = protaFrame
-                        Return 5
-                    Else If protaFrame = 5 And protaLastFrame = 4 Then
-                        protaLastFrame = protaFrame
-                        Return 6
-                    Else If protaFrame = 6 Then
-                        protaLastFrame = protaFrame
-                        Return 5
-                    Else If protaFrame = 5 And protaLastFrame = 6 Then
-                        protaLastFrame = protaFrame
-                        Return 4
-                    End If
+Function getNextFrameRunning() As Ubyte
+    #ifdef SIDE_VIEW
+        #ifdef MAIN_CHARACTER_EXTRA_FRAME
+            If protaDirection = 1 Then
+                If protaFrame = 0 Then
+                    protaLastFrame = protaFrame
+                    Return 1
+                Else If protaFrame = 1 And protaLastFrame = 0 Then
+                    protaLastFrame = protaFrame
+                    Return 2
+                Else If protaFrame = 2 Then
+                    protaLastFrame = protaFrame
+                    Return 1
+                Else If protaFrame = 1 And protaLastFrame = 2 Then
+                    protaLastFrame = protaFrame
+                    Return 0
                 End If
-            #Else
-                If protaDirection = 1 Then
-                    If protaFrame = 0 Then
-                        Return 1
-                    Else
-                        Return 0
-                    End If
-                Else
-                    If protaFrame = 4 Then
-                        Return 5
-                    Else
-                        Return 4
-                    End If
+            Else
+                If protaFrame = 4 Then
+                    protaLastFrame = protaFrame
+                    Return 5
+                Else If protaFrame = 5 And protaLastFrame = 4 Then
+                    protaLastFrame = protaFrame
+                    Return 6
+                Else If protaFrame = 6 Then
+                    protaLastFrame = protaFrame
+                    Return 5
+                Else If protaFrame = 5 And protaLastFrame = 6 Then
+                    protaLastFrame = protaFrame
+                    Return 4
                 End If
-            #endif
+            End If
         #Else
             If protaDirection = 1 Then
                 If protaFrame = 0 Then
@@ -116,26 +92,50 @@ End Function
                 Else
                     Return 0
                 End If
-            Elseif protaDirection = 0 Then
-                If protaFrame = 2 Then
-                    Return 3
-                Else
-                    Return 2
-                End If
-            Elseif protaDirection = 8 Then
+            Else
                 If protaFrame = 4 Then
                     Return 5
                 Else
                     Return 4
                 End If
-            Else ' down
-                If protaFrame = 6 Then
-                    Return 7
-                Else
-                    Return 6
-                End If
             End If
         #endif
+    #Else
+        If protaDirection = 1 Then
+            If protaFrame = 0 Then
+                Return 1
+            Else
+                Return 0
+            End If
+        Elseif protaDirection = 0 Then
+            If protaFrame = 2 Then
+                Return 3
+            Else
+                Return 2
+            End If
+        Elseif protaDirection = 8 Then
+            If protaFrame = 4 Then
+                Return 5
+            Else
+                Return 4
+            End If
+        Else ' down
+            If protaFrame = 6 Then
+                Return 7
+            Else
+                Return 6
+            End If
+        End If
+    #endif
+End Function
+
+#ifdef SIDE_VIEW
+    Function getNextFrameJumpingFalling() As Ubyte
+        If (protaDirection) Then
+            Return 4
+        Else
+            Return 8
+        End If
     End Function
     
     #ifndef JETPACK_FUEL
@@ -145,7 +145,7 @@ End Function
                 jumpCurrentKey = jumpStopValue
                 Return
             End If
-
+            
             If protaY < 2 Then
                 #ifdef ARCADE_MODE
                     protaY = 39
@@ -155,12 +155,12 @@ End Function
                 jumpCurrentKey = jumpCurrentKey + 1
                 Return
             End If
-
+            
             If CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey)) Then
                 jumpCurrentKey = jumpStopValue
                 Return
             End If
-
+            
             If jumpArray(jumpCurrentKey) < 0 Then
                 If CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey) + 1) Then
                     jumpCurrentKey = jumpStopValue
@@ -183,20 +183,20 @@ End Function
                     End If
                 End If
             End If
-
+            
             saveSprite(PROTA_SPRITE, protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
             jumpCurrentKey = jumpCurrentKey + 1
         End Sub
     #endif
-
+    
     #ifdef JETPACK_FUEL
         Function pressingUp() As Ubyte
             return ((kempston = 0 and MultiKeys(keyArray(UP)) <> 0) or (kempston = 1 and IN(31) bAND %1000 <> 0))
         End Function
-
+        
         sub checkIsFlying()
             if jumpCurrentKey = jumpStopValue then return
-
+            
             if protaY < 2 then
                 if jumpEnergy > 0 then
                     #ifdef ARCADE_MODE
@@ -204,17 +204,17 @@ End Function
                     #else
                         moveScreen = 8 ' stop jumping
                     #endif
-                end if  
-                Return            
-            end if    
-
+                end if
+                Return
+            end if
+            
             if pressingUp() and jumpEnergy > 0 then
                 if not CheckCollision(protaX, protaY - 1) then
                     saveSprite(PROTA_SPRITE, protaY - 1, protaX, getNextFrameJumpingFalling(), protaDirection)
                 end if
                 jumpCurrentKey = jumpCurrentKey + 1
                 jumpEnergy = jumpEnergy - 1
-                if jumpEnergy MOD 5 = 0 then 
+                if jumpEnergy MOD 5 = 0 then
                     printLife()
                 end if
                 return
@@ -223,25 +223,25 @@ End Function
             jumpCurrentKey = jumpStopValue ' stop jumping
             if jumpEnergy = 0 then
                 printLife()
-            end if                     
+            end if
         end Sub
     #endif
-
+    
     Function isFalling() As Ubyte
         If canMoveDown() Then
             #ifdef JETPACK_FUEL
-				if pressingUp() then
-					jumpCurrentKey = 0
-				end if
-			#endif
+                if pressingUp() then
+                    jumpCurrentKey = 0
+                end if
+            #endif
             Return 1
         Else
             If landed = 0 Then
                 landed = 1
                 #ifdef JETPACK_FUEL
-					jumpEnergy = jumpStepsCount
-					printLife()
-				#endif
+                    jumpEnergy = jumpStepsCount
+                    printLife()
+                #endif
                 If protaY bAND 1 <> 0 Then
                     ' saveSpriteLin(PROTA_SPRITE, protaY - 1)
                     protaY = protaY - 1
@@ -256,12 +256,12 @@ End Function
         If jumpCurrentKey = jumpStopValue And isFalling() Then
             If protaY >= MAX_LINE Then
                 moveScreen = 2
-            Else                
+            Else
                 #ifndef JETPACK_FUEL
-					saveSprite(PROTA_SPRITE, protaY + 2, protaX, getNextFrameJumpingFalling(), protaDirection)
-				#else
-					saveSprite(PROTA_SPRITE, protaY + 1, protaX, getNextFrameJumpingFalling(), protaDirection)
-				#endif
+                    saveSprite(PROTA_SPRITE, protaY + 2, protaX, getNextFrameJumpingFalling(), protaDirection)
+                #else
+                    saveSprite(PROTA_SPRITE, protaY + 1, protaX, getNextFrameJumpingFalling(), protaDirection)
+                #endif
             End If
             landed = 0
         End If
@@ -611,7 +611,7 @@ Sub protaMovement()
     #ifdef LIVES_MODE_GRAVEYARD
         if invincible Then Return
     #endif
-
+    
     If MultiKeys(keyArray(FIRE)) = 0 Then
         noKeyPressedForShoot = 1
     End If
