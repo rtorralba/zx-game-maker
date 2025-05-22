@@ -200,48 +200,48 @@ End Function
     
     #ifdef JETPACK_FUEL
         Function pressingUp() As Ubyte
-            return ((kempston = 0 and MultiKeys(keyArray(UP)) <> 0) or (kempston = 1 and IN(31) bAND %1000 <> 0))
+            Return ((kempston = 0 And MultiKeys(keyArray(UP)) <> 0) Or (kempston = 1 And In(31) bAND %1000 <> 0))
         End Function
         
-        sub checkIsFlying()
-            if jumpCurrentKey = jumpStopValue then return
+        Sub checkIsFlying()
+            If jumpCurrentKey = jumpStopValue Then Return
             
-            if protaY < 2 then
-                if jumpEnergy > 0 then
+            If protaY < 2 Then
+                If jumpEnergy > 0 Then
                     #ifdef ARCADE_MODE
                         protaY = 39
-                    #else
+                    #Else
                         moveScreen = 8 ' stop jumping
                     #endif
-                end if  
+                End If
                 Return
-            end if    
+            End If
             
-            if pressingUp() and jumpEnergy > 0 then
-                if not CheckCollision(protaX, protaY - 1) then
+            If pressingUp() And jumpEnergy > 0 Then
+                If Not CheckCollision(protaX, protaY - 1) Then
                     saveSprite(PROTA_SPRITE, protaY - 1, protaX, getNextFrameJumpingFalling(), protaDirection)
-                end if
+                End If
                 jumpCurrentKey = jumpCurrentKey + 1
                 jumpEnergy = jumpEnergy - 1
-                if jumpEnergy MOD 5 = 0 then 
+                If jumpEnergy Mod 5 = 0 Then
                     printLife()
-                end if
-                return
-            end if
+                End If
+                Return
+            End If
             
             jumpCurrentKey = jumpStopValue ' stop jumping
-            if jumpEnergy = 0 then
+            If jumpEnergy = 0 Then
                 printLife()
-            end if                     
-        end Sub
+            End If
+        End Sub
     #endif
     
     Function isFalling() As Ubyte
         If canMoveDown() Then
             #ifdef JETPACK_FUEL
-				if pressingUp() then
+                If pressingUp() Then
                     jumpCurrentKey = 0
-				end if
+                End If
             #endif
             Return 1
         Else
@@ -268,7 +268,7 @@ End Function
             Else
                 #ifndef JETPACK_FUEL
                     saveSprite(PROTA_SPRITE, protaY + 2, protaX, getNextFrameJumpingFalling(), protaDirection)
-				#else
+                #Else
                     saveSprite(PROTA_SPRITE, protaY + 1, protaX, getNextFrameJumpingFalling(), protaDirection)
                 #endif
             End If
@@ -625,7 +625,7 @@ End Sub
 
 Sub protaMovement()
     #ifdef LIVES_MODE_GRAVEYARD
-        if invincible Then Return
+        If invincible Then Return
     #endif
     
     If MultiKeys(keyArray(FIRE)) = 0 Then
