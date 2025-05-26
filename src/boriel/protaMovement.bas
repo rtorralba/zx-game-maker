@@ -275,9 +275,7 @@ End Function
             landed = 0
         End If
     End Sub
-#endif
 
-#ifdef SIDE_VIEW
     Sub shoot()
         If Not noKeyPressedForShoot Then Return
         noKeyPressedForShoot = 0
