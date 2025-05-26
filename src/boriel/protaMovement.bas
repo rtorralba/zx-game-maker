@@ -52,6 +52,82 @@ Function canMoveDown() As Ubyte
     #endif
     Return 1
 End Function
+    
+Function getNextFrameRunning() As Ubyte
+    #ifdef SIDE_VIEW
+        #ifdef MAIN_CHARACTER_EXTRA_FRAME
+            If protaDirection = 1 Then
+                If protaFrame = 0 Then
+                    protaLastFrame = protaFrame
+                    Return 1
+                Else If protaFrame = 1 And protaLastFrame = 0 Then
+                    protaLastFrame = protaFrame
+                    Return 2
+                Else If protaFrame = 2 Then
+                    protaLastFrame = protaFrame
+                    Return 1
+                Else If protaFrame = 1 And protaLastFrame = 2 Then
+                    protaLastFrame = protaFrame
+                    Return 0
+                End If
+            Else
+                If protaFrame = 4 Then
+                    protaLastFrame = protaFrame
+                    Return 5
+                Else If protaFrame = 5 And protaLastFrame = 4 Then
+                    protaLastFrame = protaFrame
+                    Return 6
+                Else If protaFrame = 6 Then
+                    protaLastFrame = protaFrame
+                    Return 5
+                Else If protaFrame = 5 And protaLastFrame = 6 Then
+                    protaLastFrame = protaFrame
+                    Return 4
+                End If
+            End If
+        #Else
+            If protaDirection = 1 Then
+                If protaFrame = 0 Then
+                    Return 1
+                Else
+                    Return 0
+                End If
+            Else
+                If protaFrame = 4 Then
+                    Return 5
+                Else
+                    Return 4
+                End If
+            End If
+        #endif
+    #Else
+        If protaDirection = 1 Then
+            If protaFrame = 0 Then
+                Return 1
+            Else
+                Return 0
+            End If
+        Elseif protaDirection = 0 Then
+            If protaFrame = 2 Then
+                Return 3
+            Else
+                Return 2
+            End If
+        Elseif protaDirection = 8 Then
+            If protaFrame = 4 Then
+                Return 5
+            Else
+                Return 4
+            End If
+        Else ' down
+            If protaFrame = 6 Then
+                Return 7
+            Else
+                Return 6
+            End If
+        End If
+    #endif
+End Function
 
 #ifdef SIDE_VIEW
     Function getNextFrameJumpingFalling() As Ubyte
@@ -60,82 +136,6 @@ End Function
         Else
             Return 8
         End If
-    End Function
-    
-    Function getNextFrameRunning() As Ubyte
-        #ifdef SIDE_VIEW
-            #ifdef MAIN_CHARACTER_EXTRA_FRAME
-                If protaDirection = 1 Then
-                    If protaFrame = 0 Then
-                        protaLastFrame = protaFrame
-                        Return 1
-                    Else If protaFrame = 1 And protaLastFrame = 0 Then
-                        protaLastFrame = protaFrame
-                        Return 2
-                    Else If protaFrame = 2 Then
-                        protaLastFrame = protaFrame
-                        Return 1
-                    Else If protaFrame = 1 And protaLastFrame = 2 Then
-                        protaLastFrame = protaFrame
-                        Return 0
-                    End If
-                Else
-                    If protaFrame = 4 Then
-                        protaLastFrame = protaFrame
-                        Return 5
-                    Else If protaFrame = 5 And protaLastFrame = 4 Then
-                        protaLastFrame = protaFrame
-                        Return 6
-                    Else If protaFrame = 6 Then
-                        protaLastFrame = protaFrame
-                        Return 5
-                    Else If protaFrame = 5 And protaLastFrame = 6 Then
-                        protaLastFrame = protaFrame
-                        Return 4
-                    End If
-                End If
-            #Else
-                If protaDirection = 1 Then
-                    If protaFrame = 0 Then
-                        Return 1
-                    Else
-                        Return 0
-                    End If
-                Else
-                    If protaFrame = 4 Then
-                        Return 5
-                    Else
-                        Return 4
-                    End If
-                End If
-            #endif
-        #Else
-            If protaDirection = 1 Then
-                If protaFrame = 0 Then
-                    Return 1
-                Else
-                    Return 0
-                End If
-            Elseif protaDirection = 0 Then
-                If protaFrame = 2 Then
-                    Return 3
-                Else
-                    Return 2
-                End If
-            Elseif protaDirection = 8 Then
-                If protaFrame = 4 Then
-                    Return 5
-                Else
-                    Return 4
-                End If
-            Else ' down
-                If protaFrame = 6 Then
-                    Return 7
-                Else
-                    Return 6
-                End If
-            End If
-        #endif
     End Function
     
     #ifndef JETPACK_FUEL
