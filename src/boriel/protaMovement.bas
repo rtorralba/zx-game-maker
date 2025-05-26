@@ -52,7 +52,7 @@ Function canMoveDown() As Ubyte
     #endif
     Return 1
 End Function
-    
+
 Function getNextFrameRunning() As Ubyte
     #ifdef SIDE_VIEW
         #ifdef MAIN_CHARACTER_EXTRA_FRAME
@@ -275,7 +275,7 @@ End Function
             landed = 0
         End If
     End Sub
-
+    
     Sub shoot()
         If Not noKeyPressedForShoot Then Return
         noKeyPressedForShoot = 0
