@@ -214,7 +214,6 @@ End Function
                         moveScreen = 8 ' stop jumping
                     #endif
                 End If
-                Return
             End If
             
             If pressingUp() And jumpEnergy > 0 Then
@@ -223,16 +222,12 @@ End Function
                 End If
                 jumpCurrentKey = jumpCurrentKey + 1
                 jumpEnergy = jumpEnergy - 1
-                If jumpEnergy Mod 5 = 0 Then
-                    printLife()
-                End If
+                PRINT AT 23, 5; "   "
+                PRINT AT 23, 5; jumpEnergy
                 Return
             End If
             
-            jumpCurrentKey = jumpStopValue ' stop jumping
-            If jumpEnergy = 0 Then
-                printLife()
-            End If
+            jumpCurrentKey = jumpStopValue ' stop flight
         End Sub
     #endif
     
