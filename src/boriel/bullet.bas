@@ -155,6 +155,8 @@ sub damageEnemy(enemyToKill as Ubyte)
         
         BeepFX_Play(0)
 
+        ' si ambos estan definidos
+        #ifdef ENEMIES_NOT_RESPAWN_ENABLED
         #ifdef SHOULD_KILL_ENEMIES_ENABLED
             if not screensWon(currentScreen) then
                 if allEnemiesKilled() then
@@ -162,9 +164,22 @@ sub damageEnemy(enemyToKill as Ubyte)
                     removeTilesFromScreen(63)
                 end if
             end if
-            return ' to prevent check twice if ENEMIES_NOT_RESPAWN_ENABLED is defined'
+        #endif
         #endif
 
+        ' si solo uno esta definido
+        #ifndef ENEMIES_NOT_RESPAWN_ENABLED
+        #ifdef SHOULD_KILL_ENEMIES_ENABLED
+            if not screensWon(currentScreen) then
+                if allEnemiesKilled() then
+                    screensWon(currentScreen) = 1
+                    removeTilesFromScreen(63)
+                end if
+            end if
+        #endif
+        #endif
+
+        #ifndef SHOULD_KILL_ENEMIES_ENABLED
         #ifdef ENEMIES_NOT_RESPAWN_ENABLED
             if not screensWon(currentScreen) then
                 if allEnemiesKilled() then
@@ -172,6 +187,7 @@ sub damageEnemy(enemyToKill as Ubyte)
                     removeTilesFromScreen(63)
                 end if
             end if
+        #endif
         #endif
     else
         BeepFX_Play(1)
