@@ -34,6 +34,29 @@
             "valuesAsFlags": false
         },
         {
+            "id": 4,
+            "name": "jumpType",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "constant",
+                "accelerated"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "id": 5,
+            "name": "livesMode",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "disabled",
+                "instant respawn",
+                "show graveyard"
+            ],
+            "valuesAsFlags": false
+        },
+        {
             "color": "#ffa0a0a4",
             "drawFill": true,
             "id": 2,
@@ -171,12 +194,6 @@
                     "value": "constant"
                 },
                 {
-                    "name": "livesMode",
-                    "propertyType": "livesMode",
-                    "type": "string",
-                    "value":"disabled"
-                },
-                {
                     "name": "keysEnabled",
                     "type": "bool",
                     "value": true
@@ -192,6 +209,12 @@
                     "value": 5
                 },
                 {
+                    "name": "livesMode",
+                    "propertyType": "livesMode",
+                    "type": "string",
+                    "value": "disabled"
+                },
+                {
                     "name": "mainCharacterExtraFrame",
                     "type": "bool",
                     "value": true
@@ -205,6 +228,11 @@
                     "name": "maxEnemiesPerScreen",
                     "type": "int",
                     "value": 5
+                },
+                {
+                    "name": "messagesEnabled",
+                    "type": "bool",
+                    "value": false
                 },
                 {
                     "name": "musicEnabled",
@@ -258,29 +286,6 @@
                 "map",
                 "project"
             ]
-        },
-        {
-            "id": 4,
-            "name": "jumpType",
-            "storageType": "string",
-            "type": "enum",
-            "values": [
-                "constant",
-                "accelerated"
-            ],
-            "valuesAsFlags": false
-        },
-        {
-            "id": 5,
-            "name": "livesMode",
-            "storageType": "string",
-            "type": "enum",
-            "values": [
-                "disabled",
-                "instant respawn",
-                "show graveyard"
-            ],
-            "valuesAsFlags": false
         }
     ]
 }

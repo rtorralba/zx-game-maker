@@ -108,6 +108,10 @@ End Sub
                 screenObjects(currentScreen, SCREEN_OBJECT_DOOR_INDEX) = 0
                 BeepFX_Play(4)
                 removeTilesFromScreen(DOOR_TILE)
+            Else
+                #ifdef MESSAGES_ENABLED
+                     printMessage("No keys ", "left!   ", 2, 0)
+                #endif
             End If
             Return 1
         Else

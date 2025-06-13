@@ -505,6 +505,9 @@ Function checkTileObject(tile As Ubyte) As Ubyte
             End If
         #endif
         printLife()
+        #ifdef MESSAGES_ENABLED
+            printMessage("ITEM    ", "FOUND!  ", 4, 0)
+        #endif
         #ifdef ARCADE_MODE
             If currentItems = itemsToFind Then
                 drawKey()
@@ -529,6 +532,9 @@ Function checkTileObject(tile As Ubyte) As Ubyte
             #endif
             currentKeys = currentKeys + 1
             printLife()
+            #ifdef MESSAGES_ENABLED
+                printMessage("KEY     ", "FOUND!  ", 4, 0)
+            #endif
             screenObjects(currentScreen, SCREEN_OBJECT_KEY_INDEX) = 0
             BeepFX_Play(3)
             Return 1
@@ -627,5 +633,9 @@ Sub protaMovement()
                 End If
             End If
         #endif
+    #endif
+    
+    #ifdef MESSAGES_ENABLED
+        checkMessageForDelete()
     #endif
 End Sub

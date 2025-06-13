@@ -183,12 +183,6 @@
                 "value": "constant"
             },
             {
-                "name": "livesMode",
-                "propertyType": "livesMode",
-                "type": "string",
-                "value": "disabled"
-            },
-            {
                 "name": "keysEnabled",
                 "type": "bool",
                 "value": true
@@ -204,6 +198,12 @@
                 "value": 5
             },
             {
+                "name": "livesMode",
+                "propertyType": "livesMode",
+                "type": "string",
+                "value": "disabled"
+            },
+            {
                 "name": "mainCharacterExtraFrame",
                 "type": "bool",
                 "value": true
@@ -217,6 +217,11 @@
                 "name": "maxEnemiesPerScreen",
                 "type": "int",
                 "value": 5
+            },
+            {
+                "name": "messagesEnabled",
+                "type": "bool",
+                "value": false
             },
             {
                 "name": "musicEnabled",

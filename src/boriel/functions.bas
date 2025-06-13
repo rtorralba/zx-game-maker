@@ -67,6 +67,24 @@ sub printLife()
     #endif
 end sub
 
+#ifdef MESSAGES_ENABLED
+    sub printMessage(line1 as string, line2 as string, p as ubyte, i as ubyte)
+        Paper p: Ink i: Flash 1
+        PRINT AT 22, 18; line1
+        PRINT AT 23, 18; line2
+        Paper 0: Ink 7: Flash 0
+        messageLoopCounter = 0
+    end sub
+
+    sub checkMessageForDelete()
+        If messageLoopCounter = MESSAGE_LOOPS_VISIBLE Then
+            PRINT AT 22, 18; "        "
+            PRINT AT 23, 18; "        "
+        End If
+        messageLoopCounter = messageLoopCounter + 1
+    end sub
+#endif
+
 function isADamageTile(tile as ubyte) as UBYTE
     for i = 0 to DAMAGE_TILES_COUNT
         if peek(@damageTiles + i) = tile then
@@ -95,6 +113,12 @@ end function
 
 function isSolidTileByColLin(col as ubyte, lin as ubyte) as ubyte
 	dim tile as ubyte = GetTile(col, lin)
+
+    #ifdef MESSAGES_ENABLED
+        If tile = ENEMY_DOOR_TILE Then
+            printMessage("Kill All", "Enemies!", 2, 0)
+        End If
+    #endif
 
     if tile > 64 then return 0
     if tile < 1 then return 0
