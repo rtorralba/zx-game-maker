@@ -157,40 +157,12 @@ End Function
             End If
             
             If CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey)) Then
-                jumpCurrentKey = jumpStopValue
+                If jumpArray(jumpCurrentKey) > 0 Then
+                    jumpCurrentKey = jumpStopValue
+                Else
+                    jumpCurrentKey = jumpCurrentKey + 1
+                End If
                 Return
-            End If
-            
-            If jumpArray(jumpCurrentKey) <= 0 Then
-                If CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey) + 1) Then
-                    jumpCurrentKey = jumpStopValue
-                    Return
-                End If
-            Else
-                If CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey) - 1) Then
-                    jumpCurrentKey = jumpStopValue
-                    Return
-                End If
-                If CheckStaticPlatform(protaX, protaY + jumpArray(jumpCurrentKey)) Then
-                    jumpCurrentKey = jumpStopValue
-                    Return
-                End If
-                If CheckStaticPlatform(protaX + 1, protaY + jumpArray(jumpCurrentKey)) Then
-                    jumpCurrentKey = jumpStopValue
-                    Return
-                End If
-                If jumpArray(jumpCurrentKey) = 2 Then
-                    If CheckStaticPlatform(protaX, protaY + jumpArray(jumpCurrentKey) + 2) Then
-                        jumpCurrentKey = jumpStopValue
-                        resetProtaSpriteToRunning()
-                        Return
-                    End If
-                    If CheckStaticPlatform(protaX + 1, protaY + jumpArray(jumpCurrentKey) + 2) Then
-                        jumpCurrentKey = jumpStopValue
-                        resetProtaSpriteToRunning()
-                        Return
-                    End If
-                End If
             End If
             
             saveSprite(PROTA_SPRITE, protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
@@ -247,6 +219,7 @@ End Function
         Else
             If landed = 0 Then
                 landed = 1
+                jumpCurrentKey = jumpStopValue
                 #ifdef JETPACK_FUEL
                     jumpEnergy = jumpStepsCount
                     printLife()
