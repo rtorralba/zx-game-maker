@@ -125,7 +125,7 @@ Sub checkProtaCollision(enemyId As Ubyte)
         #ifdef KILL_JUMPING_ON_TOP
             If Not landed Then
                 If (protaY1 + 2) = enemyY0 Then
-                    If protaX >= (enemyX0-1) And protaX <= (enemyX1+1) Then
+                    If protaX >= (enemyX0-1) And protaX <= (enemyX1+3) Then
                         damageEnemy(enemyId)
                         landed = 1
                         jumpCurrentKey = jumpStopValue
