@@ -12,8 +12,7 @@ sub decrementLife()
         if currentLife > 1 then
             currentLife = currentLife - 1
 
-            invincible = 1
-            invincibleFrame = framec
+            invincible = INVINCIBLE_FRAMES
             
             #ifdef LIVES_MODE_GRAVEYARD
                 saveSprite(PROTA_SPRITE, protaY, protaX, 15, 0)
@@ -29,8 +28,7 @@ sub decrementLife()
         if currentLife > DAMAGE_AMOUNT then
             currentLife = currentLife - DAMAGE_AMOUNT
 
-            invincible = 1
-            invincibleFrame = framec
+             invincible = INVINCIBLE_FRAMES
         else
             currentLife = 0
         end if
@@ -85,9 +83,9 @@ end sub
     end sub
 #endif
 
-function isADamageTile(tile as ubyte) as UBYTE
+function isADamageTile(x as ubyte, y as ubyte) as UBYTE
     for i = 0 to DAMAGE_TILES_COUNT
-        if peek(@damageTiles + i) = tile then
+        if peek(@damageTiles + i) = GetTile(x,y) then
             return 1
         end if
     next i
@@ -98,11 +96,12 @@ function allEnemiesKilled() as ubyte
     if enemiesPerScreen(currentScreen) = 0 then return 1
 
     for enemyId=0 TO enemiesPerScreen(currentScreen) - 1
-        if decompressedEnemiesScreen(enemyId, 0) < 16 then
+        if decompressedEnemiesScreen(enemyId, ENEMY_TILE) < 16 then
             continue for
         end if
-        if decompressedEnemiesScreen(enemyId, 8) <> 99 then  'is not invincible'
-            if decompressedEnemiesScreen(enemyId, 8) > 0 then 'In the screen and still live
+        dim alive as ubyte = decompressedEnemiesScreen(enemyId, ENEMY_ALIVE)
+        if alive <> 99 then  'is not invincible'
+            if alive > 0 then 'In the screen and still live
                 return 0
             end if
         end if
@@ -123,7 +122,7 @@ function isSolidTileByColLin(col as ubyte, lin as ubyte) as ubyte
     if tile > 64 then return 0
     if tile < 1 then return 0
 
-	return 1
+	return tile
 end function
 
 #ifdef ARCADE_MODE
@@ -188,17 +187,6 @@ function CheckCollision(x as uByte, y as uByte) as uByte
     end if
 
 	return 0
-end function
-
-function isSolidTileByXY(x as ubyte, y as ubyte) as ubyte
-    dim col as uByte = x >> 1
-    dim lin as uByte = y >> 1
-    
-    if GetTile(col, lin) = 0 then return 0
-
-    if GetTile(col, lin) > 63 then return 0
-
-    return GetTile(col, lin)
 end function
 
 sub removeTilesFromScreen(tile as ubyte)

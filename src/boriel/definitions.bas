@@ -49,8 +49,6 @@ Dim lastFrameTiles As Ubyte = 0
 
 Const INVINCIBLE_FRAMES As Ubyte = 25
 Dim invincible As Ubyte = 0
-Dim invincibleFrame As Ubyte = 0
-Dim invincibleBlink As Ubyte = 0
 
 Dim protaX As Ubyte
 Dim protaY As Ubyte
@@ -118,7 +116,7 @@ Const ENEMY_HORIZONTAL_DIRECTION As Ubyte = 5
 Const ENEMY_CURRENT_LIN As Ubyte = 6
 Const ENEMY_CURRENT_COL As Ubyte = 7
 Const ENEMY_ALIVE As Ubyte = 8
-' Const ENEMY_SPRITE As Ubyte = 9
+Const ENEMY_MODE As Ubyte = 9
 Const ENEMY_VERTICAL_DIRECTION As Ubyte = 10
 Const ENEMY_SPEED As Ubyte = 11
 

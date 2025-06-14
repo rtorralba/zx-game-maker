@@ -66,42 +66,41 @@ sub moveBullet()
     checkBulletCollision()
 end sub
 
+#ifdef USE_BREAKABLE_TILE
+sub checkAndRemoveBreakableTile(tile as ubyte)
+    if tile = 62 then
+        brokenTiles(currentScreen) = 1
+        BeepFX_Play(0)
+        removeTilesFromScreen(62)
+    end if
+end sub
+#EndIf
+
 sub checkBulletCollision()
+    #ifdef OVERHEAD_VIEW
     if bulletPositionY = maxYScreenTop or bulletPositionY = maxYScreenBottom then
         resetBullet()
         return
     end if
+    #endif
 
-    dim xToCheck as ubyte
+    dim xToCheck as ubyte = bulletPositionX
 
     if bulletDirection = 1 then
         xToCheck = bulletPositionX + 1
-    else
-        xToCheck = bulletPositionX
     end if
 
-    dim tile as ubyte = isSolidTileByXY(xToCheck, bulletPositionY)
+    dim tile as ubyte = isSolidTileByColLin(xToCheck >> 1, bulletPositionY >> 1)
+
     if tile then
         resetBullet()
-        #ifdef USE_BREAKABLE_TILE
-            if tile = 62 then
-                brokenTiles(currentScreen) = 1
-                BeepFX_Play(0)
-                removeTilesFromScreen(62)
-            end if
-        #endif
+        checkAndRemoveBreakableTile(tile)
         return
     else
-        tile = isSolidTileByXY(xToCheck, bulletPositionY + 1)
+        tile = isSolidTileByColLin(xToCheck >> 1, (bulletPositionY + 1) >> 1)
         if tile then
             resetBullet()
-            #ifdef USE_BREAKABLE_TILE
-                if tile = 62 then
-                    brokenTiles(currentScreen) = 1
-                    BeepFX_Play(0)
-                    removeTilesFromScreen(62)
-                end if
-            #endif
+            checkAndRemoveBreakableTile(tile)
             return
         end if
     end if
@@ -114,21 +113,10 @@ sub checkBulletCollision()
         if decompressedEnemiesScreen(enemyId, ENEMY_TILE) < 16 then continue for ' not enemy
         if decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) = 0 then continue for
 
-        dim bulletX0, bulletX1, bulletY0, bulletY1, enemyX0, enemyX1, enemyY0, enemyY1 as ubyte
-
-        bulletX0 = bulletPositionX
-        bulletX1 = bulletPositionX + 1
-        bulletY0 = bulletPositionY
-        bulletY1 = bulletPositionY + 1
-        enemyX0 = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL)
-        enemyX1 = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) + 2
-        enemyY0 = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
-        enemyY1 = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) + 2
-
-        if bulletX1 < enemyX0 then continue for
-        if bulletX0 > enemyX1 then continue for
-        if bulletY1 < enemyY0 then continue for
-        if bulletY0 > enemyY1 then continue for
+        if (bulletPositionX + 1) < decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) then continue for
+        if bulletPositionX > (decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) + 2) then continue for
+        if (bulletPositionY + 1) < decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) then continue for
+        if bulletPositionY > (decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)+2) then continue for
 
         damageEnemy(enemyId)
         resetBullet()
@@ -142,9 +130,11 @@ sub resetBullet()
 end sub
 
 sub damageEnemy(enemyToKill as Ubyte)
-    if decompressedEnemiesScreen(enemyToKill, ENEMY_ALIVE) = 99 then return 'invincible enemies
+    dim alive as ubyte = decompressedEnemiesScreen(enemyToKill, ENEMY_ALIVE)
+    if alive = 99 then return 'invincible enemies
 
-    decompressedEnemiesScreen(enemyToKill, ENEMY_ALIVE) = decompressedEnemiesScreen(enemyToKill, ENEMY_ALIVE) - 1
+    alive = alive - 1
+    
     #ifdef HISCORE_ENABLED
         score = score + 5
         If score > hiScore Then
@@ -153,16 +143,16 @@ sub damageEnemy(enemyToKill as Ubyte)
         printLife()
     #endif
 
-    if decompressedEnemiesScreen(enemyToKill, ENEMY_ALIVE) = 0 then
-        dim attr, tile, x, y, col, lin, tmpX, tmpY as ubyte
+    decompressedEnemiesScreen(enemyToKill, ENEMY_ALIVE) = alive
 
-        x = decompressedEnemiesScreen(enemyToKill, ENEMY_CURRENT_COL)
-        y = decompressedEnemiesScreen(enemyToKill, ENEMY_CURRENT_LIN)
+    if alive = 0 then
         saveSprite(enemyToKill, 0, 0, 0, 0)
-        Draw2x2Sprite(BURST_SPRITE_ID, x, y)
+        Draw2x2Sprite(BURST_SPRITE_ID, decompressedEnemiesScreen(enemyToKill, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyToKill, ENEMY_CURRENT_LIN))
         
         BeepFX_Play(0)
 
+        ' si ambos estan definidos
+        #ifdef ENEMIES_NOT_RESPAWN_ENABLED
         #ifdef SHOULD_KILL_ENEMIES_ENABLED
             if not screensWon(currentScreen) then
                 if allEnemiesKilled() then
@@ -170,9 +160,22 @@ sub damageEnemy(enemyToKill as Ubyte)
                     removeTilesFromScreen(63)
                 end if
             end if
-            return ' to prevent check twice if ENEMIES_NOT_RESPAWN_ENABLED is defined'
+        #endif
         #endif
 
+        ' si solo uno esta definido
+        #ifndef ENEMIES_NOT_RESPAWN_ENABLED
+        #ifdef SHOULD_KILL_ENEMIES_ENABLED
+            if not screensWon(currentScreen) then
+                if allEnemiesKilled() then
+                    screensWon(currentScreen) = 1
+                    removeTilesFromScreen(63)
+                end if
+            end if
+        #endif
+        #endif
+
+        #ifndef SHOULD_KILL_ENEMIES_ENABLED
         #ifdef ENEMIES_NOT_RESPAWN_ENABLED
             if not screensWon(currentScreen) then
                 if allEnemiesKilled() then
@@ -180,6 +183,7 @@ sub damageEnemy(enemyToKill as Ubyte)
                     removeTilesFromScreen(63)
                 end if
             end if
+        #endif
         #endif
     else
         BeepFX_Play(1)

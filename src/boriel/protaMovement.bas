@@ -582,19 +582,11 @@ Sub checkDamageByTile()
     Dim col As Ubyte = protaX >> 1
     Dim lin As Ubyte = protaY >> 1
     
-    If isADamageTile(GetTile(col, lin)) Then
+    If isADamageTile(col, lin) Or isADamageTile(col + 1, lin) Then
         decrementLife()
         Return
     End If
-    If isADamageTile(GetTile(col + 1, lin)) Then
-        decrementLife()
-        Return
-    End If
-    If isADamageTile(GetTile(col, lin + 1)) Then
-        decrementLife()
-        Return
-    End If
-    If isADamageTile(GetTile(col + 1, lin + 1)) Then
+    if isADamageTile(col, lin + 1) Or isADamageTile(col + 1, lin + 1) Then
         decrementLife()
         Return
     End If

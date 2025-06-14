@@ -194,15 +194,8 @@ Sub drawSprites()
         #ifdef LIVES_MODE_GRAVEYARD
             Draw2x2Sprite(getSpriteTile(PROTA_SPRITE), protaX, protaY)
         #else
-            If Not invincible Then
+            If Not invincible Or invincible bAnd 2 Then
                 Draw2x2Sprite(getSpriteTile(PROTA_SPRITE), protaX, protaY)
-            Else
-                If invincibleBlink Then
-                    invincibleBlink = Not invincibleBlink
-                    Draw2x2Sprite(getSpriteTile(PROTA_SPRITE), protaX, protaY)
-                Else
-                    invincibleBlink = Not invincibleBlink
-                End If
             End If
         #endif
     End If

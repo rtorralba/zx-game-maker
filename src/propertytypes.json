@@ -46,6 +46,33 @@
         "valuesAsFlags": false
     },
     {
+        "id": 6,
+        "name": "enemyMovement",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "normal",
+            "pursuit",
+            "alert",
+            "one direction",
+            "anticlockwise",
+            "clockwise"
+        ],
+        "valuesAsFlags": false
+    },
+    {
+        "id": 7,
+        "name": "enemiesAlertDistance",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "near",
+            "medium",
+            "far"
+        ],
+        "valuesAsFlags": false
+    },
+    {
         "color": "#ffa0a0a4",
         "drawFill": true,
         "id": 2,

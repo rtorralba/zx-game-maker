@@ -147,6 +147,7 @@ jumpArray = "{-2, -2, -2, -2, -2}"
 livesMode = 0
 
 messagesEnabled = 0
+enemiesAlertDistance = 10
 
 if 'properties' in data:
     for property in data['properties']:
@@ -250,6 +251,13 @@ if 'properties' in data:
                 livesMode = 2
         elif property['name'] == 'messagesEnabled':
             messagesEnabled = 1 if property['value'] else 0
+        elif property['name'] == 'enemiesAlertDistance':
+            if property['value'] == 'near':
+                enemiesAlertDistance = 10
+            elif property['value'] == 'medium':
+                enemiesAlertDistance = 20
+            elif property['value'] == 'far':
+                enemiesAlertDistance = 30
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -517,6 +525,11 @@ with open(outputDir + "screenOffsets.bin", "wb") as f:
         f.write(offset.to_bytes(2, byteorder='little'))
 
 # Construct enemies
+enemiesPursuit = 0
+enemiesAlert = 0
+enemiesOneDirection = 0
+enemiesClockwise = 0
+enemiesAnticlockwise = 0
 
 objects = {}
 keys = {}
@@ -539,6 +552,7 @@ for layer in data['layers']:
                     'tile': str(object['gid'] - spriteTileOffset),
                     'life': '1',
                     'speed': '3',
+                    'mode': '0'
                 }
 
                 if 'properties' in object and len(object['properties']) > 0:
@@ -548,6 +562,40 @@ for layer in data['layers']:
                         elif property['name'] == 'speed':
                             if property['value'] in [0, 1, 2]:
                                 objects[str(object['id'])]['speed'] = str(property['value'] + 1)
+                        elif property['name'] == 'mode':
+                            if property['value'] == 'alert':
+                                objects[str(object['id'])]['mode'] = '1'
+                                enemiesPursuit = 1
+                                enemiesAlert = 1
+                            elif property['value'] == 'pursuit':
+                                objects[str(object['id'])]['mode'] = '2'
+                                enemiesPursuit = 1
+                            elif property['value'] == 'one direction':
+                                objects[str(object['id'])]['mode'] = '4'
+                                enemiesOneDirection = 1
+                            elif property['value'] == 'anticlockwise':
+                                objects[str(object['id'])]['mode'] = '5'
+                                enemiesAnticlockwise = 1
+                            elif property['value'] == 'clockwise':
+                                objects[str(object['id'])]['mode'] = '6'
+                                enemiesClockwise = 1
+
+if enemiesPursuit == 1:
+    configStr += "#DEFINE ENEMIES_PURSUIT_ENABLED\n"
+
+if enemiesAlert == 1:
+    configStr += "#DEFINE ENEMIES_ALERT_ENABLED\n"
+    configStr += "#DEFINE ENEMIES_ALERT_DISTANCE " + str(enemiesAlertDistance) + "\n"
+
+if enemiesOneDirection == 1:
+    configStr += "#DEFINE ENEMIES_ONE_DIRECTION_ENABLED\n"
+
+if enemiesAnticlockwise == 1:
+    configStr += "#DEFINE ENEMIES_ANTICLOCKWISE_ENABLED\n"
+
+if enemiesClockwise == 1:
+    configStr += "#DEFINE ENEMIES_CLOCKWISE_ENABLED\n"
+
 for layer in data['layers']:
     if layer['type'] == 'objectgroup':
         for object in layer['objects']:
@@ -555,6 +603,23 @@ for layer in data['layers']:
                 if object['type'] == '' and 'properties' in object:
                     objects[str(object['properties'][0]['value'])]['linEnd'] = str(int((object['y'] % (tileHeight * screenHeight))) // 4)
                     objects[str(object['properties'][0]['value'])]['colEnd'] = str(int((object['x'] % (tileWidth * screenWidth))) // 4)
+
+                    # la posicion final no puede estar por encima de la inicial
+                    if objects[str(object['properties'][0]['value'])]['mode'] == '5' or objects[str(object['properties'][0]['value'])]['mode'] == '6':
+                        if int(objects[str(object['properties'][0]['value'])]['colEnd']) < int(objects[str(object['properties'][0]['value'])]['colIni']):
+                            colIni = objects[str(object['properties'][0]['value'])]['colEnd']
+                            colEnd = objects[str(object['properties'][0]['value'])]['colIni'] 
+                            objects[str(object['properties'][0]['value'])]['colEnd'] = colEnd
+                            objects[str(object['properties'][0]['value'])]['colIni'] = colIni
+                            print("====================== 1")
+
+                        if int(objects[str(object['properties'][0]['value'])]['linEnd']) < int(objects[str(object['properties'][0]['value'])]['linIni']):
+                            linIni = objects[str(object['properties'][0]['value'])]['linEnd']
+                            linEnd = objects[str(object['properties'][0]['value'])]['linIni'] 
+                            objects[str(object['properties'][0]['value'])]['linEnd'] = linEnd
+                            objects[str(object['properties'][0]['value'])]['linIni'] = linIni
+                            print("====================== 2")
+
                 elif object['type'] == 'mainCharacter':
                     xScreenPosition = math.ceil(object['x'] / screenPixelsWidth) - 1
                     yScreenPosition = math.ceil(object['y'] / screenPixelsHeight) - 1
@@ -604,15 +669,37 @@ for layer in data['layers']:
                 for i in range(maxEnemiesPerScreen):
                     if i <= len(screen) - 1:
                         enemy = screen[i]
-                        if (int(enemy['colIni']) < int(enemy['colEnd'])):
-                            horizontalDirection = '-1'
-                        else:
-                            horizontalDirection = '1'
+                        if enemy['mode'] == '0' or enemy['mode'] == '1' or enemy['mode'] == '2':
+                            if (int(enemy['colIni']) < int(enemy['colEnd'])):
+                                horizontalDirection = '-1'
+                            elif (int(enemy['colIni']) > int(enemy['colEnd'])):
+                                horizontalDirection = '1'
+                            else:
+                                horizontalDirection = '0'
 
-                        if (int(enemy['linIni']) > int(enemy['linEnd'])):
-                            verticalDirection = '1'
+                            if int(enemy['linIni']) < int(enemy['linEnd']):
+                                verticalDirection = '-1'
+                            elif int(enemy['linIni']) > int(enemy['linEnd']):
+                                verticalDirection = '1'
+                            else:
+                                verticalDirection = '0'
+                        elif enemy['mode'] == '5' or enemy['mode'] == '6':
+                            horizontalDirection = '0'
+                            verticalDirection = '0'
                         else:
-                            verticalDirection = '-1'
+                            if (int(enemy['colIni']) < int(enemy['colEnd'])):
+                                horizontalDirection = '1'
+                            elif (int(enemy['colIni']) > int(enemy['colEnd'])):
+                                horizontalDirection = '-1'
+                            else:
+                                horizontalDirection = '0'
+
+                            if int(enemy['linIni']) < int(enemy['linEnd']):
+                                verticalDirection = '1'
+                            elif int(enemy['linIni']) > int(enemy['linEnd']):
+                                verticalDirection = '-1'
+                            else:
+                                verticalDirection = '0'
 
                         enemiesPerScreen[idx] = enemiesPerScreen[idx] + 1
                         arrayBuffer.append(int(enemy['tile']))
@@ -624,7 +711,7 @@ for layer in data['layers']:
                         arrayBuffer.append(int(enemy['linIni']))
                         arrayBuffer.append(int(enemy['colIni']))
                         arrayBuffer.append(int(enemy['life']))
-                        arrayBuffer.append(i + 1)
+                        arrayBuffer.append(int(enemy['mode']))
                         arrayBuffer.append(int(verticalDirection))                  
                         arrayBuffer.append(int(enemy['speed']))                  
                     else:
@@ -637,7 +724,7 @@ for layer in data['layers']:
                         arrayBuffer.append(0)
                         arrayBuffer.append(0)
                         arrayBuffer.append(0)
-                        arrayBuffer.append(i + 1)
+                        arrayBuffer.append(0)
                         arrayBuffer.append(0) 
                         arrayBuffer.append(0)
             else:
