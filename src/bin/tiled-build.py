@@ -533,7 +533,7 @@ for layer in data['layers']:
                     'name': object['name'],
                     'screenId': screenId,
                     'linIni': str(int((object['y'] % (tileHeight * screenHeight))) // 4),
-                    'linEnd': str(int((object['y'] % (tileHeight * screenHeight))) // 4),
+                    'linEnd': -1,
                     'colIni': str(int((object['x'] % (tileWidth * screenWidth))) // 4),
                     'colEnd': str(int((object['x'] % (tileWidth * screenWidth))) // 4),
                     'tile': str(object['gid'] - spriteTileOffset),
@@ -546,8 +546,8 @@ for layer in data['layers']:
                         if property['name'] == 'life':
                             objects[str(object['id'])]['life'] = str(property['value'])
                         elif property['name'] == 'speed':
-                            if property['value'] in [0, 1, 2]:
-                                objects[str(object['id'])]['speed'] = str(property['value'] + 1)
+                            if property['value'] in [0, 1, 2, 3]:
+                                objects[str(object['id'])]['speed'] = str(property['value'])
 for layer in data['layers']:
     if layer['type'] == 'objectgroup':
         for object in layer['objects']:

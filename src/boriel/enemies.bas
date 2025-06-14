@@ -24,8 +24,10 @@ Sub moveEnemies()
             End If
         #endif
         
-        If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) > 0 Then 'In the Screen And still live
-            If decompressedEnemiesScreen(enemyId, ENEMY_SPEED) = 1 Then
+        If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) > 0 Then
+            If decompressedEnemiesScreen(enemyId, ENEMY_SPEED) = 0 Then
+                If (framec bAnd 7) <> 0 Then continue For
+            ElseIf decompressedEnemiesScreen(enemyId, ENEMY_SPEED) = 1 Then
                 If (framec bAnd 1) = 0 Then continue For
             ElseIf decompressedEnemiesScreen(enemyId, ENEMY_SPEED) = 2 Then
                 If (framec bAnd 3) = 0 Then continue For
@@ -35,7 +37,7 @@ Sub moveEnemies()
         Dim enemyLin As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
         
         tile = decompressedEnemiesScreen(enemyId, ENEMY_TILE)
-        
+
         If decompressedEnemiesScreen(enemyId, ENEMY_COL_INI) = decompressedEnemiesScreen(enemyId, ENEMY_COL_END) Then decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 0
         If decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) Then decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = 0
         
@@ -48,6 +50,25 @@ Sub moveEnemies()
         If decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) Then
             If decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = enemyLin Or decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = enemyLin Then
                 decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) * -1
+            End If
+        End If
+
+                ' If don't have end poing follow the prota
+        If decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = -1 Then
+            If decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) < protaX Then
+                decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 1
+            ElseIf decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) > protaX Then
+                decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = -1
+            Else
+                decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 0
+            End If
+
+            If decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) < protaY Then
+                decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = 1
+            ElseIf decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) > protaY Then
+                decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = -1
+            Else
+                decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = 0
             End If
         End If
 
