@@ -151,6 +151,8 @@ end function
 
 #ifdef SIDE_VIEW
     function CheckStaticPlatform(x as uByte, y as uByte) as uByte
+        If jumpCurrentKey <> jumpStopValue Then Return 0
+        
         Dim col as uByte = x >> 1
         Dim lin as uByte = y >> 1
 
