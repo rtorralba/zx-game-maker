@@ -125,7 +125,7 @@ Sub checkProtaCollision(enemyId As Ubyte)
     #ifdef SIDE_VIEW
         #ifdef KILL_JUMPING_ON_TOP
             If Not landed Then
-                If (protaY1 + 2) = enemyY0 Or (protaY1 + 1) = enemyY0 Then
+                If enemyY0 <= protaY1 + 2 And enemyY0 >= protaY1 Then
                     If protaX >= enemyX0 And protaX <= enemyX1 Or protaX1 <= enemyX1 And protaX1 >= enemyX0 Then
                         damageEnemy(enemyId)
                         landed = 1
