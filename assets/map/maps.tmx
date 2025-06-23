@@ -22,12 +22,14 @@
   <property name="initialLife" type="int" value="50"/>
   <property name="itemsCountdown" type="bool" value="true"/>
   <property name="itemsEnabled" type="bool" value="true"/>
+  <property name="jumpType" propertytype="jumpType" value="accelerated"/>
   <property name="keysEnabled" type="bool" value="true"/>
   <property name="killJumpingOnTop" type="bool" value="true"/>
   <property name="lifeAmount" type="int" value="5"/>
   <property name="mainCharacterExtraFrame" type="bool" value="true"/>
   <property name="maxAnimatedTilesPerScreen" type="int" value="10"/>
   <property name="maxEnemiesPerScreen" type="int" value="3"/>
+  <property name="messagesEnabled" type="bool" value="true"/>
   <property name="musicEnabled" type="bool" value="true"/>
   <property name="newBeeperPlayer" type="bool" value="true"/>
   <property name="redefineKeysEnabled" type="bool" value="true"/>
@@ -163,7 +165,7 @@
   <object id="12" name="enemy_2" type="enemy" gid="209" x="376" y="320" width="16" height="16">
    <properties>
     <property name="life" type="int" value="3"/>
-    <property name="speed" type="int" propertytype="enemySpeed" value="0"/>
+    <property name="speed" type="int" propertytype="enemySpeed" value="1"/>
    </properties>
   </object>
   <object id="13" name="enemy_2_end" x="448" y="272">

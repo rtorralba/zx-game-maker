@@ -5,6 +5,7 @@
         "storageType": "int",
         "type": "enum",
         "values": [
+            "0",
             "1",
             "2",
             "3"
@@ -180,7 +181,7 @@
                 "name": "jumpType",
                 "propertyType": "jumpType",
                 "type": "string",
-                "value": "constant"
+                "value": "accelerated"
             },
             {
                 "name": "keysEnabled",

@@ -128,3 +128,5 @@ Const ENEMY_SPEED As Ubyte = 11
 #endif
 
 Const ENEMY_DOOR_TILE As Ubyte = 63
+
+Dim firstTimeMoveEnemyOnRoom As Ubyte = 1

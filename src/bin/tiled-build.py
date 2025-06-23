@@ -546,8 +546,8 @@ for layer in data['layers']:
                         if property['name'] == 'life':
                             objects[str(object['id'])]['life'] = str(property['value'])
                         elif property['name'] == 'speed':
-                            if property['value'] in [0, 1, 2]:
-                                objects[str(object['id'])]['speed'] = str(property['value'] + 1)
+                            if property['value'] in [0, 1, 2, 3]:
+                                objects[str(object['id'])]['speed'] = str(property['value'])
 for layer in data['layers']:
     if layer['type'] == 'objectgroup':
         for object in layer['objects']:

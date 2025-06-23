@@ -28,12 +28,18 @@ Sub moveEnemies()
             End If
         #endif
         
-        If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) > 0 Then 'In the Screen And still live
-            If decompressedEnemiesScreen(enemyId, ENEMY_SPEED) = 1 Then
-                If (framec bAnd 1) = 0 Then continue For
-            ElseIf decompressedEnemiesScreen(enemyId, ENEMY_SPEED) = 2 Then
-                If (framec bAnd 3) = 0 Then continue For
+        If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) > 0 Then
+            If not firstTimeMoveEnemyOnRoom Then
+                If decompressedEnemiesScreen(enemyId, ENEMY_SPEED) = 0 Then
+                    If (framec bAnd 15) <> 0 Then continue For
+                Elseif decompressedEnemiesScreen(enemyId, ENEMY_SPEED) = 1 Then
+                    If (framec bAnd 1) = 0 Then continue For
+                Elseif decompressedEnemiesScreen(enemyId, ENEMY_SPEED) = 2 Then
+                    If (framec bAnd 3) = 0 Then continue For
+                End If
             End If
+            firstTimeMoveEnemyOnRoom = 0
+
         Dim tile As Byte
         Dim enemyCol As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL)
         Dim enemyLin As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
@@ -63,7 +69,7 @@ Sub moveEnemies()
         decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) + decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION)
         decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) + decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION)
         
-        If decompressedEnemiesScreen(enemyId, ENEMY_TILE) < 16 Then ' Is a platform Not an enemy, only 2 frames, 1 direction
+        If decompressedEnemiesScreen(enemyId, ENEMY_TILE) < 16 Then
         #ifdef SIDE_VIEW
             If checkPlatformHasProtaOnTop(decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)) Then
                 jumpCurrentKey = jumpStopValue
