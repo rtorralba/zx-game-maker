@@ -533,7 +533,7 @@ for layer in data['layers']:
                     'name': object['name'],
                     'screenId': screenId,
                     'linIni': str(int((object['y'] % (tileHeight * screenHeight))) // 4),
-                    'linEnd': str(int((object['y'] % (tileHeight * screenHeight))) // 4),
+                    'linEnd': "-1",
                     'colIni': str(int((object['x'] % (tileWidth * screenWidth))) // 4),
                     'colEnd': str(int((object['x'] % (tileWidth * screenWidth))) // 4),
                     'tile': str(object['gid'] - spriteTileOffset),

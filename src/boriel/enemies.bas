@@ -1,7 +1,7 @@
 #ifdef SIDE_VIEW
     Function checkPlatformHasProtaOnTop(x As Ubyte, y As Ubyte) As Ubyte
         If jumpCurrentKey <> jumpStopValue Then Return 0
-        
+
         Dim protaX1 As Ubyte = protaX + 4
         Dim protaY1 As Ubyte = protaY + 4
         
@@ -53,6 +53,11 @@ Sub moveEnemies()
             If decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = enemyLin Or decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = enemyLin Then
                 decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) * -1
             End If
+        End If
+
+        If decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = -1 Then
+            decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = Sgn(protaX - decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL))
+            decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = Sgn(protaY - decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
         End If
 
         decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) + decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION)
@@ -124,14 +129,16 @@ Sub checkProtaCollision(enemyId As Ubyte)
     
     #ifdef SIDE_VIEW
         #ifdef KILL_JUMPING_ON_TOP
-            If jumpCurrentKey = jumpStopValue And Not landed Then
-                If enemyY0 <= protaY1 + 2 And enemyY0 >= protaY1 Then
-                    If protaX >= enemyX0 And protaX <= enemyX1 Or protaX1 <= enemyX1 And protaX1 >= enemyX0 Then
-                        damageEnemy(enemyId)
-                        landed = 1
-                        jumpCurrentKey = jumpStopValue
-                        jump()
-                        Return
+            If jumpCurrentKey = jumpStopValue Then
+                If Not landed Then
+                    If enemyY0 <= protaY1 + 2 And enemyY0 >= protaY1 Then
+                        If protaX >= enemyX0 And protaX <= enemyX1 Or protaX1 <= enemyX1 And protaX1 >= enemyX0 Then
+                            damageEnemy(enemyId)
+                            landed = 1
+                            jumpCurrentKey = jumpStopValue
+                            jump()
+                            Return
+                        End If
                     End If
                 End If
             End If
