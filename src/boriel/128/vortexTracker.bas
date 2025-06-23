@@ -30,16 +30,6 @@ End Sub
 ' interrupciones. Si no usamos el gestor, se debe llamar a
 ' este método cada 20ms.
 Sub Fastcall VortexTracker_NextNote()
-    Asm
-        ;Aumentamos manualmente los frames en 23672
-        push af
-        push hl
-        ld hl,23672
-        inc (hl)
-        pop hl
-        pop af
-    End Asm
-    
     If VortexTracker_Status <> 1 Then Return
     
     If inMenu Then
