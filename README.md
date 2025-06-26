@@ -20,17 +20,22 @@ Grupo de Telegram: [https://t.me/zx_spectrum_game_maker](https://t.me/zx_spectru
 
 ## Créditos
 
+### ZX Spectrum Game Maker Team
+
 * [Raül Torralba](https://github.com/rtorralba) (Autor)
+* [Juan Antonio](https://x.com/JuanAntonio1072) bin2tap example and loader.bin and Improved Beeper player
+* [programadorhedonista](https://github.com/programadorhedonista) Contibutor
+* [Juan GM](https://github.com/jgajete) Contibutor
+* [Isaías](https://isaiasdiaz.itch.io/) make-game.bat
+* [Khan_Noonien_Singh] Telegram group moderator
+
+### Other
 * [Juan J. Martínez](https://github.com/reidrac) png2src
 * [Einar Saukas](https://github.com/einar-saukas) ZX0
 * [PixelArtM](https://twitter.com/PixelArtM) Sprites
 * [Jimmy Devesa](https://twitter.com/Jimmy_Devesa) Música In Game
 * [Beyker](https://twitter.com/Jimmy_Devesa) Música menú
-* [Isaías](https://isaiasdiaz.itch.io/) make-game.bat
 * [shiru8bit](http://shiru.untergrund.net) Beeper FX Sounds
-* [Juan Antonio](https://x.com/JuanAntonio1072) bin2tap example and loader.bin and Improved Beeper player
-* [programadorhedonista](https://github.com/programadorhedonista) Contibutor
-* [Juan GM](https://github.com/jgajete) Contibutor
 * [r-lyeh](https://github.com/r-lyeh) Spectral emulator
 
 ## Special Thanks
