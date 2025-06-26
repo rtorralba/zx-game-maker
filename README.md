@@ -29,6 +29,8 @@ Grupo de Telegram: [https://t.me/zx_spectrum_game_maker](https://t.me/zx_spectru
 * [Isaías](https://isaiasdiaz.itch.io/) make-game.bat
 * [shiru8bit](http://shiru.untergrund.net) Beeper FX Sounds
 * [Juan Antonio](https://x.com/JuanAntonio1072) bin2tap example and loader.bin and Improved Beeper player
+* [programadorhedonista](https://github.com/programadorhedonista) Contibutor
+* [Juan GM](https://github.com/jgajete) Contibutor
 * [r-lyeh](https://github.com/r-lyeh) Spectral emulator
 
 ## Special Thanks
@@ -44,6 +46,7 @@ Grupo de Telegram: [https://t.me/zx_spectrum_game_maker](https://t.me/zx_spectru
 * [Juan Antonio](https://x.com/JuanAntonio1072)
 * [Conrado Badenas](https://conradobadenas.wordpress.com/)
 * [programadorhedonista](https://github.com/programadorhedonista)
+* [Juan GM](https://github.com/jgajete)
 
 Y a todo el grupo de ZX Basic de Boriel de Telegram
 
