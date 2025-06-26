@@ -24,8 +24,9 @@ Grupo de Telegram: [https://t.me/zx_spectrum_game_maker](https://t.me/zx_spectru
 
 * [Raül Torralba](https://github.com/rtorralba) (Autor)
 * [Juan Antonio](https://x.com/JuanAntonio1072) bin2tap example and loader.bin and Improved Beeper player
-* [programadorhedonista](https://github.com/programadorhedonista) Contibutor
-* [Juan GM](https://github.com/jgajete) Contibutor
+* [Conrado Badenas](https://conradobadenas.wordpress.com/) Contributor
+* [Juan GM](https://github.com/jgajete) Contributor
+* [programadorhedonista](https://github.com/programadorhedonista) Contributor
 * [Isaías](https://isaiasdiaz.itch.io/) make-game.bat
 * [Khan_Noonien_Singh](https://t.me/zx_spectrum_game_maker) Telegram group moderator
 
