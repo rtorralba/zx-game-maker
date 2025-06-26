@@ -27,7 +27,7 @@ Grupo de Telegram: [https://t.me/zx_spectrum_game_maker](https://t.me/zx_spectru
 * [programadorhedonista](https://github.com/programadorhedonista) Contibutor
 * [Juan GM](https://github.com/jgajete) Contibutor
 * [Isaías](https://isaiasdiaz.itch.io/) make-game.bat
-* [Khan_Noonien_Singh] Telegram group moderator
+* [Khan_Noonien_Singh](https://t.me/zx_spectrum_game_maker) Telegram group moderator
 
 ### Other
 * [Juan J. Martínez](https://github.com/reidrac) png2src
