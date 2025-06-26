@@ -113,6 +113,7 @@ def build():
     print("============================================")
 
     executeFunction(tiledExport, "Exporting game from Tiled")
+    executeFunction(hudTiledExport, "Exporting HUD from Tiled")
     executeFunction(tiledBuild, "Building Tiled maps")
     sizes = executeFunction(buildingFilesAndConfig, "Building files and config")
     executeFunction(compilingGame, "Compiling game")
