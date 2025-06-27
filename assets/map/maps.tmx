@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1-99-gec89c545" class="ZXSpectrumGameMaker" orientation="orthogonal" renderorder="left-down" width="132" height="116" tilewidth="8" tileheight="8" infinite="1" nextlayerid="3" nextobjectid="40">
+<map version="1.10" tiledversion="1.11.1-99-gec89c545" class="ZXSpectrumGameMaker" orientation="orthogonal" renderorder="left-down" width="132" height="116" tilewidth="8" tileheight="8" infinite="1" nextlayerid="3" nextobjectid="45">
  <editorsettings>
   <chunksize width="32" height="22"/>
  </editorsettings>
@@ -191,18 +191,6 @@
   <object id="26" name="mainCharacter" type="mainCharacter" x="272" y="320">
    <point/>
   </object>
-  <object id="30" gid="217" x="376" y="256" width="16" height="16">
-   <properties>
-    <property name="behaviour" propertytype="enemyBehaviour" value="noReturn"/>
-    <property name="speed" type="int" propertytype="enemySpeed" value="3"/>
-   </properties>
-  </object>
-  <object id="31" x="408" y="256">
-   <properties>
-    <property name="enemy" type="object" value="30"/>
-   </properties>
-   <point/>
-  </object>
   <object id="32" name="platform_1" type="platform" gid="201" x="280" y="304" width="16" height="16"/>
   <object id="33" name="platform_1_end" x="336" y="304">
    <properties>
@@ -214,6 +202,17 @@
    <properties>
     <property name="speed" type="int" propertytype="enemySpeed" value="0"/>
    </properties>
+  </object>
+  <object id="43" type="enemy" gid="215" x="264" y="240" width="16" height="16">
+   <properties>
+    <property name="behaviour" propertytype="enemyBehaviour" value="noReturn"/>
+   </properties>
+  </object>
+  <object id="44" x="480" y="240">
+   <properties>
+    <property name="enemy" type="object" value="43"/>
+   </properties>
+   <point/>
   </object>
  </objectgroup>
 </map>

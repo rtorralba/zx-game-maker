@@ -122,41 +122,57 @@ Sub moveEnemies()
         
         Dim enemyCol As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL)
         Dim enemyLin As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
+        Dim enemyColIni As Byte = decompressedEnemiesScreen(enemyId, ENEMY_COL_INI)
+        Dim enemyLinIni As Byte = decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI)
+        Dim enemyColEnd As Byte = decompressedEnemiesScreen(enemyId, ENEMY_COL_END)
+        Dim enemyLinEnd As Byte = decompressedEnemiesScreen(enemyId, ENEMY_LIN_END)
 
-        If decompressedEnemiesScreen(enemyId, ENEMY_COL_INI) = decompressedEnemiesScreen(enemyId, ENEMY_COL_END) Then decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 0
-        If decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) Then decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = 0
-        
+        If enemyColIni = enemyColEnd Then decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 0
+        If enemyLinIni = enemyLinEnd Then decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = 0
+
         If decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) Then
-            If decompressedEnemiesScreen(enemyId, ENEMY_COL_INI) = enemyCol Or decompressedEnemiesScreen(enemyId, ENEMY_COL_END) = enemyCol Then
+            If enemyColIni = enemyCol Or enemyColEnd = enemyCol Then
                 decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) * -1
             End If
         End If
         
         If decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) Then
-            If decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = enemyLin Or decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = enemyLin Then
+            If enemyLinIni = enemyLin Or enemyLinEnd = enemyLin Then
                 decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) * -1
             End If
         End If
         
         If decompressedEnemiesScreen(enemyId, ENEMY_BEHAVIOUR) = 0 Then
-            If decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = -1 Then
-                decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = Sgn(protaX - decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL))
-                decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = Sgn(protaY - decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
+            If enemyLinEnd = -1 Then
+                decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = Sgn(protaX - enemyCol)
+                decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = Sgn(protaY - enemyLin)
             End If
 
-            decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) + decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION)
-            decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) + decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION)
+            decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = enemyCol + decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION)
+            decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLin + decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION)
         Elseif decompressedEnemiesScreen(enemyId, ENEMY_BEHAVIOUR) = 1 Then
-            If enemyCol = decompressedEnemiesScreen(enemyId, ENEMY_COL_END) Then
-                decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = decompressedEnemiesScreen(enemyId, ENEMY_COL_INI)
+            If enemyCol = enemyColEnd Then
+                decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = enemyColIni
             Else
-                decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) + decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION)
+                decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = enemyCol + decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION)
+                If enemyCol + decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = enemyColEnd Then
+                    tile = decompressedEnemiesScreen(enemyId, ENEMY_TILE) + 17
+                    Draw2x2Sprite(tile, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
+                    saveSprite(enemyId, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), tile + 1, decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION))
+                    continue For
+                End If
             End If
             
-            If enemyLin = decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) Then
-                decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI)
+            If enemyLin = enemyLinEnd Then
+                decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLinIni
             Else
                 decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) + decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION)
+                If enemyLin + decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = enemyLinEnd Then
+                    tile = decompressedEnemiesScreen(enemyId, ENEMY_TILE) + 17
+                    Draw2x2Sprite(tile, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
+                    saveSprite(enemyId, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), tile + 1, decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION))
+                    continue For
+                End If
             End If
         End If
         
