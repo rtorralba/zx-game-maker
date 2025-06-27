@@ -35,7 +35,7 @@
   <property name="redefineKeysEnabled" type="bool" value="false"/>
   <property name="shooting" type="bool" value="true"/>
   <property name="shouldKillEnemies" type="bool" value="true"/>
-  <property name="useBreakableTile" type="bool" value="true"/>
+  <property name="useBreakableTile" type="bool" value="false"/>
  </properties>
  <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="192" columns="32">
   <image source="tiles.png" width="256" height="48"/>
@@ -191,8 +191,8 @@
   <object id="26" name="mainCharacter" type="mainCharacter" x="272" y="320">
    <point/>
   </object>
-  <object id="32" name="platform_1" type="platform" gid="201" x="280" y="304" width="16" height="16"/>
-  <object id="33" name="platform_1_end" x="336" y="304">
+  <object id="32" name="platform_1" type="platform" gid="201" x="288" y="320" width="16" height="16"/>
+  <object id="33" name="platform_1_end" x="328" y="256">
    <properties>
     <property name="platform_1" type="object" value="32"/>
    </properties>
@@ -205,7 +205,7 @@
   </object>
   <object id="43" type="enemy" gid="215" x="264" y="240" width="16" height="16">
    <properties>
-    <property name="behaviour" propertytype="enemyBehaviour" value="noReturn"/>
+    <property name="behaviour" value="noReturn"/>
    </properties>
   </object>
   <object id="44" x="480" y="240">
