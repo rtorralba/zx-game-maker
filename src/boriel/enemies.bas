@@ -12,7 +12,7 @@
         
         Return 1
     End Function
-
+    
     Function checkPlatformByXY(x As Ubyte, y As Ubyte) As Ubyte
         If enemiesPerScreen(currentScreen) = 0 Then Return 0
         
@@ -31,15 +31,15 @@
         
         Return 0
     End Function
-
+    
     #ifdef KILL_JUMPING_ON_TOP
         Function checkHitOnTop(protaX1 As Ubyte, protaY1 As Ubyte, enemyX0 As Ubyte, enemyY0 As Ubyte, enemyX1 As Ubyte, enemyY1 As Ubyte) As Ubyte
             If jumpCurrentKey <> jumpStopValue Then Return 0
             If landed Then Return 0
-
+            
             If enemyY0 > protaY1 + 2 Then Return 0
             If enemyY0 < protaY1 Then Return 0
-
+            
             If protaX >= enemyX0 And protaX <= enemyX1 Or protaX1 <= enemyX1 And protaX1 >= enemyX0 Then
                 damageEnemy(enemyId)
                 landed = 1
@@ -47,7 +47,7 @@
                 jump()
                 Return 1
             End If
-
+            
             Return 0
         End Function
     #endif
@@ -97,24 +97,32 @@ Sub moveEnemies()
         #endif
         
         If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <= 0 Then continue For
+
+        Dim tile As Byte = decompressedEnemiesScreen(enemyId, ENEMY_TILE)
         
         If Not firstTimeMoveEnemyOnRoom Then
             If decompressedEnemiesScreen(enemyId, ENEMY_SPEED) = 0 Then
-                If (framec bAnd 15) <> 0 Then continue For
+                If (framec bAnd 15) <> 0 Then
+                    Draw2x2Sprite(tile + 1, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
+                    continue For
+                End If
             Elseif decompressedEnemiesScreen(enemyId, ENEMY_SPEED) = 1 Then
-                If (framec bAnd 1) = 0 Then continue For
+                If (framec bAnd 1) = 0 Then
+                    Draw2x2Sprite(tile + 1, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
+                    continue For
+                End If
             Elseif decompressedEnemiesScreen(enemyId, ENEMY_SPEED) = 2 Then
-                If (framec bAnd 3) = 0 Then continue For
+                If (framec bAnd 3) = 0 Then
+                    Draw2x2Sprite(tile + 1, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
+                    continue For
+                End If
             End If
         End If
         firstTimeMoveEnemyOnRoom = 0
         
-        Dim tile As Byte
         Dim enemyCol As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL)
         Dim enemyLin As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
-        
-        tile = decompressedEnemiesScreen(enemyId, ENEMY_TILE)
-        
+
         If decompressedEnemiesScreen(enemyId, ENEMY_COL_INI) = decompressedEnemiesScreen(enemyId, ENEMY_COL_END) Then decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 0
         If decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI) = decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) Then decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = 0
         
@@ -130,13 +138,27 @@ Sub moveEnemies()
             End If
         End If
         
-        If decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = -1 Then
-            decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = Sgn(protaX - decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL))
-            decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = Sgn(protaY - decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
+        If decompressedEnemiesScreen(enemyId, ENEMY_BEHAVIOUR) = 0 Then
+            If decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) = -1 Then
+                decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = Sgn(protaX - decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL))
+                decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = Sgn(protaY - decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
+            End If
+
+            decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) + decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION)
+            decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) + decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION)
+        Elseif decompressedEnemiesScreen(enemyId, ENEMY_BEHAVIOUR) = 1 Then
+            If enemyCol = decompressedEnemiesScreen(enemyId, ENEMY_COL_END) Then
+                decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = decompressedEnemiesScreen(enemyId, ENEMY_COL_INI)
+            Else
+                decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) + decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION)
+            End If
+            
+            If enemyLin = decompressedEnemiesScreen(enemyId, ENEMY_LIN_END) Then
+                decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI)
+            Else
+                decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) + decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION)
+            End If
         End If
-        
-        decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) + decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION)
-        decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) + decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION)
         
         If decompressedEnemiesScreen(enemyId, ENEMY_TILE) < 16 Then
             #ifdef SIDE_VIEW
@@ -158,10 +180,11 @@ Sub moveEnemies()
             If checkProtaCollision(enemyId) Then
                 If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <= 0 Then continue For
             End If
-            If decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 1 Then
-                tile = decompressedEnemiesScreen(enemyId, ENEMY_TILE)
-            Elseif decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = -1 Then
-                tile = decompressedEnemiesScreen(enemyId, ENEMY_TILE) + 16
+            
+            If decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = -1 Then
+                If decompressedEnemiesScreen(enemyId, ENEMY_BEHAVIOUR) = 0 Then
+                    tile = decompressedEnemiesScreen(enemyId, ENEMY_TILE) + 16
+                End If
             End If
         End If
         
@@ -170,5 +193,6 @@ Sub moveEnemies()
         End If
         
         saveSprite(enemyId, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), tile + 1, decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION))
+        Draw2x2Sprite(tile + 1, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
     Next enemyId
 End Sub

@@ -16,20 +16,6 @@ sub saveSprite(sprite as ubyte, lin as ubyte, col as ubyte, tile as ubyte, direc
     end if
 end sub
 
-function getSpriteLin(sprite as ubyte) as ubyte
-    if sprite = PROTA_SPRITE then
-        return protaY
-    end if
-    return spritesLinColTileAndFrame(sprite, 0)
-end function
-
-function getSpriteCol(sprite as ubyte) as ubyte
-    if sprite = PROTA_SPRITE then
-        return protaX
-    end if
-    return spritesLinColTileAndFrame(sprite, 1)
-end function
-
 function getSpriteTile(sprite as ubyte) as ubyte
     return spritesLinColTileAndFrame(sprite, 2)
 end function
@@ -49,17 +35,9 @@ end function
 #endif
 
 function onLastColumn(sprite as ubyte) as ubyte
-    return getSpriteCol(sprite) = 60
+    return protaX = 60
 end function
 
 function onFirstColumn(sprite as ubyte) as ubyte
-    return getSpriteCol(sprite) = 0
+    return protaX = 0
 end function
-
-' sub removeScreenObjectFromBuffer()
-'     for i = 0 to 4
-'         for j = 0 to spritesDataCount - 1
-'             spritesLinColTileAndFrame(i, j) = 0
-'         next j
-'     next i
-' end sub

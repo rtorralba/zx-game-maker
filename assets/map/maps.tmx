@@ -191,8 +191,13 @@
   <object id="26" name="mainCharacter" type="mainCharacter" x="272" y="320">
    <point/>
   </object>
-  <object id="30" gid="217" x="408" y="256" width="16" height="16"/>
-  <object id="31" x="376" y="256">
+  <object id="30" gid="217" x="376" y="256" width="16" height="16">
+   <properties>
+    <property name="behaviour" propertytype="enemyBehaviour" value="noReturn"/>
+    <property name="speed" type="int" propertytype="enemySpeed" value="3"/>
+   </properties>
+  </object>
+  <object id="31" x="408" y="256">
    <properties>
     <property name="enemy" type="object" value="30"/>
    </properties>

@@ -206,19 +206,6 @@ Sub drawSprites()
             End If
         #endif
     End If
-
-    If enemiesPerScreen(currentScreen) > 0 Then
-        For i = 0 To enemiesPerScreen(currentScreen) - 1
-            If Not getSpriteLin(i) Then continue For
-            
-            #ifdef ENEMIES_NOT_RESPAWN_ENABLED
-                If decompressedEnemiesScreen(i, ENEMY_ALIVE) <> 99 And decompressedEnemiesScreen(i, ENEMY_TILE) > 15 Then
-                    If screensWon(currentScreen) Then continue For
-                End If
-            #endif
-            Draw2x2Sprite(getSpriteTile(i), getSpriteCol(i), getSpriteLin(i))
-        Next i
-    End If
     
     If bulletPositionX <> 0 Then
         Draw1x1Sprite(currentBulletSpriteId, bulletPositionX, bulletPositionY)

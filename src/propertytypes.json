@@ -1,5 +1,16 @@
 [
     {
+        "id": 6,
+        "name": "enemyBehaviour",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "default",
+            "noReturn"
+        ],
+        "valuesAsFlags": false
+    },
+    {
         "id": 3,
         "name": "enemySpeed",
         "storageType": "int",
