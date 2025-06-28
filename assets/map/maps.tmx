@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1-99-gec89c545" class="ZXSpectrumGameMaker" orientation="orthogonal" renderorder="left-down" width="132" height="116" tilewidth="8" tileheight="8" infinite="1" nextlayerid="3" nextobjectid="47">
+<map version="1.10" tiledversion="1.11.1-99-gec89c545" class="ZXSpectrumGameMaker" orientation="orthogonal" renderorder="left-down" width="132" height="116" tilewidth="8" tileheight="8" infinite="1" nextlayerid="3" nextobjectid="49">
  <editorsettings>
   <chunksize width="32" height="22"/>
  </editorsettings>
@@ -35,7 +35,7 @@
   <property name="redefineKeysEnabled" type="bool" value="false"/>
   <property name="shooting" type="bool" value="true"/>
   <property name="shouldKillEnemies" type="bool" value="true"/>
-  <property name="useBreakableTile" type="bool" value="false"/>
+  <property name="useBreakableTile" type="bool" value="true"/>
  </properties>
  <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="192" columns="32">
   <image source="tiles.png" width="256" height="48"/>
@@ -162,18 +162,6 @@
   </data>
  </layer>
  <objectgroup id="2" name="objects">
-  <object id="12" name="enemy_2" type="enemy" gid="209" x="376" y="320" width="16" height="16">
-   <properties>
-    <property name="life" type="int" value="3"/>
-    <property name="speed" type="int" propertytype="enemySpeed" value="3"/>
-   </properties>
-  </object>
-  <object id="13" name="enemy_2_end" x="448" y="272">
-   <properties>
-    <property name="enemy" type="object" value="12"/>
-   </properties>
-   <point/>
-  </object>
   <object id="17" name="enemy_4" type="enemy" gid="209" x="264" y="152" width="16" height="16"/>
   <object id="18" name="enemy_4_end" x="336" y="152">
    <properties>
@@ -188,7 +176,7 @@
    </properties>
    <point/>
   </object>
-  <object id="26" name="mainCharacter" type="mainCharacter" x="272" y="320">
+  <object id="26" name="mainCharacter" type="mainCharacter" x="152" y="320">
    <point/>
   </object>
   <object id="32" name="platform_1" type="platform" gid="201" x="288" y="320" width="16" height="16"/>
@@ -211,6 +199,13 @@
   <object id="44" x="480" y="240">
    <properties>
     <property name="enemy" type="object" value="43"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="47" type="enemy" gid="211" x="360" y="320" width="16" height="16"/>
+  <object id="48" x="424" y="288">
+   <properties>
+    <property name="enemy" type="object" value="47"/>
    </properties>
    <point/>
   </object>

@@ -1,12 +1,6 @@
 const BURST_SPRITE_ID as ubyte = 16
 const BULLET_SPEED as ubyte = 2
 
-dim bulletPositionX as ubyte = 0
-dim bulletPositionY as ubyte = 0
-dim bulletDirection as ubyte = 0
-dim bulletEndPositionX as ubyte = 0
-dim bulletEndPositionY as ubyte = 0
-
 ' sub createBullet(directionRight as ubyte)
 '     if directionRight
 '         spritesSet(BULLET_SPRITE_RIGHT_ID) = Create1x1Sprite(@bulletRight)
@@ -105,34 +99,6 @@ sub checkBulletCollision()
             return
         end if
     end if
-
-    #ifdef ENEMIES_NOT_RESPAWN_ENABLED
-        if screensWon(currentScreen) then return
-    #endif
-    
-    for enemyId=0 TO MAX_ENEMIES_PER_SCREEN - 1
-        if decompressedEnemiesScreen(enemyId, ENEMY_TILE) < 16 then continue for ' not enemy
-        if decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) = 0 then continue for
-
-        dim bulletX0, bulletX1, bulletY0, bulletY1, enemyX0, enemyX1, enemyY0, enemyY1 as ubyte
-
-        bulletX0 = bulletPositionX
-        bulletX1 = bulletPositionX + 1
-        bulletY0 = bulletPositionY
-        bulletY1 = bulletPositionY + 1
-        enemyX0 = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL)
-        enemyX1 = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) + 2
-        enemyY0 = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
-        enemyY1 = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) + 2
-
-        if bulletX1 < enemyX0 then continue for
-        if bulletX0 > enemyX1 then continue for
-        if bulletY1 < enemyY0 then continue for
-        if bulletY0 > enemyY1 then continue for
-
-        damageEnemy(enemyId)
-        resetBullet()
-    next enemyId
 end sub
 
 sub resetBullet()

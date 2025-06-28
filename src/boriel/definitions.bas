@@ -104,6 +104,12 @@ Dim spriteAddressIndex As Uinteger = 0
 
 Dim bullet(7) As Ubyte
 
+Dim bulletPositionX as Ubyte = 0
+Dim bulletPositionY as Ubyte = 0
+Dim bulletDirection as Ubyte = 0
+Dim bulletEndPositionX as Ubyte = 0
+Dim bulletEndPositionY as Ubyte = 0
+
 Const FIRST_RUNNING_PROTA_SPRITE_RIGHT As Ubyte = 1
 Const FIRST_RUNNING_PROTA_SPRITE_LEFT As Ubyte = 5
 

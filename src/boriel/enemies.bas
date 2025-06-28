@@ -53,7 +53,26 @@
     #endif
 #endif
 
-Function checkProtaCollision(enemyId As Ubyte) As Ubyte
+Function checkBulletProtaCollision(enemyX0 As Ubyte, enemyY0 As Ubyte, enemyX1 As Ubyte, enemyY1 As Ubyte, enemyId As Ubyte) As Ubyte
+    If bulletPositionX = 0 Then Return 0
+
+    Dim bulletX0 As Ubyte = bulletPositionX
+    Dim bulletX1 As Ubyte = bulletPositionX + 1
+    Dim bulletY0 As Ubyte = bulletPositionY
+    Dim bulletY1 As Ubyte = bulletPositionY + 1
+    
+    If bulletX1 < enemyX0 Then Return 0
+    If bulletX0 > enemyX1 Then Return 0
+    If bulletY1 < enemyY0 Then Return 0
+    If bulletY0 > enemyY1 Then Return 0
+    
+    damageEnemy(enemyId)
+    resetBullet()
+
+    Return 1
+End Function
+
+Function checkProtaAndBulletCollision(enemyId As Ubyte) As Ubyte
     If invincible Then Return 0
     
     Dim protaX1 As Ubyte = protaX + 2
@@ -63,7 +82,11 @@ Function checkProtaCollision(enemyId As Ubyte) As Ubyte
     Dim enemyY0 As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
     Dim enemyX1 As Ubyte = enemyX0 + 2
     Dim enemyY1 As Ubyte = enemyY0 + 2
+
+    Dim damage As Ubyte = 0
     
+    If checkBulletProtaCollision(enemyX0, enemyY0, enemyX1, enemyY1, enemyId) Then Return 1
+
     #ifdef SIDE_VIEW
         #ifdef KILL_JUMPING_ON_TOP
             If checkHitOnTop(protaX1, protaY1, enemyX0, enemyY0, enemyX1, enemyY1) Then Return 1
@@ -118,16 +141,19 @@ Sub moveEnemies()
             If enemySpeed = 0 Then
                 If (framec bAnd 15) <> 0 Then
                     Draw2x2Sprite(tile + 1, enemyCol, enemyLin)
+                    checkProtaAndBulletCollision(enemyId)
                     continue For
                 End If
             Elseif enemySpeed = 1 Then
                 If (framec bAnd 1) = 0 Then
                     Draw2x2Sprite(tile + 1, enemyCol, enemyLin)
+                    checkProtaAndBulletCollision(enemyId)
                     continue For
                 End If
             Elseif enemySpeed = 2 Then
                 If (framec bAnd 3) = 0 Then
                     Draw2x2Sprite(tile + 1, enemyCol, enemyLin)
+                    checkProtaAndBulletCollision(enemyId)
                     continue For
                 End If
             End If
@@ -198,8 +224,10 @@ Sub moveEnemies()
                 End If
             #endif
         Else
-            If checkProtaCollision(enemyId) Then
-                If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <= 0 Then continue For
+            If checkProtaAndBulletCollision(enemyId) Then
+                If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <= 0 Then
+                    continue For
+                End If
             End If
             
             If enemyHorizontalDirection = -1 Then
