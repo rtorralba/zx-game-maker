@@ -205,7 +205,7 @@
   </object>
   <object id="43" type="enemy" gid="215" x="264" y="240" width="16" height="16">
    <properties>
-    <property name="behaviour" value="noReturn"/>
+    <property name="move" propertytype="enemyMovementTypes" value="noReturn"/>
    </properties>
   </object>
   <object id="44" x="480" y="240">

@@ -118,7 +118,7 @@ Const ENEMY_HORIZONTAL_DIRECTION As Ubyte = 5
 Const ENEMY_CURRENT_LIN As Ubyte = 6
 Const ENEMY_CURRENT_COL As Ubyte = 7
 Const ENEMY_ALIVE As Ubyte = 8
-Const ENEMY_BEHAVIOUR As Ubyte = 9
+Const ENEMY_MOVE As Ubyte = 9
 Const ENEMY_VERTICAL_DIRECTION As Ubyte = 10
 Const ENEMY_SPEED As Ubyte = 11
 

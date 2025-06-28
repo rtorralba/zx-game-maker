@@ -539,7 +539,7 @@ for layer in data['layers']:
                     'tile': str(object['gid'] - spriteTileOffset),
                     'life': '1',
                     'speed': '3',
-                    'behaviour': '0',
+                    'move': '0',
                 }
 
                 if 'properties' in object and len(object['properties']) > 0:
@@ -549,9 +549,9 @@ for layer in data['layers']:
                         elif property['name'] == 'speed':
                             if property['value'] in [0, 1, 2, 3]:
                                 objects[str(object['id'])]['speed'] = str(property['value'])
-                        elif property['name'] == 'behaviour':
+                        elif property['name'] == 'move':
                             if property['value'] == 'noReturn':
-                                objects[str(object['id'])]['behaviour'] = '1'
+                                objects[str(object['id'])]['move'] = '1'
 for layer in data['layers']:
     if layer['type'] == 'objectgroup':
         for object in layer['objects']:
@@ -628,7 +628,7 @@ for layer in data['layers']:
                         arrayBuffer.append(int(enemy['linIni']))
                         arrayBuffer.append(int(enemy['colIni']))
                         arrayBuffer.append(int(enemy['life']))
-                        arrayBuffer.append(int(enemy['behaviour']))
+                        arrayBuffer.append(int(enemy['move']))
                         arrayBuffer.append(int(verticalDirection))                  
                         arrayBuffer.append(int(enemy['speed']))                  
                     else:

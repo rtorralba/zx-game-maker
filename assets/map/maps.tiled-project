@@ -12,7 +12,7 @@
     "propertyTypes": [
         {
             "id": 6,
-            "name": "enemyBehaviour",
+            "name": "enemyMovementTypes",
             "storageType": "string",
             "type": "enum",
             "values": [
