@@ -85,14 +85,18 @@ Sub saveAndDraw(enemyId as Ubyte, tile As Ubyte)
     saveSprite(enemyId, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), tile + 1, decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION))
 End Sub
 
-Sub moveEnemies()
-    Dim maxEnemiesCount As Ubyte = 0
-    
-    If enemiesPerScreen(currentScreen) > 0 Then maxEnemiesCount = enemiesPerScreen(currentScreen) - 1
-    
-    For enemyId=0 To maxEnemiesCount
+Sub moveEnemies()    
+    For enemyId=0 To enemiesPerScreen(currentScreen) - 1
         Dim tile As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_TILE)
         Dim enemyAlive As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_ALIVE)
+        Dim enemyCol As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL)
+        Dim enemyLin As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
+        Dim enemySpeed As Byte = decompressedEnemiesScreen(enemyId, ENEMY_SPEED)
+        Dim enemyColIni As Byte = decompressedEnemiesScreen(enemyId, ENEMY_COL_INI)
+        Dim enemyLinIni As Byte = decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI)
+        Dim enemyColEnd As Byte = decompressedEnemiesScreen(enemyId, ENEMY_COL_END)
+        Dim enemyLinEnd As Byte = decompressedEnemiesScreen(enemyId, ENEMY_LIN_END)
+        Dim enemyBehaviour As Byte = decompressedEnemiesScreen(enemyId, ENEMY_BEHAVIOUR)
 
         If tile = 0 Then continue For
         
@@ -107,35 +111,24 @@ Sub moveEnemies()
         If enemyAlive <= 0 Then continue For
 
         If Not firstTimeMoveEnemyOnRoom Then
-            If decompressedEnemiesScreen(enemyId, ENEMY_SPEED) = 0 Then
+            If enemySpeed = 0 Then
                 If (framec bAnd 15) <> 0 Then
-                    Draw2x2Sprite(tile + 1, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
+                    Draw2x2Sprite(tile + 1, enemyCol, enemyLin)
                     continue For
                 End If
-            Elseif decompressedEnemiesScreen(enemyId, ENEMY_SPEED) = 1 Then
+            Elseif enemySpeed = 1 Then
                 If (framec bAnd 1) = 0 Then
-                    Draw2x2Sprite(tile + 1, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
+                    Draw2x2Sprite(tile + 1, enemyCol, enemyLin)
                     continue For
                 End If
-            Elseif decompressedEnemiesScreen(enemyId, ENEMY_SPEED) = 2 Then
+            Elseif enemySpeed = 2 Then
                 If (framec bAnd 3) = 0 Then
-                    Draw2x2Sprite(tile + 1, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
+                    Draw2x2Sprite(tile + 1, enemyCol, enemyLin)
                     continue For
                 End If
             End If
         End If
         firstTimeMoveEnemyOnRoom = 0
-        
-        Dim enemyCol As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL)
-        Dim enemyLin As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
-        Dim enemyColIni As Byte = decompressedEnemiesScreen(enemyId, ENEMY_COL_INI)
-        Dim enemyLinIni As Byte = decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI)
-        Dim enemyColEnd As Byte = decompressedEnemiesScreen(enemyId, ENEMY_COL_END)
-        Dim enemyLinEnd As Byte = decompressedEnemiesScreen(enemyId, ENEMY_LIN_END)
-        Dim enemyBehaviour As Byte = decompressedEnemiesScreen(enemyId, ENEMY_BEHAVIOUR)
-
-        If enemyColIni = enemyColEnd Then decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = 0
-        If enemyLinIni = enemyLinEnd Then decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = 0
 
         If decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) Then
             If enemyColIni = enemyCol Or enemyColEnd = enemyCol Then
