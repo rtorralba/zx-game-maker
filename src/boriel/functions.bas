@@ -40,29 +40,29 @@ sub decrementLife()
 end sub
 
 sub printLife()
-	PRINT AT 22, 5; "   "  
-	PRINT AT 22, 5; currentLife
+	PRINT AT HUD_LIFE_Y, HUD_LIFE_X; "   ";
+	PRINT AT HUD_LIFE_Y, HUD_LIFE_X; currentLife;
     #ifdef JETPACK_FUEL
-        PRINT AT 23, 5; "   "  
-	    PRINT AT 23, 5; jumpEnergy
+        PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; "   ";  
+	    PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; jumpEnergy;
     #endif
     #ifdef AMMO_ENABLED
-        PRINT AT 22, 10; "   "  
-        PRINT AT 22, 10; currentAmmo
+        PRINT AT HUD_AMMO_Y, HUD_AMMO_X; "   ";  
+        PRINT AT HUD_AMMO_Y, HUD_AMMO_X; currentAmmo;
     #endif
     #ifndef ARCADE_MODE
         #ifdef KEYS_ENABLED
-            PRINT AT 22, 16; currentKeys
+            PRINT AT HUD_KEYS_Y, HUD_KEYS_X; currentKeys;
         #endif
     #endif
     #ifdef HISCORE_ENABLED
-        PRINT AT 22, 25 - LEN(STR$(hiScore)); hiScore
-	    PRINT AT 23, 25 - LEN(STR$(score)); score
+        PRINT AT HUD_HISCORE_Y, HUD_HISCORE_X; hiScore;
+	    PRINT AT HUD_HISCORE_Y_2, HUD_HISCORE_X; score;
     #endif
     #ifndef ARCADE_MODE
         #ifdef ITEMS_ENABLED
-            PRINT AT 22, 30; "  "
-            PRINT AT 22, 30; currentItems
+            PRINT AT HUD_ITEMS_Y, HUD_ITEMS_X; "  ";
+            PRINT AT HUD_ITEMS_Y, HUD_ITEMS_X; currentItems;
         #endif
     #endif
 end sub
@@ -70,16 +70,16 @@ end sub
 #ifdef MESSAGES_ENABLED
     sub printMessage(line1 as string, line2 as string, p as ubyte, i as ubyte)
         Paper p: Ink i: Flash 1
-        PRINT AT 22, 18; line1
-        PRINT AT 23, 18; line2
+        PRINT AT HUD_MESSAGE_Y, HUD_MESSAGE_X; line1
+        PRINT AT HUD_MESSAGE_Y_2, HUD_MESSAGE_X; line2
         Paper 0: Ink 7: Flash 0
         messageLoopCounter = 0
     end sub
 
     sub checkMessageForDelete()
         If messageLoopCounter = MESSAGE_LOOPS_VISIBLE Then
-            PRINT AT 22, 18; "        "
-            PRINT AT 23, 18; "        "
+            PRINT AT HUD_MESSAGE_Y, HUD_MESSAGE_X; "        "
+            PRINT AT HUD_MESSAGE_Y_2, HUD_MESSAGE_X; "        "
         End If
         messageLoopCounter = messageLoopCounter + 1
     end sub

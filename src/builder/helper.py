@@ -17,6 +17,7 @@ OUTPUT_FOLDER = str(Path("output/")) + getOsSeparator()
 SCREENS_FOLDER = str(Path(ASSETS_FOLDER + "screens/")) + getOsSeparator()
 MAP_FOLDER = str(Path(ASSETS_FOLDER + "map/")) + getOsSeparator()
 MAPS_FILE = str(Path(ASSETS_FOLDER + "map/maps.tmx"))
+HUD_MAP_FILE = str(Path(ASSETS_FOLDER + "screens/hud.tmx"))
 MAPS_PROJECT = str(Path(ASSETS_FOLDER + "map/maps.tiled-project"))
 DIST_FOLDER = str(Path("../dist/")) + getOsSeparator()
 INITIAL_ADDRESS = 49152
@@ -59,6 +60,13 @@ def getTiledExportCommand():
 
 def tiledExport():
     runCommand(getTiledExportCommand())
+
+def hudTiledExport():
+    if os.name == "nt":
+        program_files = os.environ["ProgramFiles"]
+        runCommand("\"" + program_files + "\\Tiled\\tiled.exe\" --export-map json " + HUD_MAP_FILE + " " + str(Path("output/hud.json")))
+    else:
+        runCommand("tiled --export-map json " + HUD_MAP_FILE + " " + str(Path("output/hud.json")))
 
 def getProjectName():
     with open(str(Path("output/maps.json")), "r") as f:
