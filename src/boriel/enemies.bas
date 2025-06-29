@@ -110,6 +110,15 @@ Sub saveAndDraw(enemyId as Ubyte, tile As Ubyte, horizontalDirection As Ubyte = 
     decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = verticalDirection
 End Sub
 
+Sub checkAndDraw(enemyId as Ubyte, tile As Ubyte, enemyCol As Byte, enemyLin As Byte)
+    if checkProtaAndBulletCollision(enemyId) Then
+        If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <= 0 Then
+            Return
+        End If
+    End If
+    Draw2x2Sprite(tile + 1, enemyCol, enemyLin)
+End Sub
+
 Sub moveEnemies()    
     For enemyId=0 To enemiesPerScreen(currentScreen) - 1
         Dim tile As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_TILE)
@@ -140,20 +149,17 @@ Sub moveEnemies()
         If Not firstTimeMoveEnemyOnRoom Then
             If enemySpeed = 0 Then
                 If (framec bAnd 15) <> 0 Then
-                    Draw2x2Sprite(tile + 1, enemyCol, enemyLin)
-                    checkProtaAndBulletCollision(enemyId)
+                    checkAndDraw(enemyId, tile, enemyCol, enemyLin)
                     continue For
                 End If
             Elseif enemySpeed = 1 Then
                 If (framec bAnd 1) = 0 Then
-                    Draw2x2Sprite(tile + 1, enemyCol, enemyLin)
-                    checkProtaAndBulletCollision(enemyId)
+                    checkAndDraw(enemyId, tile, enemyCol, enemyLin)
                     continue For
                 End If
             Elseif enemySpeed = 2 Then
                 If (framec bAnd 3) = 0 Then
-                    Draw2x2Sprite(tile + 1, enemyCol, enemyLin)
-                    checkProtaAndBulletCollision(enemyId)
+                    checkAndDraw(enemyId, tile, enemyCol, enemyLin)
                     continue For
                 End If
             End If
