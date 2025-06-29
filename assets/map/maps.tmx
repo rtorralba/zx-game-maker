@@ -179,8 +179,8 @@
   <object id="26" name="mainCharacter" type="mainCharacter" x="152" y="320">
    <point/>
   </object>
-  <object id="32" name="platform_1" type="platform" gid="201" x="288" y="320" width="16" height="16"/>
-  <object id="33" name="platform_1_end" x="328" y="256">
+  <object id="32" name="platform_1" type="platform" gid="201" x="280" y="296" width="16" height="16"/>
+  <object id="33" name="platform_1_end" x="344" y="296">
    <properties>
     <property name="platform_1" type="object" value="32"/>
    </properties>
