@@ -381,7 +381,8 @@ Sub leftKey()
         #Else
             protaFrame = 2
         #endif
-        spritesLinColTileAndFrame(PROTA_SPRITE, 3) = 0
+        protaDirection = 0
+        saveSprite(PROTA_SPRITE, protaY, protaX, getNextFrameRunning(), protaDirection)
     End If
     
     If onFirstColumn(PROTA_SPRITE) Then
@@ -399,7 +400,8 @@ End Sub
 Sub rightKey()
     If protaDirection <> 1 Then
         protaFrame = 0
-        spritesLinColTileAndFrame(PROTA_SPRITE, 3) = 1
+        protaDirection = 1
+        saveSprite(PROTA_SPRITE, protaY, protaX, getNextFrameRunning(), protaDirection)
     End If
     
     If onLastColumn(PROTA_SPRITE) Then
@@ -420,7 +422,7 @@ Sub upKey()
     #Else
         If protaDirection <> 8 Then
             protaFrame = 4
-            spritesLinColTileAndFrame(PROTA_SPRITE, 3) = 8
+            protaDirection = 8
         End If
         If canMoveUp() Then
             saveSprite(PROTA_SPRITE, protaY - 1, protaX, protaFrame + 1, 8)
@@ -435,7 +437,7 @@ Sub downKey()
     #ifdef OVERHEAD_VIEW
         If protaDirection <> 2 Then
             protaFrame = 6
-            spritesLinColTileAndFrame(PROTA_SPRITE, 3) = 2
+            protaDirection = 2
         End If
         If canMoveDown() Then
             If protaY >= MAX_LINE Then
