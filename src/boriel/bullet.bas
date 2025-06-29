@@ -1,14 +1,6 @@
 const BURST_SPRITE_ID as ubyte = 16
 const BULLET_SPEED as ubyte = 2
 
-' sub createBullet(directionRight as ubyte)
-'     if directionRight
-'         spritesSet(BULLET_SPRITE_RIGHT_ID) = Create1x1Sprite(@bulletRight)
-'     else
-'         spritesSet(BULLET_SPRITE_RIGHT_ID) = Create1x1Sprite(@bulletLeft)
-'     end if
-' end sub
-
 dim maxXScreenRight as ubyte = 60
 dim maxXScreenLeft as ubyte = 2
 #ifdef OVERHEAD_VIEW
@@ -76,26 +68,38 @@ sub checkBulletCollision()
 
     dim tile as ubyte = isSolidTileByColLin(xToCheck >> 1, bulletPositionY >> 1)
     if tile then
-        resetBullet()
-        #ifdef USE_BREAKABLE_TILE
+        #ifdef USE_BREAKABLE_TILE_ALL
             if tile = 62 then
                 brokenTiles(currentScreen) = 1
                 BeepFX_Play(0)
                 removeTilesFromScreen(62)
             end if
         #endif
+        #ifdef USE_BREAKABLE_TILE_INDIVIDUAL
+            if tile = 62 then
+                BeepFX_Play(0)
+                SetTile(0, BACKGROUND_ATTRIBUTE, xToCheck >> 1, bulletPositionY >> 1)
+            end if
+        #endif
+        resetBullet()
         return
     else
         tile = isSolidTileByColLin(xToCheck >> 1, (bulletPositionY + 1) >> 1)
         if tile then
-            resetBullet()
-            #ifdef USE_BREAKABLE_TILE
+            #ifdef USE_BREAKABLE_TILE_ALL
                 if tile = 62 then
                     brokenTiles(currentScreen) = 1
                     BeepFX_Play(0)
                     removeTilesFromScreen(62)
                 end if
             #endif
+            #ifdef USE_BREAKABLE_TILE_INDIVIDUAL
+                if tile = 62 then
+                    BeepFX_Play(0)
+                    SetTile(0, BACKGROUND_ATTRIBUTE, xToCheck >> 1, (bulletPositionY + 1) >> 1)
+                end if
+            #endif
+            resetBullet()
             return
         end if
     end if

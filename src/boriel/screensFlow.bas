@@ -353,7 +353,7 @@ Sub resetValues()
     For i = 0 To SCREENS_COUNT
         screensWon(i) = 0
     Next i
-    #ifdef USE_BREAKABLE_TILE
+    #ifdef USE_BREAKABLE_TILE_ALL
         For i = 0 To SCREENS_COUNT
             brokenTiles(i) = 0
         Next i

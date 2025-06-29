@@ -35,13 +35,20 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
         End If
     #endif
     
-    #ifdef USE_BREAKABLE_TILE
+    #ifdef USE_BREAKABLE_TILE_ALL
         If tile = 62 Then
             If brokenTiles(currentScreen) Then
                 SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
             Else
                 SetTileChecked(tile, attrSet(tile), x, y)
             End If
+            Return
+        End If
+    #endif
+
+    #ifdef USE_BREAKABLE_TILE_INDIVIDUAL
+        If tile = 62 Then
+            SetTileChecked(tile, attrSet(tile), x, y)
             Return
         End If
     #endif
