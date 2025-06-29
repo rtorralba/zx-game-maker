@@ -99,6 +99,11 @@ Dim decompressedEnemiesScreen(MAX_ENEMIES_PER_SCREEN, 11) As Byte at DECOMPRESSE
     Dim brokenTiles(SCREENS_COUNT) As Ubyte at BROKEN_TILES_DATA_ADDRESS
 #endif
 
+#ifdef USE_BREAKABLE_TILE_INDIVIDUAL
+    Dim brokenTiles(BREAKABLE_TILES_COUNT, 2) As Ubyte at BROKEN_TILES_DATA_ADDRESS
+    Dim brokenTilesCurrentIndex As Ubyte = 0
+#endif
+
 Dim spritesSet(51) As Ubyte
 Dim spriteAddressIndex As Uinteger = 0
 

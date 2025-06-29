@@ -77,6 +77,13 @@ sub checkBulletCollision()
         #endif
         #ifdef USE_BREAKABLE_TILE_INDIVIDUAL
             if tile = 62 then
+                brokenTiles(brokenTilesCurrentIndex, 0) = currentScreen
+                brokenTiles(brokenTilesCurrentIndex, 1) = xToCheck >> 1
+                brokenTiles(brokenTilesCurrentIndex, 2) = bulletPositionY >> 1
+                If brokenTilesCurrentIndex < BREAKABLE_TILES_COUNT - 1 Then
+                    brokenTilesCurrentIndex = brokenTilesCurrentIndex + 1
+                End If
+
                 BeepFX_Play(0)
                 SetTile(0, BACKGROUND_ATTRIBUTE, xToCheck >> 1, bulletPositionY >> 1)
             end if
@@ -95,6 +102,12 @@ sub checkBulletCollision()
             #endif
             #ifdef USE_BREAKABLE_TILE_INDIVIDUAL
                 if tile = 62 then
+                    brokenTiles(brokenTilesCurrentIndex, 0) = currentScreen
+                    brokenTiles(brokenTilesCurrentIndex, 1) = xToCheck >> 1
+                    brokenTiles(brokenTilesCurrentIndex, 2) = (bulletPositionY + 1) >> 1
+                    If brokenTilesCurrentIndex < BREAKABLE_TILES_COUNT - 1 Then
+                        brokenTilesCurrentIndex = brokenTilesCurrentIndex + 1
+                    End If
                     BeepFX_Play(0)
                     SetTile(0, BACKGROUND_ATTRIBUTE, xToCheck >> 1, (bulletPositionY + 1) >> 1)
                 end if

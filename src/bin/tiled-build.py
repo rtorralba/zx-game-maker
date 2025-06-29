@@ -397,6 +397,8 @@ if idleTime > 0:
     configStr += "#DEFINE IDLE_ENABLED\n"
     configStr += "const IDLE_TIME as ubyte = " + str(idleTime) + "\n"
 
+breakableTilesCount = 0
+
 for layer in data['layers']:
     if layer['type'] == 'tilelayer':
         screensCount = len(layer['chunks'])
@@ -422,6 +424,9 @@ for layer in data['layers']:
                 mapY = jdx // screen['width']
 
                 tile = str(cell - 1)
+
+                if tile == "62":
+                    breakableTilesCount += 1
 
                 # screens[idx][mapY][mapX % screenWidth] = tile
 
@@ -505,6 +510,9 @@ if useBreakableTile == 'all':
         f.write(bytearray([0] * screensCount))
 elif useBreakableTile == 'individual':
     configStr += "#DEFINE USE_BREAKABLE_TILE_INDIVIDUAL\n"
+    configStr += "#DEFINE BREAKABLE_TILES_COUNT " + str(breakableTilesCount) + "\n"
+    with open("output/brokenTiles.bin", "wb") as f:
+        f.write(bytearray([0] * breakableTilesCount * 3))
 
 
 for idx, screen in enumerate(screens):

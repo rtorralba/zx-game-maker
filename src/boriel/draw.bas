@@ -45,9 +45,17 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
             Return
         End If
     #endif
-
+    
     #ifdef USE_BREAKABLE_TILE_INDIVIDUAL
         If tile = 62 Then
+            For i = 0 To BREAKABLE_TILES_COUNT
+                If brokenTiles(i, 0) <> currentScreen Then Continue For
+                If brokenTiles(i, 1) <> x Then Continue For
+                If brokenTiles(i, 2) <> y Then Continue For
+
+                SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
+                Return
+            Next i
             SetTileChecked(tile, attrSet(tile), x, y)
             Return
         End If
@@ -117,7 +125,7 @@ End Sub
                 removeTilesFromScreen(DOOR_TILE)
             Else
                 #ifdef MESSAGES_ENABLED
-                     printMessage("No keys ", "left!   ", 2, 0)
+                    printMessage("No keys ", "left!   ", 2, 0)
                 #endif
             End If
             Return 1
@@ -157,7 +165,7 @@ Sub moveToScreen(direction As Ubyte)
     If direction = 6 Then
         saveSprite(PROTA_SPRITE, protaY, 0, getSpriteTile(PROTA_SPRITE), protaDirection)
         currentScreen = currentScreen + 1
-
+        
         #ifdef LIVES_MODE_ENABLED
             protaXRespawn = 0
             protaYRespawn = protaY
@@ -165,7 +173,7 @@ Sub moveToScreen(direction As Ubyte)
     Elseif direction = 4 Then
         saveSprite(PROTA_SPRITE, protaY, 60, getSpriteTile(PROTA_SPRITE), protaDirection)
         currentScreen = currentScreen - 1
-
+        
         #ifdef LIVES_MODE_ENABLED
             protaXRespawn = 60
             protaYRespawn = protaY
@@ -173,7 +181,7 @@ Sub moveToScreen(direction As Ubyte)
     Elseif direction = 2 Then
         saveSprite(PROTA_SPRITE, 0, protaX, getSpriteTile(PROTA_SPRITE), protaDirection)
         currentScreen = currentScreen + MAP_SCREENS_WIDTH_COUNT
-
+        
         #ifdef LIVES_MODE_ENABLED
             protaXRespawn = protaX
             protaYRespawn = 0
@@ -184,7 +192,7 @@ Sub moveToScreen(direction As Ubyte)
             jumpCurrentKey = 0
         #endif
         currentScreen = currentScreen - MAP_SCREENS_WIDTH_COUNT
-
+        
         #ifdef LIVES_MODE_ENABLED
             protaXRespawn = protaX
             protaYRespawn = MAX_LINE
