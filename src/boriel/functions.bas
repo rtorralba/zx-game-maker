@@ -123,7 +123,7 @@ function isSolidTileByColLin(col as ubyte, lin as ubyte) as ubyte
     if tile > 64 then return 0
     if tile < 1 then return 0
 
-	return 1
+	return tile
 end function
 
 #ifdef ARCADE_MODE

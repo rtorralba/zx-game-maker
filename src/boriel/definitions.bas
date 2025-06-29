@@ -95,8 +95,13 @@ Dim screenObjects(SCREENS_COUNT, 4) As Ubyte at SCREEN_OBJECTS_DATA_ADDRESS
 Dim screensWon(SCREENS_COUNT) As Ubyte at SCREENS_WON_DATA_ADDRESS
 Dim decompressedEnemiesScreen(MAX_ENEMIES_PER_SCREEN, 11) As Byte at DECOMPRESSED_ENEMIES_SCREEN_DATA_ADDRESS
 
-#ifdef USE_BREAKABLE_TILE
+#ifdef USE_BREAKABLE_TILE_ALL
     Dim brokenTiles(SCREENS_COUNT) As Ubyte at BROKEN_TILES_DATA_ADDRESS
+#endif
+
+#ifdef USE_BREAKABLE_TILE_INDIVIDUAL
+    Dim brokenTiles(BREAKABLE_TILES_COUNT, 2) As Ubyte at BROKEN_TILES_DATA_ADDRESS
+    Dim brokenTilesCurrentIndex As Ubyte = 0
 #endif
 
 Dim spritesSet(51) As Ubyte

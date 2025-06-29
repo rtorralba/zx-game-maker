@@ -38,7 +38,7 @@ class BinaryFilesToTapMerger:
             OUTPUT_FOLDER + "decompressedEnemiesScreen.bin"
         ]
 
-        if useBreakableTile:
+        if useBreakableTile == 'all':
             input_files.append(OUTPUT_FOLDER + "brokenTiles.bin")
 
         concatenateFiles(output_file, input_files)

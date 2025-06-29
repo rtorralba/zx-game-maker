@@ -124,7 +124,7 @@ itemsEnabled = 1
 
 itemsCountdown = 0
 
-useBreakableTile = 0
+useBreakableTile = "disabled"
 
 waitPressKeyAfterLoad = 0
 
@@ -224,7 +224,7 @@ if 'properties' in data:
         elif property['name'] == 'itemsCountdown':
             itemsCountdown = 1 if property['value'] else 0
         elif property['name'] == 'useBreakableTile':
-            useBreakableTile = 1 if property['value'] else 0
+            useBreakableTile = property['value']
         elif property['name'] == 'maxAnimatedTilesPerScreen':
             maxAnimatedTilesPerScreen = property['value']
         elif property['name'] == 'newBeeperPlayer':
@@ -397,6 +397,8 @@ if idleTime > 0:
     configStr += "#DEFINE IDLE_ENABLED\n"
     configStr += "const IDLE_TIME as ubyte = " + str(idleTime) + "\n"
 
+breakableTilesCount = 0
+
 for layer in data['layers']:
     if layer['type'] == 'tilelayer':
         screensCount = len(layer['chunks'])
@@ -422,6 +424,9 @@ for layer in data['layers']:
                 mapY = jdx // screen['width']
 
                 tile = str(cell - 1)
+
+                if tile == "62":
+                    breakableTilesCount += 1
 
                 # screens[idx][mapY][mapX % screenWidth] = tile
 
@@ -499,10 +504,16 @@ if enemiesRespawn == 0:
 with open("output/screensWon.bin", "wb") as f:
     f.write(bytearray([0] * screensCount))
 
-if useBreakableTile == 1:
-    configStr += "#DEFINE USE_BREAKABLE_TILE\n"
+if useBreakableTile == 'all':
+    configStr += "#DEFINE USE_BREAKABLE_TILE_ALL\n"
     with open("output/brokenTiles.bin", "wb") as f:
         f.write(bytearray([0] * screensCount))
+elif useBreakableTile == 'individual':
+    configStr += "#DEFINE USE_BREAKABLE_TILE_INDIVIDUAL\n"
+    configStr += "#DEFINE BREAKABLE_TILES_COUNT " + str(breakableTilesCount) + "\n"
+    with open("output/brokenTiles.bin", "wb") as f:
+        f.write(bytearray([0] * breakableTilesCount * 3))
+
 
 for idx, screen in enumerate(screens):
     label = 'screen' + str(idx).zfill(3)

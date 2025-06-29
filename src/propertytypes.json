@@ -1,5 +1,17 @@
 [
     {
+        "id": 7,
+        "name": "breakableTilesMode",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "disabled",
+            "all",
+            "individual"
+        ],
+        "valuesAsFlags": false
+    },
+    {
         "id": 6,
         "name": "enemyMovementTypes",
         "storageType": "string",
@@ -272,8 +284,9 @@
             },
             {
                 "name": "useBreakableTile",
-                "type": "bool",
-                "value": false
+                "propertyType": "breakableTilesMode",
+                "type": "string",
+                "value": "disabled"
             },
             {
                 "name": "waitPressKeyAfterLoad",
