@@ -160,6 +160,9 @@ Sub moveEnemies()
         End If
         firstTimeMoveEnemyOnRoom = 0
 
+        If enemyColIni = enemyColEnd Then enemyHorizontalDirection = 0
+        If enemyLinIni = enemyLinEnd Then enemyVerticalDirection = 0
+
         If enemyHorizontalDirection Then
             If enemyColIni = enemyCol Or enemyColEnd = enemyCol Then
                 enemyHorizontalDirection = enemyHorizontalDirection * -1
