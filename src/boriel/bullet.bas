@@ -74,7 +74,7 @@ sub checkBulletCollision()
         xToCheck = bulletPositionX
     end if
 
-    dim tile as ubyte = isSolidTileByXY(xToCheck, bulletPositionY)
+    dim tile as ubyte = isSolidTileByColLin(xToCheck >> 1, bulletPositionY >> 1)
     if tile then
         resetBullet()
         #ifdef USE_BREAKABLE_TILE
@@ -86,7 +86,7 @@ sub checkBulletCollision()
         #endif
         return
     else
-        tile = isSolidTileByXY(xToCheck, bulletPositionY + 1)
+        tile = isSolidTileByColLin(xToCheck >> 1, (bulletPositionY + 1) >> 1)
         if tile then
             resetBullet()
             #ifdef USE_BREAKABLE_TILE
