@@ -684,6 +684,42 @@ with open("output/decompressedEnemiesScreen.bin", "wb") as f:
     for i in range(maxEnemiesPerScreen):
         f.write(bytearray([0] * 12))
 
+# get hud.json
+hudFile = open(outputDir + 'hud.json')
+hudData = json.load(hudFile)
+hudFile.close()
+
+for i in hudData['layers'][1]['objects']:
+    if i['name'] == "life":
+        configStr += "#DEFINE HUD_LIFE_X " + str((i['x']//8)) + "\n"
+        configStr += "#DEFINE HUD_LIFE_Y " + str((i['y']//8) - 1) + "\n"
+    elif i['name'] == "ammo":
+        if ammo > -1:
+            configStr += "#DEFINE HUD_AMMO_X " + str((i['x']//8)) + "\n"
+            configStr += "#DEFINE HUD_AMMO_Y " + str((i['y']//8) - 1) + "\n"
+    elif i['name'] == "keys":
+        if keysEnabled == 1:
+            configStr += "#DEFINE HUD_KEYS_X " + str((i['x']//8)) + "\n"
+            configStr += "#DEFINE HUD_KEYS_Y " + str((i['y']//8) - 1) + "\n"
+    elif i['name'] == "score":
+        if hiScore == 1:
+            configStr += "#DEFINE HUD_HISCORE_X " + str((i['x']//8)) + "\n"
+            configStr += "#DEFINE HUD_HISCORE_Y " + str((i['y']//8) - 1) + "\n"
+            configStr += "#DEFINE HUD_HISCORE_Y_2 " + str((i['y']//8)) + "\n"
+    elif i['name'] == "items":
+        if itemsEnabled == 1:
+            configStr += "#DEFINE HUD_ITEMS_X " + str((i['x']//8)) + "\n"
+            configStr += "#DEFINE HUD_ITEMS_Y " + str((i['y']//8) - 1) + "\n"
+    elif i['name'] == "fuel":
+        if jetPackFuel > 0:
+            configStr += "#DEFINE HUD_JETPACK_FUEL_X " + str((i['x']//8)) + "\n"
+            configStr += "#DEFINE HUD_JETPACK_FUEL_Y " + str((i['y']//8) - 1) + "\n"
+    elif i['name'] == "messages":
+        if messagesEnabled == 1:
+            configStr += "#DEFINE HUD_MESSAGE_X " + str((i['x']//8)) + "\n"
+            configStr += "#DEFINE HUD_MESSAGE_Y " + str((i['y']//8) - 1) + "\n"
+            configStr += "#DEFINE HUD_MESSAGE_Y_2 " + str((i['y']//8)) + "\n"
+
 with open(outputDir + "config.bas", "w") as text_file:
     print(configStr, file=text_file)
 
