@@ -225,10 +225,13 @@ End Function
                     printLife()
                 #endif
                 If protaY bAND 1 <> 0 Then
-                    ' saveSpriteLin(PROTA_SPRITE, protaY - 1)
                     protaY = protaY - 1
                 End If
-                resetProtaSpriteToRunning()
+                If protaDirection Then
+                    saveSprite(PROTA_SPRITE, protaY, protaX, FIRST_RUNNING_PROTA_SPRITE_RIGHT, protaDirection)
+                Else
+                    saveSprite(PROTA_SPRITE, protaY, protaX, FIRST_RUNNING_PROTA_SPRITE_LEFT, protaDirection)
+                End If
             End If
             Return 0
         End If
@@ -385,7 +388,7 @@ Sub leftKey()
         saveSprite(PROTA_SPRITE, protaY, protaX, getNextFrameRunning(), protaDirection)
     End If
     
-    If onFirstColumn(PROTA_SPRITE) Then
+    If protaX = 0 Then
         #ifdef ARCADE_MODE
             protaX = 60
             Return
@@ -404,7 +407,7 @@ Sub rightKey()
         saveSprite(PROTA_SPRITE, protaY, protaX, getNextFrameRunning(), protaDirection)
     End If
     
-    If onLastColumn(PROTA_SPRITE) Then
+    If protaX = 60 Then
         #ifdef ARCADE_MODE
             protaX = 0
             Return
@@ -627,7 +630,7 @@ Sub protaMovement()
                 If isFalling() Then Return
                 
                 If framec - lastFrameTiles = ANIMATE_PERIOD_TILE - 2 Then
-                    If getSpriteTile(PROTA_SPRITE) = 13 Then
+                    If protaTile = 13 Then
                         saveSprite(PROTA_SPRITE, protaY, protaX, 14, protaDirection)
                     Else
                         saveSprite(PROTA_SPRITE, protaY, protaX, 13, protaDirection)

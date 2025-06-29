@@ -221,44 +221,23 @@ end sub
     end sub
 #endif
 
-#ifdef INIT_TEXTS
-    sub showInitTexts(Text as String)
-        dim n as uByte
-        dim line = ""
-        dim word = ""
-        dim y = 1
-        dim x = 0
-        cls
-        for n=0 to len(Text)-1
-            let c = Text(n to n)
-            if c = " " or n = len(Text) - 1 then
-                if len(line + word) > 31 then
-                    print at y, 0; line
-                    beep .01,0
-                    let line = word
-                    if c = " " then
-                        let line = line + " "
-                    end if
-                    let y = y + 1
-                    let x = 0
-                else
-                    let line = line + word
-                    if c = " " then
-                        let line = line + " "
-                    end if
-                end if
-                let word = ""
-            else
-                let word = word + c
-            end if
-        next n
-        if line <> "" then
-            print at y, x; line
-        end if
-        while INKEY$<>"":wend
-        while INKEY$="":wend
-    end sub
-#endif
+sub saveSprite(sprite as ubyte, lin as ubyte, col as ubyte, tile as ubyte, directionRight as ubyte)
+    if sprite = PROTA_SPRITE then
+        protaX = col
+        protaY = lin
+        protaTile = tile
+        protaDirection = directionRight
+    end if
+    spritesLinColTileAndFrame(sprite, 0) = lin
+    spritesLinColTileAndFrame(sprite, 1) = col
+    spritesLinColTileAndFrame(sprite, 2) = tile
+    spritesLinColTileAndFrame(sprite, 3) = directionRight
+    if spritesLinColTileAndFrame(sprite, 4) = 6 then
+        spritesLinColTileAndFrame(sprite, 4) = 0
+    else
+        spritesLinColTileAndFrame(sprite, 4) = spritesLinColTileAndFrame(sprite, 4) + 1
+    end if
+end sub
 
 sub debugA(value as BYTE)
     PRINT AT 0, 0; "----"

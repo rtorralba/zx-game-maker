@@ -55,6 +55,7 @@ Dim invincibleBlink As Ubyte = 0
 Dim protaX As Ubyte
 Dim protaY As Ubyte
 Dim protaDirection As Ubyte
+Dim protaTile As Ubyte
 
 #ifdef LIVES_MODE_ENABLED
     dim protaXRespawn as ubyte
