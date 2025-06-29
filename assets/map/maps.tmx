@@ -32,7 +32,7 @@
   <property name="messagesEnabled" type="bool" value="true"/>
   <property name="musicEnabled" type="bool" value="true"/>
   <property name="newBeeperPlayer" type="bool" value="true"/>
-  <property name="redefineKeysEnabled" type="bool" value="false"/>
+  <property name="redefineKeysEnabled" type="bool" value="true"/>
   <property name="shooting" type="bool" value="true"/>
   <property name="shouldKillEnemies" type="bool" value="true"/>
   <property name="useBreakableTile" propertytype="breakableTilesMode" value="individual"/>
@@ -202,7 +202,11 @@
    </properties>
    <point/>
   </object>
-  <object id="47" type="enemy" gid="211" x="360" y="320" width="16" height="16"/>
+  <object id="47" type="enemy" gid="211" x="360" y="320" width="16" height="16">
+   <properties>
+    <property name="life" type="int" value="3"/>
+   </properties>
+  </object>
   <object id="48" x="424" y="288">
    <properties>
     <property name="enemy" type="object" value="47"/>
