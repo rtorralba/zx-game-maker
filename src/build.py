@@ -25,6 +25,9 @@ DEFAULT_FX = str(Path("default/fx.tap"))
 def tiledBuild():
     runPythonScript(TILED_SCRIPT)
 
+def hudScrToPng():
+    runCommand("sna2img.py " + str(Path(ASSETS_FOLDER + "screens/hud.scr")) + " " + str(Path(ASSETS_FOLDER + "screens/hud.png")))
+
 def buildingFilesAndConfig():
     return Builder().execute()
 
@@ -114,6 +117,7 @@ def build():
 
     executeFunction(tiledExport, "Exporting game from Tiled")
     executeFunction(hudTiledExport, "Exporting HUD from Tiled")
+    executeFunction(hudScrToPng, "Converting HUD screen to PNG")
     executeFunction(tiledBuild, "Building Tiled maps")
     sizes = executeFunction(buildingFilesAndConfig, "Building files and config")
     executeFunction(compilingGame, "Compiling game")
