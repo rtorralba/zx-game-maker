@@ -90,18 +90,9 @@ End Sub
 
 #ifdef REDEFINE_KEYS_ENABLED
     Function LeerTecla() As Uinteger
-        ' Declaramos k con el valor 0 por defecto
-        Dim k As Uinteger = 0
-        ' Esperamos hasta que no se pulse nada
-        While GetKeyScanCode() <> 0
-        Wend
-        ' Repetimos mientras no se haya pulsado una tecla
-        While k = 0
-            ' Leemos la tecla pulsada
-            k = GetKeyScanCode()
-        Wend
-        ' Devolvemos el código de la tecla pulsada
-        Return k
+        Do Loop While GetKeyScanCode()
+        Do Loop Until GetKeyScanCode()
+        Return GetKeyScanCode()
     End Function
     
     Sub redefineKeys()
@@ -113,24 +104,22 @@ End Sub
             #endif
         #endif
         
-        Print AT 5,5;"Press key For:";
-        
-        Print AT 8,10;"Left"
+        Print AT 8,10;"<"
         keyArray(LEFT) = LeerTecla()
         ' keyOption = Inkey$
         ' Print AT 8,20; keyOption
         
-        Print AT 10,10;"Right"
+        Print AT 10,10;">"
         keyArray(RIGHT) = LeerTecla()
         ' keyOption = Inkey$
         ' Print AT 10,20; keyOption
         
-        Print AT 12,10;"Up"
+        Print AT 12,10;"^"
         keyArray(UP) = LeerTecla()
         ' keyOption = Inkey$
         ' Print AT 12,20; keyOption
         
-        Print AT 14,10;"Down"
+        Print AT 14,10;"v"
         keyArray(DOWN) = LeerTecla()
         ' keyOption = Inkey$
         ' Print AT 14,20; keyOption
