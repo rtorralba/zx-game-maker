@@ -40,29 +40,29 @@ sub decrementLife()
 end sub
 
 sub printLife()
-	PRINT AT HUD_LIFE_Y, HUD_LIFE_X; "   "  
-	PRINT AT HUD_LIFE_Y, HUD_LIFE_X; currentLife
+	PRINT AT HUD_LIFE_Y, HUD_LIFE_X; "   ";
+	PRINT AT HUD_LIFE_Y, HUD_LIFE_X; currentLife;
     #ifdef JETPACK_FUEL
-        PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; "   "  
-	    PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; jumpEnergy
+        PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; "   ";  
+	    PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; jumpEnergy;
     #endif
     #ifdef AMMO_ENABLED
-        PRINT AT HUD_AMMO_Y, HUD_AMMO_X; "   "  
-        PRINT AT HUD_AMMO_Y, HUD_AMMO_X; currentAmmo
+        PRINT AT HUD_AMMO_Y, HUD_AMMO_X; "   ";  
+        PRINT AT HUD_AMMO_Y, HUD_AMMO_X; currentAmmo;
     #endif
     #ifndef ARCADE_MODE
         #ifdef KEYS_ENABLED
-            PRINT AT HUD_KEYS_Y, HUD_KEYS_X; currentKeys
+            PRINT AT HUD_KEYS_Y, HUD_KEYS_X; currentKeys;
         #endif
     #endif
     #ifdef HISCORE_ENABLED
-        PRINT AT HUD_HISCORE_Y, HUD_HISCORE_X; hiScore
-	    PRINT AT HUD_HISCORE_Y_2, HUD_HISCORE_X; score
+        PRINT AT HUD_HISCORE_Y, HUD_HISCORE_X; hiScore;
+	    PRINT AT HUD_HISCORE_Y_2, HUD_HISCORE_X; score;
     #endif
     #ifndef ARCADE_MODE
         #ifdef ITEMS_ENABLED
-            PRINT AT HUD_ITEMS_Y, HUD_ITEMS_X; "  "
-            PRINT AT HUD_ITEMS_Y, HUD_ITEMS_X; currentItems
+            PRINT AT HUD_ITEMS_Y, HUD_ITEMS_X; "  ";
+            PRINT AT HUD_ITEMS_Y, HUD_ITEMS_X; currentItems;
         #endif
     #endif
 end sub
