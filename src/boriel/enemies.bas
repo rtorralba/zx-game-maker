@@ -33,7 +33,7 @@
     End Function
     
     #ifdef KILL_JUMPING_ON_TOP
-        Function checkHitOnTop(protaX1 As Ubyte, protaY1 As Ubyte, enemyX0 As Ubyte, enemyY0 As Ubyte, enemyX1 As Ubyte, enemyY1 As Ubyte) As Ubyte
+        Function checkHitOnTop(enemyId As Ubyte, protaX1 As Ubyte, protaY1 As Ubyte, enemyX0 As Ubyte, enemyY0 As Ubyte, enemyX1 As Ubyte, enemyY1 As Ubyte) As Ubyte
             If jumpCurrentKey <> jumpStopValue Then Return 0
             If landed Then Return 0
             
@@ -89,7 +89,7 @@ Function checkProtaAndBulletCollision(enemyId As Ubyte) As Ubyte
 
     #ifdef SIDE_VIEW
         #ifdef KILL_JUMPING_ON_TOP
-            If checkHitOnTop(protaX1, protaY1, enemyX0, enemyY0, enemyX1, enemyY1) Then Return 1
+            If checkHitOnTop(enemyId, protaX1, protaY1, enemyX0, enemyY0, enemyX1, enemyY1) Then Return 1
         #endif
     #endif
     
@@ -168,88 +168,91 @@ Sub moveEnemies()
 
         If enemyColIni = enemyColEnd Then enemyHorizontalDirection = 0
         If enemyLinIni = enemyLinEnd Then enemyVerticalDirection = 0
-
-        If enemyHorizontalDirection Then
-            If enemyColIni = enemyCol Or enemyColEnd = enemyCol Then
-                enemyHorizontalDirection = enemyHorizontalDirection * -1
-            End If
-        End If
-        
-        If enemyVerticalDirection Then
-            If enemyLinIni = enemyLin Or enemyLinEnd = enemyLin Then
-                enemyVerticalDirection = enemyVerticalDirection * -1
-            End If
-        End If
         
         If enemyBehaviour = 0 Then
             If enemyLinEnd = -1 Then
                 enemyHorizontalDirection = Sgn(protaX - enemyCol)
                 enemyVerticalDirection = Sgn(protaY - enemyLin)
+            Else
+                If enemyHorizontalDirection Then
+                    If enemyColIni = enemyCol Or enemyColEnd = enemyCol Then
+                        enemyHorizontalDirection = enemyHorizontalDirection * -1
+                    End If
+                End If
+                
+                If enemyVerticalDirection Then
+                    If enemyLinIni = enemyLin Or enemyLinEnd = enemyLin Then
+                        enemyVerticalDirection = enemyVerticalDirection * -1
+                    End If
+                End If
             End If
 
             decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = enemyCol + enemyHorizontalDirection
             decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLin + enemyVerticalDirection
-        Elseif enemyBehaviour = 1 Then
-            If enemyCol = enemyColEnd Then
-                decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = enemyColIni
-            Else
-                decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = enemyCol + enemyHorizontalDirection
-                If enemyCol = enemyColIni Then
-                    saveAndDraw(enemyId, tile + 17, enemyHorizontalDirection, enemyVerticalDirection)
-                    continue For
-                ElseIf enemyCol + enemyHorizontalDirection = enemyColEnd Then
-                    saveAndDraw(enemyId, tile + 18, enemyHorizontalDirection, enemyVerticalDirection)
-                    continue For
-                End If
-            End If
-            
-            If enemyLin = enemyLinEnd Then
-                decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLinIni
-            Else
-                decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) + enemyVerticalDirection
-                If enemyLin = enemyLinIni Then
-                    saveAndDraw(enemyId, tile + 17, enemyHorizontalDirection, enemyVerticalDirection)
-                    continue For
-                ElseIf enemyLin + enemyVerticalDirection = enemyLinEnd Then
-                    saveAndDraw(enemyId, tile + 18, enemyHorizontalDirection, enemyVerticalDirection)
-                    continue For
-                End If
-            End If
-        End If
-        
-        If tile < 16 Then
-            #ifdef SIDE_VIEW
-                If checkPlatformHasProtaOnTop(decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)) Then
-                    jumpCurrentKey = jumpStopValue
-                    If enemyVerticalDirection Then
-                        protaY = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) - 4
-                    End If
                     
-                    If enemyHorizontalDirection Then
-                        If Not CheckCollision(protaX + enemyHorizontalDirection, protaY) Then
-                            protaX = protaX + enemyHorizontalDirection
+            If tile < 16 Then
+                #ifdef SIDE_VIEW
+                    If checkPlatformHasProtaOnTop(decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)) Then
+                        jumpCurrentKey = jumpStopValue
+                        If enemyVerticalDirection Then
+                            protaY = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) - 4
+                        End If
+                        
+                        If enemyHorizontalDirection Then
+                            If Not CheckCollision(protaX + enemyHorizontalDirection, protaY) Then
+                                protaX = protaX + enemyHorizontalDirection
+                            End If
                         End If
                     End If
+                #endif
+            Else
+                If checkProtaAndBulletCollision(enemyId) Then
+                    If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <= 0 Then
+                        continue For
+                    End If
                 End If
-            #endif
-        Else
-            If checkProtaAndBulletCollision(enemyId) Then
-                If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <= 0 Then
-                    continue For
-                End If
-            End If
-            
-            If enemyHorizontalDirection = -1 Then
-                If enemyBehaviour = 0 Then
+                
+                If enemyHorizontalDirection = -1 Then
                     tile = tile + 16
                 End If
             End If
+            
+            If enemFrame Then
+                tile = tile + 1
+            End If
+            
+            saveAndDraw(enemyId, tile + 1, enemyHorizontalDirection, enemyVerticalDirection)
+        Elseif enemyBehaviour = 1 Then
+            enemyHorizontalDirection = Sgn(enemyColEnd - enemyColIni)
+            enemyVerticalDirection = Sgn(enemyLinEnd - enemyLinIni)
+
+            decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = enemyCol + enemyHorizontalDirection
+            decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLin + enemyVerticalDirection
+
+            If enemyCol = enemyColIni And enemyLin = enemyLinIni Then
+                saveAndDraw(enemyId, tile + 17, enemyHorizontalDirection, enemyVerticalDirection)
+                continue For
+            ElseIf enemyCol + enemyHorizontalDirection = enemyColEnd And enemyLin + enemyVerticalDirection = enemyLinEnd Then
+                saveAndDraw(enemyId, tile + 18, enemyHorizontalDirection, enemyVerticalDirection)
+                continue For
+            End If
+
+            If enemyCol = enemyColEnd Or enemyLin = enemyLinEnd Then
+                If enemyCol = enemyColEnd Then
+                    decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = enemyColIni
+                End If
+                If enemyLin = enemyLinEnd Then
+                    decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLinIni
+                End If
+            End If
+
+            If enemFrame Then
+                tile = tile + 1
+            End If
+
+            saveAndDraw(enemyId, tile + 1, enemyHorizontalDirection, enemyVerticalDirection)
+
+            checkProtaAndBulletCollision(enemyId)
         End If
-        
-        If enemFrame Then
-            tile = tile + 1
-        End If
-        
-        saveAndDraw(enemyId, tile + 1, enemyHorizontalDirection, enemyVerticalDirection)
     Next enemyId
 End Sub
