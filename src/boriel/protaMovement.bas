@@ -157,40 +157,12 @@ End Function
             End If
             
             If CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey)) Then
-                jumpCurrentKey = jumpStopValue
+                If jumpArray(jumpCurrentKey) > 0 Then
+                    jumpCurrentKey = jumpStopValue
+                Else
+                    jumpCurrentKey = jumpCurrentKey + 1
+                End If
                 Return
-            End If
-            
-            If jumpArray(jumpCurrentKey) <= 0 Then
-                If CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey) + 1) Then
-                    jumpCurrentKey = jumpStopValue
-                    Return
-                End If
-            Else
-                If CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey) - 1) Then
-                    jumpCurrentKey = jumpStopValue
-                    Return
-                End If
-                If CheckStaticPlatform(protaX, protaY + jumpArray(jumpCurrentKey)) Then
-                    jumpCurrentKey = jumpStopValue
-                    Return
-                End If
-                If CheckStaticPlatform(protaX + 1, protaY + jumpArray(jumpCurrentKey)) Then
-                    jumpCurrentKey = jumpStopValue
-                    Return
-                End If
-                If jumpArray(jumpCurrentKey) = 2 Then
-                    If CheckStaticPlatform(protaX, protaY + jumpArray(jumpCurrentKey) + 2) Then
-                        jumpCurrentKey = jumpStopValue
-                        resetProtaSpriteToRunning()
-                        Return
-                    End If
-                    If CheckStaticPlatform(protaX + 1, protaY + jumpArray(jumpCurrentKey) + 2) Then
-                        jumpCurrentKey = jumpStopValue
-                        resetProtaSpriteToRunning()
-                        Return
-                    End If
-                End If
             End If
             
             saveSprite(PROTA_SPRITE, protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
@@ -242,15 +214,19 @@ End Function
         Else
             If landed = 0 Then
                 landed = 1
+                jumpCurrentKey = jumpStopValue
                 #ifdef JETPACK_FUEL
                     jumpEnergy = jumpStepsCount
                     printLife()
                 #endif
                 If protaY bAND 1 <> 0 Then
-                    ' saveSpriteLin(PROTA_SPRITE, protaY - 1)
                     protaY = protaY - 1
                 End If
-                resetProtaSpriteToRunning()
+                If protaDirection Then
+                    saveSprite(PROTA_SPRITE, protaY, protaX, FIRST_RUNNING_PROTA_SPRITE_RIGHT, protaDirection)
+                Else
+                    saveSprite(PROTA_SPRITE, protaY, protaX, FIRST_RUNNING_PROTA_SPRITE_LEFT, protaDirection)
+                End If
             End If
             Return 0
         End If
@@ -403,10 +379,11 @@ Sub leftKey()
         #Else
             protaFrame = 2
         #endif
-        spritesLinColTileAndFrame(PROTA_SPRITE, 3) = 0
+        protaDirection = 0
+        saveSprite(PROTA_SPRITE, protaY, protaX, getNextFrameRunning(), protaDirection)
     End If
     
-    If onFirstColumn(PROTA_SPRITE) Then
+    If protaX = 0 Then
         #ifdef ARCADE_MODE
             protaX = 60
             Return
@@ -421,10 +398,11 @@ End Sub
 Sub rightKey()
     If protaDirection <> 1 Then
         protaFrame = 0
-        spritesLinColTileAndFrame(PROTA_SPRITE, 3) = 1
+        protaDirection = 1
+        saveSprite(PROTA_SPRITE, protaY, protaX, getNextFrameRunning(), protaDirection)
     End If
     
-    If onLastColumn(PROTA_SPRITE) Then
+    If protaX = 60 Then
         #ifdef ARCADE_MODE
             protaX = 0
             Return
@@ -442,7 +420,7 @@ Sub upKey()
     #Else
         If protaDirection <> 8 Then
             protaFrame = 4
-            spritesLinColTileAndFrame(PROTA_SPRITE, 3) = 8
+            protaDirection = 8
         End If
         If canMoveUp() Then
             saveSprite(PROTA_SPRITE, protaY - 1, protaX, protaFrame + 1, 8)
@@ -457,7 +435,7 @@ Sub downKey()
     #ifdef OVERHEAD_VIEW
         If protaDirection <> 2 Then
             protaFrame = 6
-            spritesLinColTileAndFrame(PROTA_SPRITE, 3) = 2
+            protaDirection = 2
         End If
         If canMoveDown() Then
             If protaY >= MAX_LINE Then
@@ -527,6 +505,9 @@ Function checkTileObject(tile As Ubyte) As Ubyte
             End If
         #endif
         printLife()
+        #ifdef MESSAGES_ENABLED
+            printMessage("ITEM    ", "FOUND!  ", 4, 0)
+        #endif
         #ifdef ARCADE_MODE
             If currentItems = itemsToFind Then
                 drawKey()
@@ -551,6 +532,9 @@ Function checkTileObject(tile As Ubyte) As Ubyte
             #endif
             currentKeys = currentKeys + 1
             printLife()
+            #ifdef MESSAGES_ENABLED
+                printMessage("KEY     ", "FOUND!  ", 4, 0)
+            #endif
             screenObjects(currentScreen, SCREEN_OBJECT_KEY_INDEX) = 0
             BeepFX_Play(3)
             Return 1
@@ -641,7 +625,7 @@ Sub protaMovement()
                 If isFalling() Then Return
                 
                 If framec - lastFrameTiles = ANIMATE_PERIOD_TILE - 2 Then
-                    If getSpriteTile(PROTA_SPRITE) = 13 Then
+                    If protaTile = 13 Then
                         saveSprite(PROTA_SPRITE, protaY, protaX, 14, protaDirection)
                     Else
                         saveSprite(PROTA_SPRITE, protaY, protaX, 13, protaDirection)
@@ -649,5 +633,9 @@ Sub protaMovement()
                 End If
             End If
         #endif
+    #endif
+    
+    #ifdef MESSAGES_ENABLED
+        checkMessageForDelete()
     #endif
 End Sub

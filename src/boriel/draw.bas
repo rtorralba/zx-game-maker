@@ -35,13 +35,28 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
         End If
     #endif
     
-    #ifdef USE_BREAKABLE_TILE
+    #ifdef USE_BREAKABLE_TILE_ALL
         If tile = 62 Then
             If brokenTiles(currentScreen) Then
                 SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
             Else
                 SetTileChecked(tile, attrSet(tile), x, y)
             End If
+            Return
+        End If
+    #endif
+    
+    #ifdef USE_BREAKABLE_TILE_INDIVIDUAL
+        If tile = 62 Then
+            For i = 0 To BREAKABLE_TILES_COUNT
+                If brokenTiles(i, 0) <> currentScreen Then Continue For
+                If brokenTiles(i, 1) <> x Then Continue For
+                If brokenTiles(i, 2) <> y Then Continue For
+
+                SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
+                Return
+            Next i
+            SetTileChecked(tile, attrSet(tile), x, y)
             Return
         End If
     #endif
@@ -108,6 +123,10 @@ End Sub
                 screenObjects(currentScreen, SCREEN_OBJECT_DOOR_INDEX) = 0
                 BeepFX_Play(4)
                 removeTilesFromScreen(DOOR_TILE)
+            Else
+                #ifdef MESSAGES_ENABLED
+                    printMessage("No keys ", "left!   ", 2, 0)
+                #endif
             End If
             Return 1
         Else
@@ -144,36 +163,36 @@ End Sub
 Sub moveToScreen(direction As Ubyte)
     ' removeAllObjects()
     If direction = 6 Then
-        saveSprite(PROTA_SPRITE, protaY, 0, getSpriteTile(PROTA_SPRITE), protaDirection)
+        saveSprite(PROTA_SPRITE, protaY, 0, protaTile, protaDirection)
         currentScreen = currentScreen + 1
-
+        
         #ifdef LIVES_MODE_ENABLED
             protaXRespawn = 0
             protaYRespawn = protaY
         #endif
     Elseif direction = 4 Then
-        saveSprite(PROTA_SPRITE, protaY, 60, getSpriteTile(PROTA_SPRITE), protaDirection)
+        saveSprite(PROTA_SPRITE, protaY, 60, protaTile, protaDirection)
         currentScreen = currentScreen - 1
-
+        
         #ifdef LIVES_MODE_ENABLED
             protaXRespawn = 60
             protaYRespawn = protaY
         #endif
     Elseif direction = 2 Then
-        saveSprite(PROTA_SPRITE, 0, protaX, getSpriteTile(PROTA_SPRITE), protaDirection)
+        saveSprite(PROTA_SPRITE, 0, protaX, protaTile, protaDirection)
         currentScreen = currentScreen + MAP_SCREENS_WIDTH_COUNT
-
+        
         #ifdef LIVES_MODE_ENABLED
             protaXRespawn = protaX
             protaYRespawn = 0
         #endif
     Elseif direction = 8 Then
-        saveSprite(PROTA_SPRITE, MAX_LINE, protaX, getSpriteTile(PROTA_SPRITE), protaDirection)
+        saveSprite(PROTA_SPRITE, MAX_LINE, protaX, protaTile, protaDirection)
         #ifdef SIDE_VIEW
             jumpCurrentKey = 0
         #endif
         currentScreen = currentScreen - MAP_SCREENS_WIDTH_COUNT
-
+        
         #ifdef LIVES_MODE_ENABLED
             protaXRespawn = protaX
             protaYRespawn = MAX_LINE
@@ -188,32 +207,19 @@ End Sub
 Sub drawSprites()
     If (protaY < 41) Then
         #ifdef LIVES_MODE_GRAVEYARD
-            Draw2x2Sprite(getSpriteTile(PROTA_SPRITE), protaX, protaY)
+            Draw2x2Sprite(protaTile, protaX, protaY)
         #else
             If Not invincible Then
-                Draw2x2Sprite(getSpriteTile(PROTA_SPRITE), protaX, protaY)
+                Draw2x2Sprite(protaTile, protaX, protaY)
             Else
                 If invincibleBlink Then
                     invincibleBlink = Not invincibleBlink
-                    Draw2x2Sprite(getSpriteTile(PROTA_SPRITE), protaX, protaY)
+                    Draw2x2Sprite(protaTile, protaX, protaY)
                 Else
                     invincibleBlink = Not invincibleBlink
                 End If
             End If
         #endif
-    End If
-
-    If enemiesPerScreen(currentScreen) > 0 Then
-        For i = 0 To enemiesPerScreen(currentScreen) - 1
-            If Not getSpriteLin(i) Then continue For
-            
-            #ifdef ENEMIES_NOT_RESPAWN_ENABLED
-                If decompressedEnemiesScreen(i, ENEMY_ALIVE) <> 99 And decompressedEnemiesScreen(i, ENEMY_TILE) > 15 Then
-                    If screensWon(currentScreen) Then continue For
-                End If
-            #endif
-            Draw2x2Sprite(getSpriteTile(i), getSpriteCol(i), getSpriteLin(i))
-        Next i
     End If
     
     If bulletPositionX <> 0 Then

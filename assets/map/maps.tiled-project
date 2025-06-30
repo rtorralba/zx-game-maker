@@ -11,11 +11,35 @@
     ],
     "propertyTypes": [
         {
+            "id": 7,
+            "name": "breakableTilesMode",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "disabled",
+                "all",
+                "individual"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "id": 6,
+            "name": "enemyMovementTypes",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "default",
+                "noReturn"
+            ],
+            "valuesAsFlags": false
+        },
+        {
             "id": 3,
             "name": "enemySpeed",
             "storageType": "int",
             "type": "enum",
             "values": [
+                "0",
                 "1",
                 "2",
                 "3"
@@ -30,6 +54,29 @@
             "values": [
                 "side",
                 "overhead"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "id": 4,
+            "name": "jumpType",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "constant",
+                "accelerated"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "id": 5,
+            "name": "livesMode",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "disabled",
+                "instant respawn",
+                "show graveyard"
             ],
             "valuesAsFlags": false
         },
@@ -168,13 +215,7 @@
                     "name": "jumpType",
                     "propertyType": "jumpType",
                     "type": "string",
-                    "value": "constant"
-                },
-                {
-                    "name": "livesMode",
-                    "propertyType": "livesMode",
-                    "type": "string",
-                    "value":"disabled"
+                    "value": "accelerated"
                 },
                 {
                     "name": "keysEnabled",
@@ -192,6 +233,12 @@
                     "value": 5
                 },
                 {
+                    "name": "livesMode",
+                    "propertyType": "livesMode",
+                    "type": "string",
+                    "value": "disabled"
+                },
+                {
                     "name": "mainCharacterExtraFrame",
                     "type": "bool",
                     "value": true
@@ -205,6 +252,11 @@
                     "name": "maxEnemiesPerScreen",
                     "type": "int",
                     "value": 5
+                },
+                {
+                    "name": "messagesEnabled",
+                    "type": "bool",
+                    "value": false
                 },
                 {
                     "name": "musicEnabled",
@@ -243,8 +295,9 @@
                 },
                 {
                     "name": "useBreakableTile",
-                    "type": "bool",
-                    "value": false
+                    "propertyType": "breakableTilesMode",
+                    "type": "string",
+                    "value": "disabled"
                 },
                 {
                     "name": "waitPressKeyAfterLoad",
@@ -258,29 +311,6 @@
                 "map",
                 "project"
             ]
-        },
-        {
-            "id": 4,
-            "name": "jumpType",
-            "storageType": "string",
-            "type": "enum",
-            "values": [
-                "constant",
-                "accelerated"
-            ],
-            "valuesAsFlags": false
-        },
-        {
-            "id": 5,
-            "name": "livesMode",
-            "storageType": "string",
-            "type": "enum",
-            "values": [
-                "disabled",
-                "instant respawn",
-                "show graveyard"
-            ],
-            "valuesAsFlags": false
         }
     ]
 }

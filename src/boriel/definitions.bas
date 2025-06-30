@@ -55,6 +55,7 @@ Dim invincibleBlink As Ubyte = 0
 Dim protaX As Ubyte
 Dim protaY As Ubyte
 Dim protaDirection As Ubyte
+Dim protaTile As Ubyte
 
 #ifdef LIVES_MODE_ENABLED
     dim protaXRespawn as ubyte
@@ -95,14 +96,25 @@ Dim screenObjects(SCREENS_COUNT, 4) As Ubyte at SCREEN_OBJECTS_DATA_ADDRESS
 Dim screensWon(SCREENS_COUNT) As Ubyte at SCREENS_WON_DATA_ADDRESS
 Dim decompressedEnemiesScreen(MAX_ENEMIES_PER_SCREEN, 11) As Byte at DECOMPRESSED_ENEMIES_SCREEN_DATA_ADDRESS
 
-#ifdef USE_BREAKABLE_TILE
+#ifdef USE_BREAKABLE_TILE_ALL
     Dim brokenTiles(SCREENS_COUNT) As Ubyte at BROKEN_TILES_DATA_ADDRESS
+#endif
+
+#ifdef USE_BREAKABLE_TILE_INDIVIDUAL
+    Dim brokenTiles(BREAKABLE_TILES_COUNT, 2) As Ubyte at BROKEN_TILES_DATA_ADDRESS
+    Dim brokenTilesCurrentIndex As Ubyte = 0
 #endif
 
 Dim spritesSet(51) As Ubyte
 Dim spriteAddressIndex As Uinteger = 0
 
 Dim bullet(7) As Ubyte
+
+Dim bulletPositionX as Ubyte = 0
+Dim bulletPositionY as Ubyte = 0
+Dim bulletDirection as Ubyte = 0
+Dim bulletEndPositionX as Ubyte = 0
+Dim bulletEndPositionY as Ubyte = 0
 
 Const FIRST_RUNNING_PROTA_SPRITE_RIGHT As Ubyte = 1
 Const FIRST_RUNNING_PROTA_SPRITE_LEFT As Ubyte = 5
@@ -118,7 +130,7 @@ Const ENEMY_HORIZONTAL_DIRECTION As Ubyte = 5
 Const ENEMY_CURRENT_LIN As Ubyte = 6
 Const ENEMY_CURRENT_COL As Ubyte = 7
 Const ENEMY_ALIVE As Ubyte = 8
-' Const ENEMY_SPRITE As Ubyte = 9
+Const ENEMY_MOVE As Ubyte = 9
 Const ENEMY_VERTICAL_DIRECTION As Ubyte = 10
 Const ENEMY_SPEED As Ubyte = 11
 
@@ -128,3 +140,5 @@ Const ENEMY_SPEED As Ubyte = 11
 #endif
 
 Const ENEMY_DOOR_TILE As Ubyte = 63
+
+Dim firstTimeMoveEnemyOnRoom As Ubyte = 1

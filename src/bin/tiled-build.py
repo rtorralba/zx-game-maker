@@ -124,7 +124,7 @@ itemsEnabled = 1
 
 itemsCountdown = 0
 
-useBreakableTile = 0
+useBreakableTile = "disabled"
 
 waitPressKeyAfterLoad = 0
 
@@ -145,6 +145,8 @@ jumpArrayCount = 5
 jumpArray = "{-2, -2, -2, -2, -2}"
 
 livesMode = 0
+
+messagesEnabled = 0
 
 if 'properties' in data:
     for property in data['properties']:
@@ -222,7 +224,7 @@ if 'properties' in data:
         elif property['name'] == 'itemsCountdown':
             itemsCountdown = 1 if property['value'] else 0
         elif property['name'] == 'useBreakableTile':
-            useBreakableTile = 1 if property['value'] else 0
+            useBreakableTile = property['value']
         elif property['name'] == 'maxAnimatedTilesPerScreen':
             maxAnimatedTilesPerScreen = property['value']
         elif property['name'] == 'newBeeperPlayer':
@@ -239,13 +241,16 @@ if 'properties' in data:
             jetPackFuel = property['value'] 
         elif property['name'] == 'jumpType':
             if property['value'] == 'accelerated':
-                jumpArrayCount = 13
-                jumpArray = "{-2, -2, -2, -2, -1, -1, 0, 1, 1, 2, 2, 2, 2}"
+                jumpArrayCount = 8
+                jumpArray = "{-2, -2, -2, -2, -2, 0, 0, 0}"
         elif property['name'] == 'livesMode':
             if property['value'] == 'instant respawn':
                 livesMode = 1
             elif property['value'] == 'show graveyard':
                 livesMode = 2
+        elif property['name'] == 'messagesEnabled':
+            messagesEnabled = 1 if property['value'] else 0
+
 if len(damageTiles) == 0:
     damageTiles.append('0')
  
@@ -321,6 +326,11 @@ configStr += "const BACKGROUND_ATTRIBUTE as ubyte = " + str(backgroundAttribute)
 if arcadeMode == 1:
     configStr += "#DEFINE ARCADE_MODE\n"
 
+if messagesEnabled == 1:
+    configStr += "#DEFINE MESSAGES_ENABLED\n"
+    configStr += "Dim messageLoopCounter As Ubyte = 0\n"
+    configStr += "#Define MESSAGE_LOOPS_VISIBLE 30\n"
+
 if len(initTexts) > 0:
     configStr += "#DEFINE INIT_TEXTS\n"
     initTexts = initTexts.split("\n")
@@ -387,6 +397,8 @@ if idleTime > 0:
     configStr += "#DEFINE IDLE_ENABLED\n"
     configStr += "const IDLE_TIME as ubyte = " + str(idleTime) + "\n"
 
+breakableTilesCount = 0
+
 for layer in data['layers']:
     if layer['type'] == 'tilelayer':
         screensCount = len(layer['chunks'])
@@ -412,6 +424,9 @@ for layer in data['layers']:
                 mapY = jdx // screen['width']
 
                 tile = str(cell - 1)
+
+                if tile == "62":
+                    breakableTilesCount += 1
 
                 # screens[idx][mapY][mapX % screenWidth] = tile
 
@@ -489,10 +504,16 @@ if enemiesRespawn == 0:
 with open("output/screensWon.bin", "wb") as f:
     f.write(bytearray([0] * screensCount))
 
-if useBreakableTile == 1:
-    configStr += "#DEFINE USE_BREAKABLE_TILE\n"
+if useBreakableTile == 'all':
+    configStr += "#DEFINE USE_BREAKABLE_TILE_ALL\n"
     with open("output/brokenTiles.bin", "wb") as f:
         f.write(bytearray([0] * screensCount))
+elif useBreakableTile == 'individual':
+    configStr += "#DEFINE USE_BREAKABLE_TILE_INDIVIDUAL\n"
+    configStr += "#DEFINE BREAKABLE_TILES_COUNT " + str(breakableTilesCount) + "\n"
+    with open("output/brokenTiles.bin", "wb") as f:
+        f.write(bytearray([0] * breakableTilesCount * 3))
+
 
 for idx, screen in enumerate(screens):
     label = 'screen' + str(idx).zfill(3)
@@ -523,12 +544,13 @@ for layer in data['layers']:
                     'name': object['name'],
                     'screenId': screenId,
                     'linIni': str(int((object['y'] % (tileHeight * screenHeight))) // 4),
-                    'linEnd': str(int((object['y'] % (tileHeight * screenHeight))) // 4),
+                    'linEnd': "-1",
                     'colIni': str(int((object['x'] % (tileWidth * screenWidth))) // 4),
                     'colEnd': str(int((object['x'] % (tileWidth * screenWidth))) // 4),
                     'tile': str(object['gid'] - spriteTileOffset),
                     'life': '1',
                     'speed': '3',
+                    'move': '0',
                 }
 
                 if 'properties' in object and len(object['properties']) > 0:
@@ -536,8 +558,11 @@ for layer in data['layers']:
                         if property['name'] == 'life':
                             objects[str(object['id'])]['life'] = str(property['value'])
                         elif property['name'] == 'speed':
-                            if property['value'] in [0, 1, 2]:
-                                objects[str(object['id'])]['speed'] = str(property['value'] + 1)
+                            if property['value'] in [0, 1, 2, 3]:
+                                objects[str(object['id'])]['speed'] = str(property['value'])
+                        elif property['name'] == 'move':
+                            if property['value'] == 'noReturn':
+                                objects[str(object['id'])]['move'] = '1'
 for layer in data['layers']:
     if layer['type'] == 'objectgroup':
         for object in layer['objects']:
@@ -614,7 +639,7 @@ for layer in data['layers']:
                         arrayBuffer.append(int(enemy['linIni']))
                         arrayBuffer.append(int(enemy['colIni']))
                         arrayBuffer.append(int(enemy['life']))
-                        arrayBuffer.append(i + 1)
+                        arrayBuffer.append(int(enemy['move']))
                         arrayBuffer.append(int(verticalDirection))                  
                         arrayBuffer.append(int(enemy['speed']))                  
                     else:
@@ -627,7 +652,7 @@ for layer in data['layers']:
                         arrayBuffer.append(0)
                         arrayBuffer.append(0)
                         arrayBuffer.append(0)
-                        arrayBuffer.append(i + 1)
+                        arrayBuffer.append(0)
                         arrayBuffer.append(0) 
                         arrayBuffer.append(0)
             else:
@@ -673,6 +698,42 @@ with open("output/enemiesPerScreenInitial.bin", "wb") as f:
 with open("output/decompressedEnemiesScreen.bin", "wb") as f:
     for i in range(maxEnemiesPerScreen):
         f.write(bytearray([0] * 12))
+
+# get hud.json
+hudFile = open(outputDir + 'hud.json')
+hudData = json.load(hudFile)
+hudFile.close()
+
+for i in hudData['layers'][1]['objects']:
+    if i['name'] == "life":
+        configStr += "#DEFINE HUD_LIFE_X " + str((i['x']//8)) + "\n"
+        configStr += "#DEFINE HUD_LIFE_Y " + str((i['y']//8) - 1) + "\n"
+    elif i['name'] == "ammo":
+        if ammo > -1:
+            configStr += "#DEFINE HUD_AMMO_X " + str((i['x']//8)) + "\n"
+            configStr += "#DEFINE HUD_AMMO_Y " + str((i['y']//8) - 1) + "\n"
+    elif i['name'] == "keys":
+        if keysEnabled == 1:
+            configStr += "#DEFINE HUD_KEYS_X " + str((i['x']//8)) + "\n"
+            configStr += "#DEFINE HUD_KEYS_Y " + str((i['y']//8) - 1) + "\n"
+    elif i['name'] == "score":
+        if hiScore == 1:
+            configStr += "#DEFINE HUD_HISCORE_X " + str((i['x']//8)) + "\n"
+            configStr += "#DEFINE HUD_HISCORE_Y " + str((i['y']//8) - 1) + "\n"
+            configStr += "#DEFINE HUD_HISCORE_Y_2 " + str((i['y']//8)) + "\n"
+    elif i['name'] == "items":
+        if itemsEnabled == 1:
+            configStr += "#DEFINE HUD_ITEMS_X " + str((i['x']//8)) + "\n"
+            configStr += "#DEFINE HUD_ITEMS_Y " + str((i['y']//8) - 1) + "\n"
+    elif i['name'] == "fuel":
+        if jetPackFuel > 0:
+            configStr += "#DEFINE HUD_JETPACK_FUEL_X " + str((i['x']//8)) + "\n"
+            configStr += "#DEFINE HUD_JETPACK_FUEL_Y " + str((i['y']//8) - 1) + "\n"
+    elif i['name'] == "messages":
+        if messagesEnabled == 1:
+            configStr += "#DEFINE HUD_MESSAGE_X " + str((i['x']//8)) + "\n"
+            configStr += "#DEFINE HUD_MESSAGE_Y " + str((i['y']//8) - 1) + "\n"
+            configStr += "#DEFINE HUD_MESSAGE_Y_2 " + str((i['y']//8)) + "\n"
 
 with open(outputDir + "config.bas", "w") as text_file:
     print(configStr, file=text_file)

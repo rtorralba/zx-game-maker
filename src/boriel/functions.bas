@@ -40,32 +40,50 @@ sub decrementLife()
 end sub
 
 sub printLife()
-	PRINT AT 22, 5; "   "  
-	PRINT AT 22, 5; currentLife
+	PRINT AT HUD_LIFE_Y, HUD_LIFE_X; "   ";
+	PRINT AT HUD_LIFE_Y, HUD_LIFE_X; currentLife;
     #ifdef JETPACK_FUEL
-        PRINT AT 23, 5; "   "  
-	    PRINT AT 23, 5; jumpEnergy
+        PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; "   ";  
+	    PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; jumpEnergy;
     #endif
     #ifdef AMMO_ENABLED
-        PRINT AT 22, 10; "   "  
-        PRINT AT 22, 10; currentAmmo
+        PRINT AT HUD_AMMO_Y, HUD_AMMO_X; "   ";  
+        PRINT AT HUD_AMMO_Y, HUD_AMMO_X; currentAmmo;
     #endif
     #ifndef ARCADE_MODE
         #ifdef KEYS_ENABLED
-            PRINT AT 22, 16; currentKeys
+            PRINT AT HUD_KEYS_Y, HUD_KEYS_X; currentKeys;
         #endif
     #endif
     #ifdef HISCORE_ENABLED
-        PRINT AT 22, 25 - LEN(STR$(hiScore)); hiScore
-	    PRINT AT 23, 25 - LEN(STR$(score)); score
+        PRINT AT HUD_HISCORE_Y, HUD_HISCORE_X; hiScore;
+	    PRINT AT HUD_HISCORE_Y_2, HUD_HISCORE_X; score;
     #endif
     #ifndef ARCADE_MODE
         #ifdef ITEMS_ENABLED
-            PRINT AT 22, 30; "  "
-            PRINT AT 22, 30; currentItems
+            PRINT AT HUD_ITEMS_Y, HUD_ITEMS_X; "  ";
+            PRINT AT HUD_ITEMS_Y, HUD_ITEMS_X; currentItems;
         #endif
     #endif
 end sub
+
+#ifdef MESSAGES_ENABLED
+    sub printMessage(line1 as string, line2 as string, p as ubyte, i as ubyte)
+        Paper p: Ink i: Flash 1
+        PRINT AT HUD_MESSAGE_Y, HUD_MESSAGE_X; line1
+        PRINT AT HUD_MESSAGE_Y_2, HUD_MESSAGE_X; line2
+        Paper 0: Ink 7: Flash 0
+        messageLoopCounter = 0
+    end sub
+
+    sub checkMessageForDelete()
+        If messageLoopCounter = MESSAGE_LOOPS_VISIBLE Then
+            PRINT AT HUD_MESSAGE_Y, HUD_MESSAGE_X; "        "
+            PRINT AT HUD_MESSAGE_Y_2, HUD_MESSAGE_X; "        "
+        End If
+        messageLoopCounter = messageLoopCounter + 1
+    end sub
+#endif
 
 function isADamageTile(tile as ubyte) as UBYTE
     for i = 0 to DAMAGE_TILES_COUNT
@@ -96,10 +114,16 @@ end function
 function isSolidTileByColLin(col as ubyte, lin as ubyte) as ubyte
 	dim tile as ubyte = GetTile(col, lin)
 
+    #ifdef MESSAGES_ENABLED
+        If tile = ENEMY_DOOR_TILE Then
+            printMessage("Kill All", "Enemies!", 2, 0)
+        End If
+    #endif
+
     if tile > 64 then return 0
     if tile < 1 then return 0
 
-	return 1
+	return tile
 end function
 
 #ifdef ARCADE_MODE
@@ -127,6 +151,8 @@ end function
 
 #ifdef SIDE_VIEW
     function CheckStaticPlatform(x as uByte, y as uByte) as uByte
+        If jumpCurrentKey <> jumpStopValue Then Return 0
+        
         Dim col as uByte = x >> 1
         Dim lin as uByte = y >> 1
 
@@ -166,17 +192,6 @@ function CheckCollision(x as uByte, y as uByte) as uByte
 	return 0
 end function
 
-function isSolidTileByXY(x as ubyte, y as ubyte) as ubyte
-    dim col as uByte = x >> 1
-    dim lin as uByte = y >> 1
-    
-    if GetTile(col, lin) = 0 then return 0
-
-    if GetTile(col, lin) > 63 then return 0
-
-    return GetTile(col, lin)
-end function
-
 sub removeTilesFromScreen(tile as ubyte)
 	dim index as uinteger
     dim y, x as ubyte
@@ -206,44 +221,23 @@ end sub
     end sub
 #endif
 
-#ifdef INIT_TEXTS
-    sub showInitTexts(Text as String)
-        dim n as uByte
-        dim line = ""
-        dim word = ""
-        dim y = 1
-        dim x = 0
-        cls
-        for n=0 to len(Text)-1
-            let c = Text(n to n)
-            if c = " " or n = len(Text) - 1 then
-                if len(line + word) > 31 then
-                    print at y, 0; line
-                    beep .01,0
-                    let line = word
-                    if c = " " then
-                        let line = line + " "
-                    end if
-                    let y = y + 1
-                    let x = 0
-                else
-                    let line = line + word
-                    if c = " " then
-                        let line = line + " "
-                    end if
-                end if
-                let word = ""
-            else
-                let word = word + c
-            end if
-        next n
-        if line <> "" then
-            print at y, x; line
-        end if
-        while INKEY$<>"":wend
-        while INKEY$="":wend
-    end sub
-#endif
+sub saveSprite(sprite as ubyte, lin as ubyte, col as ubyte, tile as ubyte, directionRight as ubyte)
+    if sprite = PROTA_SPRITE then
+        protaX = col
+        protaY = lin
+        protaTile = tile
+        protaDirection = directionRight
+    end if
+    spritesLinColTileAndFrame(sprite, 0) = lin
+    spritesLinColTileAndFrame(sprite, 1) = col
+    spritesLinColTileAndFrame(sprite, 2) = tile
+    spritesLinColTileAndFrame(sprite, 3) = directionRight
+    if spritesLinColTileAndFrame(sprite, 4) = 6 then
+        spritesLinColTileAndFrame(sprite, 4) = 0
+    else
+        spritesLinColTileAndFrame(sprite, 4) = spritesLinColTileAndFrame(sprite, 4) + 1
+    end if
+end sub
 
 sub debugA(value as BYTE)
     PRINT AT 0, 0; "----"
