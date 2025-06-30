@@ -103,7 +103,7 @@ Function checkProtaAndBulletCollision(enemyId As Ubyte) As Ubyte
     Return 0
 End Function
 
-Sub saveAndDraw(enemyId as Ubyte, tile As Ubyte, horizontalDirection As Ubyte = 0, verticalDirection As Ubyte = 0)
+Sub saveAndDraw(enemyId as Ubyte, tile As Ubyte, horizontalDirection As Ubyte, verticalDirection As Ubyte)
     Draw2x2Sprite(tile, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
     saveSprite(enemyId, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), tile + 1, horizontalDirection)
     decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = horizontalDirection
@@ -117,6 +117,27 @@ Sub checkAndDraw(enemyId as Ubyte, tile As Ubyte, enemyCol As Byte, enemyLin As 
         End If
     End If
     Draw2x2Sprite(tile + 1, enemyCol, enemyLin)
+End Sub
+
+Function checkShouldMoveBySpeed(enemySpeed As Ubyte) As Ubyte
+    If enemySpeed = 0 Then
+        If (framec bAnd 15) <> 0 Then Return 1
+    Elseif enemySpeed = 1 Then
+        If (framec bAnd 1) = 0 Then Return 1
+    Elseif enemySpeed = 2 Then
+        If (framec bAnd 3) = 0 Then Return 1
+    End If
+    Return 0
+End Function
+
+Sub updateEnemyCol(enemyId As Ubyte, enemyCol As uByte, enemySpeed As uByte)
+    If checkShouldMoveBySpeed(enemySpeed) Then Return
+    decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = enemyCol
+End Sub
+
+Sub updateEnemyLin(enemyId As Ubyte, enemyLin As uByte, enemySpeed As uByte)
+    If checkShouldMoveBySpeed(enemySpeed) Then Return
+    decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLin
 End Sub
 
 Sub moveEnemies()    
@@ -146,26 +167,6 @@ Sub moveEnemies()
         
         If enemyAlive <= 0 Then continue For
 
-        If Not firstTimeMoveEnemyOnRoom Then
-            If enemySpeed = 0 Then
-                If (framec bAnd 15) <> 0 Then
-                    checkAndDraw(enemyId, tile, enemyCol, enemyLin)
-                    continue For
-                End If
-            Elseif enemySpeed = 1 Then
-                If (framec bAnd 1) = 0 Then
-                    checkAndDraw(enemyId, tile, enemyCol, enemyLin)
-                    continue For
-                End If
-            Elseif enemySpeed = 2 Then
-                If (framec bAnd 3) = 0 Then
-                    checkAndDraw(enemyId, tile, enemyCol, enemyLin)
-                    continue For
-                End If
-            End If
-        End If
-        firstTimeMoveEnemyOnRoom = 0
-
         If enemyColIni = enemyColEnd Then enemyHorizontalDirection = 0
         If enemyLinIni = enemyLinEnd Then enemyVerticalDirection = 0
         
@@ -187,9 +188,9 @@ Sub moveEnemies()
                 End If
             End If
 
-            decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = enemyCol + enemyHorizontalDirection
-            decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLin + enemyVerticalDirection
-                    
+            updateEnemyCol(enemyId, enemyCol + enemyHorizontalDirection, enemySpeed)
+            updateEnemyLin(enemyId, enemyLin + enemyVerticalDirection, enemySpeed)
+
             If tile < 16 Then
                 #ifdef SIDE_VIEW
                     If checkPlatformHasProtaOnTop(decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)) Then
@@ -226,8 +227,8 @@ Sub moveEnemies()
             enemyHorizontalDirection = Sgn(enemyColEnd - enemyColIni)
             enemyVerticalDirection = Sgn(enemyLinEnd - enemyLinIni)
 
-            decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = enemyCol + enemyHorizontalDirection
-            decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLin + enemyVerticalDirection
+            updateEnemyCol(enemyId, enemyCol + enemyHorizontalDirection, enemySpeed)
+            updateEnemyLin(enemyId, enemyLin + enemyVerticalDirection, enemySpeed)
 
             If enemyCol = enemyColIni And enemyLin = enemyLinIni Then
                 saveAndDraw(enemyId, tile + 17, enemyHorizontalDirection, enemyVerticalDirection)
@@ -239,10 +240,10 @@ Sub moveEnemies()
 
             If enemyCol = enemyColEnd Or enemyLin = enemyLinEnd Then
                 If enemyCol = enemyColEnd Then
-                    decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = enemyColIni
+                    updateEnemyCol(enemyId, enemyColIni, enemySpeed)
                 End If
                 If enemyLin = enemyLinEnd Then
-                    decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLinIni
+                    updateEnemyLin(enemyId, enemyLinIni, enemySpeed)
                 End If
             End If
 
