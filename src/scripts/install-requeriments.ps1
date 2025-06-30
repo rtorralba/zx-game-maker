@@ -14,7 +14,7 @@ if ($pythonVersion -lt 3.12) {
     exit 1
 }
 
-$venv = ".\venv\Scripts\Activate.ps1"
+$venv = ".\venv\Scripts\Activate.bat"
 
 if (-not (Test-Path $venv)) {
     Write-Host "Creando entorno virtual venv..." -ForegroundColor Yellow
@@ -23,7 +23,7 @@ if (-not (Test-Path $venv)) {
 
 if (-not $env:VIRTUAL_ENV) {
     Write-Host "Activando entorno virtual venv..." -ForegroundColor Yellow
-    .\venv\Scripts\Activate.ps1
+    .\venv\Scripts\Activate.bat
 }
 
 $requerimentsFile = ".\requeriments.txt"
