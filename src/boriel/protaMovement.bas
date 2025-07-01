@@ -491,12 +491,9 @@ Sub keyboardListen()
 End Sub
 
 Function checkTileObject(tile As Ubyte) As Ubyte
+    If tile < 187 Then Return 0
+
     If tile = ITEM_TILE Then
-        #ifndef ARCADE_MODE
-            If Not screenObjects(currentScreen, SCREEN_OBJECT_ITEM_INDEX) Then
-                Return 0
-            End If
-        #endif
         currentItems = currentItems + ITEMS_INCREMENT
         #ifdef HISCORE_ENABLED
             score = score + 100
@@ -517,42 +514,36 @@ Function checkTileObject(tile As Ubyte) As Ubyte
                 ending()
             End If
         #endif
-        screenObjects(currentScreen, SCREEN_OBJECT_ITEM_INDEX) = 0
         BeepFX_Play(5)
         Return 1
-        #ifdef KEYS_ENABLED
-        Elseif tile = KEY_TILE And screenObjects(currentScreen, SCREEN_OBJECT_KEY_INDEX) Then
-            #ifdef ARCADE_MODE
-                If currentScreen = SCREENS_COUNT Then
-                    ending()
-                Else
-                    moveScreen = 6
-                    Return 1
-                End If
-            #endif
-            currentKeys = currentKeys + 1
-            printLife()
-            #ifdef MESSAGES_ENABLED
-                printMessage("KEY     ", "FOUND!  ", 4, 0)
-            #endif
-            screenObjects(currentScreen, SCREEN_OBJECT_KEY_INDEX) = 0
-            BeepFX_Play(3)
-            Return 1
+    Elseif tile = KEY_TILE Then
+        #ifdef ARCADE_MODE
+            If currentScreen = SCREENS_COUNT Then
+                ending()
+            Else
+                moveScreen = 6
+                Return 1
+            End If
         #endif
-    Elseif tile = LIFE_TILE And screenObjects(currentScreen, SCREEN_OBJECT_LIFE_INDEX) Then
+        currentKeys = currentKeys + 1
+        printLife()
+        #ifdef MESSAGES_ENABLED
+            printMessage("KEY     ", "FOUND!  ", 4, 0)
+        #endif
+        BeepFX_Play(3)
+        Return 1
+    Elseif tile = LIFE_TILE Then
         currentLife = currentLife + LIFE_AMOUNT
         printLife()
-        screenObjects(currentScreen, SCREEN_OBJECT_LIFE_INDEX) = 0
         BeepFX_Play(6)
         Return 1
-        #ifdef AMMO_ENABLED
-        Elseif tile = AMMO_TILE And screenObjects(currentScreen, SCREEN_OBJECT_AMMO_INDEX) Then
-            currentAmmo = currentAmmo + AMMO_INCREMENT
-            printLife()
-            screenObjects(currentScreen, SCREEN_OBJECT_AMMO_INDEX) = 0
-            BeepFX_Play(6)
-            Return 1
-        #endif
+    #ifdef AMMO_ENABLED
+    Elseif tile = AMMO_TILE Then
+        currentAmmo = currentAmmo + AMMO_INCREMENT
+        printLife()
+        BeepFX_Play(6)
+        Return 1
+    #endif
     End If
     Return 0
 End Function
@@ -560,17 +551,32 @@ End Function
 Sub checkObjectContact()
     Dim col As Ubyte = protaX >> 1
     Dim lin As Ubyte = protaY >> 1
+
+    Dim tile As Ubyte = GetTile(col, lin)
     
-    If checkTileObject(GetTile(col, lin)) Then
+    If checkTileObject(tile) Then
+        addScreenObject(tile, col, lin)
         FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col, lin)
         Return
-    Elseif checkTileObject(GetTile(col + 1, lin))
+    End If
+
+    tile = GetTile(col + 1, lin)
+    If checkTileObject(tile) Then
+        addScreenObject(tile, col + 1, lin)
         FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col + 1, lin)
         Return
-    Elseif checkTileObject(GetTile(col, lin + 1))
+    End If
+
+    tile = GetTile(col, lin + 1)
+    If checkTileObject(tile) Then
+        addScreenObject(tile, col, lin + 1)
         FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col, lin + 1)
         Return
-    Elseif checkTileObject(GetTile(col + 1, lin + 1))
+    End If
+  
+    tile = GetTile(col + 1, lin + 1)
+    If checkTileObject(tile) Then
+        addScreenObject(tile, col + 1, lin + 1)
         FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col + 1, lin + 1)
         Return
     End If

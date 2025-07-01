@@ -320,7 +320,22 @@ Sub resetValues()
     currentLife = INITIAL_LIFE
     currentKeys = 2 Mod 2
     currentKeys = 0
-    
+
+    #ifdef USE_BREAKABLE_TILE_INDIVIDUAL
+        For i = 0 To BREAKABLE_TILES_COUNT
+            brokenTiles(i, 0) = 0
+            brokenTiles(i, 1) = 0
+            brokenTiles(i, 2) = 0
+        Next i
+    #endif
+
+    For i = 0 To SCREEN_OBJECTS_COUNT
+        screenObjects(i, 1) = 0
+        screenObjects(i, 2) = 0
+        screenObjects(i, 3) = 0
+        screenObjects(i, 4) = 0
+    Next i
+
     #ifdef ARCADE_MODE
         currentItems = 0
     #Else
@@ -336,8 +351,6 @@ Sub resetValues()
         protaYRespawn = INITIAL_MAIN_CHARACTER_Y
     #endif
 
-    ' removeScreenObjectFromBuffer()
-    screenObjects = screenObjectsInitial
     enemiesPerScreen = enemiesPerScreenInitial
     For i = 0 To SCREENS_COUNT
         screensWon(i) = 0

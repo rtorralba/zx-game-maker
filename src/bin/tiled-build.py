@@ -398,6 +398,7 @@ if idleTime > 0:
     configStr += "const IDLE_TIME as ubyte = " + str(idleTime) + "\n"
 
 breakableTilesCount = 0
+screenObjectsCount = 0
 
 for layer in data['layers']:
     if layer['type'] == 'tilelayer':
@@ -410,12 +411,6 @@ for layer in data['layers']:
 
         for idx, screen in enumerate(layer['chunks']):
             screens.append(array.array('B', screen['data']))
-
-            screenObjects[idx]['ammo'] = 0
-            screenObjects[idx]['key'] = 0
-            screenObjects[idx]['item'] = 0
-            screenObjects[idx]['door'] = 0
-            screenObjects[idx]['life'] = 0
 
             screenAnimatedTiles[idx] = []
 
@@ -433,16 +428,8 @@ for layer in data['layers']:
                 if int(tile) in animatedTilesIds and len(screenAnimatedTiles[idx]) < maxAnimatedTilesPerScreen:
                     screenAnimatedTiles[idx].append([tile, mapX, mapY])
 
-                if tile == keyTile:
-                    screenObjects[idx]['key'] = 1
-                elif tile == itemTile:
-                    screenObjects[idx]['item'] = 1
-                elif tile == doorTile:
-                    screenObjects[idx]['door'] = 1
-                elif tile == lifeTile:
-                    screenObjects[idx]['life'] = 1
-                elif tile == ammoTile:
-                    screenObjects[idx]['ammo'] = 1
+                if tile == keyTile or tile == itemTile or tile == doorTile or tile == lifeTile or tile == ammoTile:
+                    screenObjectsCount += 1
                 
 configStr += "const MAP_SCREENS_WIDTH_COUNT as ubyte = " + str(mapCols) + "\n"
 configStr += "const SCREEN_OBJECT_ITEM_INDEX as ubyte = 0 \n"
@@ -466,8 +453,9 @@ configStr += "  #endif\n"
 configStr += "#endif\n"
 
 with open("output/screenObjects.bin", "wb") as f:
-    for screen in screenObjects:
-        f.write(bytearray([screenObjects[screen]['item'], screenObjects[screen]['key'], screenObjects[screen]['door'], screenObjects[screen]['life'], screenObjects[screen]['ammo']]))
+    f.write(bytearray([0] * screenObjectsCount * 4))
+
+configStr += "CONST SCREEN_OBJECTS_COUNT as ubyte = " + str(screenObjectsCount) + "\n"
 
 with open("output/objectsInScreen.bin", "wb") as f:
     for screen in screenObjects:
