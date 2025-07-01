@@ -164,8 +164,10 @@ Sub moveEnemies()
         
         If enemyBehaviour = 0 Then
             If checkShouldMoveBySpeed(enemySpeed) Then
-                If enemyHorizontalDirection = -1 Then
-                    tile = tile + 16
+                If tile > 15 Then
+                    If enemyHorizontalDirection = -1 Then
+                        tile = tile + 16
+                    End If
                 End If
                 checkAndDraw(enemyId, tile, enemyCol, enemyLin)
                 Continue For
