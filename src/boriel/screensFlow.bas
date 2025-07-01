@@ -320,6 +320,14 @@ Sub resetValues()
     currentLife = INITIAL_LIFE
     currentKeys = 2 Mod 2
     currentKeys = 0
+
+    #ifdef USE_BREAKABLE_TILE_INDIVIDUAL
+        For i = 0 To BREAKABLE_TILES_COUNT
+            brokenTiles(i, 0) = 0
+            brokenTiles(i, 1) = 0
+            brokenTiles(i, 2) = 0
+        Next i
+    #endif
     
     #ifdef ARCADE_MODE
         currentItems = 0
