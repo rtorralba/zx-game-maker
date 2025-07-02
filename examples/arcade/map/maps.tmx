@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.1-99-gec89c545" class="ZXSpectrumGameMaker" orientation="orthogonal" renderorder="left-down" width="132" height="116" tilewidth="8" tileheight="8" infinite="1" nextlayerid="3" nextobjectid="58">
+ <editorsettings>
+  <chunksize width="32" height="22"/>
+ </editorsettings>
+ <properties>
+  <property name="128Kenabled" type="bool" value="true"/>
+  <property name="VTPLAYER_INIT" value="EFAD"/>
+  <property name="VTPLAYER_MUTE" value="EFB5"/>
+  <property name="VTPLAYER_NEXTNOTE" value="EFB2"/>
+  <property name="ammo" type="int" value="10"/>
+  <property name="animatePeriodMain" type="int" value="1"/>
+  <property name="animatePeriodTile" type="int" value="10"/>
+  <property name="arcadeMode" type="bool" value="true"/>
+  <property name="backgroundAttribute" type="int" value="7"/>
+  <property name="bulletDistance" type="int" value="0"/>
+  <property name="damageAmount" type="int" value="10"/>
+  <property name="enemiesRespawn" type="bool" value="true"/>
+  <property name="gameName" value="Game Name"/>
+  <property name="goalItems" type="int" value="4"/>
+  <property name="hiScore" type="bool" value="false"/>
+  <property name="idleTime" type="int" value="30"/>
+  <property name="initialLife" type="int" value="50"/>
+  <property name="itemsCountdown" type="bool" value="true"/>
+  <property name="itemsEnabled" type="bool" value="true"/>
+  <property name="jumpType" propertytype="jumpType" value="accelerated"/>
+  <property name="keysEnabled" type="bool" value="true"/>
+  <property name="killJumpingOnTop" type="bool" value="true"/>
+  <property name="lifeAmount" type="int" value="5"/>
+  <property name="mainCharacterExtraFrame" type="bool" value="true"/>
+  <property name="maxAnimatedTilesPerScreen" type="int" value="10"/>
+  <property name="maxEnemiesPerScreen" type="int" value="3"/>
+  <property name="messagesEnabled" type="bool" value="true"/>
+  <property name="musicEnabled" type="bool" value="true"/>
+  <property name="newBeeperPlayer" type="bool" value="true"/>
+  <property name="redefineKeysEnabled" type="bool" value="false"/>
+  <property name="shooting" type="bool" value="true"/>
+  <property name="shouldKillEnemies" type="bool" value="true"/>
+  <property name="useBreakableTile" propertytype="breakableTilesMode" value="individual"/>
+ </properties>
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="192" columns="32">
+  <image source="tiles.png" width="256" height="48"/>
+  <tile id="2" type="solid"/>
+  <tile id="3" type="solid"/>
+  <tile id="12" type="solid"/>
+  <tile id="13" type="solid"/>
+  <tile id="34" type="solid"/>
+  <tile id="35" type="solid"/>
+  <tile id="44" type="solid"/>
+  <tile id="45" type="solid"/>
+  <tile id="96" type="animated"/>
+  <tile id="98" type="animated"/>
+  <tile id="128" type="animated-damage"/>
+  <tile id="129" type="damage"/>
+  <tile id="166" type="damage"/>
+  <tile id="187" type="ammo"/>
+  <tile id="188" type="door"/>
+  <tile id="189" type="life"/>
+  <tile id="190" type="item"/>
+  <tile id="191" type="key"/>
+ </tileset>
+ <tileset firstgid="193" name="sprites" tilewidth="16" tileheight="16" tilecount="48" columns="16" objectalignment="topleft">
+  <image source="sprites.png" width="256" height="48"/>
+ </tileset>
+ <layer id="1" name="map" width="132" height="116">
+  <data encoding="csv">
+   <chunk x="0" y="0" width="32" height="22">
+3,3,1,1,1,1,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,
+3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,192,1,1,1,1,1,1,1,1,1,1,3,
+3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,3,3,3,1,1,1,1,1,1,1,1,1,1,3,
+3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,
+3,3,1,1,1,1,1,1,1,1,1,1,1,1,191,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,
+3,3,1,1,1,1,1,1,1,1,1,1,1,1,3,3,1,1,1,1,1,1,1,191,1,1,1,1,1,1,1,3,
+3,3,1,1,1,97,99,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,3,1,1,1,1,1,1,1,3,
+3,3,1,1,1,113,114,1,1,1,1,1,1,1,1,1,1,1,191,1,1,1,1,1,1,1,1,1,1,1,1,3,
+3,3,1,1,1,145,146,1,1,1,1,1,1,1,1,1,1,1,3,3,1,1,1,1,1,1,1,1,1,1,1,3,
+3,3,1,1,1,177,178,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,
+3,3,1,1,1,1,1,1,1,1,3,3,3,1,1,1,1,1,1,1,1,190,1,1,1,1,1,1,1,1,1,3,
+3,3,1,1,1,1,1,1,1,1,1,1,1,3,3,1,1,1,1,1,1,3,3,1,1,1,1,1,1,1,1,3,
+3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,
+3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,
+3,3,1,1,1,3,3,3,3,1,1,1,1,1,1,1,1,190,1,1,1,1,1,1,1,1,1,1,1,1,1,3,
+3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,3,3,1,1,1,1,1,77,78,1,1,1,1,1,3,
+3,3,1,1,63,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,109,110,1,1,1,1,1,3,
+1,1,1,1,63,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,141,142,1,1,1,1,1,1,
+1,1,1,1,63,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,190,1,1,173,174,1,188,1,188,1,1,
+4,4,1,1,4,4,129,129,129,129,129,129,129,129,129,167,167,167,167,4,4,4,4,4,4,4,4,4,4,4,4,4,
+36,36,1,1,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36
+</chunk>
+   <chunk x="32" y="0" width="32" height="22">
+3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,1,1,1,1,1,1,1,1,1,3,3,
+3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,3,3,
+3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,64,1,1,1,1,1,1,1,1,1,3,3,
+3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,64,1,1,1,1,1,1,1,1,1,3,3,
+3,1,1,87,88,89,90,1,1,68,68,68,68,68,68,68,68,68,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
+3,1,1,119,120,121,122,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,3,
+3,1,1,151,152,153,154,1,1,1,1,1,1,1,191,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,3,
+3,1,1,183,184,185,186,1,1,1,1,1,3,3,3,3,3,3,3,1,1,1,1,1,1,1,1,1,1,1,3,3,
+3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,115,116,117,118,1,1,1,1,1,3,3,
+3,1,1,1,1,1,1,1,1,1,191,1,1,1,1,1,1,1,1,1,1,147,148,149,150,1,1,1,1,1,3,3,
+3,1,1,1,1,1,1,1,1,1,3,3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,3,
+3,1,1,1,1,1,1,3,3,3,3,1,1,1,1,1,1,191,1,1,1,1,1,1,1,1,1,1,1,1,3,3,
+3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,3,3,3,3,3,1,1,1,1,1,1,1,1,1,3,3,
+3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,3,
+3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,3,
+3,1,1,1,1,1,1,1,1,1,1,1,1,3,3,3,3,3,1,1,1,1,1,1,1,1,1,1,1,1,3,3,
+3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,191,1,192,1,1,1,1,3,3,
+3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,3,3,3,1,1,1,1,3,3,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,3,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,3,
+4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,129,129,4,4,4,4,
+36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36
+</chunk>
+  </data>
+ </layer>
+ <objectgroup id="2" name="objects">
+  <object id="26" name="mainCharacter" type="mainCharacter" x="152" y="144">
+   <point/>
+  </object>
+  <object id="32" name="platform_1" type="platform" gid="201" x="280" y="120" width="16" height="16"/>
+  <object id="33" name="platform_1_end" x="344" y="120">
+   <properties>
+    <property name="platform_1" type="object" value="32"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="34" type="enemy" gid="219" x="80" y="64" width="16" height="16">
+   <properties>
+    <property name="speed" type="int" propertytype="enemySpeed" value="0"/>
+   </properties>
+  </object>
+  <object id="43" type="enemy" gid="215" x="264" y="80" width="16" height="16">
+   <properties>
+    <property name="move" propertytype="enemyMovementTypes" value="noReturn"/>
+    <property name="speed" type="int" propertytype="enemySpeed" value="2"/>
+   </properties>
+  </object>
+  <object id="44" x="320" y="24">
+   <properties>
+    <property name="enemy" type="object" value="43"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="47" type="enemy" gid="211" x="360" y="144" width="16" height="16">
+   <properties>
+    <property name="life" type="int" value="3"/>
+    <property name="speed" type="int" propertytype="enemySpeed" value="0"/>
+   </properties>
+  </object>
+  <object id="48" x="424" y="112">
+   <properties>
+    <property name="enemy" type="object" value="47"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="57" name="mainCharacter" type="mainCharacter" x="280" y="144">
+   <point/>
+  </object>
+ </objectgroup>
+</map>
