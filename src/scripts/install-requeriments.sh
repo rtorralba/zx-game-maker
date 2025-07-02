@@ -8,15 +8,6 @@ else
     exit 1
 fi
 
-pythonVersion=$(python -c 'import sys; print(sys.version_info.major + sys.version_info.minor / 100)')
-requiredVersion=3.12
-
-if (( $(echo "$pythonVersion < $requiredVersion" | bc -l) )); then
-    echo "La versión de Python es menor que 3.12. Por favor, instala Python 3.12 o superior."
-    read -p "Pulse una tecla para cerrar..."
-    exit 1
-fi
-
 # Crear entorno virtual si no existe
 if [ ! -d "venv" ]; then
     echo "Creando entorno virtual venv..."
