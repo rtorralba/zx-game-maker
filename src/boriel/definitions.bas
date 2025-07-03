@@ -118,8 +118,6 @@ Dim bulletEndPositionY as Ubyte = 0
 Const FIRST_RUNNING_PROTA_SPRITE_RIGHT As Ubyte = 1
 Const FIRST_RUNNING_PROTA_SPRITE_LEFT As Ubyte = 5
 
-Dim spritesLinColTileAndFrame(MAX_ENEMIES_PER_SCREEN, 4) As Ubyte
-
 Const ENEMY_TILE As Ubyte = 0
 Const ENEMY_LIN_INI As Ubyte = 1
 Const ENEMY_COL_INI As Ubyte = 2

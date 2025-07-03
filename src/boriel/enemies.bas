@@ -105,7 +105,6 @@ End Function
 
 Sub saveAndDraw(enemyId as Ubyte, tile As Ubyte, horizontalDirection As Ubyte, verticalDirection As Ubyte)
     Draw2x2Sprite(tile, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
-    saveSprite(enemyId, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), tile + 1, horizontalDirection)
     decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = horizontalDirection
     decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = verticalDirection
 End Sub
@@ -130,8 +129,9 @@ Function checkShouldMoveBySpeed(enemySpeed As Ubyte) As Ubyte
     Return 0
 End Function
 
-Sub moveEnemies()    
-    For enemyId=0 To enemiesPerScreen(currentScreen)
+Sub moveEnemies()
+    If enemiesPerScreen(currentScreen) = 0 Then Return
+    For enemyId=0 To enemiesPerScreen(currentScreen) - 1
         Dim enemyAlive As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_ALIVE)
 
         If enemyAlive <= 0 Then continue For
@@ -198,7 +198,9 @@ Sub moveEnemies()
                     If checkPlatformHasProtaOnTop(enemyCol, enemyLin) Then
                         jumpCurrentKey = jumpStopValue
                         If enemyVerticalDirection Then
-                            protaY = enemyLin - 4
+                            If Not CheckCollision(protaX, enemyLin - 4) Then
+                                protaY = enemyLin - 4
+                            End If
                         End If
                         
                         If enemyHorizontalDirection Then
@@ -258,9 +260,13 @@ Sub moveEnemies()
                 tile = tile + 1
             End If
 
-            saveAndDraw(enemyId, tile + 1, enemyHorizontalDirection, enemyVerticalDirection)
+            If checkProtaAndBulletCollision(enemyId) Then
+                If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <= 0 Then
+                    continue For
+                End If
+            End If
 
-            checkProtaAndBulletCollision(enemyId)
+            saveAndDraw(enemyId, tile + 1, enemyHorizontalDirection, enemyVerticalDirection)
         End If
     Next enemyId
 End Sub

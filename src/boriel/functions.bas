@@ -16,11 +16,11 @@ sub decrementLife()
             invincibleFrame = framec
             
             #ifdef LIVES_MODE_GRAVEYARD
-                saveSprite(PROTA_SPRITE, protaY, protaX, 15, 0)
+                saveProta(protaY, protaX, 15, 0)
             #endif
 
             #ifdef LIVES_MODE_RESPAWN
-                saveSprite(PROTA_SPRITE, protaYRespawn, protaXRespawn, 1, protaDirection)
+                saveProta(protaYRespawn, protaXRespawn, 1, protaDirection)
             #endif
         else
             currentLife = 0
@@ -221,22 +221,11 @@ end sub
     end sub
 #endif
 
-sub saveSprite(sprite as ubyte, lin as ubyte, col as ubyte, tile as ubyte, directionRight as ubyte)
-    if sprite = PROTA_SPRITE then
-        protaX = col
-        protaY = lin
-        protaTile = tile
-        protaDirection = directionRight
-    end if
-    spritesLinColTileAndFrame(sprite, 0) = lin
-    spritesLinColTileAndFrame(sprite, 1) = col
-    spritesLinColTileAndFrame(sprite, 2) = tile
-    spritesLinColTileAndFrame(sprite, 3) = directionRight
-    if spritesLinColTileAndFrame(sprite, 4) = 6 then
-        spritesLinColTileAndFrame(sprite, 4) = 0
-    else
-        spritesLinColTileAndFrame(sprite, 4) = spritesLinColTileAndFrame(sprite, 4) + 1
-    end if
+sub saveProta(lin as ubyte, col as ubyte, tile as ubyte, directionRight as ubyte)
+    protaX = col
+    protaY = lin
+    protaTile = tile
+    protaDirection = directionRight
 end sub
 
 Sub addScreenObject(tile As Ubyte, col As Ubyte, lin As Ubyte)

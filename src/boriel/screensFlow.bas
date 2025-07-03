@@ -189,7 +189,7 @@ Sub playGame()
             protaYRespawn = INITIAL_MAIN_CHARACTER_Y
         #endif
         
-        saveSprite(PROTA_SPRITE, INITIAL_MAIN_CHARACTER_Y, INITIAL_MAIN_CHARACTER_X, 1, 1)
+        saveProta(INITIAL_MAIN_CHARACTER_Y, INITIAL_MAIN_CHARACTER_X, 1, 1)
     #endif
     swapScreen()
     resetValues()
@@ -247,7 +247,7 @@ Sub playGame()
             End If
 
             #ifdef LIVES_MODE_GRAVEYARD
-                if Not invincible Then saveSprite(PROTA_SPRITE, protaYRespawn, protaXRespawn, 1, protaDirection)
+                if Not invincible Then saveProta(protaYRespawn, protaXRespawn, 1, protaDirection)
             #endif
         End If
         
@@ -293,11 +293,11 @@ Sub gameOver()
             dzx0Standard(GAMEOVER_SCREEN_ADDRESS, $4000)
             PaginarMemoria(0)
         #Else
-            saveSprite(PROTA_SPRITE, protaY, protaX, 15, 0)
+            saveProta(protaY, protaX, 15, 0)
             Print AT 7, 12; "GAME OVER"
         #endif
     #Else
-        saveSprite(PROTA_SPRITE, protaY, protaX, 15, 0)
+        saveProta(protaY, protaX, 15, 0)
         Print at 7, 12; "GAME OVER"
     #endif
     
@@ -375,7 +375,7 @@ Sub swapScreen()
     bulletPositionX = 0
     #ifdef ARCADE_MODE
         countItemsOnTheScreen()
-        saveSprite(PROTA_SPRITE, mainCharactersArray(currentScreen, 1), mainCharactersArray(currentScreen, 0), 1, 1)
+        saveProta(mainCharactersArray(currentScreen, 1), mainCharactersArray(currentScreen, 0), 1, 1)
 
         #ifdef LIVES_MODE_ENABLED
             protaXRespawn = mainCharactersArray(currentScreen, 0)

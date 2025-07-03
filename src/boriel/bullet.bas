@@ -141,7 +141,6 @@ sub damageEnemy(enemyToKill as Ubyte)
 
         x = decompressedEnemiesScreen(enemyToKill, ENEMY_CURRENT_COL)
         y = decompressedEnemiesScreen(enemyToKill, ENEMY_CURRENT_LIN)
-        saveSprite(enemyToKill, 0, 0, 0, 0)
         Draw2x2Sprite(BURST_SPRITE_ID, x, y)
         
         BeepFX_Play(0)

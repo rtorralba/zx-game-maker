@@ -300,7 +300,7 @@ else:
 with open("output/damageTiles.bin", "wb") as f:
     f.write(bytearray(damageTiles))
 
-configStr += "#define ONSCREEN_2x2_SPRITES " + str(maxEnemiesPerScreen) + "\n"
+configStr += "#define ONSCREEN_2x2_SPRITES " + str(maxEnemiesPerScreen + 1) + "\n"
 
 configStr += "const DAMAGE_TILES_COUNT as ubyte = " + str(damageTilesCount) + "\n"
 
