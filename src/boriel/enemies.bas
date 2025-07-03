@@ -131,7 +131,7 @@ Function checkShouldMoveBySpeed(enemySpeed As Ubyte) As Ubyte
 End Function
 
 Sub moveEnemies()    
-    For enemyId=0 To enemiesPerScreen(currentScreen) - 1
+    For enemyId=0 To enemiesPerScreen(currentScreen)
         Dim enemyAlive As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_ALIVE)
 
         If enemyAlive <= 0 Then continue For
