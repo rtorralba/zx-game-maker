@@ -2,10 +2,10 @@
     Function checkPlatformHasProtaOnTop(x As Ubyte, y As Ubyte) As Ubyte
         If jumpCurrentKey <> jumpStopValue Then Return 0
         
-        Dim protaX1 As Ubyte = protaX + 4
+        Dim protaX1 As Ubyte = protaX + 2
         Dim protaY1 As Ubyte = protaY + 4
         
-        If protaX > x + 4 Then Return 0
+        If protaX > x + 2 Then Return 0
         If protaX1 < x Then Return 0
         If protaY > y + 2 Then Return 0
         If protaY1 < y - 2 Then Return 0
