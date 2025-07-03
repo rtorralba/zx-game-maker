@@ -2,10 +2,10 @@
     Function checkPlatformHasProtaOnTop(x As Ubyte, y As Ubyte) As Ubyte
         If jumpCurrentKey <> jumpStopValue Then Return 0
         
-        Dim protaX1 As Ubyte = protaX + 4
+        Dim protaX1 As Ubyte = protaX + 2
         Dim protaY1 As Ubyte = protaY + 4
         
-        If protaX > x + 4 Then Return 0
+        If protaX > x + 2 Then Return 0
         If protaX1 < x Then Return 0
         If protaY > y + 2 Then Return 0
         If protaY1 < y - 2 Then Return 0
@@ -131,7 +131,7 @@ Function checkShouldMoveBySpeed(enemySpeed As Ubyte) As Ubyte
 End Function
 
 Sub moveEnemies()    
-    For enemyId=0 To enemiesPerScreen(currentScreen) - 1
+    For enemyId=0 To enemiesPerScreen(currentScreen)
         Dim enemyAlive As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_ALIVE)
 
         If enemyAlive <= 0 Then continue For
@@ -164,8 +164,10 @@ Sub moveEnemies()
         
         If enemyBehaviour = 0 Then
             If checkShouldMoveBySpeed(enemySpeed) Then
-                If enemyHorizontalDirection = -1 Then
-                    tile = tile + 16
+                If tile > 15 Then
+                    If enemyHorizontalDirection = -1 Then
+                        tile = tile + 16
+                    End If
                 End If
                 checkAndDraw(enemyId, tile, enemyCol, enemyLin)
                 Continue For
