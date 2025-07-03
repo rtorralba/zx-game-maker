@@ -260,9 +260,13 @@ Sub moveEnemies()
                 tile = tile + 1
             End If
 
-            saveAndDraw(enemyId, tile + 1, enemyHorizontalDirection, enemyVerticalDirection)
+            If checkProtaAndBulletCollision(enemyId) Then
+                If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <= 0 Then
+                    continue For
+                End If
+            End If
 
-            checkProtaAndBulletCollision(enemyId)
+            saveAndDraw(enemyId, tile + 1, enemyHorizontalDirection, enemyVerticalDirection)
         End If
     Next enemyId
 End Sub
