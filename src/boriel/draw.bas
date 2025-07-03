@@ -163,7 +163,7 @@ End Sub
 Sub moveToScreen(direction As Ubyte)
     ' removeAllObjects()
     If direction = 6 Then
-        saveSprite(PROTA_SPRITE, protaY, 0, protaTile, protaDirection)
+        saveProta(protaY, 0, protaTile, protaDirection)
         currentScreen = currentScreen + 1
         
         #ifdef LIVES_MODE_ENABLED
@@ -171,7 +171,7 @@ Sub moveToScreen(direction As Ubyte)
             protaYRespawn = protaY
         #endif
     Elseif direction = 4 Then
-        saveSprite(PROTA_SPRITE, protaY, 60, protaTile, protaDirection)
+        saveProta(protaY, 60, protaTile, protaDirection)
         currentScreen = currentScreen - 1
         
         #ifdef LIVES_MODE_ENABLED
@@ -179,7 +179,7 @@ Sub moveToScreen(direction As Ubyte)
             protaYRespawn = protaY
         #endif
     Elseif direction = 2 Then
-        saveSprite(PROTA_SPRITE, 0, protaX, protaTile, protaDirection)
+        saveProta(0, protaX, protaTile, protaDirection)
         currentScreen = currentScreen + MAP_SCREENS_WIDTH_COUNT
         
         #ifdef LIVES_MODE_ENABLED
@@ -187,7 +187,7 @@ Sub moveToScreen(direction As Ubyte)
             protaYRespawn = 0
         #endif
     Elseif direction = 8 Then
-        saveSprite(PROTA_SPRITE, MAX_LINE, protaX, protaTile, protaDirection)
+        saveProta(MAX_LINE, protaX, protaTile, protaDirection)
         #ifdef SIDE_VIEW
             jumpCurrentKey = 0
         #endif

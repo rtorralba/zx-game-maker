@@ -165,7 +165,7 @@ End Function
                 Return
             End If
             
-            saveSprite(PROTA_SPRITE, protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
+            saveProta(protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
             jumpCurrentKey = jumpCurrentKey + 1
         End Sub
     #endif
@@ -190,7 +190,7 @@ End Function
             
             If pressingUp() And jumpEnergy > 0 Then
                 If Not CheckCollision(protaX, protaY - 1) Then
-                    saveSprite(PROTA_SPRITE, protaY - 1, protaX, getNextFrameJumpingFalling(), protaDirection)
+                    saveProta(protaY - 1, protaX, getNextFrameJumpingFalling(), protaDirection)
                 End If
                 jumpCurrentKey = jumpCurrentKey + 1
                 jumpEnergy = jumpEnergy - 1
@@ -223,9 +223,9 @@ End Function
                     protaY = protaY - 1
                 End If
                 If protaDirection Then
-                    saveSprite(PROTA_SPRITE, protaY, protaX, FIRST_RUNNING_PROTA_SPRITE_RIGHT, protaDirection)
+                    saveProta(protaY, protaX, FIRST_RUNNING_PROTA_SPRITE_RIGHT, protaDirection)
                 Else
-                    saveSprite(PROTA_SPRITE, protaY, protaX, FIRST_RUNNING_PROTA_SPRITE_LEFT, protaDirection)
+                    saveProta(protaY, protaX, FIRST_RUNNING_PROTA_SPRITE_LEFT, protaDirection)
                 End If
             End If
             Return 0
@@ -238,9 +238,9 @@ End Function
                 moveScreen = 2
             Else
                 #ifndef JETPACK_FUEL
-                    saveSprite(PROTA_SPRITE, protaY + 2, protaX, getNextFrameJumpingFalling(), protaDirection)
+                    saveProta(protaY + 2, protaX, getNextFrameJumpingFalling(), protaDirection)
                 #Else
-                    saveSprite(PROTA_SPRITE, protaY + 1, protaX, getNextFrameJumpingFalling(), protaDirection)
+                    saveProta(protaY + 1, protaX, getNextFrameJumpingFalling(), protaDirection)
                 #endif
             End If
             landed = 0
@@ -262,7 +262,7 @@ End Function
         currentBulletSpriteId = BULLET_SPRITE_RIGHT_ID
         If protaDirection Then
             #ifdef IDLE_ENABLED
-                saveSprite(PROTA_SPRITE, protaY, protaX, 1, 1)
+                saveProta(protaY, protaX, 1, 1)
             #endif
             
             currentBulletSpriteId = BULLET_SPRITE_RIGHT_ID
@@ -278,7 +278,7 @@ End Function
             End If
         Elseif protaDirection = 0
             #ifdef IDLE_ENABLED
-                saveSprite(PROTA_SPRITE, protaY, protaX, 5, 0)
+                saveProta(protaY, protaX, 5, 0)
             #endif
             currentBulletSpriteId = BULLET_SPRITE_LEFT_ID
             bulletPositionX = protaX
@@ -380,7 +380,7 @@ Sub leftKey()
             protaFrame = 2
         #endif
         protaDirection = 0
-        saveSprite(PROTA_SPRITE, protaY, protaX, getNextFrameRunning(), protaDirection)
+        saveProta(protaY, protaX, getNextFrameRunning(), protaDirection)
     End If
     
     If protaX = 0 Then
@@ -391,7 +391,7 @@ Sub leftKey()
             moveScreen = 4
         #endif
     Elseif canMoveLeft()
-        saveSprite(PROTA_SPRITE, protaY, protaX - 1, protaFrame + 1, 0)
+        saveProta(protaY, protaX - 1, protaFrame + 1, 0)
     End If
 End Sub
 
@@ -399,7 +399,7 @@ Sub rightKey()
     If protaDirection <> 1 Then
         protaFrame = 0
         protaDirection = 1
-        saveSprite(PROTA_SPRITE, protaY, protaX, getNextFrameRunning(), protaDirection)
+        saveProta(protaY, protaX, getNextFrameRunning(), protaDirection)
     End If
     
     If protaX = 60 Then
@@ -410,7 +410,7 @@ Sub rightKey()
             moveScreen = 6
         #endif
     Elseif canMoveRight()
-        saveSprite(PROTA_SPRITE, protaY, protaX + 1, protaFrame + 1, 1)
+        saveProta(protaY, protaX + 1, protaFrame + 1, 1)
     End If
 End Sub
 
@@ -423,7 +423,7 @@ Sub upKey()
             protaDirection = 8
         End If
         If canMoveUp() Then
-            saveSprite(PROTA_SPRITE, protaY - 1, protaX, protaFrame + 1, 8)
+            saveProta(protaY - 1, protaX, protaFrame + 1, 8)
             If protaY < 2 Then
                 moveScreen = 8
             End If
@@ -443,7 +443,7 @@ Sub downKey()
                     moveScreen = 2
                 #endif
             Else
-                saveSprite(PROTA_SPRITE, protaY + 1, protaX, protaFrame + 1, 2)
+                saveProta(protaY + 1, protaX, protaFrame + 1, 2)
             End If
         End If
     #Else
@@ -626,9 +626,9 @@ Sub protaMovement()
                 
                 If framec - lastFrameTiles = ANIMATE_PERIOD_TILE - 2 Then
                     If protaTile = 13 Then
-                        saveSprite(PROTA_SPRITE, protaY, protaX, 14, protaDirection)
+                        saveProta(protaY, protaX, 14, protaDirection)
                     Else
-                        saveSprite(PROTA_SPRITE, protaY, protaX, 13, protaDirection)
+                        saveProta(protaY, protaX, 13, protaDirection)
                     End If
                 End If
             End If
