@@ -97,7 +97,7 @@ End Sub
     
     Sub redefineKeys()
         Ink 7: Paper 0: Border 0: BRIGHT 0: FLASH 0: Cls
-        
+
         #ifdef ENABLED_128k
             #ifdef TITLE_MUSIC_ENABLED
                 VortexTracker_Stop()
@@ -130,10 +130,6 @@ End Sub
         ' Print AT 16,20; keyOption
         '
         ' keyOption = ""
-        
-        Print AT 20,2;"Press enter To Return To menu"
-        Do
-        Loop Until MultiKeys(KEYENTER)
         
         showMenu()
     End Sub
@@ -364,8 +360,10 @@ Sub resetValues()
     
     currentAmmo = INITIAL_AMMO
     
+    brokenTilesCurrentIndex = 0
+    screenObjectsCurrentIndex = 0
+
     redrawScreen()
-    ' drawSprites()
 End Sub
 
 Sub swapScreen()

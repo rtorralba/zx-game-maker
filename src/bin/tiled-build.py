@@ -453,7 +453,7 @@ configStr += "  #endif\n"
 configStr += "#endif\n"
 
 with open("output/screenObjects.bin", "wb") as f:
-    f.write(bytearray([0] * screenObjectsCount * 4))
+    f.write(bytearray([0] * (screenObjectsCount + 1) * 4))
 
 configStr += "CONST SCREEN_OBJECTS_COUNT as ubyte = " + str(screenObjectsCount) + "\n"
 
