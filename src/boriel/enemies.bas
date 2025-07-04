@@ -163,16 +163,6 @@ Sub moveEnemies()
         If enemyLinIni = enemyLinEnd Then enemyVerticalDirection = 0
         
         If enemyBehaviour = 0 Then
-            If checkShouldMoveBySpeed(enemySpeed) Then
-                If tile > 15 Then
-                    If enemyHorizontalDirection = -1 Then
-                        tile = tile + 16
-                    End If
-                End If
-                checkAndDraw(enemyId, tile, enemyCol, enemyLin)
-                Continue For
-            End If
-
             If enemyLinEnd = -1 Then
                 enemyHorizontalDirection = Sgn(protaX - enemyCol)
                 enemyVerticalDirection = Sgn(protaY - enemyLin)
@@ -188,6 +178,16 @@ Sub moveEnemies()
                         enemyVerticalDirection = enemyVerticalDirection * -1
                     End If
                 End If
+            End If
+
+            If checkShouldMoveBySpeed(enemySpeed) Then
+                If tile > 15 Then
+                    If enemyHorizontalDirection = -1 Then
+                        tile = tile + 16
+                    End If
+                End If
+                checkAndDraw(enemyId, tile, enemyCol, enemyLin)
+                Continue For
             End If
 
             enemyCol = enemyCol + enemyHorizontalDirection
