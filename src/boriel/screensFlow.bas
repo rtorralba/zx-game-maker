@@ -233,7 +233,6 @@ Sub playGame()
         drawSprites()
         
         If moveScreen <> 0 Then
-            firstTimeMoveEnemyOnRoom = 1
             moveToScreen(moveScreen)
             moveScreen = 0
         End If
