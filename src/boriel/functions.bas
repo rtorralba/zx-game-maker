@@ -228,6 +228,17 @@ sub saveProta(lin as ubyte, col as ubyte, tile as ubyte, directionRight as ubyte
     protaDirection = directionRight
 end sub
 
+Sub addScreenObject(tile As Ubyte, col As Ubyte, lin As Ubyte)
+    If screenObjectsCurrentIndex >= SCREEN_OBJECTS_COUNT Then Return
+    
+    screenObjects(screenObjectsCurrentIndex, 0) = currentScreen
+    screenObjects(screenObjectsCurrentIndex, 1) = tile
+    screenObjects(screenObjectsCurrentIndex, 2) = col
+    screenObjects(screenObjectsCurrentIndex, 3) = lin
+    
+    screenObjectsCurrentIndex = screenObjectsCurrentIndex + 1
+End Sub
+
 sub debugA(value as BYTE)
     PRINT AT 0, 0; "----"
     PRINT AT 0, 0; value
