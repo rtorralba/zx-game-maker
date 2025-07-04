@@ -7,7 +7,6 @@
 '     End If
 ' #endif
 
-Const PROTA_SPRITE As Ubyte = 5
 Const BULLET_SPRITE_RIGHT_ID As Ubyte = 49
 Const BULLET_SPRITE_LEFT_ID As Ubyte = 50
 #ifdef OVERHEAD_VIEW
@@ -137,5 +136,3 @@ Const ENEMY_SPEED As Ubyte = 11
 #endif
 
 Const ENEMY_DOOR_TILE As Ubyte = 63
-
-Dim firstTimeMoveEnemyOnRoom As Ubyte = 1
