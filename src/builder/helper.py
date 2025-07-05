@@ -1,8 +1,9 @@
+import json
 import os
+import subprocess
 import sys
 from pathlib import Path
-import json
-import subprocess
+# import fileinput
 
 # create function to get os separator
 def getOsSeparator():
@@ -11,23 +12,25 @@ def getOsSeparator():
     else:
         return "/"
 
-ASSETS_FOLDER = str(Path("../assets/")) + getOsSeparator()
-BIN_FOLDER = str(Path("../src/bin/")) + getOsSeparator()
-OUTPUT_FOLDER = str(Path("output/")) + getOsSeparator()
-SCREENS_FOLDER = str(Path(ASSETS_FOLDER + "screens/")) + getOsSeparator()
-MAP_FOLDER = str(Path(ASSETS_FOLDER + "map/")) + getOsSeparator()
-MAPS_FILE = str(Path(ASSETS_FOLDER + "map/maps.tmx"))
-HUD_MAP_FILE = str(Path(ASSETS_FOLDER + "screens/hud.tmx"))
-MAPS_PROJECT = str(Path(ASSETS_FOLDER + "map/maps.tiled-project"))
-DIST_FOLDER = str(Path("../dist/")) + getOsSeparator()
+ASSETS_FOLDER = Path("../assets/")
+BIN_FOLDER = Path("../src/bin/")
+OUTPUT_FOLDER = Path("output/")
+SCREENS_FOLDER = ASSETS_FOLDER / "screens"
+MAP_FOLDER = ASSETS_FOLDER / "map"
+# MAPS_FILE = ASSETS_FOLDER / "map/maps.tmx"
+MAPS_FILE = MAP_FOLDER / "maps.tmx"
+# HUD_MAP_FILE = ASSETS_FOLDER / "screens/hud.tmx"
+HUD_MAP_FILE = SCREENS_FOLDER / "hud.tmx"
+# MAPS_PROJECT = ASSETS_FOLDER / "map/maps.tiled-project"
+MAPS_PROJECT = MAP_FOLDER / "maps.tiled-project"
+DIST_FOLDER = Path("../dist")
 INITIAL_ADDRESS = 49152
 MEMORY_BANK_SIZE = 16384
 
+EJECUTABLE_TILED = Path(os.environ["ProgramFiles"], "Tiled/tiled.exe") if os.name == "nt" else "tiled"
+
 def getZx0():
-    if os.name == "nt":
-        return "zx0.exe"
-    else:
-        return "zx0"
+    return "zx0.exe" if os.name == "nt" else "zx0"
 
 verbose = False
 
@@ -38,68 +41,63 @@ def setVerbose(value):
 def runCommand(command):
     global verbose
     if verbose:
-        result = subprocess.call(command, shell=True)
+        result = subprocess.run(command).returncode
     else:
-        result = subprocess.call(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        result = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode
     if result != 0:
-        print("Error executing command: " + command)
+        print(f"Error executing command: {command}")
         sys.exit(1)
 
 def getPythonExecutable():
-    return str(Path(sys.executable)) + " "
+    return Path(sys.executable)
 
 def runPythonScript(script):
-    runCommand(getPythonExecutable() + script)
+    runCommand([getPythonExecutable(), script])
 
 def getTiledExportCommand():
-    if os.name == "nt":
-        program_files = os.environ["ProgramFiles"]
-        return "\"" + program_files + "\\Tiled\\tiled.exe\" --export-map json " + MAPS_FILE + " " + str(Path("output/maps.json"))
-    else:
-        return "tiled --export-map json " + MAPS_FILE + " " + str(Path("output/maps.json"))
+    return [EJECUTABLE_TILED, "--export-map json", MAPS_FILE, Path(OUTPUT_FOLDER,"maps.json")]
 
 def tiledExport():
     runCommand(getTiledExportCommand())
 
 def hudTiledExport():
-    if os.name == "nt":
-        program_files = os.environ["ProgramFiles"]
-        runCommand("\"" + program_files + "\\Tiled\\tiled.exe\" --export-map json " + HUD_MAP_FILE + " " + str(Path("output/hud.json")))
-    else:
-        runCommand("tiled --export-map json " + HUD_MAP_FILE + " " + str(Path("output/hud.json")))
+    runCommand([EJECUTABLE_TILED, "--export-map json", HUD_MAP_FILE, Path(OUTPUT_FOLDER, "hud.json")])
 
 def getProjectName():
-    with open(str(Path("output/maps.json")), "r") as f:
+    with Path(OUTPUT_FOLDER, "maps.json").open(mode="r") as f:
         maps_json = json.load(f)
-    project_name = next((prop["value"] for prop in maps_json["properties"] if prop["name"] == "gameName"), "Game Name")
-    return project_name
+    return next((prop["value"] for prop in maps_json["properties"] if prop["name"] == "gameName"), "Game Name")
 
 def getProjectFileName():
     return getProjectName().replace(" ", "-")
 
 def getEnabled128K():
-    with open(OUTPUT_FOLDER + "maps.json", "r") as f:
+    with Path(OUTPUT_FOLDER, "maps.json").open(mode="r") as f:
         maps_json = json.load(f)
     return any(prop["name"] == "128Kenabled" and prop["value"] for prop in maps_json["properties"])
 
 def getGameView():
-    with open(OUTPUT_FOLDER + "maps.json", "r") as f:
+    with Path(OUTPUT_FOLDER, "maps.json").open(mode="r") as f:
         maps_json = json.load(f)
     return next((prop["value"] for prop in maps_json["properties"] if prop["name"] == "gameView"), 'side')
 
 def getUseBreakableTile():
-    with open(OUTPUT_FOLDER + "maps.json", "r") as f:
+    with Path(OUTPUT_FOLDER, "maps.json").open(mode="r") as f:
         maps_json = json.load(f)
     return any(prop["name"] == "useBreakableTile" and prop["value"] for prop in maps_json["properties"])
 
-def concatenateFiles(output_file, input_files):
+def concatenateFiles(output_file=None, input_files=None):
     with open(output_file, "wb") as out_file:
         for file in input_files:
             with open(file, "rb") as in_file:
                 out_file.write(in_file.read())
 
+    # with open(output_file, "wb") as out_file:
+    #     with fileinput.input(files=input_files, mode="rb") as f:
+    #         out_file.write(f.read())
+
 def screenExists(screen_name):  
-    return os.path.isfile(SCREENS_FOLDER + screen_name + ".scr")
+    return Path(SCREENS_FOLDER, f"{screen_name}.scr").is_file()
 
 def musicExists(music_name):
-    return os.path.isfile(ASSETS_FOLDER + "music/" + music_name + ".tap")
+    return Path(ASSETS_FOLDER, "music", f"{music_name}.tap").is_file()

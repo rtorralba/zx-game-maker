@@ -4,6 +4,9 @@ import os
 import sys
 import hashlib
 import matplotlib.pyplot as plt
+from pathlib import Path
+
+DIST_PATH = Path("dist")
 
 # Función que genera un color hex a partir de una cadena
 def stringToColor(s):
@@ -51,8 +54,8 @@ ax.set_title(f"Distribución de memoria ({free} bytes libres)")
 ax.legend(wedges, labels, title="Categorías", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
 
 # Guardar gráfico
-if not os.path.exists("dist"):
-    os.mkdir("dist")
+if not DIST_PATH.exists():
+    DIST_PATH.mkdir()
 
 output_file = sys.argv[2]
 if not output_file.endswith(".png"):
@@ -60,4 +63,4 @@ if not output_file.endswith(".png"):
 
 plt.savefig(f"output/{output_file}", format='png', dpi=150, bbox_inches="tight")
 
-print(f"Gráfico guardado en dist/{output_file}")
+print(f"Gráfico guardado en {DIST_PATH / output_file}")    # dist ???

@@ -8,16 +8,18 @@ import os
 from pprint import pprint
 import subprocess
 import sys
+from pathlib import Path
 
 def exitWithErrorMessage(message):
     print('\n\n=====================================================================================')
     sys.exit('ERROR: ' + message + '\n=====================================================================================\n\n')
 
-outputDir = 'output/'
+bin_path = Path("bin")
+outputDir = 'output'
+output_path = Path(outputDir)
 
-f = open(outputDir + 'maps.json')
-
-data = json.load(f)
+with Path(output_path, 'maps.json').open() as f:
+    data = json.load(f)
 
 # Screens count per row
 screenWidth = data['editorsettings']['chunksize']['width']
@@ -297,7 +299,7 @@ else:
 
 
 # save damage tiles in file .bin instead variable
-with open("output/damageTiles.bin", "wb") as f:
+with Path(output_path, "damageTiles.bin").open(mode="wb") as f:
     f.write(bytearray(damageTiles))
 
 configStr += "#define ONSCREEN_2x2_SPRITES " + str(maxEnemiesPerScreen + 1) + "\n"
@@ -465,11 +467,11 @@ configStr += "    Dim jumpEnergy As Ubyte = jumpStepsCount\n"
 configStr += "  #endif\n"
 configStr += "#endif\n"
 
-with open("output/screenObjects.bin", "wb") as f:
+with Path(output_path, "screenObjects.bin").open(mode="wb") as f:
     for screen in screenObjects:
         f.write(bytearray([screenObjects[screen]['item'], screenObjects[screen]['key'], screenObjects[screen]['door'], screenObjects[screen]['life'], screenObjects[screen]['ammo']]))
 
-with open("output/objectsInScreen.bin", "wb") as f:
+with Path(output_path, "objectsInScreen.bin").open(mode="wb") as f:
     for screen in screenObjects:
         f.write(bytearray([screenObjects[screen]['item'], screenObjects[screen]['key'], screenObjects[screen]['door'], screenObjects[screen]['life'], screenObjects[screen]['ammo']]))
 
@@ -477,7 +479,7 @@ for screen in screenAnimatedTiles:
     for i in range(maxAnimatedTilesPerScreen - len(screenAnimatedTiles[screen])):
         screenAnimatedTiles[screen].append([0, 0, 0])
 
-with open("output/animatedTilesInScreen.bin", "wb") as f:
+with Path(output_path, "animatedTilesInScreen.bin").open(mode="wb") as f:
     for screen in screenAnimatedTiles:
         for tile in screenAnimatedTiles[screen]:
             f.write(bytearray([int(tile[0]), int(tile[1]), int(tile[2])]))
@@ -501,29 +503,30 @@ if shouldKillEnemies == 1:
 if enemiesRespawn == 0:
     configStr += "#DEFINE ENEMIES_NOT_RESPAWN_ENABLED\n"
 
-with open("output/screensWon.bin", "wb") as f:
+with Path(output_path, "screensWon.bin").open(mode="wb") as f:
     f.write(bytearray([0] * screensCount))
 
 if useBreakableTile == 'all':
     configStr += "#DEFINE USE_BREAKABLE_TILE_ALL\n"
-    with open("output/brokenTiles.bin", "wb") as f:
+    with Path(output_path, "brokenTiles.bin").open(mode="wb") as f:
         f.write(bytearray([0] * screensCount))
 elif useBreakableTile == 'individual':
     configStr += "#DEFINE USE_BREAKABLE_TILE_INDIVIDUAL\n"
     configStr += "#DEFINE BREAKABLE_TILES_COUNT " + str(breakableTilesCount) + "\n"
-    with open("output/brokenTiles.bin", "wb") as f:
+    with Path(output_path, "brokenTiles.bin").open(mode="wb") as f:
         f.write(bytearray([0] * breakableTilesCount * 3))
-
 
 for idx, screen in enumerate(screens):
     label = 'screen' + str(idx).zfill(3)
-    with open(outputDir + label + '.bin', 'wb') as f:
+    _out_file = Path(output_path, label).with_suffix(".bin")
+    with _out_file.open(mode='wb') as f:
         screen.tofile(f)
-    subprocess.run(['bin/zx0', '-f', outputDir + label + '.bin', outputDir + label + '.bin.zx0'])
-    currentOffset += os.path.getsize(outputDir + label + '.bin.zx0')
+    subprocess.run([bin_path / "zx0", "-f " + _out_file, _out_file.with_suffix(".zx0")])
+    # currentOffset += os.path.getsize(_out_file.with_suffix(".zx0"))
+    currentOffset += _out_file.with_suffix('.zx0').stat().st_size
     screenOffsets.append(currentOffset)
 
-with open(outputDir + "screenOffsets.bin", "wb") as f:
+with Path(output_path, "screenOffsets.bin").open(mode="wb") as f:
     for offset in screenOffsets:
         f.write(offset.to_bytes(2, byteorder='little'))
 
@@ -677,30 +680,32 @@ enemiesInScreenOffsets.append(0)
 currentOffset = 0
 for idx, enemiesScreen in enumerate(enemiesArray):
     label = 'enemiesInScreen' + str(idx).zfill(3)
-    with open(outputDir + label + '.bin', 'wb') as f:
+    _out_file = Path(output_path, label).with_suffix(".bin")
+    with _out_file.open(mode='wb') as f:
         enemiesScreen.tofile(f)
-    subprocess.run(['bin/zx0', '-f', outputDir + label + '.bin', outputDir + label + '.bin.zx0'])
-    currentOffset += os.path.getsize(outputDir + label + '.bin.zx0')
+    subprocess.run([bin_path / "zx0", '-f ' + _out_file, _out_file.with_suffix('.zx0')])
+    # currentOffset += os.path.getsize(_out_file.with_suffix('.zx0'))
+    currentOffset += _out_file.with_suffix('.zx0').stat().st_size
     enemiesInScreenOffsets.append(currentOffset)
 
-with open(outputDir + "enemiesInScreenOffsets.bin", "wb") as f:
+with Path(output_path, "enemiesInScreenOffsets.bin").open(mode="wb") as f:
     for offset in enemiesInScreenOffsets:
         f.write(offset.to_bytes(2, byteorder='little'))
 
-with open("output/enemiesPerScreen.bin", "wb") as f:
+with Path(output_path, "enemiesPerScreen.bin").open(mode="wb") as f:
     f.write(bytearray(enemiesPerScreen))
 
-with open("output/enemiesPerScreenInitial.bin", "wb") as f:
+with Path(output_path, "enemiesPerScreenInitial.bin").open(mode="wb") as f:
     f.write(bytearray(enemiesPerScreen))
 
 # configStr += "dim decompressedEnemiesScreen(" + str(maxEnemiesPerScreen - 1) + ", 11) as byte\n"
 
-with open("output/decompressedEnemiesScreen.bin", "wb") as f:
+with Path(output_path, "decompressedEnemiesScreen.bin").open(mode="wb") as f:
     for i in range(maxEnemiesPerScreen):
         f.write(bytearray([0] * 12))
 
 # get hud.json
-hudFile = open(outputDir + 'hud.json')
+hudFile = Path(output_path, "hud.json").open()
 hudData = json.load(hudFile)
 hudFile.close()
 
@@ -735,17 +740,17 @@ for i in hudData['layers'][1]['objects']:
             configStr += "#DEFINE HUD_MESSAGE_Y " + str((i['y']//8) - 1) + "\n"
             configStr += "#DEFINE HUD_MESSAGE_Y_2 " + str((i['y']//8)) + "\n"
 
-with open(outputDir + "config.bas", "w") as text_file:
+with Path(output_path, "config.bas").open(mode="w") as text_file:
     print(configStr, file=text_file)
 
-with open(outputDir + 'map.bin.zx0', 'wb') as outfile:
+with Path(output_path, "map.bin.zx0").open(mode="wb") as outfile:
     for idx in range(screensCount):
-        label = 'screen' + str(idx).zfill(3)
-        with open(outputDir + label + '.bin.zx0', 'rb') as infile:
+        label = "screen" + str(idx).zfill(3)
+        with Path(output_path, label).with_suffix(".bin.zx0").open(mode="rb") as infile:
             outfile.write(infile.read())
 
-with open(outputDir + 'enemies.bin.zx0', 'wb') as outfile:
+with Path(output_path, "enemies.bin.zx0").open(mode="wb") as outfile:
     for idx in range(screensCount):
-        label = 'enemiesInScreen' + str(idx).zfill(3)
-        with open(outputDir + label + '.bin.zx0', 'rb') as infile:
+        label = "enemiesInScreen" + str(idx).zfill(3)
+        with Path(output_path, label).with_suffix(".bin.zx0").open(mode="rb") as infile:
             outfile.write(infile.read())

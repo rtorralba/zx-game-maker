@@ -1,36 +1,39 @@
 import os
+from pathlib import Path
 import platform
+import stat
 import subprocess
 import sys
 
 def install_requirements():
     """Ejecuta el script de instalación de dependencias según el sistema operativo."""
+
+    # Detectar el sistema operativo
+    current_os = platform.system()
+    script_name = ""
+
+    if current_os == "Windows":
+        script_name = "install-requeriments.ps1"
+    elif current_os in ["Linux", "Darwin"]:  # Linux o macOS
+        script_name = "install-requeriments.sh"
+    else:
+        print(f"Sistema operativo no soportado: {current_os}")
+        sys.exit(1)
+    # Construir la ruta completa del script
+    script_path = Path(__file__).parent / "scripts" / script_name
+    # Verificar si el script existe
+    if not script_path.exists():
+        print(f"No se encontró el script: {script_path}")
+        sys.exit(1)
     try:
-        # Detectar el sistema operativo
-        current_os = platform.system()
-        script_name = ""
-
-        if current_os == "Windows":
-            script_name = "install-requeriments.ps1"
-        elif current_os in ["Linux", "Darwin"]:  # Linux o macOS
-            script_name = "install-requeriments.sh"
-        else:
-            print(f"Sistema operativo no soportado: {current_os}")
-            sys.exit(1)
-
-        # Construir la ruta completa del script
-        script_path = os.path.join(os.path.dirname(__file__), "scripts", script_name)
-
-        # Verificar si el script existe
-        if not os.path.exists(script_path):
-            print(f"No se encontró el script: {script_path}")
-            sys.exit(1)
-
         # Ejecutar el script
         if current_os == "Windows":
-            subprocess.run(["powershell", "-ExecutionPolicy", "Bypass", "-File", script_path], check=True)
+            subprocess.run(["powershell", "-ExecutionPolicy Bypass", f"-File {script_path}"], check=True)
         else:
-            subprocess.run(["bash", script_path], check=True)
+            # subprocess.run(["bash", script_path], check=True)
+            if not os.access(script_path, os.X_OK):
+                script_path.chmod(stat.S_IXUSR)
+            subprocess.run(script_path, check=True)
 
     except subprocess.CalledProcessError as e:
         print(f"Error al ejecutar el script de instalación de dependencias: {e}")
@@ -49,12 +52,12 @@ import threading
 import webbrowser
 
 from builder.SpritesPreviewGenerator import SpritesPreviewGenerator
-from builder.helper import DIST_FOLDER, MAPS_PROJECT, getProjectFileName
+from builder.helper import DIST_FOLDER, MAPS_PROJECT, getProjectFileName, EJECUTABLE_TILED
 
 import os
 
 # Establecer el directorio de trabajo al directorio del script
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
+os.chdir(Path(__file__).parent.resolve())
 
 def run_script(script_name, output_text, extra_args=None):
     def execute(script_name):
@@ -72,10 +75,10 @@ def run_script(script_name, output_text, extra_args=None):
                 return
 
             # Construir la ruta completa del script en la carpeta src/scripts
-            script_path = os.path.join(os.getcwd(), "scripts", script_name)
+            script_path = Path.cwd() / "scripts" / script_name
 
             # Verificar si el script existe
-            if not os.path.exists(script_path):
+            if not script_path.exists():
                 output_text.insert(tk.END, f"No se encontró el script: {script_path}\n")
                 return
 
@@ -87,7 +90,7 @@ def run_script(script_name, output_text, extra_args=None):
             # Ejecutar el script según el sistema operativo
             if platform.system() == "Windows":
                 process = subprocess.Popen(
-                    ["powershell", "-ExecutionPolicy", "Bypass", "-File"] + command,
+                    ["powershell", "-ExecutionPolicy Bypass", "-File"] + command,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
                     text=True,
@@ -95,7 +98,8 @@ def run_script(script_name, output_text, extra_args=None):
                 )
             elif platform.system() in ["Linux", "Darwin"]:
                 process = subprocess.Popen(
-                    ["bash"] + command,
+                    # ["bash"] + command,
+                    command,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
                     text=True,
@@ -131,36 +135,37 @@ def open_game_variant(variant):
 
         if variant == "rf":
             project_name += "-RF"
-            
+
         # Detectar el sistema operativo y seleccionar el archivo ejecutable
         if platform.system() == "Windows":
-            game_path = os.path.join(os.getcwd(), DIST_FOLDER, f"{project_name}.exe")
+            game_path = Path.cwd() / DIST_FOLDER / f"{project_name}.exe"
         elif platform.system() in ["Linux", "Darwin"]:
-            game_path = os.path.join(os.getcwd(), DIST_FOLDER, f"{project_name}.linux")
+            game_path = Path.cwd() / DIST_FOLDER / f"{project_name}.linux"
         else:
             messagebox.showerror("Error", "El sistema operativo no es compatible.")
             return
 
         # Verificar si el archivo existe
-        if not os.path.exists(game_path):
+        if not game_path.exists():
             messagebox.showerror("Error", f"No se encontró el archivo del juego: {game_path}")
             return
 
         # Abrir el archivo ejecutable
-        subprocess.Popen([game_path], shell=True)
+        # subprocess.Popen(game_path, shell=True)
+        subprocess.run(game_path)
     except Exception as e:
         messagebox.showerror("Error", f"No se pudo abrir el juego: {e}")
 
 def show_modal_with_animation(gif_path):
     """Abre el GIF en el navegador predeterminado."""
+    gif_path = Path(gif_path)
+    # Verificar si el archivo existe
+    if not gif_path.exists():
+        messagebox.showerror("Error", f"No se encontró el archivo: {gif_path}")
+        return
     try:
-        # Verificar si el archivo existe
-        if not os.path.exists(gif_path):
-            messagebox.showerror("Error", f"No se encontró el archivo: {gif_path}")
-            return
-
         # Abrir el archivo GIF en el navegador predeterminado
-        webbrowser.open(f"file://{os.path.abspath(gif_path)}")
+        webbrowser.open(f"file://{gif_path.resolve()}")
     except Exception as e:
         messagebox.showerror("Error", f"No se pudo abrir el GIF: {e}")
 
@@ -251,15 +256,15 @@ def show_sprites_menu(event):
 
 def open_memory_bank_image(image):
     """Abre la imagen de uso de memoria para el banco especificado."""
+    # Construir la ruta de la imagen
+    image_path = Path.cwd() / "output" / image
+
+    # Verificar si la imagen existe
+    if not image_path.exists():
+        messagebox.showerror("Error", f"No se encontró la imagen: {image_path}")
+        return
+
     try:
-        # Construir la ruta de la imagen
-        image_path = os.path.join(os.getcwd(), "output", image)
-
-        # Verificar si la imagen existe
-        if not os.path.exists(image_path):
-            messagebox.showerror("Error", f"No se encontró la imagen: {image_path}")
-            return
-
         # Abrir la imagen con el visor predeterminado del sistema
         if platform.system() == "Windows":
             os.startfile(image_path)
@@ -280,18 +285,11 @@ def open_map_with_tiled():
         return
 
     # Verificar si el archivo del mapa existe
-    if not os.path.exists(MAPS_PROJECT):
+    if not MAPS_PROJECT.exists():
         messagebox.showerror("Error", f"No se encontró el archivo del mapa: {MAPS_PROJECT}")
         return
-    
-    if os.name == "nt":
-        program_files = os.environ["ProgramFiles"]
-        command = "\"" + program_files + "\\Tiled\\tiled.exe\" " + MAPS_PROJECT
-    else:
-        command = "tiled " + MAPS_PROJECT
-    
-    subprocess.Popen(command, shell=True)
-    
+    command = [EJECUTABLE_TILED, MAPS_PROJECT]
+    subprocess.Popen(command)
     # Ejecutar el comando
 
 # Crear la ventana principal
@@ -301,20 +299,20 @@ root.geometry("600x750")
 root.resizable(False, False)
 
 # Establecer el icono de la aplicación
-icon_path = os.path.join(os.getcwd(), "ui/logo.png")
-if os.path.exists(icon_path):
+icon_path = Path.cwd() / "ui/logo.png"
+if icon_path.exists():
     root.iconphoto(True, PhotoImage(file=icon_path))
 else:
-    messagebox.showwarning("Advertencia", "No se encontró el icono en 'ui/logo.png'.")
+    messagebox.showwarning("Advertencia", f"No se encontró el icono en {icon_path}.")
 
 # Cargar el logo
-logo_path = os.path.join(os.getcwd(), "ui/logo.png")
-if os.path.exists(logo_path):
+logo_path = Path.cwd() / "ui/logo.png"
+if logo_path.exists():
     logo = PhotoImage(file=logo_path)
     logo_label = tk.Label(root, image=logo)
     logo_label.pack(pady=10)
 else:
-    messagebox.showwarning("Advertencia", "No se encontró el logo en 'ui/logo.png'.")
+    messagebox.showwarning("Advertencia", f"No se encontró el logo en {logo_path}.")
 
 # Crear el menú de barras
 menu_bar = tk.Menu(root)

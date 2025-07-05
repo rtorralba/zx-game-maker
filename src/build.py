@@ -16,84 +16,100 @@ verbose = False
 
 totalExecutionTime = 0
 
-python_executable = str(Path(sys.executable)) + " "
+# python_executable = Path(sys.executable)
 
-TILED_SCRIPT = str(Path("bin/tiled-build.py"))
+TILED_SCRIPT = Path("bin/tiled-build.py")
 
-DEFAULT_FX = str(Path("default/fx.tap"))
+DEFAULT_FX = Path("default/fx.tap")
 
 def tiledBuild():
     runPythonScript(TILED_SCRIPT)
 
 def hudScrToPng():
-    runCommand("sna2img.py " + str(Path(ASSETS_FOLDER + "screens/hud.scr")) + " " + str(Path(ASSETS_FOLDER + "screens/hud.png")))
+    runCommand(["sna2img.py", SCREENS_FOLDER / "hud.scr", SCREENS_FOLDER / "hud.png"])
 
 def buildingFilesAndConfig():
     return Builder().execute()
 
 def compilingGame():
-    runCommand("zxbc -W160 -W170 -W130 -W190 -W150 -W100 -H 128 --heap-address 23755 -S 24576 -O 4 " + str(Path("boriel/main.bas")) + " --mmap " + str(Path("output/map.txt")) + " -D HIDE_LOAD_MSG -o " + str(Path("output/main.bin")))
+    runCommand(["zxbc", "-W160", "-W170", "-W130", "-W190", "-W150", "-W100", "-H 128", "--heap-address 23755", "-S 24576", "-O 4",
+        Path("boriel/main.bas"), f"--mmap {OUTPUT_FOLDER / map.txt}", "-D HIDE_LOAD_MSG", f"-o {OUTPUT_FOLDER / main.bin}"])
 
 def checkMemory():
     runPythonScript("bin/check-memory.py")
 
 def tapsBuild():
-    OUTPUT_FILE = str(Path(DIST_FOLDER + getProjectFileName() + ".tap"))
-    
-    runCommand("bin2tap " + str(Path("bin/loader.bin")) + " " + str(Path("output/loader.tap")) + " 10 --header \"" + getProjectName() + "\" --block_type 1")
-    runCommand("bin2tap " + str(Path("output/loading.bin")) + " " + str(Path("output/loading.tap")) + " 16384")
-    runCommand("bin2tap " + str(Path("output/main.bin")) + " " + str(Path("output/main.tap")) + " 24576")
+    OUTPUT_FILE = Path(DIST_FOLDER, getProjectFileName()).with_suffix(".tap")
+
+    runCommand(["bin2tap", Path("bin/loader.bin", OUTPUT_FOLDER / "loader.tap"), "10", f'--header "{getProjectName()}"', "--block_type 1"])
+    runCommand(["bin2tap", OUTPUT_FOLDER / "loading.bin", OUTPUT_FOLDER / "loading.tap", "16384"])
+    runCommand(["bin2tap", OUTPUT_FOLDER / "main.bin", OUTPUT_FOLDER / "main.tap", "24576"])
 
     if getEnabled128K():
-        runCommand("bin2tap " + str(Path("output/title.scr.zx0")) + " " + str(Path("output/title.tap")) + " 49152")
-        runCommand("bin2tap " + str(Path("output/ending.scr.zx0")) + " " + str(Path("output/ending.tap")) + " 16384")
-        runCommand("bin2tap " + str(Path("output/hud.scr.zx0")) + " " + str(Path("output/hud.tap")) + " 24576")
+        runCommand(["bin2tap", OUTPUT_FOLDER / "title.scr.zx0", OUTPUT_FOLDER / "title.tap", "49152"])
+        runCommand(["bin2tap", OUTPUT_FOLDER / "ending.scr.zx0", OUTPUT_FOLDER / "ending.tap", "16384"])
+        runCommand(["bin2tap", OUTPUT_FOLDER / "hud.scr.zx0", OUTPUT_FOLDER / "hud.tap", "24576"])
         input_files = [
-            str(Path("output/loader.tap")),
-            str(Path("output/loading.tap")),
-            str(Path("output/main.tap")),
-            str(Path(ASSETS_FOLDER + "fx/fx.tap")),
-            str(Path("output/files.tap")),
-            str(Path(ASSETS_FOLDER + "music/title.tap")),
-            str(Path(ASSETS_FOLDER + "music/music.tap")),
-            str(Path("output/title.tap")),
-            str(Path("output/ending.tap")),
-            str(Path("output/hud.tap"))
+            OUTPUT_FOLDER / "loader.tap",
+            OUTPUT_FOLDER / "loading.tap",
+            OUTPUT_FOLDER / "main.tap",
+            ASSETS_FOLDER / "fx/fx.tap",
+            OUTPUT_FOLDER / "files.tap",
+            ASSETS_FOLDER / "music/title.tap",
+            ASSETS_FOLDER / "music/music.tap",
+            OUTPUT_FOLDER / "title.tap",
+            OUTPUT_FOLDER / "ending.tap",
+            OUTPUT_FOLDER / "hud.tap"
         ]
 
         if not musicExists("title"):
-            input_files.remove(str(Path(ASSETS_FOLDER + "music/title.tap")))
+            input_files.remove(ASSETS_FOLDER / "music/title.tap")
 
-        if os.path.isfile("output/intro.scr.zx0"):
-            runCommand("bin2tap " + str(Path("output/intro.scr.zx0")) + " " + str(Path("output/intro.tap")) + " 49152")
-            input_files.append("output/intro.tap")
+        if Path(OUTPUT_FOLDER, "intro.scr.zx0").is_file():
+            runCommand(["bin2tap", OUTPUT_FOLDER / "intro.scr.zx0", OUTPUT_FOLDER / "intro.tap", "49152"])
+            input_files.append(OUTPUT_FOLDER / "intro.tap")
         
-        if os.path.isfile("output/gameover.scr.zx0"):
-            runCommand("bin2tap " + str(Path("output/gameover.scr.zx0")) + " " + str(Path("output/gameover.tap")) + " 49152")
-            input_files.append("output/gameover.tap")
+        if Path(OUTPUT_FOLDER, "gameover.scr.zx0").is_file():
+            runCommand(["bin2tap", OUTPUT_FOLDER / "gameover.scr.zx0", OUTPUT_FOLDER / "gameover.tap", "49152"])
+            input_files.append(OUTPUT_FOLDER / "gameover.tap")
     else:
         input_files = [
-            str(Path("output/loader.tap")),
-            str(Path("output/loading.tap")),
-            str(Path("output/main.tap")),
-            str(Path(ASSETS_FOLDER + "fx/fx.tap")),
-            str(Path("output/files.tap")),
+            OUTPUT_FOLDER / "loader.tap",
+            OUTPUT_FOLDER / "loading.tap",
+            OUTPUT_FOLDER / "main.tap",
+            ASSETS_FOLDER / "fx/fx.tap",
+            OUTPUT_FOLDER / "output/files.tap"
         ]
 
-    concatenateFiles(OUTPUT_FILE, input_files)
+    concatenateFiles(output_file=OUTPUT_FILE, input_files=input_files)
 
 def snaBuild():
-    runCommand("tap2sna.py --sim-load-config machine=128 " + str(Path(DIST_FOLDER + getProjectFileName() + ".tap")) + " " + str(Path(DIST_FOLDER + getProjectFileName() + ".z80")))
+    runCommand(["tap2sna.py", "--sim-load-config machine=128",
+        DIST_FOLDER / Path(getProjectFileName()).with_suffix(".tap"),
+        DIST_FOLDER / Path(getProjectFileName()).with_suffix(".z80")
+        ])
 
 def exeBuild():
-    concatenateFiles(str(Path(DIST_FOLDER + getProjectFileName() + ".exe")), [str(Path("bin/spectral.exe")), str(Path(DIST_FOLDER + getProjectFileName() + ".z80"))])
-    concatenateFiles(str(Path(DIST_FOLDER + getProjectFileName() + "-RF.exe")), [str(Path("bin/spectral-rf.exe")), str(Path(DIST_FOLDER + getProjectFileName() + ".z80"))])
+    concatenateFiles(
+        output_file = DIST_FOLDER / Path(getProjectFileName()).with_suffix(".exe"),
+        input_files = [Path("bin/spectral.exe"), DIST_FOLDER / Path(getProjectFileName()).with_suffix(".z80")]
+        )
+    concatenateFiles(
+        output_file = DIST_FOLDER / f"{getProjectFileName()}-RF.exe",
+        input_files = [Path("bin/spectral-rf.exe"), DIST_FOLDER / Path(getProjectFileName()).with_suffix(".z80")]
+        )
 
 def linuxBuild():
-    concatenateFiles(str(Path(DIST_FOLDER + getProjectFileName() + "-RF.linux")), [str(Path("bin/spectral-rf.linux")), str(Path(DIST_FOLDER + getProjectFileName() + ".z80"))])
-    concatenateFiles(str(Path(DIST_FOLDER + getProjectFileName() + ".linux")), [str(Path("bin/spectral.linux")), str(Path(DIST_FOLDER + getProjectFileName() + ".z80"))])
-    # run_command("chmod +x " + str(Path(DIST_FOLDER + getProjectFileName() + "-RF.linux")))
-    # run_command("chmod +x " + str(Path(DIST_FOLDER + getProjectFileName() + ".linux")))
+    concatenateFiles(
+        output_file = DIST_FOLDER / f"{getProjectFileName()}-RF.linux",
+        input_files = [Path("bin/spectral-rf.linux"), DIST_FOLDER / Path(getProjectFileName()).with_suffix(".z80")]
+        )
+    concatenateFiles(
+        output_file = DIST_FOLDER / Path(getProjectFileName()).with_suffix(".linux"),
+        input_files = [Path("bin/spectral.linux"), DIST_FOLDER / Path(getProjectFileName()).with_suffix(".z80")]
+        )
+    # run_command("chmod +x " + str(DIST_FOLDER / Path(getProjectFileName()).with_suffix("-RF.linux")))
+    # run_command("chmod +x " + str(DIST_FOLDER / Path(getProjectFileName()).with_suffix(".linux")))
 
 def distBuild():
     tapsBuild()
@@ -104,8 +120,8 @@ def distBuild():
 
 def removeTempFiles():
     for file in os.listdir("output"):
-        if file.endswith(".zx0") or file.endswith(".bin") or file.endswith(".tap") or file.endswith(".bas"):
-            os.remove(os.path.join("output", file))
+        if any(filter(file.endswith, [".zx0", ".bin", ".tap", ".bas"])):
+            os.remove(OUTPUT_FOLDER / file)
 
 def build():
     global totalExecutionTime

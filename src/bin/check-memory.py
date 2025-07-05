@@ -1,7 +1,8 @@
 import os
 import sys
+from pathlib import Path
 
-with open("output/map.txt", "r") as file:
+with Path("output", "map.txt").open("r") as file:
     lines = file.readlines()
     last_line = lines[-1]
 
