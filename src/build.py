@@ -54,6 +54,7 @@ def tapsBuild():
             str(Path("output/main.tap")),
             str(Path(ASSETS_FOLDER + "fx/fx.tap")),
             str(Path("output/files.tap")),
+            str(Path(BIN_FOLDER + "vtplayer.tap")),
             str(Path(ASSETS_FOLDER + "music/title.tap")),
             str(Path(ASSETS_FOLDER + "music/music.tap")),
             str(Path("output/title.tap")),

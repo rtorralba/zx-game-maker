@@ -11,7 +11,7 @@ Sub showMenu()
         dzx0Standard(TITLE_SCREEN_ADDRESS, $4000)
         PaginarMemoria(0)
         #ifdef TITLE_MUSIC_ENABLED
-            VortexTracker_Inicializar(1)
+            VortexTracker_Play(51312)
         #endif
     #Else
         dzx0Standard(TITLE_SCREEN_ADDRESS, $4000)
@@ -177,7 +177,7 @@ Sub playGame()
         dzx0Standard(HUD_SCREEN_ADDRESS, $4000)
         PaginarMemoria(0)
         #ifdef MUSIC_ENABLED
-            VortexTracker_Inicializar(1)
+            VortexTracker_Play(54354)
         #endif
     #Else
         dzx0Standard(HUD_SCREEN_ADDRESS, $4000)

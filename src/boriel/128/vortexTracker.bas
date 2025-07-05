@@ -3,27 +3,42 @@ Dim VortexTracker_Status As Ubyte = 0
 ' This Sub used PaginarMemoria previously, which included/d DI/EI.
 ' Without PaginarMemoria, DI/EI *must* be done explicitly.
 'usarIM2 (Byte): 1 utiliza el motor de interrupciones
-Sub VortexTracker_Inicializar(usarIM2 As Ubyte)
+Sub VortexTracker_Init()
     Asm
         di
     End Asm
-    If inMenu Then
-        callVtAddress($C000)
-    Else
-        callVtAddress(VTPLAYER_INIT)
-    End If
     
-    If usarIM2 = 1 Then
-        ' Inicializamos el motor de interrupciones para
-        ' que se ejecute "VortexTracker_NextNote" en cada
-        ' interrupción
-        IM2_Inicializar(@VortexTracker_NextNote)
-    End If
+    IM2_Inicializar(@VortexTracker_NextNote)
+    ' Estado: 0 = Parado, 1 = Reproduciendo, 2 = Pausado
+    VortexTracker_Status = 0
+    
     Asm
         ei
     End Asm
-    ' Estado: 1 (sonando)
-    VortexTracker_Status = 1
+End Sub
+
+Sub Fastcall VortexTracker_Play(address As Uinteger)
+
+    Asm
+        di
+        ld a,($5b5c)
+        push af
+        And %11111000
+        Or  MUSIC_BANK; Memory Bank
+        ld bc,$7ffd
+        push bc
+        Out (c),a
+        push ix ; Guardamos ix
+        call $C003; Saltar a la dirección en HL
+        pop ix ; Recuperamos ix
+        pop bc
+        pop af
+        Out (c),a
+    End Asm
+        VortexTracker_Status = 1
+    Asm
+        ei
+    End Asm
 End Sub
 
 ' Se invoca de forma automática por el gestor de
@@ -32,11 +47,7 @@ End Sub
 Sub Fastcall VortexTracker_NextNote()
     If VortexTracker_Status <> 1 Then Return
     
-    If inMenu Then
-        callVtAddress($C005)
-    Else
-        callVtAddress(VTPLAYER_NEXTNOTE)
-    End If
+    callVtAddress($C005)
 End Sub
 
 ' This Sub used PaginarMemoria previously, which included DI/EI.
@@ -47,11 +58,7 @@ Sub VortexTracker_Stop()
     Asm
         di
     End Asm
-    If inMenu Then
         callVtAddress($C008)
-    Else
-        callVtAddress(VTPLAYER_MUTE)
-    End If
     Asm
         ei
     End Asm
