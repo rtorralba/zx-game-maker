@@ -202,6 +202,9 @@ sub removeTilesFromScreen(tile as ubyte)
 	for index=0 to SCREEN_LENGTH
 		if peek(@decompressedMap + index) - 1 = tile then
 			SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
+            If tile = DOOR_TILE Then
+                addScreenObject(DOOR_TILE, x, y)
+            End If
 		end if
 
 		x = x + 1

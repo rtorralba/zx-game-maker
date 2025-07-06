@@ -119,8 +119,6 @@ End Sub
             If currentKeys <> 0 Then
                 currentKeys = currentKeys - 1
                 printLife()
-                addScreenObject(DOOR_TILE, col, lin)
-                addScreenObject(DOOR_TILE, col, lin + 1)
                 BeepFX_Play(4)
                 removeTilesFromScreen(DOOR_TILE)
             Else
