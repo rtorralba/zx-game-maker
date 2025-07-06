@@ -29,10 +29,10 @@ class ConfigWriter:
                 if musicExists("title"):
                     self.__write("#DEFINE TITLE_MUSIC_ENABLED\n")
                 
-                if musicExists("music_2"):
+                if musicExists("music2"):
                     self.__write("#DEFINE MUSIC_2_ENABLED\n")
                 
-                if musicExists("music_3"):
+                if musicExists("music3"):
                     self.__write("#DEFINE MUSIC_3_ENABLED\n")
 
                 currentAddress = self.initialAddress
@@ -42,9 +42,9 @@ class ConfigWriter:
                 currentAddress = self.__writeDeclarationAndIncrement(Sizes.MUSIC_STRING(), currentAddress)
                 if musicExists("title"):
                     currentAddress = self.__writeDeclarationAndIncrement(Sizes.TITLE_MUSIC_STRING(), currentAddress)
-                if musicExists("music_2"):
+                if musicExists("music2"):
                     currentAddress = self.__writeDeclarationAndIncrement(Sizes.MUSIC_2_STRING(), currentAddress)
-                if musicExists("music_3"):
+                if musicExists("music3"):
                     currentAddress = self.__writeDeclarationAndIncrement(Sizes.MUSIC_3_STRING(), currentAddress)
 
                 self.__write("\n")

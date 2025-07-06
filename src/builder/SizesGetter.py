@@ -38,8 +38,8 @@ class SizesGetter:
             sizes.VTPLAYER = self.__getFileSize(BIN_FOLDER + "vtplayer.tap")
             sizes.MUSIC = self.__getFileSize(OUTPUT_FOLDER + "music.tap")
             sizes.TITLE_MUSIC = self.__getFileSize(OUTPUT_FOLDER + "music-title.tap") if musicExists("title") else 0
-            sizes.MUSIC_2 = self.__getFileSize(OUTPUT_FOLDER + "music_2.tap") if musicExists("music_2") else 0
-            sizes.MUSIC_3 = self.__getFileSize(OUTPUT_FOLDER + "music_3.tap") if musicExists("music_3") else 0
+            sizes.MUSIC_2 = self.__getFileSize(OUTPUT_FOLDER + "music2.tap") if musicExists("music2") else 0
+            sizes.MUSIC_3 = self.__getFileSize(OUTPUT_FOLDER + "music3.tap") if musicExists("music3") else 0
             sizes.INTRO_SCREEN = self.__getOutputFileSize("intro.scr.zx0") if screenExists("intro") else 0
             sizes.GAMEOVER_SCREEN = self.__getOutputFileSize("gameover.scr.zx0") if screenExists("gameover") else 0
 

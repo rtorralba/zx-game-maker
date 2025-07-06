@@ -20,16 +20,16 @@ class MusicSetup:
             os.rename("output/title-000.tap", "output/vtplayer.tap")
             os.rename("output/title-001.tap", "output/music-title.tap")
 
-        musicFile = Path("../assets/music/music_2.tap")
+        musicFile = Path("../assets/music/music2.tap")
         if musicFile.is_file():
             tapsplitCommand = "tapsplit --outdir output " + str(musicFile)
             subprocess.run(tapsplitCommand, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-            os.rename("output/music_2-001.tap", "output/music_2.tap")
+            os.rename("output/music2-001.tap", "output/music2.tap")
         
-        musicFile = Path("../assets/music/music_3.tap")
+        musicFile = Path("../assets/music/music3.tap")
         if musicFile.is_file():
             tapsplitCommand = "tapsplit --outdir output " + str(musicFile)
             subprocess.run(tapsplitCommand, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-            os.rename("output/music_3-001.tap", "output/music_3.tap")
+            os.rename("output/music3-001.tap", "output/music3.tap")

@@ -57,8 +57,8 @@ def tapsBuild():
             str(Path(BIN_FOLDER + "vtplayer.tap")),
             str(Path(OUTPUT_FOLDER + "music.tap")),
             str(Path(OUTPUT_FOLDER + "music-title.tap")),
-            str(Path(OUTPUT_FOLDER + "music_2.tap")),
-            str(Path(OUTPUT_FOLDER + "music_3.tap")),
+            str(Path(OUTPUT_FOLDER + "music2.tap")),
+            str(Path(OUTPUT_FOLDER + "music3.tap")),
             str(Path("output/title.tap")),
             str(Path("output/ending.tap")),
             str(Path("output/hud.tap"))
@@ -67,11 +67,11 @@ def tapsBuild():
         if not musicExists("title"):
             input_files.remove(str(Path(OUTPUT_FOLDER + "music-title.tap")))
         
-        if not musicExists("music_2"):
-            input_files.remove(str(Path(OUTPUT_FOLDER + "music_2.tap")))
+        if not musicExists("music2"):
+            input_files.remove(str(Path(OUTPUT_FOLDER + "music2.tap")))
 
-        if not musicExists("music_3"):
-            input_files.remove(str(Path(OUTPUT_FOLDER + "music_3.tap")))
+        if not musicExists("music3"):
+            input_files.remove(str(Path(OUTPUT_FOLDER + "music3.tap")))
 
         if os.path.isfile("output/intro.scr.zx0"):
             runCommand("bin2tap " + str(Path("output/intro.scr.zx0")) + " " + str(Path("output/intro.tap")) + " 49152")
