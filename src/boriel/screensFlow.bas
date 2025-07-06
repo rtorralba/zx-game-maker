@@ -11,7 +11,7 @@ Sub showMenu()
         dzx0Standard(TITLE_SCREEN_ADDRESS, $4000)
         PaginarMemoria(0)
         #ifdef TITLE_MUSIC_ENABLED
-            VortexTracker_Play(51312)
+            VortexTracker_Play(TITLE_MUSIC_ADDRESS)
         #endif
     #Else
         dzx0Standard(TITLE_SCREEN_ADDRESS, $4000)
@@ -177,7 +177,7 @@ Sub playGame()
         dzx0Standard(HUD_SCREEN_ADDRESS, $4000)
         PaginarMemoria(0)
         #ifdef MUSIC_ENABLED
-            VortexTracker_Play(54354)
+            VortexTracker_Play(MUSIC_ADDRESS)
         #endif
     #Else
         dzx0Standard(HUD_SCREEN_ADDRESS, $4000)
@@ -374,6 +374,27 @@ Sub swapScreen()
         #ifdef LIVES_MODE_ENABLED
             protaXRespawn = mainCharactersArray(currentScreen, 0)
             protaYRespawn = mainCharactersArray(currentScreen, 1)
+        #endif
+    #endif
+
+    #ifdef ENABLED_128k
+        #ifdef MUSIC_ENABLED
+            #ifdef MUSIC_2_ENABLED
+                If currentScreen = MUSIC_2_SCREEN_ID Then
+                    If music2alreadyPlayed = 0 Then
+                        VortexTracker_Play(MUSIC_2_ADDRESS)
+                        music2alreadyPlayed = 1
+                    End If
+                End If
+            #endif
+            #ifdef MUSIC_3_ENABLED
+                If currentScreen = MUSIC_3_SCREEN_ID Then
+                    If music3alreadyPlayed = 0 Then
+                        VortexTracker_Play(MUSIC_3_ADDRESS)
+                        music3alreadyPlayed = 1
+                    End If
+                End If
+            #endif
         #endif
     #endif
 End Sub

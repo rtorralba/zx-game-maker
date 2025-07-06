@@ -567,13 +567,13 @@ for layer in data['layers']:
     if layer['type'] == 'objectgroup':
         for object in layer['objects']:
             if 'point' in object and object['point'] == True:
+                xScreenPosition = math.ceil(object['x'] / screenPixelsWidth) - 1
+                yScreenPosition = math.ceil(object['y'] / screenPixelsHeight) - 1
+                screenId = xScreenPosition + (yScreenPosition * mapCols)
                 if object['type'] == '' and 'properties' in object:
                     objects[str(object['properties'][0]['value'])]['linEnd'] = str(int((object['y'] % (tileHeight * screenHeight))) // 4)
                     objects[str(object['properties'][0]['value'])]['colEnd'] = str(int((object['x'] % (tileWidth * screenWidth))) // 4)
                 elif object['type'] == 'mainCharacter':
-                    xScreenPosition = math.ceil(object['x'] / screenPixelsWidth) - 1
-                    yScreenPosition = math.ceil(object['y'] / screenPixelsHeight) - 1
-                    screenId = xScreenPosition + (yScreenPosition * mapCols)
                     initialScreen = screenId
                     initialMainCharacterX = str(int((object['x'] % (tileWidth * screenWidth))) // 4)
                     initialMainCharacterY = str(int((object['y'] % (tileHeight * screenHeight))) // 4)
@@ -583,6 +583,12 @@ for layer in data['layers']:
                     
                     if arcadeMode == 1: # Voy guardando en un array cuyo indice sea la pantalla y el valor sea la posición de inicio
                         keys[str(screenId)] = [int(initialMainCharacterX), int(initialMainCharacterY)]
+                elif object['type'] == 'music2':
+                    configStr += "Const MUSIC_2_SCREEN_ID as Uinteger = " + str(screenId) + "\n"
+                    configStr += "Dim music2alreadyPlayed as Ubyte = 0\n"
+                elif object['type'] == 'music3':
+                    configStr += "Const MUSIC_3_SCREEN_ID as Uinteger = " + str(screenId) + "\n"
+                    configStr += "Dim music3alreadyPlayed as Ubyte = 0\n"
                 else:
                     exitWithErrorMessage('Unknown object type. Only "enemy" and "mainCharacter" are allowed')   
                     

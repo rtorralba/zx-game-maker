@@ -1,4 +1,5 @@
 from builder.ConvertZXPToGuSprites import ConvertZXPToGuSprites
+from builder.MusicSetup import MusicSetup
 from builder.ScreensCompressor import ScreensCompressor
 from builder.TilesGenerator import TilesGenerator
 from builder.SpritesGenerator import SpritesGenerator
@@ -16,6 +17,7 @@ class Builder:
         ScreensCompressor().execute(is128K, screenExists("intro"), screenExists("gameover"))
         TilesGenerator().execute()
         SpritesGenerator().execute()
+        MusicSetup().splitSongs()
         ConvertZXPToGuSprites.convert()
         BinaryFilesToTapMerger().execute(is128K, useBreakableTile)
         sizes = SizesGetter(OUTPUT_FOLDER, is128K, useBreakableTile).execute()

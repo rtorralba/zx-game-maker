@@ -10,10 +10,24 @@ Sub loadDataFromTape()
     load "" CODE ' Load files
     
     #ifdef ENABLED_128k
-        PaginarMemoria(MUSIC_BANK)
-        load "" CODE ' Load vtplayer
-        load "" CODE 51312 ' Load title music
-        load "" CODE 54354 ' Load ingame music
+        #ifdef MUSIC_ENABLED
+            PaginarMemoria(MUSIC_BANK)
+            load "" CODE ' Load vtplayer
+            load "" CODE MUSIC_ADDRESS ' Load ingame music
+
+            #ifdef TITLE_MUSIC_ENABLED
+                load "" CODE TITLE_MUSIC_ADDRESS ' Load title music
+            #endif
+
+            #ifdef MUSIC_2_ENABLED
+                load "" CODE MUSIC_2_ADDRESS ' Load music 2
+            #endif
+
+            #ifdef MUSIC_3_ENABLED
+                load "" CODE MUSIC_3_ADDRESS ' Load music 3
+            #endif
+
+        #endif
         
         PaginarMemoria(DATA_BANK)
         load "" CODE TITLE_SCREEN_ADDRESS ' Load title Screen
