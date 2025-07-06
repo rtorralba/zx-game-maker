@@ -27,7 +27,7 @@ class ConfigWriter:
                     self.__write("#DEFINE GAMEOVER_SCREEN_ENABLED\n")
                 
                 if musicExists("title"):
-                    self.__write("#DEFINE TITLE_MUSIC_ENABLED\n")
+                    self.__write("#DEFINE MUSIC_TITLE_ENABLED\n")
                 
                 if musicExists("music2"):
                     self.__write("#DEFINE MUSIC_2_ENABLED\n")
@@ -41,7 +41,7 @@ class ConfigWriter:
                 currentAddress = self.__writeDeclarationAndIncrement(Sizes.VTPLAYER_STRING(), currentAddress)
                 currentAddress = self.__writeDeclarationAndIncrement(Sizes.MUSIC_STRING(), currentAddress)
                 if musicExists("title"):
-                    currentAddress = self.__writeDeclarationAndIncrement(Sizes.TITLE_MUSIC_STRING(), currentAddress)
+                    currentAddress = self.__writeDeclarationAndIncrement(Sizes.MUSIC_TITLE_STRING(), currentAddress)
                 if musicExists("music2"):
                     currentAddress = self.__writeDeclarationAndIncrement(Sizes.MUSIC_2_STRING(), currentAddress)
                 if musicExists("music3"):

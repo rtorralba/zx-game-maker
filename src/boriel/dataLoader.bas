@@ -15,8 +15,8 @@ Sub loadDataFromTape()
             load "" CODE ' Load vtplayer
             load "" CODE MUSIC_ADDRESS ' Load ingame music
 
-            #ifdef TITLE_MUSIC_ENABLED
-                load "" CODE TITLE_MUSIC_ADDRESS ' Load title music
+            #ifdef MUSIC_TITLE_ENABLED
+                load "" CODE MUSIC_TITLE_ADDRESS ' Load title music
             #endif
 
             #ifdef MUSIC_2_ENABLED
