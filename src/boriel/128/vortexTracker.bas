@@ -9,7 +9,6 @@ Sub VortexTracker_Init()
     End Asm
     
     IM2_Inicializar(@VortexTracker_NextNote)
-    ' Estado: 0 = Parado, 1 = Reproduciendo, 2 = Pausado
     VortexTracker_Status = 0
     
     Asm
@@ -29,7 +28,7 @@ Sub Fastcall VortexTracker_Play(address As Uinteger)
         push bc
         Out (c),a
         push ix ; Guardamos ix
-        call $C003; Saltar a la dirección en HL
+        call $C003
         pop ix ; Recuperamos ix
         pop bc
         pop af
