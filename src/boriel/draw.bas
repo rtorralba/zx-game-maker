@@ -16,6 +16,19 @@ Sub mapDraw()
     Next index
 End Sub
 
+Function checkScreenObjectAlreadyTaken(tile As Ubyte, x As Ubyte, y As Ubyte) As Ubyte
+    For i = 0 To SCREEN_OBJECTS_COUNT - 1
+        If screenObjects(i, 0) <> currentScreen Then Continue For
+        If screenObjects(i, 1) <> tile Then Continue For
+        If screenObjects(i, 2) <> x Then Continue For
+        If screenObjects(i, 3) <> y Then Continue For
+        
+        Return 1 ' Object already taken
+    Next i
+    
+    Return 0 ' Object not taken
+End Function
+
 Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
     If tile < 2 Then Return
     
@@ -65,34 +78,20 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
         SetTile(tile, attrSet(tile), x, y)
         Return
     End If
-    
-    If tile = ITEM_TILE Then
-        If screenObjects(currentScreen, SCREEN_OBJECT_ITEM_INDEX) Then
+
+    If tile <> KEY_TILE Then
+        If not checkScreenObjectAlreadyTaken(tile, x, y) Then
             SetTileChecked(tile, attrSet(tile), x, y)
         End If
-    Elseif tile = KEY_TILE
+    Else
         #ifdef ARCADE_MODE
             currentScreenKeyX = x
             currentScreenKeyY = y
         #Else
-            If screenObjects(currentScreen, SCREEN_OBJECT_KEY_INDEX) Then
+            If not checkScreenObjectAlreadyTaken(tile, x, y) Then
                 SetTileChecked(tile, attrSet(tile), x, y)
             End If
         #endif
-        #ifdef KEYS_ENABLED
-        Elseif tile = DOOR_TILE
-            If screenObjects(currentScreen, SCREEN_OBJECT_DOOR_INDEX) Then
-                SetTile(tile, attrSet(tile), x, y)
-            End If
-        #endif
-    Elseif tile = LIFE_TILE
-        If screenObjects(currentScreen, SCREEN_OBJECT_LIFE_INDEX) Then
-            SetTileChecked(tile, attrSet(tile), x, y)
-        End If
-    Elseif tile = AMMO_TILE
-        If screenObjects(currentScreen, SCREEN_OBJECT_AMMO_INDEX) Then
-            SetTileChecked(tile, attrSet(tile), x, y)
-        End If
     End If
 End Sub
 
@@ -120,7 +119,6 @@ End Sub
             If currentKeys <> 0 Then
                 currentKeys = currentKeys - 1
                 printLife()
-                screenObjects(currentScreen, SCREEN_OBJECT_DOOR_INDEX) = 0
                 BeepFX_Play(4)
                 removeTilesFromScreen(DOOR_TILE)
             Else
@@ -201,7 +199,6 @@ Sub moveToScreen(direction As Ubyte)
     
     swapScreen()
     ' removeScreenObjectFromBuffer()
-    redrawScreen()
 End Sub
 
 Sub drawSprites()
