@@ -44,16 +44,16 @@ class ConfigWriter:
 
             if getUseBreakableTile():
                 self.__writeDeclarationAndIncrement(Sizes.BROKEN_TILES_DATA_STRING(), currentAddress)
-    
+
     def __setFileHandler(self, fileHandler):
         self.fileHandler = fileHandler
-    
+
     def __getDeclaration(self, name, address):
         return "const {}_ADDRESS as uinteger={}\n".format(name, address)
 
     def __write(self, content):
         self.fileHandler.write(content)
-        
+
     def __writeDeclarationAndIncrement(self, name, address):
         self.__write(self.__getDeclaration(name, address))
         return address + getattr(self.sizes, name)

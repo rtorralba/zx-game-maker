@@ -1,9 +1,9 @@
 import os
 import sys
+from pathlib import Path
 
-with open("output/map.txt", "r") as file:
-    lines = file.readlines()
-    last_line = lines[-1]
+with Path("output", "map.txt").open("r") as file:
+    last_line = list(file)[-1]
 
 memoryAddress = last_line.split(":")[0]
 

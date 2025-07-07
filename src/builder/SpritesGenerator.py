@@ -1,9 +1,12 @@
 import os
+import subprocess
+import zxp2gus.cli as zxp2gus
 from pathlib import Path
 from builder.helper import MAP_FOLDER
 
 class SpritesGenerator:
     def execute(self):
-        spritesPath = str(Path(MAP_FOLDER + "/sprites.zxp"))
+        spritesPath = Path(MAP_FOLDER, "sprites.zxp")
 
-        os.system("zxp2gus -t sprites -i " + spritesPath + " -o " + MAP_FOLDER + " -f png")
+        # import zxp2gus.cli as zxp2gus
+        zxp2gus.main(["-t", "sprites", "-i", str(spritesPath), "-o", str(MAP_FOLDER), "-f", "png"])
