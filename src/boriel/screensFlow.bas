@@ -187,8 +187,8 @@ Sub playGame()
         
         saveProta(INITIAL_MAIN_CHARACTER_Y, INITIAL_MAIN_CHARACTER_X, 1, 1)
     #endif
-    swapScreen()
     resetValues()
+    swapScreen()
     
     Let lastFrameProta = framec
     Let lastFrameEnemies = framec
@@ -362,8 +362,6 @@ Sub resetValues()
     
     brokenTilesCurrentIndex = 0
     screenObjectsCurrentIndex = 0
-
-    redrawScreen()
 End Sub
 
 Sub swapScreen()
@@ -379,4 +377,5 @@ Sub swapScreen()
             protaYRespawn = mainCharactersArray(currentScreen, 1)
         #endif
     #endif
+    redrawScreen()
 End Sub
