@@ -33,3 +33,17 @@ class MusicSetup:
             subprocess.run(tapsplitCommand, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
             os.rename("output/music3-001.tap", "output/music3.tap")
+        
+        musicFile = Path("../assets/music/ending.tap")
+        if musicFile.is_file():
+            tapsplitCommand = "tapsplit --outdir output " + str(musicFile)
+            subprocess.run(tapsplitCommand, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+            os.rename("output/ending-001.tap", "output/music-ending.tap")
+        
+        musicFile = Path("../assets/music/gameover.tap")
+        if musicFile.is_file():
+            tapsplitCommand = "tapsplit --outdir output " + str(musicFile)
+            subprocess.run(tapsplitCommand, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+            os.rename("output/gameover-001.tap", "output/music-gameover.tap")

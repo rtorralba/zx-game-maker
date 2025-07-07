@@ -258,7 +258,7 @@ End Sub
 Sub ending()
     #ifdef ENABLED_128k
         #ifdef MUSIC_ENABLED
-            VortexTracker_Stop()
+            VortexTracker_Play(MUSIC_ENDING_ADDRESS)
         #endif
         PaginarMemoria(DATA_BANK)
         dzx0Standard(ENDING_SCREEN_ADDRESS, $4000)
@@ -274,7 +274,7 @@ End Sub
 Sub gameOver()
     #ifdef ENABLED_128k
         #ifdef MUSIC_ENABLED
-            VortexTracker_Stop()
+            VortexTracker_Play(MUSIC_GAMEOVER_ADDRESS)
         #endif
     #endif
     
@@ -362,6 +362,13 @@ Sub resetValues()
     
     brokenTilesCurrentIndex = 0
     screenObjectsCurrentIndex = 0
+
+    #ifdef MUSIC_2_ENABLED
+        music2alreadyPlayed = 0
+    #endif
+    #ifdef MUSIC_3_ENABLED
+        music3alreadyPlayed = 0
+    #endif
 End Sub
 
 Sub swapScreen()

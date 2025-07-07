@@ -27,6 +27,14 @@ Sub loadDataFromTape()
                 load "" CODE MUSIC_3_ADDRESS ' Load music 3
             #endif
 
+            #ifdef MUSIC_ENDING_ENABLED
+                load "" CODE MUSIC_ENDING_ADDRESS ' Load ending music
+            #endif
+
+            #ifdef MUSIC_GAMEOVER_ENABLED
+                load "" CODE MUSIC_GAMEOVER_ADDRESS ' Load game over music
+            #endif
+
         #endif
         
         PaginarMemoria(DATA_BANK)
