@@ -26,7 +26,6 @@ class BinaryFilesToTapMerger:
             OUTPUT_FOLDER + "enemies.bin.zx0",
             OUTPUT_FOLDER + "tiles.bin",
             OUTPUT_FOLDER + "attrs.bin",
-            OUTPUT_FOLDER + "objectsInScreen.bin",
             OUTPUT_FOLDER + "screenOffsets.bin",
             OUTPUT_FOLDER + "enemiesInScreenOffsets.bin",
             OUTPUT_FOLDER + "animatedTilesInScreen.bin",
