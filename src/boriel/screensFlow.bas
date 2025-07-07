@@ -97,7 +97,7 @@ End Sub
     
     Sub redefineKeys()
         Ink 7: Paper 0: Border 0: BRIGHT 0: FLASH 0: Cls
-        
+
         #ifdef ENABLED_128k
             #ifdef TITLE_MUSIC_ENABLED
                 VortexTracker_Stop()
@@ -130,10 +130,6 @@ End Sub
         ' Print AT 16,20; keyOption
         '
         ' keyOption = ""
-        
-        Print AT 20,2;"Press enter To Return To menu"
-        Do
-        Loop Until MultiKeys(KEYENTER)
         
         showMenu()
     End Sub
@@ -191,8 +187,8 @@ Sub playGame()
         
         saveProta(INITIAL_MAIN_CHARACTER_Y, INITIAL_MAIN_CHARACTER_X, 1, 1)
     #endif
-    swapScreen()
     resetValues()
+    swapScreen()
     
     Let lastFrameProta = framec
     Let lastFrameEnemies = framec
@@ -326,7 +322,14 @@ Sub resetValues()
             brokenTiles(i, 2) = 0
         Next i
     #endif
-    
+
+    For i = 0 To SCREEN_OBJECTS_COUNT
+        screenObjects(i, 1) = 0
+        screenObjects(i, 2) = 0
+        screenObjects(i, 3) = 0
+        screenObjects(i, 4) = 0
+    Next i
+
     #ifdef ARCADE_MODE
         currentItems = 0
     #Else
@@ -342,8 +345,6 @@ Sub resetValues()
         protaYRespawn = INITIAL_MAIN_CHARACTER_Y
     #endif
 
-    ' removeScreenObjectFromBuffer()
-    screenObjects = screenObjectsInitial
     enemiesPerScreen = enemiesPerScreenInitial
     For i = 0 To SCREENS_COUNT
         screensWon(i) = 0
@@ -359,8 +360,8 @@ Sub resetValues()
     
     currentAmmo = INITIAL_AMMO
     
-    redrawScreen()
-    ' drawSprites()
+    brokenTilesCurrentIndex = 0
+    screenObjectsCurrentIndex = 0
 End Sub
 
 Sub swapScreen()
@@ -376,4 +377,5 @@ Sub swapScreen()
             protaYRespawn = mainCharactersArray(currentScreen, 1)
         #endif
     #endif
+    redrawScreen()
 End Sub
