@@ -12,9 +12,9 @@ def getOsSeparator():
     else:
         return "/"
 
-ASSETS_FOLDER = Path("../assets/")
-BIN_FOLDER = Path("../src/bin/")
-OUTPUT_FOLDER = Path("output/")
+ASSETS_FOLDER = Path("../assets")
+BIN_FOLDER = Path("../src/bin")
+OUTPUT_FOLDER = Path("output")
 SCREENS_FOLDER = ASSETS_FOLDER / "screens"
 MAP_FOLDER = ASSETS_FOLDER / "map"
 # MAPS_FILE = ASSETS_FOLDER / "map/maps.tmx"
@@ -52,16 +52,18 @@ def getPythonExecutable():
     return Path(sys.executable)
 
 def runPythonScript(script):
-    runCommand([getPythonExecutable(), script])
+    _complete_command = [getPythonExecutable()]
+    _complete_command.extend(script)
+    runCommand(_complete_command)
 
 def getTiledExportCommand():
-    return [EJECUTABLE_TILED, "--export-map json", MAPS_FILE, Path(OUTPUT_FOLDER,"maps.json")]
+    return [EJECUTABLE_TILED, "--export-map", "json", MAPS_FILE, Path(OUTPUT_FOLDER, "maps.json")]
 
 def tiledExport():
     runCommand(getTiledExportCommand())
 
 def hudTiledExport():
-    runCommand([EJECUTABLE_TILED, "--export-map json", HUD_MAP_FILE, Path(OUTPUT_FOLDER, "hud.json")])
+    runCommand([EJECUTABLE_TILED, "--export-map", "json", HUD_MAP_FILE, Path(OUTPUT_FOLDER, "hud.json")])
 
 def getProjectName():
     with Path(OUTPUT_FOLDER, "maps.json").open(mode="r") as f:
@@ -97,7 +99,7 @@ def concatenateFiles(output_file=None, input_files=None):
     #         out_file.write(f.read())
 
 def screenExists(screen_name):  
-    return Path(SCREENS_FOLDER, f"{screen_name}.scr").is_file()
+    return Path(SCREENS_FOLDER, screen_name).with_suffix(".scr").is_file()
 
 def musicExists(music_name):
-    return Path(ASSETS_FOLDER, "music", f"{music_name}.tap").is_file()
+    return Path(ASSETS_FOLDER, "music", music_name).with_suffix(".tap").is_file()

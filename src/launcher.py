@@ -31,8 +31,8 @@ def install_requirements():
             subprocess.run(["powershell", "-ExecutionPolicy Bypass", f"-File {script_path}"], check=True)
         else:
             # subprocess.run(["bash", script_path], check=True)
-            if not os.access(script_path, os.X_OK):
-                script_path.chmod(stat.S_IXUSR)
+            if stat.filemode(script_path.stat().st_mode) != "-rwxr-xr-x":
+                script_path.chmod(stat.S_IRWXU | stat.S_IRGRP | stat.S_IXGRP | stat.S_IROTH | stat.S_IXOTH)
             subprocess.run(script_path, check=True)
 
     except subprocess.CalledProcessError as e:
@@ -131,10 +131,7 @@ def run_script(script_name, output_text, extra_args=None):
 def open_game_variant(variant):
     """Abre el juego en su variante 'Normal' o 'RF'."""
     try:
-        project_name = getProjectFileName()
-
-        if variant == "rf":
-            project_name += "-RF"
+        project_name = getProjectFileName() + ("-RF" if variant == "rf" else "")
 
         # Detectar el sistema operativo y seleccionar el archivo ejecutable
         if platform.system() == "Windows":
@@ -151,7 +148,6 @@ def open_game_variant(variant):
             return
 
         # Abrir el archivo ejecutable
-        # subprocess.Popen(game_path, shell=True)
         subprocess.run(game_path)
     except Exception as e:
         messagebox.showerror("Error", f"No se pudo abrir el juego: {e}")

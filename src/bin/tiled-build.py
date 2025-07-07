@@ -521,9 +521,9 @@ for idx, screen in enumerate(screens):
     _out_file = Path(output_path, label).with_suffix(".bin")
     with _out_file.open(mode='wb') as f:
         screen.tofile(f)
-    subprocess.run([bin_path / "zx0", "-f " + _out_file, _out_file.with_suffix(".zx0")])
-    # currentOffset += os.path.getsize(_out_file.with_suffix(".zx0"))
-    currentOffset += _out_file.with_suffix('.zx0').stat().st_size
+    subprocess.run([bin_path / "zx0", "-f", _out_file, _out_file.with_suffix(".bin.zx0")])
+    # currentOffset += os.path.getsize(_out_file.with_suffix(".bin.zx0"))
+    currentOffset += _out_file.with_suffix(".bin.zx0").stat().st_size
     screenOffsets.append(currentOffset)
 
 with Path(output_path, "screenOffsets.bin").open(mode="wb") as f:
@@ -683,9 +683,8 @@ for idx, enemiesScreen in enumerate(enemiesArray):
     _out_file = Path(output_path, label).with_suffix(".bin")
     with _out_file.open(mode='wb') as f:
         enemiesScreen.tofile(f)
-    subprocess.run([bin_path / "zx0", '-f ' + _out_file, _out_file.with_suffix('.zx0')])
-    # currentOffset += os.path.getsize(_out_file.with_suffix('.zx0'))
-    currentOffset += _out_file.with_suffix('.zx0').stat().st_size
+    subprocess.run([bin_path / "zx0", "-f", _out_file, _out_file.with_suffix(".bin.zx0")])
+    currentOffset += _out_file.with_suffix(".bin.zx0").stat().st_size
     enemiesInScreenOffsets.append(currentOffset)
 
 with Path(output_path, "enemiesInScreenOffsets.bin").open(mode="wb") as f:
