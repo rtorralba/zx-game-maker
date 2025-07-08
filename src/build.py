@@ -132,6 +132,7 @@ def build():
     print("=          ZX SPECTRUM GAME MAKER          =")
     print("============================================")
 
+    executeFunction(removeTempFiles, "Removing temporary files")
     executeFunction(tiledExport, "Exporting game from Tiled")
     executeFunction(hudTiledExport, "Exporting HUD from Tiled")
     executeFunction(hudScrToPng, "Converting HUD screen to PNG")
