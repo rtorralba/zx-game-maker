@@ -10,8 +10,10 @@ Sub showMenu()
         PaginarMemoria(DATA_BANK)
         dzx0Standard(TITLE_SCREEN_ADDRESS, $4000)
         PaginarMemoria(0)
-        #ifdef MUSIC_TITLE_ENABLED
-            VortexTracker_Play(MUSIC_TITLE_ADDRESS)
+        #ifdef MUSIC_ENABLED
+            #ifdef MUSIC_TITLE_ENABLED
+                VortexTracker_Play(MUSIC_TITLE_ADDRESS)
+            #endif
         #endif
     #Else
         dzx0Standard(TITLE_SCREEN_ADDRESS, $4000)
@@ -99,8 +101,10 @@ End Sub
         Ink 7: Paper 0: Border 0: BRIGHT 0: FLASH 0: Cls
 
         #ifdef ENABLED_128k
-            #ifdef MUSIC_TITLE_ENABLED
-                VortexTracker_Stop()
+            #ifdef MUSIC_ENABLED
+                #ifdef MUSIC_TITLE_ENABLED
+                    VortexTracker_Stop()
+                #endif
             #endif
         #endif
         
@@ -139,8 +143,10 @@ Sub playGame()
     inMenu = 0
     
     #ifdef ENABLED_128k
-        #ifdef MUSIC_TITLE_ENABLED
-            VortexTracker_Stop()
+        #ifdef MUSIC_ENABLED
+            #ifdef MUSIC_TITLE_ENABLED
+                VortexTracker_Stop()
+            #endif
         #endif
     #endif
     
@@ -258,7 +264,9 @@ End Sub
 Sub ending()
     #ifdef ENABLED_128k
         #ifdef MUSIC_ENABLED
-            VortexTracker_Play(MUSIC_ENDING_ADDRESS)
+            #ifdef MUSIC_ENDING_ENABLED
+                VortexTracker_Play(MUSIC_ENDING_ADDRESS)
+            #endif
         #endif
         PaginarMemoria(DATA_BANK)
         dzx0Standard(ENDING_SCREEN_ADDRESS, $4000)
@@ -274,7 +282,9 @@ End Sub
 Sub gameOver()
     #ifdef ENABLED_128k
         #ifdef MUSIC_ENABLED
-            VortexTracker_Play(MUSIC_GAMEOVER_ADDRESS)
+            #ifdef MUSIC_GAMEOVER_ENABLED
+                VortexTracker_Play(MUSIC_GAMEOVER_ADDRESS)
+            #endif
         #endif
     #endif
     
