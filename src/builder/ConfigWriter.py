@@ -27,8 +27,36 @@ class ConfigWriter:
                     self.__write("#DEFINE GAMEOVER_SCREEN_ENABLED\n")
                 
                 if musicExists("title"):
-                    self.__write("#DEFINE TITLE_MUSIC_ENABLED\n")
+                    self.__write("#DEFINE MUSIC_TITLE_ENABLED\n")
                 
+                if musicExists("music2"):
+                    self.__write("#DEFINE MUSIC_2_ENABLED\n")
+                
+                if musicExists("music3"):
+                    self.__write("#DEFINE MUSIC_3_ENABLED\n")
+                
+                if musicExists("ending"):
+                    self.__write("#DEFINE MUSIC_ENDING_ENABLED\n")
+
+                if musicExists("gameover"):
+                    self.__write("#DEFINE MUSIC_GAMEOVER_ENABLED\n")
+
+                currentAddress = self.initialAddress
+                self.__write("\n' Memory bank 4\n")
+
+                currentAddress = self.__writeDeclarationAndIncrement(Sizes.VTPLAYER_STRING(), currentAddress)
+                currentAddress = self.__writeDeclarationAndIncrement(Sizes.MUSIC_STRING(), currentAddress)
+                if musicExists("title"):
+                    currentAddress = self.__writeDeclarationAndIncrement(Sizes.MUSIC_TITLE_STRING(), currentAddress)
+                if musicExists("music2"):
+                    currentAddress = self.__writeDeclarationAndIncrement(Sizes.MUSIC_2_STRING(), currentAddress)
+                if musicExists("music3"):
+                    currentAddress = self.__writeDeclarationAndIncrement(Sizes.MUSIC_3_STRING(), currentAddress)
+                if musicExists("ending"):
+                    currentAddress = self.__writeDeclarationAndIncrement(Sizes.MUSIC_ENDING_STRING(), currentAddress)
+                if musicExists("gameover"):
+                    currentAddress = self.__writeDeclarationAndIncrement(Sizes.MUSIC_GAMEOVER_STRING(), currentAddress)
+
                 self.__write("\n")
                 currentAddress = self.initialAddress
             else:

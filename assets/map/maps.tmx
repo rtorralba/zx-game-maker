@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1-99-gec89c545" class="ZXSpectrumGameMaker" orientation="orthogonal" renderorder="left-down" width="132" height="116" tilewidth="8" tileheight="8" infinite="1" nextlayerid="3" nextobjectid="49">
+<map version="1.10" tiledversion="1.11.1-99-gec89c545" class="ZXSpectrumGameMaker" orientation="orthogonal" renderorder="left-down" width="132" height="116" tilewidth="8" tileheight="8" infinite="1" nextlayerid="3" nextobjectid="51">
  <editorsettings>
   <chunksize width="32" height="22"/>
  </editorsettings>
  <properties>
   <property name="128Kenabled" type="bool" value="true"/>
-  <property name="VTPLAYER_INIT" value="EFAD"/>
-  <property name="VTPLAYER_MUTE" value="EFB5"/>
-  <property name="VTPLAYER_NEXTNOTE" value="EFB2"/>
   <property name="ammo" type="int" value="10"/>
   <property name="animatePeriodMain" type="int" value="1"/>
   <property name="animatePeriodTile" type="int" value="10"/>
@@ -213,6 +210,12 @@
    <properties>
     <property name="enemy" type="object" value="47"/>
    </properties>
+   <point/>
+  </object>
+  <object id="49" type="music2" x="288" y="320">
+   <point/>
+  </object>
+  <object id="50" type="music3" x="408" y="152">
    <point/>
   </object>
  </objectgroup>

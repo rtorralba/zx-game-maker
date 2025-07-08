@@ -7,6 +7,9 @@
     #include "128/im2.bas"
     #include "128/vortexTracker.bas"
     #include "128/functions.bas"
+    #ifdef MUSIC_ENABLED
+        VortexTracker_Init()
+    #endif
 #endif
 
 loadDataFromTape()
