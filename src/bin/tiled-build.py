@@ -85,10 +85,6 @@ shouldKillEnemies = 0
 enabled128K = 0
 hiScore = 0
 
-vtplayerInit = 'EFAD'
-vtplayerMute = 'EFB5'
-vtplayerNextNote = 'EFB2'
-
 initialScreen = 2
 initialMainCharacterX = 8
 initialMainCharacterY = 8
@@ -172,12 +168,6 @@ if 'properties' in data:
             enabled128K = 1 if property['value'] else 0
         elif property['name'] == 'hiScore':
             hiScore = 1 if property['value'] else 0
-        elif property['name'] == 'VTPLAYER_INIT':
-            vtplayerInit = property['value']
-        elif property['name'] == 'VTPLAYER_MUTE':
-            vtplayerMute = property['value']
-        elif property['name'] == 'VTPLAYER_NEXTNOTE':
-            vtplayerNextNote = property['value']
         elif property['name'] == 'maxEnemiesPerScreen':
             if property['value'] < 7:
                 maxEnemiesPerScreen = property['value']
@@ -306,11 +296,6 @@ configStr += "const DAMAGE_TILES_COUNT as ubyte = " + str(damageTilesCount) + "\
 
 if shooting == 1:
     configStr += "#DEFINE SHOOTING_ENABLED\n"
-
-if enabled128K == 1:
-    configStr += "#DEFINE VTPLAYER_INIT $" + str(vtplayerInit) + "\n"
-    configStr += "#DEFINE VTPLAYER_MUTE $" + str(vtplayerMute) + "\n"
-    configStr += "#DEFINE VTPLAYER_NEXTNOTE $" + str(vtplayerNextNote) + "\n\n"
 
 if newBeeperPlayer == 1:
     configStr += "#DEFINE NEW_BEEPER_PLAYER\n"

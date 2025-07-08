@@ -80,21 +80,6 @@
                 "value": false
             },
             {
-                "name": "VTPLAYER_INIT",
-                "type": "string",
-                "value": "EFAD"
-            },
-            {
-                "name": "VTPLAYER_MUTE",
-                "type": "string",
-                "value": "EFB5"
-            },
-            {
-                "name": "VTPLAYER_NEXTNOTE",
-                "type": "string",
-                "value": "EFB2"
-            },
-            {
                 "name": "ammo",
                 "type": "int",
                 "value": -1
