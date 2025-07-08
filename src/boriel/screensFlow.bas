@@ -267,6 +267,9 @@ Sub ending()
             #ifdef MUSIC_ENDING_ENABLED
                 VortexTracker_Play(MUSIC_ENDING_ADDRESS)
             #endif
+            #ifndef MUSIC_ENDING_ENABLED
+                VortexTracker_Stop()
+            #endif
         #endif
         PaginarMemoria(DATA_BANK)
         dzx0Standard(ENDING_SCREEN_ADDRESS, $4000)
@@ -284,6 +287,9 @@ Sub gameOver()
         #ifdef MUSIC_ENABLED
             #ifdef MUSIC_GAMEOVER_ENABLED
                 VortexTracker_Play(MUSIC_GAMEOVER_ADDRESS)
+            #endif
+            #ifndef MUSIC_GAMEOVER_ENABLED
+                VortexTracker_Stop()
             #endif
         #endif
     #endif

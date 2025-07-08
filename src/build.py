@@ -85,10 +85,10 @@ def tapsBuild():
                 input_files.remove(str(Path(OUTPUT_FOLDER + "music3.tap")))
             
             if not musicExists("ending"):
-                input_files.remove(str(Path(OUTPUT_FOLDER + "ending.tap")))
+                input_files.remove(str(Path(OUTPUT_FOLDER + "music-ending.tap")))
             
             if not musicExists("gameover"):
-                input_files.remove(str(Path(OUTPUT_FOLDER + "gameover.tap")))
+                input_files.remove(str(Path(OUTPUT_FOLDER + "music-gameover.tap")))
 
         if os.path.isfile("output/intro.scr.zx0"):
             runCommand("bin2tap " + str(Path("output/intro.scr.zx0")) + " " + str(Path("output/intro.tap")) + " 49152")
