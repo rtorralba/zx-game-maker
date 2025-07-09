@@ -3,6 +3,8 @@ import platform
 import subprocess
 import sys
 
+from builder.ZXPWatcher import ZXPWatcher
+
 def install_requirements():
     """Ejecuta el script de instalación de dependencias según el sistema operativo."""
     try:
@@ -274,23 +276,28 @@ def open_memory_bank_image(image):
 
 def open_map_with_tiled():
     """Abre el mapa en Tiled."""
-    # Verificar si la variable MAPS_PROJECT está definida
     if not MAPS_PROJECT:
         messagebox.showerror("Error", "No se especificó el archivo del mapa.")
         return
 
-    # Verificar si el archivo del mapa existe
     if not os.path.exists(MAPS_PROJECT):
         messagebox.showerror("Error", f"No se encontró el archivo del mapa: {MAPS_PROJECT}")
         return
-    
+
     if os.name == "nt":
         program_files = os.environ["ProgramFiles"]
         command = "\"" + program_files + "\\Tiled\\tiled.exe\" " + MAPS_PROJECT
     else:
         command = "tiled " + MAPS_PROJECT
-    
-    subprocess.Popen(command, shell=True)
+
+    # Limpiar variables de entorno que pueden interferir
+    env = os.environ.copy()
+    env.pop("PYTHONPATH", None)
+    env.pop("PYTHONHOME", None)
+    env.pop("VIRTUAL_ENV", None)
+    env.pop("LD_LIBRARY_PATH", None)  # A veces también ayuda
+
+    subprocess.Popen(command, shell=True, env=env)
     
     # Ejecutar el comando
 
@@ -299,6 +306,10 @@ root = tk.Tk()
 root.title("ZX Spectrum Game Maker")
 root.geometry("600x750")
 root.resizable(False, False)
+
+watcher = ZXPWatcher()
+watcher_thread = threading.Thread(target=watcher.start, daemon=True)
+watcher_thread.start()
 
 # Establecer el icono de la aplicación
 icon_path = os.path.join(os.getcwd(), "ui/logo.png")
@@ -384,6 +395,12 @@ root.config(menu=menu_bar)
 # Área de texto para mostrar la salida de los scripts
 output_text = tk.Text(root, height=30, width=70)
 output_text.pack(pady=10)
+
+def on_close():
+    watcher.stop()  # Debes implementar el método stop() en tu ZXPWatcher si no existe
+    root.destroy()
+
+root.protocol("WM_DELETE_WINDOW", on_close)
 
 # Iniciar el bucle principal de la aplicación
 root.mainloop()
