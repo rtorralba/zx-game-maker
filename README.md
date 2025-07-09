@@ -37,7 +37,7 @@ Libraries and other software that are included in this project or that it was in
 * [Einar Saukas](https://github.com/einar-saukas) ZX0
 * [PixelArtM](https://twitter.com/PixelArtM) Sprites
 * [Jimmy Devesa](https://twitter.com/Jimmy_Devesa) Música In Game
-* [Beyker](https://elbeyker.blogspot.com/?m=1) Música menú
+* [Beyker](https://elbeyker.blogspot.com/?m=1) Music in title, ingame 2, ingame 3, ending, game over.
 * [shiru8bit](http://shiru.untergrund.net) Beeper FX Sounds
 * [r-lyeh](https://github.com/r-lyeh) Spectral emulator
 * [S.V.Bulba](https://ay.strangled.net/)
