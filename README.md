@@ -30,14 +30,17 @@ Grupo de Telegram: [https://t.me/zx_spectrum_game_maker](https://t.me/zx_spectru
 * [Isaías](https://isaiasdiaz.itch.io/) make-game.bat
 * [Khan_Noonien_Singh](https://t.me/zx_spectrum_game_maker) Telegram group moderator
 
-### Other
+### Libraries
+Libraries and other software that are included in this project or that it was in the past.
+
 * [Juan J. Martínez](https://github.com/reidrac) png2src
 * [Einar Saukas](https://github.com/einar-saukas) ZX0
 * [PixelArtM](https://twitter.com/PixelArtM) Sprites
 * [Jimmy Devesa](https://twitter.com/Jimmy_Devesa) Música In Game
-* [Beyker](https://twitter.com/Jimmy_Devesa) Música menú
+* [Beyker](https://elbeyker.blogspot.com/?m=1) Música menú
 * [shiru8bit](http://shiru.untergrund.net) Beeper FX Sounds
 * [r-lyeh](https://github.com/r-lyeh) Spectral emulator
+* [S.V.Bulba](https://ay.strangled.net/)
 
 ## Special Thanks
 
