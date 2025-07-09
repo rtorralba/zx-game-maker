@@ -1,46 +1,6 @@
 import os
 import platform
 import subprocess
-import sys
-
-def install_requirements():
-    """Ejecuta el script de instalación de dependencias según el sistema operativo."""
-    try:
-        # Detectar el sistema operativo
-        current_os = platform.system()
-        script_name = ""
-
-        if current_os == "Windows":
-            script_name = "install-requeriments.ps1"
-        elif current_os in ["Linux", "Darwin"]:  # Linux o macOS
-            script_name = "install-requeriments.sh"
-        else:
-            print(f"Sistema operativo no soportado: {current_os}")
-            sys.exit(1)
-
-        # Construir la ruta completa del script
-        script_path = os.path.join(os.path.dirname(__file__), "scripts", script_name)
-
-        # Verificar si el script existe
-        if not os.path.exists(script_path):
-            print(f"No se encontró el script: {script_path}")
-            sys.exit(1)
-
-        # Ejecutar el script
-        if current_os == "Windows":
-            subprocess.run(["powershell", "-ExecutionPolicy", "Bypass", "-File", script_path], check=True)
-        else:
-            subprocess.run(["bash", script_path], check=True)
-
-    except subprocess.CalledProcessError as e:
-        print(f"Error al ejecutar el script de instalación de dependencias: {e}")
-        sys.exit(1)
-    except Exception as e:
-        print(f"Error inesperado: {e}")
-        sys.exit(1)
-
-# Ejecutar la instalación de dependencias antes de importar cualquier módulo
-install_requirements()
 
 import tkinter as tk
 from tkinter import messagebox
