@@ -40,7 +40,7 @@ Libraries and other software that are included in this project or that it was in
 * [Beyker](https://elbeyker.blogspot.com/?m=1) Music in title, ingame 2, ingame 3, ending, game over.
 * [shiru8bit](http://shiru.untergrund.net) Beeper FX Sounds
 * [r-lyeh](https://github.com/r-lyeh) Spectral emulator
-* [S.V.Bulba](https://ay.strangled.net/)
+* [S.V.Bulba](https://ay.strangled.net/) Vortex Tracker II
 
 ## Special Thanks
 
