@@ -3,8 +3,6 @@ import platform
 import subprocess
 import sys
 
-from builder.ZXPWatcher import ZXPWatcher
-
 def install_requirements():
     """Ejecuta el script de instalación de dependencias según el sistema operativo."""
     try:
@@ -307,6 +305,7 @@ root.title("ZX Spectrum Game Maker")
 root.geometry("600x750")
 root.resizable(False, False)
 
+from builder.ZXPWatcher import ZXPWatcher
 watcher = ZXPWatcher()
 watcher_thread = threading.Thread(target=watcher.start, daemon=True)
 watcher_thread.start()

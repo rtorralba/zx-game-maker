@@ -5,3 +5,4 @@ zxp2gus
 zxbasic
 skoolkit
 zxtaputils
+watchdog
