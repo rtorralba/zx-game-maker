@@ -22,6 +22,7 @@ MAPS_PROJECT = str(Path(ASSETS_FOLDER + "map/maps.tiled-project"))
 DIST_FOLDER = str(Path("../dist/")) + getOsSeparator()
 INITIAL_ADDRESS = 49152
 MEMORY_BANK_SIZE = 16384
+SRC_FOLDER = str(Path(".")) + getOsSeparator()
 
 def getZx0():
     if os.name == "nt":
