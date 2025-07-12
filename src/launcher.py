@@ -289,16 +289,7 @@ def open_map_with_tiled():
     else:
         command = "tiled " + MAPS_PROJECT
 
-    # Limpiar variables de entorno que pueden interferir
-    env = os.environ.copy()
-    env.pop("PYTHONPATH", None)
-    env.pop("PYTHONHOME", None)
-    env.pop("VIRTUAL_ENV", None)
-    env.pop("LD_LIBRARY_PATH", None)  # A veces también ayuda
-
-    subprocess.Popen(command, shell=True, env=env)
-    
-    # Ejecutar el comando
+    subprocess.Popen(command, shell=True)
 
 # Crear la ventana principal
 root = tk.Tk()
