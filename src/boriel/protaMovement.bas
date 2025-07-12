@@ -4,7 +4,7 @@ Function canMoveLeft() As Ubyte
             Return 0
         End If
     #endif
-    Return Not CheckCollision(protaX - 1, protaY)
+    Return Not CheckCollision(protaX - 1, protaY, 1)
 End Function
 
 Function canMoveRight() As Ubyte
@@ -13,7 +13,7 @@ Function canMoveRight() As Ubyte
             Return 0
         End If
     #endif
-    Return Not CheckCollision(protaX + 1, protaY)
+    Return Not CheckCollision(protaX + 1, protaY, 1)
 End Function
 
 Function canMoveUp() As Ubyte
@@ -28,7 +28,7 @@ Function canMoveUp() As Ubyte
             Return 0
         End If
     #endif
-    Return Not CheckCollision(protaX, protaY - 1)
+    Return Not CheckCollision(protaX, protaY - 1, 1)
 End Function
 
 Function canMoveDown() As Ubyte
@@ -43,7 +43,7 @@ Function canMoveDown() As Ubyte
             Return 0
         End If
     #endif
-    If CheckCollision(protaX, protaY + 1) Then Return 0
+    If CheckCollision(protaX, protaY + 1, 1) Then Return 0
     #ifdef SIDE_VIEW
         If checkPlatformByXY(protaX, protaY + 4) Then Return 0
         If CheckStaticPlatform(protaX, protaY + 4) Then Return 0
@@ -156,7 +156,7 @@ End Function
                 Return
             End If
             
-            If CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey)) Then
+            If CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey), 1) Then
                 If jumpArray(jumpCurrentKey) > 0 Then
                     jumpCurrentKey = jumpStopValue
                 Else
@@ -189,7 +189,7 @@ End Function
             End If
             
             If pressingUp() And jumpEnergy > 0 Then
-                If Not CheckCollision(protaX, protaY - 1) Then
+                If Not CheckCollision(protaX, protaY - 1, 1) Then
                     saveProta(protaY - 1, protaX, getNextFrameJumpingFalling(), protaDirection)
                 End If
                 jumpCurrentKey = jumpCurrentKey + 1
@@ -584,26 +584,8 @@ End Sub
 
 Sub checkDamageByTile()
     If invincible Then Return
-    
-    Dim col As Ubyte = protaX >> 1
-    Dim lin As Ubyte = protaY >> 1
-    
-    If isADamageTile(GetTile(col, lin)) Then
-        decrementLife()
-        Return
-    End If
-    If isADamageTile(GetTile(col + 1, lin)) Then
-        decrementLife()
-        Return
-    End If
-    If isADamageTile(GetTile(col, lin + 1)) Then
-        decrementLife()
-        Return
-    End If
-    If isADamageTile(GetTile(col + 1, lin + 1)) Then
-        decrementLife()
-        Return
-    End If
+
+    CheckCollision(protaX, protaY, 0) ' check if we are on a damage tile
 End Sub
 
 Sub protaMovement()

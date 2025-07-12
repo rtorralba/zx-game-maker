@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import platform
 import subprocess
 import sys
@@ -49,7 +50,7 @@ import threading
 import webbrowser
 
 from builder.SpritesPreviewGenerator import SpritesPreviewGenerator
-from builder.helper import DIST_FOLDER, MAPS_PROJECT, getProjectFileName
+from builder.helper import ASSETS_FOLDER, DIST_FOLDER, MAPS_PROJECT, SRC_FOLDER, getProjectFileName
 
 import os
 
@@ -304,6 +305,9 @@ root = tk.Tk()
 root.title("ZX Spectrum Game Maker")
 root.geometry("600x750")
 root.resizable(False, False)
+
+os.system("zxp2gus -t tiles -i " + str(Path(ASSETS_FOLDER + "map/tiles.zxp")) + " -o " + SRC_FOLDER + " -f png")
+os.system("zxp2gus -t sprites -i " + str(Path(ASSETS_FOLDER + "map/sprites.zxp")) + " -o " + SRC_FOLDER + " -f png")
 
 from builder.ZXPWatcher import ZXPWatcher
 watcher = ZXPWatcher()
