@@ -16,3 +16,4 @@ src/bin/.Spectral/*
 **/__pycache__/*
 *.gif
 src/boriel/lib/Sprites.zxbas
+src/boriel/lib/sprites.bas
