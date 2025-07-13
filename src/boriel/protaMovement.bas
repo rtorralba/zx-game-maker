@@ -46,9 +46,12 @@ Function canMoveDown() As Ubyte
     If CheckCollision(protaX, protaY + 1, 1) Then Return 0
     #ifdef SIDE_VIEW
         If checkPlatformByXY(protaX, protaY + 4) Then Return 0
-        If CheckStaticPlatform(protaX, protaY + 4) Then Return 0
-        If CheckStaticPlatform(protaX + 1, protaY + 4) Then Return 0
-        If CheckStaticPlatform(protaX + 2, protaY + 4) Then Return 0
+        If checkTravesablePlatformFromBottom(protaX, protaY + 4) Then Return 0
+        If checkTravesablePlatformFromBottom(protaX + 1, protaY + 4) Then Return 0
+        If checkTravesablePlatformFromBottom(protaX + 2, protaY + 4) Then Return 0
+        If checkTravesablePlatformFromTopAndBottom(protaX, protaY + 4) Then Return 0
+        If checkTravesablePlatformFromTopAndBottom(protaX + 1, protaY + 4) Then Return 0
+        If checkTravesablePlatformFromTopAndBottom(protaX + 2, protaY + 4) Then Return 0
     #endif
     Return 1
 End Function
@@ -447,7 +450,7 @@ Sub downKey()
             End If
         End If
     #Else
-        If CheckStaticPlatform(protaX, protaY + 4) Or CheckStaticPlatform(protaX + 1, protaY + 4) Or CheckStaticPlatform(protaX + 2, protaY + 4) Then
+        If checkTravesablePlatformFromTop(protaX, protaY + 4) Or checkTravesablePlatformFromTop(protaX + 1, protaY + 4) Or checkTravesablePlatformFromTop(protaX + 2, protaY + 4) Or checkTravesablePlatformFromTop(protaX, protaY + 2) Or checkTravesablePlatformFromTop(protaX + 1, protaY + 2) Or checkTravesablePlatformFromTop(protaX + 2, protaY + 2) Or checkTravesablePlatformFromTop(protaX, protaY) Or checkTravesablePlatformFromTop(protaX + 1, protaY) Or checkTravesablePlatformFromTop(protaX + 2, protaY) Then
             protaY = protaY + 2
         End If
     #endif

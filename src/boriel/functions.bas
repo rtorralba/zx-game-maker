@@ -149,17 +149,30 @@ end function
 #endif
 
 #ifdef SIDE_VIEW
-    function CheckStaticPlatform(x as uByte, y as uByte) as uByte
+    Function checkTravesablePlatformFromTop(x as uByte, y as uByte) as uByte
         If jumpCurrentKey <> jumpStopValue Then Return 0
         
-        Dim col as uByte = x >> 1
-        Dim lin as uByte = y >> 1
+        Dim tile as Ubyte = GetTile(x >> 1, y >> 1)
 
-        dim tile as ubyte = GetTile(col, lin)
+        If tile < 64 Then Return 0
+        If tile > 67 Then Return 0
 
-        if tile > 63 and tile < 80 then return 1
+        Return 1
+    End Function
 
-        return 0
+    Function checkTravesablePlatformFromBottom(x as uByte, y as uByte) as uByte
+        If jumpCurrentKey <> jumpStopValue Then Return 0
+        
+        Dim tile as Ubyte = GetTile(x >> 1, y >> 1)
+
+        If tile < 66 Then Return 0
+        If tile > 69 Then Return 0
+
+        Return 1
+    End Function
+
+    function checkTravesablePlatformFromTopAndBottom(x as uByte, y as uByte) as uByte
+        Return checkTravesablePlatformFromTop(x, y) or checkTravesablePlatformFromBottom(x, y)
     end function
 #endif
 
