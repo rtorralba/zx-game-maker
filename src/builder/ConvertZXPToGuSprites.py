@@ -19,7 +19,7 @@ class ConvertZXPToGuSprites:
     def convert():
         output_file = "boriel/lib/Sprites.zxbas"
 
-        sprites = ZXPToSpritesConversor.convert(str(Path("../assets/map/sprites.zxp")))
+        sprites = ZXPToSpritesConversor.convert(str(Path("../assets/map/sprites.zxp")))   # ¿?¿?
 
         bulletCount = 2 if helper.getGameView() == "side" else 4
         sprites.extend(ZXPToSpritesConversor.convert(str(Path("../assets/map/bullet.zxp")), bulletCount, 8, 8))  # Use extend instead of append

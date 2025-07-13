@@ -18,106 +18,106 @@ totalExecutionTime = 0
 
 python_executable = str(Path(sys.executable)) + " "
 
-TILED_SCRIPT = str(Path("bin/tiled-build.py"))
+TILED_SCRIPT = BIN_FOLDER / "tiled-build.py"
 
-DEFAULT_FX = str(Path("default/fx.tap"))
+DEFAULT_FX = Path("default/fx.tap")   # ¿?¿?
 
 def tiledBuild():
-    runPythonScript(TILED_SCRIPT)
+    runPythonScript(str(TILED_SCRIPT))
 
 def hudScrToPng():
-    runCommand("sna2img.py " + str(Path(ASSETS_FOLDER + "screens/hud.scr")) + " " + str(Path(ASSETS_FOLDER + "screens/hud.png")))
+    runCommand("sna2img.py " + str(ASSETS_FOLDER / "screens/hud.scr") + " " + str(ASSETS_FOLDER / "screens/hud.png"))
 
 def buildingFilesAndConfig():
     return Builder().execute()
 
 def compilingGame():
-    runCommand("zxbc -W160 -W170 -W130 -W190 -W150 -W100 -H 128 --heap-address 23755 -S 24576 -O 4 " + str(Path("boriel/main.bas")) + " --mmap " + str(Path("output/map.txt")) + " -D HIDE_LOAD_MSG -o " + str(Path("output/main.bin")))
+    runCommand("zxbc -W160 -W170 -W130 -W190 -W150 -W100 -H 128 --heap-address 23755 -S 24576 -O 4 " + str(Path("boriel/main.bas")) + " --mmap " + str(OUTPUT_FOLDER / "map.txt") + " -D HIDE_LOAD_MSG -o " + str(OUTPUT_FOLDER / "main.bin"))
 
 def checkMemory():
-    runPythonScript("bin/check-memory.py")
+    runPythonScript(str(BIN_FOLDER / "check-memory.py"))
 
 def tapsBuild():
-    OUTPUT_FILE = str(Path(DIST_FOLDER + getProjectFileName() + ".tap"))
+    OUTPUT_FILE = str((DIST_FOLDER / getProjectFileName()).with_suffix(".tap"))
     
-    runCommand("bin2tap " + str(Path("bin/loader.bin")) + " " + str(Path("output/loader.tap")) + " 10 --header \"" + getProjectName() + "\" --block_type 1")
-    runCommand("bin2tap " + str(Path("output/loading.bin")) + " " + str(Path("output/loading.tap")) + " 16384")
-    runCommand("bin2tap " + str(Path("output/main.bin")) + " " + str(Path("output/main.tap")) + " 24576")
+    runCommand("bin2tap " + str(BIN_FOLDER / "loader.bin") + " " + str(OUTPUT_FOLDER / "loader.tap") + " 10 --header \"" + getProjectName() + "\" --block_type 1")
+    runCommand("bin2tap " + str(OUTPUT_FOLDER / "loading.bin") + " " + str(OUTPUT_FOLDER / "loading.tap") + " 16384")
+    runCommand("bin2tap " + str(OUTPUT_FOLDER / "main.bin") + " " + str(OUTPUT_FOLDER / "main.tap") + " 24576")
 
     if getEnabled128K():
-        runCommand("bin2tap " + str(Path("output/title.scr.zx0")) + " " + str(Path("output/title.tap")) + " 49152")
-        runCommand("bin2tap " + str(Path("output/ending.scr.zx0")) + " " + str(Path("output/ending.tap")) + " 16384")
-        runCommand("bin2tap " + str(Path("output/hud.scr.zx0")) + " " + str(Path("output/hud.tap")) + " 24576")
+        runCommand("bin2tap " + str(OUTPUT_FOLDER / "title.scr.zx0") + " " + str(OUTPUT_FOLDER / "title.tap") + " 49152")
+        runCommand("bin2tap " + str(OUTPUT_FOLDER / "ending.scr.zx0") + " " + str(OUTPUT_FOLDER / "ending.tap") + " 16384")
+        runCommand("bin2tap " + str(OUTPUT_FOLDER / "hud.scr.zx0") + " " + str(OUTPUT_FOLDER / "hud.tap") + " 24576")
         input_files = [
-            str(Path("output/loader.tap")),
-            str(Path("output/loading.tap")),
-            str(Path("output/main.tap")),
-            str(Path(ASSETS_FOLDER + "fx/fx.tap")),
-            str(Path("output/files.tap")),
-            str(Path(BIN_FOLDER + "vtplayer.tap")),
-            str(Path(OUTPUT_FOLDER + "music.tap")),
-            str(Path(OUTPUT_FOLDER + "music-title.tap")),
-            str(Path(OUTPUT_FOLDER + "music2.tap")),
-            str(Path(OUTPUT_FOLDER + "music3.tap")),
-            str(Path(OUTPUT_FOLDER + "music-ending.tap")),
-            str(Path(OUTPUT_FOLDER + "music-gameover.tap")),
-            str(Path("output/title.tap")),
-            str(Path("output/ending.tap")),
-            str(Path("output/hud.tap"))
+            str(OUTPUT_FOLDER / "loader.tap"),
+            str(OUTPUT_FOLDER / "loading.tap"),
+            str(OUTPUT_FOLDER / "main.tap"),
+            str(ASSETS_FOLDER / "fx/fx.tap"),
+            str(OUTPUT_FOLDER / "files.tap"),
+            str(BIN_FOLDER / "vtplayer.tap"),      # ¿?¿?
+            str(OUTPUT_FOLDER / "music.tap"),
+            str(OUTPUT_FOLDER / "music-title.tap"),
+            str(OUTPUT_FOLDER / "music2.tap"),
+            str(OUTPUT_FOLDER / "music3.tap"),
+            str(OUTPUT_FOLDER / "music-ending.tap"),
+            str(OUTPUT_FOLDER / "music-gameover.tap"),
+            str(OUTPUT_FOLDER / "title.tap"),
+            str(OUTPUT_FOLDER / "ending.tap"),
+            str(OUTPUT_FOLDER / "hud.tap")
         ]
 
         if not getMusicEnabled():
-            input_files.remove(str(Path(BIN_FOLDER + "vtplayer.tap")))
-            input_files.remove(str(Path(OUTPUT_FOLDER + "music.tap")))
-            input_files.remove(str(Path(OUTPUT_FOLDER + "music-title.tap")))
-            input_files.remove(str(Path(OUTPUT_FOLDER + "music2.tap")))
-            input_files.remove(str(Path(OUTPUT_FOLDER + "music3.tap")))
-            input_files.remove(str(Path(OUTPUT_FOLDER + "music-ending.tap")))
-            input_files.remove(str(Path(OUTPUT_FOLDER + "music-gameover.tap")))
+            input_files.remove(str(BIN_FOLDER / "vtplayer.tap"))
+            input_files.remove(str(OUTPUT_FOLDER / "music.tap"))
+            input_files.remove(str(OUTPUT_FOLDER / "music-title.tap"))
+            input_files.remove(str(OUTPUT_FOLDER / "music2.tap"))
+            input_files.remove(str(OUTPUT_FOLDER / "music3.tap"))
+            input_files.remove(str(OUTPUT_FOLDER / "music-ending.tap"))
+            input_files.remove(str(OUTPUT_FOLDER / "music-gameover.tap"))
         else:
             if not musicExists("title"):
-                input_files.remove(str(Path(OUTPUT_FOLDER + "music-title.tap")))
+                input_files.remove(str(OUTPUT_FOLDER / "music-title.tap"))
             
             if not musicExists("music2"):
-                input_files.remove(str(Path(OUTPUT_FOLDER + "music2.tap")))
+                input_files.remove(str(OUTPUT_FOLDER / "music2.tap"))
 
             if not musicExists("music3"):
-                input_files.remove(str(Path(OUTPUT_FOLDER + "music3.tap")))
+                input_files.remove(str(OUTPUT_FOLDER / "music3.tap"))
             
             if not musicExists("ending"):
-                input_files.remove(str(Path(OUTPUT_FOLDER + "music-ending.tap")))
+                input_files.remove(str(OUTPUT_FOLDER / "music-ending.tap"))
             
             if not musicExists("gameover"):
-                input_files.remove(str(Path(OUTPUT_FOLDER + "music-gameover.tap")))
+                input_files.remove(str(OUTPUT_FOLDER / "music-gameover.tap"))
 
-        if os.path.isfile("output/intro.scr.zx0"):
-            runCommand("bin2tap " + str(Path("output/intro.scr.zx0")) + " " + str(Path("output/intro.tap")) + " 49152")
-            input_files.append("output/intro.tap")
+        if os.path.isfile(OUTPUT_FOLDER / "intro.scr.zx0"):
+            runCommand("bin2tap " + str(OUTPUT_FOLDER / "intro.scr.zx0") + " " + str(OUTPUT_FOLDER / "intro.tap") + " 49152")
+            input_files.append(OUTPUT_FOLDER / "intro.tap")
         
-        if os.path.isfile("output/gameover.scr.zx0"):
-            runCommand("bin2tap " + str(Path("output/gameover.scr.zx0")) + " " + str(Path("output/gameover.tap")) + " 49152")
-            input_files.append("output/gameover.tap")
+        if os.path.isfile(OUTPUT_FOLDER / "gameover.scr.zx0"):
+            runCommand("bin2tap " + str(OUTPUT_FOLDER / "gameover.scr.zx0") + " " + str(OUTPUT_FOLDER / "gameover.tap") + " 49152")
+            input_files.append(OUTPUT_FOLDER / "gameover.tap")
     else:
         input_files = [
-            str(Path("output/loader.tap")),
-            str(Path("output/loading.tap")),
-            str(Path("output/main.tap")),
-            str(Path(ASSETS_FOLDER + "fx/fx.tap")),
-            str(Path("output/files.tap")),
+            str(OUTPUT_FOLDER / "loader.tap"),
+            str(OUTPUT_FOLDER / "loading.tap"),
+            str(OUTPUT_FOLDER / "main.tap"),
+            str(ASSETS_FOLDER / "fx/fx.tap"),
+            str(OUTPUT_FOLDER / "files.tap"),
         ]
 
     concatenateFiles(OUTPUT_FILE, input_files)
 
 def snaBuild():
-    runCommand("tap2sna.py --sim-load-config machine=128 " + str(Path(DIST_FOLDER + getProjectFileName() + ".tap")) + " " + str(Path(DIST_FOLDER + getProjectFileName() + ".z80")))
+    runCommand("tap2sna.py --sim-load-config machine=128 " + str((DIST_FOLDER / getProjectFileName()).with_suffix(".tap")) + " " + str((DIST_FOLDER / getProjectFileName()).with_suffix(".z80")))
 
 def exeBuild():
-    concatenateFiles(str(Path(DIST_FOLDER + getProjectFileName() + ".exe")), [str(Path("bin/spectral.exe")), str(Path(DIST_FOLDER + getProjectFileName() + ".z80"))])
-    concatenateFiles(str(Path(DIST_FOLDER + getProjectFileName() + "-RF.exe")), [str(Path("bin/spectral-rf.exe")), str(Path(DIST_FOLDER + getProjectFileName() + ".z80"))])
+    concatenateFiles((DIST_FOLDER / getProjectFileName()).with_suffix(".exe"), [BIN_FOLDER / "spectral.exe", (DIST_FOLDER / getProjectFileName()).with_suffix(".z80")])
+    concatenateFiles(DIST_FOLDER / (getProjectFileName() + "-RF.exe"), [BIN_FOLDER / "spectral-rf.exe", (DIST_FOLDER / getProjectFileName()).with_suffix(".z80")])
 
 def linuxBuild():
-    concatenateFiles(str(Path(DIST_FOLDER + getProjectFileName() + "-RF.linux")), [str(Path("bin/spectral-rf.linux")), str(Path(DIST_FOLDER + getProjectFileName() + ".z80"))])
-    concatenateFiles(str(Path(DIST_FOLDER + getProjectFileName() + ".linux")), [str(Path("bin/spectral.linux")), str(Path(DIST_FOLDER + getProjectFileName() + ".z80"))])
+    concatenateFiles(DIST_FOLDER / (getProjectFileName() + "-RF.linux"), [BIN_FOLDER / "spectral-rf.linux", (DIST_FOLDER / getProjectFileName()).with_suffix(".z80")])
+    concatenateFiles((DIST_FOLDER / getProjectFileName()).with_suffix(".linux"), [BIN_FOLDER / "spectral.linux", (DIST_FOLDER / getProjectFileName()).with_suffix(".z80")])
     # run_command("chmod +x " + str(Path(DIST_FOLDER + getProjectFileName() + "-RF.linux")))
     # run_command("chmod +x " + str(Path(DIST_FOLDER + getProjectFileName() + ".linux")))
 

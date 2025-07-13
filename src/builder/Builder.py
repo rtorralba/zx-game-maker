@@ -22,6 +22,6 @@ class Builder:
         BinaryFilesToTapMerger().execute(is128K, useBreakableTile)
         sizes = SizesGetter(OUTPUT_FOLDER, is128K, useBreakableTile).execute()
         ChartGenerator().execute(sizes, is128K)
-        ConfigWriter(OUTPUT_FOLDER + "config.bas", INITIAL_ADDRESS, sizes).execute()
+        ConfigWriter(OUTPUT_FOLDER / "config.bas", INITIAL_ADDRESS, sizes).execute()
 
         return sizes

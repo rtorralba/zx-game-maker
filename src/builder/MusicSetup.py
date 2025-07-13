@@ -8,7 +8,7 @@ class MusicSetup:
         if os.name == "nt":
             return r"py .\venv\Scripts\tapsplit --outdir output "
         else:
-            return "tapsplit --outdir output "
+            return "tapsplit --outdir output "    # ¿?¿?
         
     def splitSongs(self):
         musicFile = Path("../assets/music/music.tap")
