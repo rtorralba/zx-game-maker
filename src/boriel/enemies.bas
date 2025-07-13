@@ -198,13 +198,13 @@ Sub moveEnemies()
                     If checkPlatformHasProtaOnTop(enemyCol, enemyLin) Then
                         jumpCurrentKey = jumpStopValue
                         If enemyVerticalDirection Then
-                            If Not CheckCollision(protaX, enemyLin - 4) Then
+                            If Not CheckCollision(protaX, enemyLin - 4, 1) Then
                                 protaY = enemyLin - 4
                             End If
                         End If
                         
                         If enemyHorizontalDirection Then
-                            If Not CheckCollision(protaX + enemyHorizontalDirection, protaY) Then
+                            If Not CheckCollision(protaX + enemyHorizontalDirection, protaY, 1) Then
                                 protaX = protaX + enemyHorizontalDirection
                             End If
                         End If

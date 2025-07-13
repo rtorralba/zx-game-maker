@@ -85,14 +85,13 @@ end sub
     end sub
 #endif
 
-function isADamageTile(tile as ubyte) as UBYTE
-    for i = 0 to DAMAGE_TILES_COUNT
-        if peek(@damageTiles + i) = tile then
-            return 1
-        end if
-    next i
-	return 0
-end function
+Sub isDamageTileByColLin(col as Ubyte, lin as Ubyte)
+    Dim tile as Ubyte = GetTile(col, lin)
+
+    For i = 0 to DAMAGE_TILES_COUNT
+        if peek(@damageTiles + i) = tile then decrementLife()
+    Next i
+End Sub
 
 function allEnemiesKilled() as ubyte
     if enemiesPerScreen(currentScreen) = 0 then return 1
@@ -164,29 +163,38 @@ end function
     end function
 #endif
 
-function CheckCollision(x as uByte, y as uByte) as uByte
+function checkSolidOrDamageTile(col as uByte, lin as uByte, isSolid as Ubyte = 1) as uByte
+    if isSolid then
+        return isSolidTileByColLin(col, lin)
+    else
+        isDamageTileByColLin(col, lin)
+        return 0
+    end if  
+end function
+
+function CheckCollision(x as uByte, y as uByte, isSolid as Ubyte) as uByte
     Dim xIsEven as uByte = (x bAnd 1) = 0
     Dim yIsEven as uByte = (y bAnd 1) = 0
     Dim col as uByte = x >> 1
     Dim lin as uByte = y >> 1
 
-    if isSolidTileByColLin(col, lin) then return 1
-    if isSolidTileByColLin(col + 1, lin) then return 1
-    if isSolidTileByColLin(col, lin + 1) then return 1
-    if isSolidTileByColLin(col + 1, lin + 1) then return 1
-    
+    if checkSolidOrDamageTile(col, lin, isSolid) then return 1
+    if checkSolidOrDamageTile(col + 1, lin, isSolid) then return 1
+    if checkSolidOrDamageTile(col, lin + 1, isSolid) then return 1
+    if checkSolidOrDamageTile(col + 1, lin + 1, isSolid) then return 1
+
     if not yIsEven then
-        if isSolidTileByColLin(col, lin + 2) then return 1
-        if isSolidTileByColLin(col + 1, lin + 2) then return 1
+        if checkSolidOrDamageTile(col, lin + 2, isSolid) then return 1
+        if checkSolidOrDamageTile(col + 1, lin + 2, isSolid) then return 1
     end if
 
     if not xIsEven then
-        if isSolidTileByColLin(col + 2, lin) then return 1
-        if isSolidTileByColLin(col + 2, lin + 1) then return 1
+        if checkSolidOrDamageTile(col + 2, lin, isSolid) then return 1
+        if checkSolidOrDamageTile(col + 2, lin + 1, isSolid) then return 1
     end if
 
     if not xIsEven and not yIsEven then
-		if isSolidTileByColLin(col + 2, lin + 2) then return 1
+		if checkSolidOrDamageTile(col + 2, lin + 2, isSolid) then return 1
     end if
 
 	return 0

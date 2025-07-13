@@ -291,7 +291,7 @@ def open_map_with_tiled():
     if not MAPS_PROJECT.exists():
         messagebox.showerror("Error", f"No se encontró el archivo del mapa: {MAPS_PROJECT}")
         return
-    
+
     if os.name == "nt":
         program_files = os.environ["ProgramFiles"]
         command = "\"" + program_files + "\\Tiled\\tiled.exe\" " + str(MAPS_PROJECT)
@@ -299,14 +299,20 @@ def open_map_with_tiled():
         command = "tiled " + str(MAPS_PROJECT)
     
     subprocess.Popen(command, shell=True)
-    
-    # Ejecutar el comando
 
 # Crear la ventana principal
 root = tk.Tk()
 root.title("ZX Spectrum Game Maker")
 root.geometry("600x750")
 root.resizable(False, False)
+
+os.system("zxp2gus -t tiles -i " + str(Path(ASSETS_FOLDER + "map/tiles.zxp")) + " -o " + SRC_FOLDER + " -f png")
+os.system("zxp2gus -t sprites -i " + str(Path(ASSETS_FOLDER + "map/sprites.zxp")) + " -o " + SRC_FOLDER + " -f png")
+
+from builder.ZXPWatcher import ZXPWatcher
+watcher = ZXPWatcher()
+watcher_thread = threading.Thread(target=watcher.start, daemon=True)
+watcher_thread.start()
 
 # Establecer el icono de la aplicación
 icon_path = Path.cwd() / "ui/logo.png"
@@ -392,6 +398,12 @@ root.config(menu=menu_bar)
 # Área de texto para mostrar la salida de los scripts
 output_text = tk.Text(root, height=30, width=70)
 output_text.pack(pady=10)
+
+def on_close():
+    watcher.stop()  # Debes implementar el método stop() en tu ZXPWatcher si no existe
+    root.destroy()
+
+root.protocol("WM_DELETE_WINDOW", on_close)
 
 # Iniciar el bucle principal de la aplicación
 root.mainloop()
