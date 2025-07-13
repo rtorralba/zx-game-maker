@@ -173,7 +173,7 @@
    </properties>
    <point/>
   </object>
-  <object id="26" name="mainCharacter" type="mainCharacter" x="352" y="216">
+  <object id="26" name="mainCharacter" type="mainCharacter" x="152" y="320">
    <point/>
   </object>
   <object id="32" name="platform_1" type="platform" gid="201" x="280" y="296" width="16" height="16"/>

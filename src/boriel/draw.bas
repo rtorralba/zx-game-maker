@@ -30,7 +30,7 @@ Function checkScreenObjectAlreadyTaken(tile As Ubyte, x As Ubyte, y As Ubyte) As
 End Function
 
 Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
-    If tile < 2 Then Return
+    If tile < 1 Then Return
     
     #ifdef SHOULD_KILL_ENEMIES_ENABLED
         If tile = ENEMY_DOOR_TILE Then
