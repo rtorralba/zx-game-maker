@@ -11,6 +11,15 @@
 
 #define PRECOMPUTED_SPRITES
 
+'Enabling this define tells the library to store unshifted sprites in SPRITE_BUFFER,
+'that is, each 1x1,1x2,2x2 sprite in 8,16,32 bytes. Therefore, the library will use
+'much less memory, but will be slower.
+'If not enabled, the library will store shifted sprites in SPRITE_BUFFER, which is
+'the default behavior: each 1x1,1x2,2x2 sprite in 48,72,120 bytes
+#define STORE_UNSHIFTED_SPRITES
+'When this and previous defines are enabled, sprites are included from unshifted-sprites 
+'file "sprites.bas". This file is shorter than shifted-sprites file "Sprites.zxbas".
+
 'Enabling this define changes the merge of the sprites and tiles to be a XOR instead of an OR
 '#define MERGE_WITH_XOR
 
@@ -220,9 +229,19 @@ ldi \
 
 #define ROM_CHARSET 3C00h
 
+#ifdef STORE_UNSHIFTED_SPRITES
+
+SPRITE_1x1_BUFFER_SIZE equ (1 * 8)
+SPRITE_1x2_BUFFER_SIZE equ (2 * 8)
+SPRITE_2x2_BUFFER_SIZE equ (4 * 8)
+
+#else
+
 SPRITE_1x1_BUFFER_SIZE equ (6 * 8)
 SPRITE_1x2_BUFFER_SIZE equ (9 * 8)
 SPRITE_2x2_BUFFER_SIZE equ (15 * 8)
+
+#endif
 
 SPRITE_1x1_SHIFTED_SIZE equ 4
 SPRITE_1x2_SHIFTED_SIZE equ 6
@@ -297,6 +316,35 @@ defw 0
 CURRENT_CLEAR_MAP:          ;puntero a uno de los mapas de celdas que se usa para almacenar las id's de operaciones de limpieza por su posición
 defw 0
 
+#ifdef STORE_UNSHIFTED_SPRITES
+                            ;Cantidad de bytes de cada tipo (v=vacío, g=gráfico)
+#ifdef ENABLE_1x1_SPRITES
+TEMP_1x1_SPRITE:            ;Tenemos sprites 1x1:
+defs 32                     ;4v + 8g + 8v + 8g + 4v = 32
+#endif
+
+#ifdef ENABLE_1x2_SPRITES
+
+#ifndef ENABLE_2x2_SPRITES
+TEMP_1x2_SPRITE:            ;Tenemos sprites 1x2 pero NO 2x2:
+defs 48                     ;4v + 16g + 8v + 16g + 4v = 48
+#else
+TEMP_1x2_SPRITE:            ;Si tenemos sprites 1x2 AND 2x2,
+TEMP_2x2_SPRITE:            ;entonces comparten espacio en RAM:
+defs 72                     ;4v + 16g + 8v + 16g + 8v + 16g + 4v = 72
+#endif
+
+#else
+
+#ifdef ENABLE_2x2_SPRITES
+TEMP_2x2_SPRITE:            ;Tenemos sprites 2x2 pero NO 1x2:
+defs 72                     ;4v + 16g + 8v + 16g + 8v + 16g + 4v = 72
+#endif
+
+#endif
+
+#endif
+
 #ifndef PRECOMPUTED_SPRITES
 
 SPRITE_BUFFER:              ;shifted sprite buffer
@@ -310,7 +358,11 @@ defb 0
 
 end asm
 
+#ifdef STORE_UNSHIFTED_SPRITES
+    #include "sprites.bas"
+#else
     #include "Sprites.zxbas"
+#endif
 
 asm
 
@@ -550,12 +602,20 @@ ENDP
 #ifdef ENABLE_1x1_SPRITES
 
 PROC
+#ifndef STORE_UNSHIFTED_SPRITES
 LOCAL LOOP
+#endif
 CREATE_1x1_SPRITE:          ;input: hl = sprite address, output: a = sprite number (base 1); trash= bc, de, hl, a
 
 push hl
 ld bc, SPRITE_1x1_BUFFER_SIZE
 call CREATE_SPRITE_BUFFER   ;create buffer
+
+#ifdef STORE_UNSHIFTED_SPRITES
+ex de, hl
+pop hl
+LDI_8()
+#else
 
 ld de, 4
 add hl, de                  ;skip padding bytes
@@ -595,6 +655,8 @@ inc ix
 
 djnz LOOP
 
+#endif
+
 ld a, (SPRITE_COUNT)      ;read sprite number
 
 ret
@@ -605,12 +667,21 @@ ENDP
 #ifdef ENABLE_1x2_SPRITES
 
 PROC
+#ifndef STORE_UNSHIFTED_SPRITES
 LOCAL LOOP
+#endif
 CREATE_1x2_SPRITE:
 
 push hl
 ld bc, SPRITE_1x2_BUFFER_SIZE
 call CREATE_SPRITE_BUFFER   ;create buffer
+
+#ifdef STORE_UNSHIFTED_SPRITES
+ex de, hl
+pop hl
+LDI_8()
+LDI_8()
+#else
 
 ld de, 4
 add hl, de                  ;skip padding bytes
@@ -652,6 +723,8 @@ inc ix
 
 djnz LOOP
 
+#endif
+
 ld a, (SPRITE_COUNT)      ;read sprite number
 
 ret
@@ -663,12 +736,23 @@ ENDP
 #ifdef ENABLE_2x2_SPRITES
 
 PROC
+#ifndef STORE_UNSHIFTED_SPRITES
 LOCAL LOOP
+#endif
 CREATE_2x2_SPRITE:
 
 push hl
 ld bc, SPRITE_2x2_BUFFER_SIZE
 call CREATE_SPRITE_BUFFER   ;create buffer
+
+#ifdef STORE_UNSHIFTED_SPRITES
+ex de, hl
+pop hl
+LDI_8()
+LDI_8()
+LDI_8()
+LDI_8()
+#else
 
 ld de, 4
 add hl, de                  ;skip padding bytes
@@ -721,6 +805,8 @@ inc iy                      ;next src/target
 inc ix
 
 djnz LOOP
+
+#endif
 
 ld a, (SPRITE_COUNT)      ;read sprite number
 
@@ -1213,6 +1299,9 @@ ENDP
 
 PROC
 LOCAL TEST_SHIFTS, HORIZONTAL_SHIFT, VERTICAL_SHIFT
+#ifdef STORE_UNSHIFTED_SPRITES
+LOCAL LOOP1, LOOP2
+#endif
 DRAW_1x1_SPRITE:            ;input: a = sprite number, b=x, c=y
 
 dec a
@@ -1234,8 +1323,12 @@ jp nz, TEST_SHIFTS
 srl b                       ;calculate row/col
 srl c
 
+#ifdef STORE_UNSHIFTED_SPRITES
+ex de, hl
+#else
 ld hl, 4
 add hl, de                  ;hl = sprite data address
+#endif
 
 call CREATE_DRAW_OP         ;create op
 
@@ -1254,8 +1347,33 @@ jp z, VERTICAL_SHIFT
 srl b                       ;calculate row/col
 srl c
 
+#ifdef STORE_UNSHIFTED_SPRITES
+ld ix, TEMP_1x1_SPRITE + 4
+ld h, b
+ld b, 8
+LOOP1:
+ld a, (de)
+ld l, a
+xor a
+rl l
+rla
+rl l
+rla
+rl l
+rla
+rl l
+rla
+ld (ix+0), a
+ld (ix+16), l
+inc de
+inc ix
+djnz LOOP1
+ld b, h
+ld hl, TEMP_1x1_SPRITE
+#else
 ld hl, 16
 add hl, de
+#endif
 
 push bc                     ;store coords
 ;push hl                     ;store data address
@@ -1275,8 +1393,33 @@ HORIZONTAL_SHIFT:
 srl b                       ;calculate col/row
 srl c
 
+#ifdef STORE_UNSHIFTED_SPRITES
+ld ix, TEMP_1x1_SPRITE + 4
+ld h, b
+ld b, 8
+LOOP2:
+ld a, (de)
+ld l, a
+xor a
+rl l
+rla
+rl l
+rla
+rl l
+rla
+rl l
+rla
+ld (ix+0), a
+ld (ix+16), l
+inc de
+inc ix
+djnz LOOP2
+ld b, h
+ld hl, TEMP_1x1_SPRITE + 4
+#else
 ld hl, 20                   ;skip 32 bytes; 12 bytes of padding and 1 char
 add hl, de                  ;hl now contains first line of real data
+#endif
 
 push bc                     ;store coords
 push hl                     ;store data address
@@ -1301,6 +1444,13 @@ srl b                       ;calculate row/col
 srl c
 
 ex de, hl
+#ifdef STORE_UNSHIFTED_SPRITES
+ld de, TEMP_1x1_SPRITE + 4
+push bc
+LDI_8()
+pop bc
+ld hl, TEMP_1x1_SPRITE
+#endif
 ld a, 2
 call DRAW_SPRITE_COLUMN
 
@@ -1313,6 +1463,9 @@ ENDP
 
 PROC
 LOCAL TEST_SHIFTS, HORIZONTAL_SHIFT, VERTICAL_SHIFT
+#ifdef STORE_UNSHIFTED_SPRITES
+LOCAL LOOP1, LOOP2
+#endif
 DRAW_1x2_SPRITE:            ;input: a = sprite number, b=x, c=y
 
 dec a
@@ -1334,8 +1487,12 @@ jp nz, TEST_SHIFTS
 srl b                       ;calculate row/col
 srl c
 
+#ifdef STORE_UNSHIFTED_SPRITES
+ex de, hl
+#else
 ld hl, 4
 add hl, de                  ;hl = sprite data address
+#endif
 
 ld a, 2
 call DRAW_SPRITE_COLUMN
@@ -1355,8 +1512,33 @@ jp z, VERTICAL_SHIFT
 srl b                       ;calculate row/col
 srl c
 
+#ifdef STORE_UNSHIFTED_SPRITES
+ld ix, TEMP_1x2_SPRITE + 4
+ld h, b
+ld b, 16
+LOOP1:
+ld a, (de)
+ld l, a
+xor a
+rl l
+rla
+rl l
+rla
+rl l
+rla
+rl l
+rla
+ld (ix+0), a
+ld (ix+24), l
+inc de
+inc ix
+djnz LOOP1
+ld b, h
+ld hl, TEMP_1x2_SPRITE
+#else
 ld hl, 24
 add hl, de
+#endif
 
 push bc                     ;store coords
 ld a, 3
@@ -1374,8 +1556,33 @@ HORIZONTAL_SHIFT:
 srl b                       ;calculate col/row
 srl c
 
+#ifdef STORE_UNSHIFTED_SPRITES
+ld ix, TEMP_1x2_SPRITE + 4
+ld h, b
+ld b, 16
+LOOP2:
+ld a, (de)
+ld l, a
+xor a
+rl l
+rla
+rl l
+rla
+rl l
+rla
+rl l
+rla
+ld (ix+0), a
+ld (ix+24), l
+inc de
+inc ix
+djnz LOOP2
+ld b, h
+ld hl, TEMP_1x2_SPRITE + 4
+#else
 ld hl, 28                   ;skip 32 bytes; 12 bytes of padding and 1 char
 add hl, de                  ;hl now contains first line of real data
+#endif
 
 push bc                     ;store coords
 ld a,2
@@ -1396,6 +1603,14 @@ srl b                       ;calculate row/col
 srl c
 
 ex de, hl
+#ifdef STORE_UNSHIFTED_SPRITES
+ld de, TEMP_1x2_SPRITE + 4
+push bc
+LDI_8()
+LDI_8()
+pop bc
+ld hl, TEMP_1x2_SPRITE
+#endif
 ld a, 3
 call DRAW_SPRITE_COLUMN
 
@@ -1407,6 +1622,10 @@ ENDP
 #ifdef ENABLE_2x2_SPRITES
 
 PROC
+
+#ifdef STORE_UNSHIFTED_SPRITES
+LOCAL LOOP1, LOOP2
+#endif
 DRAW_2x2_SPRITE:            ;input: a = sprite number
 
 dec a
@@ -1428,8 +1647,12 @@ jp nz, TEST_SHIFTS
 srl b                       ;calculate row/col
 srl c
 
+#ifdef STORE_UNSHIFTED_SPRITES
+ex de, hl
+#else
 ld hl, 4
 add hl, de                  ;hl = sprite data address
+#endif
 
 push bc
 
@@ -1438,8 +1661,10 @@ call DRAW_SPRITE_COLUMN
 
 pop bc
 inc b
+#ifndef STORE_UNSHIFTED_SPRITES
 ld de, 8
 add hl, de
+#endif
 ld a, 2
 call DRAW_SPRITE_COLUMN
 
@@ -1458,8 +1683,36 @@ jp z, VERTICAL_SHIFT
 srl b                       ;calculate row/col
 srl c
 
+#ifdef STORE_UNSHIFTED_SPRITES
+ld iyh, d
+ld iyl, e
+ld ix, TEMP_2x2_SPRITE + 4
+ld d, b
+ld b, 16
+LOOP1:
+ld h, (iy+0)
+ld l, (iy+16)
+xor a
+add hl, hl
+rla
+add hl, hl
+rla
+add hl, hl
+rla
+add hl, hl
+rla
+ld (ix+0), a
+ld (ix+24), h
+ld (ix+48), l
+inc iy
+inc ix
+djnz LOOP1
+ld b, d
+ld hl, TEMP_2x2_SPRITE
+#else
 ld hl, 48
 add hl, de
+#endif
 
 push bc                     ;store coords
 ld a, 3
@@ -1483,8 +1736,36 @@ HORIZONTAL_SHIFT:
 srl b                       ;calculate col/row
 srl c
 
+#ifdef STORE_UNSHIFTED_SPRITES
+ld iyh, d
+ld iyl, e
+ld ix, TEMP_2x2_SPRITE + 4
+ld d, b
+ld b, 16
+LOOP2:
+ld h, (iy+0)
+ld l, (iy+16)
+xor a
+add hl, hl
+rla
+add hl, hl
+rla
+add hl, hl
+rla
+add hl, hl
+rla
+ld (ix+0), a
+ld (ix+24), h
+ld (ix+48), l
+inc iy
+inc ix
+djnz LOOP2
+ld b, d
+ld hl, TEMP_2x2_SPRITE + 4
+#else
 ld hl, 52                   ;skip 32 bytes; 12 bytes of padding and 1 char
 add hl, de                  ;hl now contains first line of real data
+#endif
 
 push bc                     ;store coords
 ld a,2                      ;column is 2 chars height
@@ -1513,6 +1794,17 @@ srl b                       ;calculate row/col
 srl c
 
 ex de, hl
+#ifdef STORE_UNSHIFTED_SPRITES
+ld de, TEMP_2x2_SPRITE + 4
+push bc
+LDI_8()
+LDI_8()
+ld de, TEMP_2x2_SPRITE + 28
+LDI_8()
+LDI_8()
+pop bc
+ld hl, TEMP_2x2_SPRITE
+#endif
 ld a, 3
 push bc
 call DRAW_SPRITE_COLUMN     ;draw first row
