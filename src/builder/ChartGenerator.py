@@ -21,4 +21,4 @@ class ChartGenerator:
         self.__generateMemoryChart(paramsMap0)
     
     def __generateMemoryChart(self, params):
-        runPythonScript(BIN_FOLDER + "memoryImageGenerator.py " + params)
+        runPythonScript(str(BIN_FOLDER / "memoryImageGenerator.py") + " " + params)

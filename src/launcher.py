@@ -4,6 +4,9 @@ import platform
 import subprocess
 import sys
 
+from configuración.folders import BIN_FOLDER, OUTPUT_FOLDER, DIST_FOLDER, ASSETS_FOLDER, SCREENS_FOLDER, MAP_FOLDER, MAPS_FILE, HUD_MAP_FILE, MAPS_PROJECT, SRC_FOLDER
+from configuración.memoria import INITIAL_ADDRESS, MEMORY_BANK_SIZE
+
 def install_requirements():
     """Ejecuta el script de instalación de dependencias según el sistema operativo."""
     try:
@@ -20,18 +23,18 @@ def install_requirements():
             sys.exit(1)
 
         # Construir la ruta completa del script
-        script_path = os.path.join(os.path.dirname(__file__), "scripts", script_name)
+        script_path = Path(os.path.dirname(__file__)) / "scripts" / script_name
 
         # Verificar si el script existe
-        if not os.path.exists(script_path):
+        if not script_path.exists():
             print(f"No se encontró el script: {script_path}")
             sys.exit(1)
 
         # Ejecutar el script
         if current_os == "Windows":
-            subprocess.run(["powershell", "-ExecutionPolicy", "Bypass", "-File", script_path], check=True)
+            subprocess.run(["powershell", "-ExecutionPolicy", "Bypass", "-File", str(script_path)], check=True)
         else:
-            subprocess.run(["bash", script_path], check=True)
+            subprocess.run(["bash", str(script_path)], check=True)
 
     except subprocess.CalledProcessError as e:
         print(f"Error al ejecutar el script de instalación de dependencias: {e}")
@@ -50,7 +53,8 @@ import threading
 import webbrowser
 
 from builder.SpritesPreviewGenerator import SpritesPreviewGenerator
-from builder.helper import ASSETS_FOLDER, DIST_FOLDER, MAPS_PROJECT, SRC_FOLDER, getProjectFileName
+# from builder.helper import DIST_FOLDER, MAPS_PROJECT, getProjectFileName
+from builder.helper import getProjectFileName
 
 import os
 
@@ -73,15 +77,15 @@ def run_script(script_name, output_text, extra_args=None):
                 return
 
             # Construir la ruta completa del script en la carpeta src/scripts
-            script_path = os.path.join(os.getcwd(), "scripts", script_name)
+            script_path = Path.cwd() / "scripts" / script_name
 
             # Verificar si el script existe
-            if not os.path.exists(script_path):
+            if not script_path.exists():
                 output_text.insert(tk.END, f"No se encontró el script: {script_path}\n")
                 return
 
             # Construir el comando con parámetros adicionales
-            command = [script_path]
+            command = [str(script_path)]
             if extra_args:
                 command.extend(extra_args)
 
@@ -135,20 +139,22 @@ def open_game_variant(variant):
             
         # Detectar el sistema operativo y seleccionar el archivo ejecutable
         if platform.system() == "Windows":
-            game_path = os.path.join(os.getcwd(), DIST_FOLDER, f"{project_name}.exe")
+            # game_path = os.path.join(os.getcwd(), DIST_FOLDER, f"{project_name}.exe")
+            game_path = Path.cwd() / DIST_FOLDER / f"{project_name}.exe"
         elif platform.system() in ["Linux", "Darwin"]:
-            game_path = os.path.join(os.getcwd(), DIST_FOLDER, f"{project_name}.linux")
+            # game_path = os.path.join(os.getcwd(), DIST_FOLDER, f"{project_name}.linux")
+            game_path = Path.cwd() / DIST_FOLDER / f"{project_name}.linux"
         else:
             messagebox.showerror("Error", "El sistema operativo no es compatible.")
             return
 
         # Verificar si el archivo existe
-        if not os.path.exists(game_path):
+        if not game_path.exists():
             messagebox.showerror("Error", f"No se encontró el archivo del juego: {game_path}")
             return
 
         # Abrir el archivo ejecutable
-        subprocess.Popen([game_path], shell=True)
+        subprocess.Popen([str(game_path)], shell=True)
     except Exception as e:
         messagebox.showerror("Error", f"No se pudo abrir el juego: {e}")
 
@@ -156,7 +162,7 @@ def show_modal_with_animation(gif_path):
     """Abre el GIF en el navegador predeterminado."""
     try:
         # Verificar si el archivo existe
-        if not os.path.exists(gif_path):
+        if not gif_path.exists():
             messagebox.showerror("Error", f"No se encontró el archivo: {gif_path}")
             return
 
@@ -254,10 +260,11 @@ def open_memory_bank_image(image):
     """Abre la imagen de uso de memoria para el banco especificado."""
     try:
         # Construir la ruta de la imagen
-        image_path = os.path.join(os.getcwd(), "output", image)
+        # image_path = os.path.join(os.getcwd(), "output", image)
+        image_path = Path.cwd() / OUTPUT_FOLDER / image
 
         # Verificar si la imagen existe
-        if not os.path.exists(image_path):
+        if not image_path.exists():
             messagebox.showerror("Error", f"No se encontró la imagen: {image_path}")
             return
 
@@ -275,20 +282,17 @@ def open_memory_bank_image(image):
 
 def open_map_with_tiled():
     """Abre el mapa en Tiled."""
-    if not MAPS_PROJECT:
-        messagebox.showerror("Error", "No se especificó el archivo del mapa.")
-        return
-
-    if not os.path.exists(MAPS_PROJECT):
+    # Verificar si el archivo del mapa existe
+    if not MAPS_PROJECT.exists():
         messagebox.showerror("Error", f"No se encontró el archivo del mapa: {MAPS_PROJECT}")
         return
 
     if os.name == "nt":
         program_files = os.environ["ProgramFiles"]
-        command = "\"" + program_files + "\\Tiled\\tiled.exe\" " + MAPS_PROJECT
+        command = "\"" + program_files + "\\Tiled\\tiled.exe\" " + str(MAPS_PROJECT)
     else:
-        command = "tiled " + MAPS_PROJECT
-
+        command = "tiled " + str(MAPS_PROJECT)
+    
     subprocess.Popen(command, shell=True)
 
 # Crear la ventana principal
@@ -297,8 +301,8 @@ root.title("ZX Spectrum Game Maker")
 root.geometry("600x750")
 root.resizable(False, False)
 
-os.system("zxp2gus -t tiles -i " + str(Path(ASSETS_FOLDER + "map/tiles.zxp")) + " -o " + SRC_FOLDER + " -f png")
-os.system("zxp2gus -t sprites -i " + str(Path(ASSETS_FOLDER + "map/sprites.zxp")) + " -o " + SRC_FOLDER + " -f png")
+os.system("zxp2gus -t tiles -i " + str(ASSETS_FOLDER / "map/tiles.zxp") + " -o " + str(SRC_FOLDER) + " -f png")
+os.system("zxp2gus -t sprites -i " + str(ASSETS_FOLDER / "map/sprites.zxp") + " -o " + str(SRC_FOLDER) + " -f png")
 
 from builder.ZXPWatcher import ZXPWatcher
 watcher = ZXPWatcher()
@@ -306,15 +310,15 @@ watcher_thread = threading.Thread(target=watcher.start, daemon=True)
 watcher_thread.start()
 
 # Establecer el icono de la aplicación
-icon_path = os.path.join(os.getcwd(), "ui/logo.png")
-if os.path.exists(icon_path):
+icon_path = Path.cwd() / "ui/logo.png"
+if icon_path.exists():
     root.iconphoto(True, PhotoImage(file=icon_path))
 else:
     messagebox.showwarning("Advertencia", "No se encontró el icono en 'ui/logo.png'.")
 
 # Cargar el logo
-logo_path = os.path.join(os.getcwd(), "ui/logo.png")
-if os.path.exists(logo_path):
+logo_path = Path.cwd() / "ui/logo.png"
+if logo_path.exists():
     logo = PhotoImage(file=logo_path)
     logo_label = tk.Label(root, image=logo)
     logo_label.pack(pady=10)

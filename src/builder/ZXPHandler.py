@@ -1,8 +1,7 @@
 import os
 from pathlib import Path
+from configuración.folders import SRC_FOLDER
 from watchdog.events import FileSystemEventHandler
-
-from builder.helper import SRC_FOLDER
 
 WATCH_FILES = ["tiles.zxp", "sprites.zxp"]
 
@@ -13,6 +12,6 @@ class ZXPHandler(FileSystemEventHandler):
             if file_path.name in WATCH_FILES:
                 print(f"{file_path.name} modificado. Ejecutando conversión...")
                 if file_path.name == "tiles.zxp":
-                    os.system("zxp2gus -t tiles -i " + str(file_path) + " -o " + SRC_FOLDER + " -f png")
+                    os.system("zxp2gus -t tiles -i " + str(file_path) + " -o " + str(SRC_FOLDER) + " -f png")
                 elif file_path.name == "sprites.zxp":
-                    os.system("zxp2gus -t sprites -i " + str(file_path) + " -o " + SRC_FOLDER + " -f png")
+                    os.system("zxp2gus -t sprites -i " + str(file_path) + " -o " + str(SRC_FOLDER) + " -f png")
