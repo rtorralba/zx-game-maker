@@ -15,4 +15,3 @@ rm venv/bin/bin2tap.py
 
 pip uninstall -y opencv-python
 pip install opencv-python-headless
-pip install watchdog
