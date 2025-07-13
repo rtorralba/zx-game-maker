@@ -20,8 +20,6 @@ python_executable = str(Path(sys.executable)) + " "
 
 TILED_SCRIPT = BIN_FOLDER / "tiled-build.py"
 
-DEFAULT_FX = Path("default/fx.tap")   # ¿?¿?
-
 def tiledBuild():
     runPythonScript(str(TILED_SCRIPT))
 
@@ -54,7 +52,7 @@ def tapsBuild():
             str(OUTPUT_FOLDER / "main.tap"),
             str(ASSETS_FOLDER / "fx/fx.tap"),
             str(OUTPUT_FOLDER / "files.tap"),
-            str(BIN_FOLDER / "vtplayer.tap"),      # ¿?¿?
+            str(BIN_FOLDER / "vtplayer.tap"),
             str(OUTPUT_FOLDER / "music.tap"),
             str(OUTPUT_FOLDER / "music-title.tap"),
             str(OUTPUT_FOLDER / "music2.tap"),

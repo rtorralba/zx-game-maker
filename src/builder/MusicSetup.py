@@ -2,13 +2,15 @@ import os
 from pathlib import Path
 import subprocess
 
+from configuración.folders import OUTPUT_FOLDER
+
 class MusicSetup:
 
     def __tapsplitCommandByOS(self):
         if os.name == "nt":
-            return r"py .\venv\Scripts\tapsplit --outdir output "
+            return rf"py .\venv\Scripts\tapsplit --outdir {OUTPUT_FOLDER} "
         else:
-            return "tapsplit --outdir output "    # ¿?¿?
+            return f"tapsplit --outdir {OUTPUT_FOLDER} "
         
     def splitSongs(self):
         musicFile = Path("../assets/music/music.tap")

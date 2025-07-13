@@ -6,7 +6,7 @@ from watchdog.observers import Observer
 from builder.ZXPHandler import ZXPHandler
 from builder.helper import MAP_FOLDER
 
-DIR = str(Path(MAP_FOLDER))
+DIR = MAP_FOLDER
 
 class ZXPWatcher(watchdog.observers.Observer) :
     def start(self):

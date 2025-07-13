@@ -1,6 +1,7 @@
 version  = "ZX SPECTRUM GAME MAKER V1"  # versión del fichero de configuración
 
-bin = "../src/bin"   # BIN_FOLDER       ¿../src/bin?    ¿bin?
+src = "."
+bin = "bin"   # BIN_FOLDER
 output = "output"    # OUTPUT_FOLDER
 dist = "../dist"     # DIST_FOLDER
 

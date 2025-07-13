@@ -4,7 +4,7 @@ import platform
 import subprocess
 import sys
 
-from configuración.folders import BIN_FOLDER, OUTPUT_FOLDER, DIST_FOLDER, ASSETS_FOLDER, SCREENS_FOLDER, MAP_FOLDER, MAPS_FILE, HUD_MAP_FILE, MAPS_PROJECT
+from configuración.folders import BIN_FOLDER, OUTPUT_FOLDER, DIST_FOLDER, ASSETS_FOLDER, SCREENS_FOLDER, MAP_FOLDER, MAPS_FILE, HUD_MAP_FILE, MAPS_PROJECT, SRC_FOLDER
 from configuración.memoria import INITIAL_ADDRESS, MEMORY_BANK_SIZE
 
 def install_requirements():
@@ -282,11 +282,6 @@ def open_memory_bank_image(image):
 
 def open_map_with_tiled():
     """Abre el mapa en Tiled."""
-    # Verificar si la variable MAPS_PROJECT está definida      ¿?¿?¿?
-    if not MAPS_PROJECT:
-        messagebox.showerror("Error", "No se especificó el archivo del mapa.")
-        return
-
     # Verificar si el archivo del mapa existe
     if not MAPS_PROJECT.exists():
         messagebox.showerror("Error", f"No se encontró el archivo del mapa: {MAPS_PROJECT}")
@@ -306,8 +301,8 @@ root.title("ZX Spectrum Game Maker")
 root.geometry("600x750")
 root.resizable(False, False)
 
-os.system("zxp2gus -t tiles -i " + str(Path(ASSETS_FOLDER + "map/tiles.zxp")) + " -o " + SRC_FOLDER + " -f png")
-os.system("zxp2gus -t sprites -i " + str(Path(ASSETS_FOLDER + "map/sprites.zxp")) + " -o " + SRC_FOLDER + " -f png")
+os.system("zxp2gus -t tiles -i " + str(ASSETS_FOLDER / "map/tiles.zxp") + " -o " + str(SRC_FOLDER) + " -f png")
+os.system("zxp2gus -t sprites -i " + str(ASSETS_FOLDER / "map/sprites.zxp") + " -o " + str(SRC_FOLDER) + " -f png")
 
 from builder.ZXPWatcher import ZXPWatcher
 watcher = ZXPWatcher()

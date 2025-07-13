@@ -16,6 +16,7 @@ if versión != "ZX SPECTRUM GAME MAKER V1":
     raise Exception(f"versión incorrecta ({versión}) del fichero {_fichero}")
 del _fichero
 
+SRC_FOLDER = Path(configuración["src"])
 BIN_FOLDER = Path(configuración["bin"])
 OUTPUT_FOLDER = Path(configuración["output"])
 DIST_FOLDER = Path(configuración["dist"])
