@@ -119,7 +119,7 @@ function isSolidTileByColLin(col as ubyte, lin as ubyte) as ubyte
         End If
     #endif
 
-    if tile > 64 then return 0
+    if tile > 63 then return 0
     if tile < 1 then return 0
 
 	return tile
@@ -150,12 +150,10 @@ end function
 
 #ifdef SIDE_VIEW
     Function checkTravesablePlatformFromTop(x as uByte, y as uByte) as uByte
-        If jumpCurrentKey <> jumpStopValue Then Return 0
-        
         Dim tile as Ubyte = GetTile(x >> 1, y >> 1)
 
         If tile < 64 Then Return 0
-        If tile > 67 Then Return 0
+        If tile > 65 Then Return 0
 
         Return 1
     End Function
@@ -165,15 +163,29 @@ end function
         
         Dim tile as Ubyte = GetTile(x >> 1, y >> 1)
 
-        If tile < 66 Then Return 0
+        If tile < 68 Then Return 0
         If tile > 69 Then Return 0
 
         Return 1
     End Function
 
-    function checkTravesablePlatformFromTopAndBottom(x as uByte, y as uByte) as uByte
-        Return checkTravesablePlatformFromTop(x, y) or checkTravesablePlatformFromBottom(x, y)
+    function checkTravesablePlatform(x as uByte, y as uByte) as uByte
+        Dim tile as Ubyte = GetTile(x >> 1, y >> 1)
+
+        If tile < 64 Then Return 0
+        If tile > 69 Then Return 0
+
+        Return 1
     end function
+
+    Function checkTravesablePlatformFromTopAndAll(x as uByte, y as uByte) as uByte
+        Dim tile as Ubyte = GetTile(x >> 1, y >> 1)
+
+        If tile < 64 Then Return 0
+        If tile > 67 Then Return 0
+
+        Return 1
+    End Function
 #endif
 
 function checkSolidOrDamageTile(col as uByte, lin as uByte, isSolid as Ubyte = 1) as uByte
