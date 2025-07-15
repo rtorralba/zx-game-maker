@@ -206,8 +206,8 @@ End Function
                 End If
                 jumpCurrentKey = jumpCurrentKey + 1
                 jumpEnergy = jumpEnergy - 1
-                PRINT AT 23, 5; "   "
-                PRINT AT 23, 5; jumpEnergy
+                Print AT 23, 5; "   "
+                Print AT 23, 5; jumpEnergy
                 Return
             End If
             
@@ -435,7 +435,7 @@ Sub upKey()
             Else
                 jump()
             End If
-        #else
+        #Else
             jump()
         #endif
     #Else
@@ -521,7 +521,7 @@ End Sub
 
 Function checkTileObject(tile As Ubyte) As Ubyte
     If tile < 187 Then Return 0
-
+    
     If tile = ITEM_TILE Then
         currentItems = currentItems + ITEMS_INCREMENT
         #ifdef HISCORE_ENABLED
@@ -566,13 +566,13 @@ Function checkTileObject(tile As Ubyte) As Ubyte
         printLife()
         BeepFX_Play(6)
         Return 1
-    #ifdef AMMO_ENABLED
-    Elseif tile = AMMO_TILE Then
-        currentAmmo = currentAmmo + AMMO_INCREMENT
-        printLife()
-        BeepFX_Play(6)
-        Return 1
-    #endif
+        #ifdef AMMO_ENABLED
+        Elseif tile = AMMO_TILE Then
+            currentAmmo = currentAmmo + AMMO_INCREMENT
+            printLife()
+            BeepFX_Play(6)
+            Return 1
+        #endif
     End If
     Return 0
 End Function
@@ -580,7 +580,7 @@ End Function
 Sub checkObjectContact()
     Dim col As Ubyte = protaX >> 1
     Dim lin As Ubyte = protaY >> 1
-
+    
     Dim tile As Ubyte = GetTile(col, lin)
     
     If checkTileObject(tile) Then
@@ -588,21 +588,21 @@ Sub checkObjectContact()
         FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col, lin)
         Return
     End If
-
+    
     tile = GetTile(col + 1, lin)
     If checkTileObject(tile) Then
         addScreenObject(tile, col + 1, lin)
         FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col + 1, lin)
         Return
     End If
-
+    
     tile = GetTile(col, lin + 1)
     If checkTileObject(tile) Then
         addScreenObject(tile, col, lin + 1)
         FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col, lin + 1)
         Return
     End If
-  
+    
     tile = GetTile(col + 1, lin + 1)
     If checkTileObject(tile) Then
         addScreenObject(tile, col + 1, lin + 1)
@@ -613,8 +613,8 @@ End Sub
 
 Sub checkDamageByTile()
     If invincible Then Return
-
-    CheckCollision(protaX, protaY, 0) ' check if we are on a damage tile
+    
+    CheckCollision(protaX, protaY, 0) ' check If we are On a damage tile
 End Sub
 
 Sub protaMovement()
