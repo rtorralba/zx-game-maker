@@ -53,6 +53,18 @@ Function canMoveDown() As Ubyte
     Return 1
 End Function
 
+#ifdef SIDE_VIEW
+    #ifdef LADDERS_ENABLED
+        Function getNextFrameLadder() As Ubyte
+            If protaTile = 11 Then
+                Return 12
+            Else
+                Return 11
+            End If
+        End Function
+    #endif
+#endif
+
 Function getNextFrameRunning() As Ubyte
     #ifdef SIDE_VIEW
         #ifdef MAIN_CHARACTER_EXTRA_FRAME
@@ -204,7 +216,7 @@ End Function
     #endif
     
     Function isFalling() As Ubyte
-        If canMoveDown() Then
+        If canMoveDown() And Not CheckCollision(protaX, protaY, 2) And Not CheckCollision(protaX, protaY + 2, 2) Then
             #ifdef JETPACK_FUEL
                 If pressingUp() Then
                     jumpCurrentKey = 0
@@ -416,7 +428,16 @@ End Sub
 
 Sub upKey()
     #ifdef SIDE_VIEW
-        jump()
+        #ifdef LADDERS_ENABLED
+            If CheckCollision(protaX, protaY, 2) Then
+                protaY = protaY - 1
+                protaTile = getNextFrameLadder()
+            Else
+                jump()
+            End If
+        #else
+            jump()
+        #endif
     #Else
         If protaDirection <> 8 Then
             protaFrame = 4
@@ -447,10 +468,17 @@ Sub downKey()
             End If
         End If
     #Else
-        If CheckCollision(protaX, protaY + 4, 1) Then Return
+        If CheckCollision(protaX, protaY + 1, 1) Then Return
         If checkTravesablePlatformFromTopAndAll(protaX, protaY + 4) Or checkTravesablePlatformFromTopAndAll(protaX + 1, protaY + 4) Or checkTravesablePlatformFromTopAndAll(protaX + 2, protaY + 4) Or checkTravesablePlatformFromTopAndAll(protaX, protaY + 2) Or checkTravesablePlatformFromTopAndAll(protaX + 1, protaY + 2) Or checkTravesablePlatformFromTopAndAll(protaX + 2, protaY + 2) Or checkTravesablePlatformFromTopAndAll(protaX, protaY) Or checkTravesablePlatformFromTopAndAll(protaX + 1, protaY) Or checkTravesablePlatformFromTopAndAll(protaX + 2, protaY) Then
             protaY = protaY + 2
+            Return
         End If
+        #ifdef LADDERS_ENABLED
+            If CheckCollision(protaX, protaY, 2) Or CheckCollision(protaX, protaY + 1, 2) Then
+                protaY = protaY + 1
+                protaTile = getNextFrameLadder()
+            End If
+        #endif
     #endif
 End Sub
 

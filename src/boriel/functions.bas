@@ -158,17 +158,6 @@ end function
         Return 1
     End Function
 
-    Function checkTravesablePlatformFromBottom(x as uByte, y as uByte) as uByte
-        If jumpCurrentKey <> jumpStopValue Then Return 0
-        
-        Dim tile as Ubyte = GetTile(x >> 1, y >> 1)
-
-        If tile < 68 Then Return 0
-        If tile > 69 Then Return 0
-
-        Return 1
-    End Function
-
     function checkTravesablePlatform(x as uByte, y as uByte) as uByte
         Dim tile as Ubyte = GetTile(x >> 1, y >> 1)
 
@@ -186,44 +175,63 @@ end function
 
         Return 1
     End Function
+    #ifdef LADDERS_ENABLED
+        Function isLadder(col as uByte, lin as uByte) as uByte
+            Dim tile as Ubyte = GetTile(col, lin)
+
+            If tile < 70 Then Return 0
+            If tile > 71 Then Return 0
+
+            Return 1
+        End Function
+    #endif
 #endif
 
-function checkSolidOrDamageTile(col as uByte, lin as uByte, isSolid as Ubyte = 1) as uByte
-    if isSolid then
-        return isSolidTileByColLin(col, lin)
-    else
+'type 0 Damage, 1 Solid, 2 Ladder
+Function checkTypeOfTile(col as uByte, lin as uByte, type as Ubyte) as uByte
+    If type = 1 Then
+        Return isSolidTileByColLin(col, lin)
+    End If
+    If type = 0 Then
         isDamageTileByColLin(col, lin)
-        return 0
-    end if  
-end function
+        Return 0
+    End If
+    #ifdef LADDERS_ENABLED
+        If type = 2 Then
+            Return isLadder(col, lin)
+        End If
+    #endif
+    Return 0
+End Function
 
-function CheckCollision(x as uByte, y as uByte, isSolid as Ubyte) as uByte
-    Dim xIsEven as uByte = (x bAnd 1) = 0
-    Dim yIsEven as uByte = (y bAnd 1) = 0
-    Dim col as uByte = x >> 1
-    Dim lin as uByte = y >> 1
+'type 0 Damage, 1 Solid, 2 Ladder
+Function CheckCollision(x as Ubyte, y as Ubyte, type as Ubyte) as Ubyte
+    Dim xIsEven as Ubyte = (x bAnd 1) = 0
+    Dim yIsEven as Ubyte = (y bAnd 1) = 0
+    Dim col as Ubyte = x >> 1
+    Dim lin as Ubyte = y >> 1
 
-    if checkSolidOrDamageTile(col, lin, isSolid) then return 1
-    if checkSolidOrDamageTile(col + 1, lin, isSolid) then return 1
-    if checkSolidOrDamageTile(col, lin + 1, isSolid) then return 1
-    if checkSolidOrDamageTile(col + 1, lin + 1, isSolid) then return 1
+    if checkTypeOfTile(col, lin, type) then return 1
+    if checkTypeOfTile(col + 1, lin, type) then return 1
+    if checkTypeOfTile(col, lin + 1, type) then return 1
+    if checkTypeOfTile(col + 1, lin + 1, type) then return 1
 
     if not yIsEven then
-        if checkSolidOrDamageTile(col, lin + 2, isSolid) then return 1
-        if checkSolidOrDamageTile(col + 1, lin + 2, isSolid) then return 1
+        if checkTypeOfTile(col, lin + 2, type) then return 1
+        if checkTypeOfTile(col + 1, lin + 2, type) then return 1
     end if
 
     if not xIsEven then
-        if checkSolidOrDamageTile(col + 2, lin, isSolid) then return 1
-        if checkSolidOrDamageTile(col + 2, lin + 1, isSolid) then return 1
+        if checkTypeOfTile(col + 2, lin, type) then return 1
+        if checkTypeOfTile(col + 2, lin + 1, type) then return 1
     end if
 
     if not xIsEven and not yIsEven then
-		if checkSolidOrDamageTile(col + 2, lin + 2, isSolid) then return 1
+		if checkTypeOfTile(col + 2, lin + 2, type) then return 1
     end if
 
 	return 0
-end function
+End Function
 
 sub removeTilesFromScreen(tile as ubyte)
 	dim index as uinteger

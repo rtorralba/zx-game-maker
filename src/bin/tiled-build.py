@@ -144,6 +144,8 @@ livesMode = 0
 
 messagesEnabled = 0
 
+laddersEnabled = 1
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -240,6 +242,8 @@ if 'properties' in data:
                 livesMode = 2
         elif property['name'] == 'messagesEnabled':
             messagesEnabled = 1 if property['value'] else 0
+        elif property['name'] == 'laddersEnabled':
+            laddersEnabled = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -315,6 +319,9 @@ if messagesEnabled == 1:
     configStr += "#DEFINE MESSAGES_ENABLED\n"
     configStr += "Dim messageLoopCounter As Ubyte = 0\n"
     configStr += "#Define MESSAGE_LOOPS_VISIBLE 30\n"
+
+if laddersEnabled == 1:
+    configStr += "#DEFINE LADDERS_ENABLED\n"
 
 if len(initTexts) > 0:
     configStr += "#DEFINE INIT_TEXTS\n"
