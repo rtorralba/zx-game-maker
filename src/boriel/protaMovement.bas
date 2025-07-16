@@ -640,6 +640,7 @@ Sub protaMovement()
             If protaLoopCounter >= IDLE_TIME Then
                 If jumpCurrentKey <> jumpStopValue Then Return
                 If isFalling() Then Return
+                If CheckCollision(protaX, protaY, 2) Then Return
                 
                 If framec - lastFrameTiles = ANIMATE_PERIOD_TILE - 2 Then
                     If protaTile = 13 Then
