@@ -203,6 +203,13 @@ End Sub
 
 Sub drawSprites()
     If (protaY < 41) Then
+        #ifdef LADDERS_ENABLED
+            If CheckCollision(protaX, protaY, 2) Then
+                If protaTile < 11 Then
+                    protaTile = 11
+                End If
+            End If
+        #endif
         #ifdef LIVES_MODE_GRAVEYARD
             Draw2x2Sprite(protaTile, protaX, protaY)
         #else
