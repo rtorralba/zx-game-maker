@@ -159,46 +159,46 @@ End Sub
 #endif
 
 Sub moveToScreen(direction As Ubyte)
-    ' removeAllObjects()
     If direction = 6 Then
-        saveProta(protaY, 0, protaTile, protaDirection)
         currentScreen = currentScreen + 1
-        
+        protaX = 0
         #ifdef LIVES_MODE_ENABLED
             protaXRespawn = 0
             protaYRespawn = protaY
         #endif
     Elseif direction = 4 Then
-        saveProta(protaY, 60, protaTile, protaDirection)
         currentScreen = currentScreen - 1
-        
+        protaX = 60
         #ifdef LIVES_MODE_ENABLED
             protaXRespawn = 60
             protaYRespawn = protaY
         #endif
     Elseif direction = 2 Then
-        saveProta(0, protaX, protaTile, protaDirection)
         currentScreen = currentScreen + MAP_SCREENS_WIDTH_COUNT
-        
+        protaY = 0
         #ifdef LIVES_MODE_ENABLED
             protaXRespawn = protaX
             protaYRespawn = 0
         #endif
     Elseif direction = 8 Then
-        saveProta(MAX_LINE, protaX, protaTile, protaDirection)
-        #ifdef SIDE_VIEW
-            jumpCurrentKey = 0
-        #endif
         currentScreen = currentScreen - MAP_SCREENS_WIDTH_COUNT
-        
+        protaY = MAX_LINE
         #ifdef LIVES_MODE_ENABLED
             protaXRespawn = protaX
             protaYRespawn = MAX_LINE
         #endif
     End If
-    
+
     swapScreen()
-    ' removeScreenObjectFromBuffer()
+
+    If direction = 8 Then
+        #ifdef SIDE_VIEW
+            #ifdef LADDERS_ENABLED
+                If CheckCollision(protaX, protaY, 2) Then Return
+            #endif
+            jumpCurrentKey = 0
+        #endif
+    End If
 End Sub
 
 Sub drawSprites()

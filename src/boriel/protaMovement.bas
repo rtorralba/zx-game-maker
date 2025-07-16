@@ -430,8 +430,18 @@ Sub upKey()
     #ifdef SIDE_VIEW
         #ifdef LADDERS_ENABLED
             If CheckCollision(protaX, protaY, 2) Then
-                protaY = protaY - 1
-                protaTile = getNextFrameLadder()
+                If protaY = 0 Then
+                    #ifdef ARCADE_MODE
+                        protaY = 39
+                    #else
+                        moveScreen = 8 ' stop jumping
+                    #endif
+                    Return
+                End If
+                If Not CheckCollision(protaX, protaY - 1, 1) Then
+                    protaY = protaY - 1
+                    protaTile = getNextFrameLadder()
+                End If
             Else
                 jump()
             End If
