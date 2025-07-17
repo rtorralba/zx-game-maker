@@ -485,6 +485,14 @@ Sub downKey()
         End If
         #ifdef LADDERS_ENABLED
             If CheckCollision(protaX, protaY, 2) Or CheckCollision(protaX, protaY + 1, 2) Then
+                If protaY = MAX_LINE Then
+                    #ifdef ARCADE_MODE
+                        protaY = 0
+                    #else
+                        moveScreen = 2 ' stop jumping
+                    #endif
+                    Return
+                End If
                 protaY = protaY + 1
                 protaTile = getNextFrameLadder()
             End If
