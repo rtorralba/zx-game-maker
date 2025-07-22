@@ -641,15 +641,27 @@ Sub protaMovement()
     #endif
 
     #ifdef SHOOTING_ENABLED
-        If MultiKeys(keyArray(FIRE)) = 0 Then
-            noKeyPressedForShoot = 1
+        If kempston = 1 Then
+            If In(31) bAND %10000 = 0 Then
+                noKeyPressedForShoot = 1
+            End If
+        Else
+            If MultiKeys(keyArray(FIRE)) = 0 Then
+                noKeyPressedForShoot = 1
+            End If
         End If
     #endif
 
     #ifdef SIDE_VIEW
         #ifdef DISABLE_CONTINUOUS_JUMP
-            If MultiKeys(keyArray(UP)) = 0 Then
-                noKeyPressedForJump = 1
+            If kempston = 1 Then
+                If In(31) bAND %1000 = 0 Then
+                    noKeyPressedForJump = 1
+                End If
+            Else
+                If MultiKeys(keyArray(UP)) = 0 Then
+                    noKeyPressedForJump = 1
+                End If
             End If
         #endif
     #endif

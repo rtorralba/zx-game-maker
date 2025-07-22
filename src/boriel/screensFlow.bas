@@ -25,6 +25,8 @@ Sub showMenu()
     #endif
     
     Do
+        Dim n As Ubyte = In(31)
+
         If MultiKeys(KEY1) Then
             If Not keyArray(LEFT) Then
                 Let keyArray(LEFT) = KEYO
@@ -48,6 +50,9 @@ Sub showMenu()
             elseif MultiKeys(KEY4) Then
                 redefineKeys()
             #endif
+        elseif n bAND %10000 Then
+            kempston = 1
+            playGame()
         End If
     Loop
 End Sub
@@ -156,7 +161,7 @@ Sub playGame()
             dzx0Standard(INTRO_SCREEN_ADDRESS, $4000)
             PaginarMemoria(0)
             Do
-            Loop Until MultiKeys(KEYENTER)
+            Loop Until MultiKeys(KEYENTER) Or (In(31) bAND %10000)
         #endif
     #endif
     
@@ -278,7 +283,7 @@ Sub ending()
         dzx0Standard(ENDING_SCREEN_ADDRESS, $4000)
     #endif
     Do
-    Loop Until MultiKeys(KEYENTER)
+    Loop Until MultiKeys(KEYENTER) Or (In(31) bAND %10000)
     showMenu()
 End Sub
 
@@ -313,7 +318,7 @@ Sub gameOver()
     #endif
     
     Do
-    Loop Until MultiKeys(KEYENTER)
+    Loop Until MultiKeys(KEYENTER) Or (In(31) bAND %10000)
     showMenu()
 End Sub
 
