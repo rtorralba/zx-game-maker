@@ -258,6 +258,12 @@ end sub
 
 #ifdef SIDE_VIEW
 	sub jump()
+        #ifdef SIDE_VIEW
+            #ifdef DISABLE_CONTINUOUS_JUMP
+                If Not noKeyPressedForJump Then Return
+                noKeyPressedForJump = 0
+            #endif
+        #endif
         if jumpCurrentKey = jumpStopValue and landed then
             landed = 0
             jumpCurrentKey = 0

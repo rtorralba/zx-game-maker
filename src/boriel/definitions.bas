@@ -79,6 +79,9 @@ Dim inMenu As Ubyte = 1
 
 #ifdef SIDE_VIEW
     Dim tileSet(192, 7) As Ubyte at TILESET_DATA_ADDRESS
+    #ifdef DISABLE_CONTINUOUS_JUMP
+        Dim noKeyPressedForJump As Ubyte = 1
+    #endif
 #Else
     Dim tileSet(194, 7) As Ubyte at TILESET_DATA_ADDRESS
 #endif

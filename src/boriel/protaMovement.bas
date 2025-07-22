@@ -639,10 +639,20 @@ Sub protaMovement()
     #ifdef LIVES_MODE_GRAVEYARD
         If invincible Then Return
     #endif
-    
-    If MultiKeys(keyArray(FIRE)) = 0 Then
-        noKeyPressedForShoot = 1
-    End If
+
+    #ifdef SHOOTING_ENABLED
+        If MultiKeys(keyArray(FIRE)) = 0 Then
+            noKeyPressedForShoot = 1
+        End If
+    #endif
+
+    #ifdef SIDE_VIEW
+        #ifdef DISABLE_CONTINUOUS_JUMP
+            If MultiKeys(keyArray(UP)) = 0 Then
+                noKeyPressedForJump = 1
+            End If
+        #endif
+    #endif
     keyboardListen()
     checkObjectContact()
     

@@ -146,6 +146,8 @@ messagesEnabled = 0
 
 laddersEnabled = 1
 
+disableContinuousJump = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -244,6 +246,8 @@ if 'properties' in data:
             messagesEnabled = 1 if property['value'] else 0
         elif property['name'] == 'laddersEnabled':
             laddersEnabled = 1 if property['value'] else 0
+        elif property['name'] == 'disableContinuousJump':
+            disableContinuousJump = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -322,6 +326,10 @@ if messagesEnabled == 1:
 
 if laddersEnabled == 1:
     configStr += "#DEFINE LADDERS_ENABLED\n"
+
+if disableContinuousJump == 1 and gameView == 'side':
+    configStr += "#DEFINE DISABLE_CONTINUOUS_JUMP\n"
+    configStr += "\n"
 
 if len(initTexts) > 0:
     configStr += "#DEFINE INIT_TEXTS\n"

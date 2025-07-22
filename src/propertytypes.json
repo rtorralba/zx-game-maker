@@ -130,6 +130,11 @@
                 "value": 10
             },
             {
+                "name": "disableContinuousJump",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "enemiesRespawn",
                 "type": "bool",
                 "value": true
