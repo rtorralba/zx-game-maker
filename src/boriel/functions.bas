@@ -180,7 +180,7 @@ end function
             Dim tile as Ubyte = GetTile(col, lin)
 
             If tile < 70 Then Return 0
-            If tile > 71 Then Return 0
+            If tile > 73 Then Return 0
 
             Return 1
         End Function
