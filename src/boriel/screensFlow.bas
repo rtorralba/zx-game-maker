@@ -25,8 +25,6 @@ Sub showMenu()
     #endif
     
     Do
-        Dim n As Ubyte = In(31)
-
         If MultiKeys(KEY1) Then
             If Not keyArray(LEFT) Then
                 Let keyArray(LEFT) = KEYO
@@ -50,9 +48,13 @@ Sub showMenu()
             elseif MultiKeys(KEY4) Then
                 redefineKeys()
             #endif
-        elseif n bAND %10000 Then
-            kempston = 1
-            playGame()
+        elseif kempstonInterfaceAvailable Then
+            Dim n As Ubyte = In(31)
+            
+            If n bAND %10000 Then
+                kempston = 1
+                playGame()
+            End If
         End If
     Loop
 End Sub
@@ -144,6 +146,21 @@ End Sub
     End Sub
 #endif
 
+Function skipScreenPressed() As Ubyte
+    If kempstonInterfaceAvailable Then
+        Dim n As Ubyte = In(31)
+        If n bAND %10000 Then
+            Return 1
+        End If
+    End If
+    
+    If MultiKeys(KEYENTER) Then
+        Return 1
+    End If
+    
+    Return 0
+End Function
+
 Sub playGame()
     inMenu = 0
     
@@ -161,7 +178,7 @@ Sub playGame()
             dzx0Standard(INTRO_SCREEN_ADDRESS, $4000)
             PaginarMemoria(0)
             Do
-            Loop Until MultiKeys(KEYENTER) Or (In(31) bAND %10000)
+            Loop Until skipScreenPressed()
         #endif
     #endif
     
@@ -283,7 +300,7 @@ Sub ending()
         dzx0Standard(ENDING_SCREEN_ADDRESS, $4000)
     #endif
     Do
-    Loop Until MultiKeys(KEYENTER) Or (In(31) bAND %10000)
+    Loop Until skipScreenPressed()
     showMenu()
 End Sub
 
@@ -318,7 +335,7 @@ Sub gameOver()
     #endif
     
     Do
-    Loop Until MultiKeys(KEYENTER) Or (In(31) bAND %10000)
+    Loop Until skipScreenPressed()
     showMenu()
 End Sub
 

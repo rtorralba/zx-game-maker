@@ -33,4 +33,9 @@ initGraphics()
     End If
 #endif
 
+waitretrace
+Dim p As Ubyte = In 31
+
+If (p bAND %11111) < 31 Then kempstonInterfaceAvailable = 1
+
 showMenu()
