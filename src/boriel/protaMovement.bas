@@ -548,6 +548,10 @@ Function checkTileObject(tile As Ubyte) As Ubyte
                 hiScore = score
             End If
         #endif
+        #ifdef BORDER_COLOR_ITEM
+            Border BORDER_COLOR_ITEM
+            resetBorder = 1
+        #endif
         printLife()
         #ifdef MESSAGES_ENABLED
             printMessage("ITEM    ", "FOUND!  ", 4, 0)
@@ -573,6 +577,10 @@ Function checkTileObject(tile As Ubyte) As Ubyte
             End If
         #endif
         currentKeys = currentKeys + 1
+        #ifdef BORDER_COLOR_KEY
+            Border BORDER_COLOR_KEY
+            resetBorder = 1
+        #endif
         printLife()
         #ifdef MESSAGES_ENABLED
             printMessage("KEY     ", "FOUND!  ", 4, 0)
@@ -581,6 +589,10 @@ Function checkTileObject(tile As Ubyte) As Ubyte
         Return 1
     Elseif tile = LIFE_TILE Then
         currentLife = currentLife + LIFE_AMOUNT
+        #ifdef BORDER_COLOR_LIFE
+            Border BORDER_COLOR_LIFE
+            resetBorder = 1
+        #endif
         printLife()
         BeepFX_Play(6)
         Return 1

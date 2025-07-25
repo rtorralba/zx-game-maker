@@ -234,6 +234,11 @@ Sub playGame()
     
     Do
         waitretrace
+
+        If resetBorder Then
+            Border BORDER_VALUE
+            resetBorder = 0
+        End If
         
         If framec - lastFrameProta >= ANIMATE_PERIOD_MAIN Then
             protaFrame = getNextFrameRunning()

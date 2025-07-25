@@ -9,6 +9,9 @@
   <property name="animatePeriodMain" type="int" value="1"/>
   <property name="animatePeriodTile" type="int" value="10"/>
   <property name="backgroundAttribute" type="int" value="7"/>
+  <property name="borderColorItem" type="int" value="1"/>
+  <property name="borderColorKey" type="int" value="2"/>
+  <property name="borderColorLife" type="int" value="3"/>
   <property name="bulletDistance" type="int" value="0"/>
   <property name="damageAmount" type="int" value="10"/>
   <property name="disableContinuousJump" type="bool" value="true"/>

@@ -140,3 +140,5 @@ Const ENEMY_SPEED As Ubyte = 11
 
 Const ENEMY_DOOR_TILE As Ubyte = 63
 Dim kempstonInterfaceAvailable As Ubyte = 0
+
+Dim resetBorder As Ubyte = 0

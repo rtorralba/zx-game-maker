@@ -148,6 +148,10 @@ laddersEnabled = 1
 
 disableContinuousJump = 0
 
+borderColorItem = 0
+borderColorKey = 0
+borderColorLife = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -248,6 +252,12 @@ if 'properties' in data:
             laddersEnabled = 1 if property['value'] else 0
         elif property['name'] == 'disableContinuousJump':
             disableContinuousJump = 1 if property['value'] else 0
+        elif property['name'] == 'borderColorItem':
+            borderColorItem = property['value']
+        elif property['name'] == 'borderColorKey':
+            borderColorKey = property['value']
+        elif property['name'] == 'borderColorLife':
+            borderColorLife = property['value']
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -330,6 +340,15 @@ if laddersEnabled == 1:
 if disableContinuousJump == 1 and gameView == 'side':
     configStr += "#DEFINE DISABLE_CONTINUOUS_JUMP\n"
     configStr += "\n"
+
+if borderColorItem != border and borderColorItem < 8:
+    configStr += "#DEFINE BORDER_COLOR_ITEM " + str(borderColorItem) + "\n"
+
+if borderColorKey != border and borderColorKey < 8:
+    configStr += "#DEFINE BORDER_COLOR_KEY " + str(borderColorKey) + "\n"
+
+if borderColorLife != border and borderColorLife < 8:
+    configStr += "#DEFINE BORDER_COLOR_LIFE " + str(borderColorLife) + "\n"
 
 if len(initTexts) > 0:
     configStr += "#DEFINE INIT_TEXTS\n"

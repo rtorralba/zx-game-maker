@@ -131,6 +131,21 @@
                     "value": "0"
                 },
                 {
+                    "name": "borderColorItem",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "borderColorKey",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "borderColorLife",
+                    "type": "int",
+                    "value": 0
+                },
+                {
                     "name": "bulletDistance",
                     "type": "int",
                     "value": 0
