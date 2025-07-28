@@ -75,8 +75,15 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
     #endif
     
     If tile < 187 Then
-        SetTile(tile, attrSet(tile), x, y)
-        Return
+        If tile = DOOR_TILE Then
+            If not checkScreenObjectAlreadyTaken(tile, x, y) Then
+                SetTileChecked(tile, attrSet(tile), x, y)
+            End If
+            Return
+        Else
+            SetTile(tile, attrSet(tile), x, y)
+            Return
+        End If
     End If
 
     If tile <> KEY_TILE Then
