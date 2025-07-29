@@ -1,18 +1,8 @@
 Function canMoveLeft() As Ubyte
-    #ifdef KEYS_ENABLED
-        If CheckDoor(protaX - 1, protaY) Then
-            Return 0
-        End If
-    #endif
     Return Not CheckCollision(protaX - 1, protaY, 1)
 End Function
 
 Function canMoveRight() As Ubyte
-    #ifdef KEYS_ENABLED
-        If CheckDoor(protaX + 1, protaY) Then
-            Return 0
-        End If
-    #endif
     Return Not CheckCollision(protaX + 1, protaY, 1)
 End Function
 
@@ -23,11 +13,6 @@ Function canMoveUp() As Ubyte
             Return 1
         End If
     #endif
-    #ifdef KEYS_ENABLED
-        If CheckDoor(protaX, protaY - 1) Then
-            Return 0
-        End If
-    #endif
     Return Not CheckCollision(protaX, protaY - 1, 1)
 End Function
 
@@ -36,11 +21,6 @@ Function canMoveDown() As Ubyte
         If protaY > 39 Then
             protaY = 0
             Return 1
-        End If
-    #endif
-    #ifdef KEYS_ENABLED
-        If CheckDoor(protaX, protaY + 1) Then
-            Return 0
         End If
     #endif
     If CheckCollision(protaX, protaY + 1, 1) Then Return 0

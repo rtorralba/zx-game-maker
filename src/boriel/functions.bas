@@ -113,14 +113,29 @@ end function
 function isSolidTileByColLin(col as ubyte, lin as ubyte) as ubyte
 	dim tile as ubyte = GetTile(col, lin)
 
+    if tile > 63 then return 0
+    if tile < 1 then return 0
+
     #ifdef MESSAGES_ENABLED
         If tile = ENEMY_DOOR_TILE Then
             printMessage("Kill All", "Enemies!", 2, 0)
         End If
     #endif
 
-    if tile > 63 then return 0
-    if tile < 1 then return 0
+    #ifdef KEYS_ENABLED
+        If tile = DOOR_TILE Then
+            If currentKeys <> 0 Then
+                currentKeys = currentKeys - 1
+                printLife()
+                BeepFX_Play(4)
+                removeTilesFromScreen(DOOR_TILE)
+            Else
+                #ifdef MESSAGES_ENABLED
+                    printMessage("No keys ", "left!   ", 2, 0)
+                #endif
+            End If
+        End If
+    #endif
 
 	return tile
 end function

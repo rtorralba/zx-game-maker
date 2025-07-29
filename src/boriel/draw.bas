@@ -120,51 +120,6 @@ Sub redrawScreen()
     ' enemiesDraw(currentScreen)
 End Sub
 
-#ifdef KEYS_ENABLED
-    Function checkTileIsDoor(col As Ubyte, lin As Ubyte) As Ubyte
-        If GetTile(col, lin) = DOOR_TILE Then
-            If currentKeys <> 0 Then
-                currentKeys = currentKeys - 1
-                printLife()
-                BeepFX_Play(4)
-                removeTilesFromScreen(DOOR_TILE)
-            Else
-                #ifdef MESSAGES_ENABLED
-                    printMessage("No keys ", "left!   ", 2, 0)
-                #endif
-            End If
-            Return 1
-        Else
-            Return 0
-        End If
-    End Function
-#endif
-
-#ifdef KEYS_ENABLED
-    Function CheckDoor(x As Ubyte, y As Ubyte) As Ubyte
-        Dim xIsEven As Ubyte = (x bAnd 1) = 0
-        Dim yIsEven As Ubyte = (y bAnd 1) = 0
-        Dim col As Ubyte = x >> 1
-        Dim lin As Ubyte = y >> 1
-        
-        If xIsEven And yIsEven Then
-            Return checkTileIsDoor(col, lin) Or checkTileIsDoor(col + 1, lin) _
-            Or checkTileIsDoor(col, lin + 1) Or checkTileIsDoor(col + 1, lin + 1)
-        Elseif xIsEven And Not yIsEven Then
-            Return checkTileIsDoor(col, lin) Or checkTileIsDoor(col + 1, lin) _
-            Or checkTileIsDoor(col, lin + 1) Or checkTileIsDoor(col + 1, lin + 1) _
-            Or checkTileIsDoor(col, lin + 2) Or checkTileIsDoor(col + 1, lin + 2)
-        Elseif Not xIsEven And yIsEven Then
-            Return checkTileIsDoor(col, lin) Or checkTileIsDoor(col + 1, lin) Or checkTileIsDoor(col + 2, lin) _
-            Or checkTileIsDoor(col, lin + 1) Or checkTileIsDoor(col + 1, lin + 1) Or checkTileIsDoor(col + 2, lin + 1)
-        Elseif Not xIsEven And Not yIsEven Then
-            Return checkTileIsDoor(col, lin) Or checkTileIsDoor(col + 1, lin) Or checkTileIsDoor(col + 2, lin) _
-            Or checkTileIsDoor(col, lin + 1) Or checkTileIsDoor(col + 1, lin + 1) Or checkTileIsDoor(col + 2, lin + 1) _
-            Or checkTileIsDoor(col, lin + 2) Or checkTileIsDoor(col + 1, lin + 2) Or checkTileIsDoor(col + 2, lin + 2)
-        End If
-    End Function
-#endif
-
 Sub moveToScreen(direction As Ubyte)
     If direction = 6 Then
         currentScreen = currentScreen + 1
