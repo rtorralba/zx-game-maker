@@ -627,6 +627,22 @@ Sub checkDamageByTile()
     CheckCollision(protaX, protaY, 0) ' check If we are On a damage tile
 End Sub
 
+#ifdef IDLE_ENABLED
+    Sub animateIdle()
+        If protaLoopCounter >= IDLE_TIME Then
+            If jumpCurrentKey <> jumpStopValue Then Return
+            If isFalling() Then Return
+            If CheckCollision(protaX, protaY, 2) Then Return
+            
+            If protaTile = 13 Then
+                saveProta(protaY, protaX, 14, protaDirection)
+            Else
+                saveProta(protaY, protaX, 13, protaDirection)
+            End If
+        End If
+    End Sub
+#endif
+
 Sub protaMovement()
     #ifdef LIVES_MODE_GRAVEYARD
         If invincible Then Return
@@ -667,22 +683,6 @@ Sub protaMovement()
             checkIsFlying()
         #endif
         gravity()
-        
-        #ifdef IDLE_ENABLED
-            If protaLoopCounter >= IDLE_TIME Then
-                If jumpCurrentKey <> jumpStopValue Then Return
-                If isFalling() Then Return
-                If CheckCollision(protaX, protaY, 2) Then Return
-                
-                If framec - lastFrameTiles = ANIMATE_PERIOD_TILE - 2 Then
-                    If protaTile = 13 Then
-                        saveProta(protaY, protaX, 14, protaDirection)
-                    Else
-                        saveProta(protaY, protaX, 13, protaDirection)
-                    End If
-                End If
-            End If
-        #endif
     #endif
     
     #ifdef MESSAGES_ENABLED

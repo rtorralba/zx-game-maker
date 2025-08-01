@@ -319,7 +319,7 @@ sub debugC(value as UBYTE)
     PRINT AT 0, 10; value
 end sub
 
-' sub debugD(value as UBYTE)
-'     PRINT AT 18, 25; "  "
-'     PRINT AT 18, 25; value
-' end sub
+sub debugD(value as UBYTE)
+    PRINT AT 0, 15; "  "
+    PRINT AT 0, 15; value
+end sub

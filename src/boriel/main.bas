@@ -3,14 +3,19 @@
 #include <keys.bas>
 #include "definitions.bas"
 #include "dataLoader.bas"
+#include "im2.bas"
+
 #ifdef ENABLED_128k
-    #include "128/im2.bas"
     #include "128/vortexTracker.bas"
     #include "128/functions.bas"
+
     #ifdef MUSIC_ENABLED
         VortexTracker_Init()
     #endif
 #endif
+
+#include "im2Functions.bas"
+IM2_Setup()
 
 loadDataFromTape()
 

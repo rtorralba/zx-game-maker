@@ -233,8 +233,6 @@ Sub playGame()
     #endif
     
     Do
-        waitretrace
-
         If resetBorder Then
             Border BORDER_VALUE
             resetBorder = 0
@@ -252,6 +250,9 @@ Sub playGame()
         
         If framec - lastFrameTiles >= ANIMATE_PERIOD_TILE Then
             animateAnimatedTiles()
+            #ifdef IDLE_ENABLED
+                animateIdle()
+            #endif
             Let lastFrameTiles = framec
         End If
         

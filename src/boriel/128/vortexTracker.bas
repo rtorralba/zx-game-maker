@@ -8,7 +8,6 @@ Sub VortexTracker_Init()
         di
     End Asm
     
-    IM2_Inicializar(@VortexTracker_NextNote)
     VortexTracker_Status = 0
     
     Asm
