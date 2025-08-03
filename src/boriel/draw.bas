@@ -191,8 +191,6 @@ Sub drawSprites()
     If bulletPositionX <> 0 Then
         Draw1x1Sprite(currentBulletSpriteId, bulletPositionX, bulletPositionY)
     End If
-    
-    RenderFrame()
 End Sub
 
 Sub animateEnemies()

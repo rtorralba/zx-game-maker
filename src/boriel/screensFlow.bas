@@ -238,29 +238,15 @@ Sub playGame()
             resetBorder = 0
         End If
         
-        If framec - lastFrameProta >= ANIMATE_PERIOD_MAIN Then
-            protaFrame = getNextFrameRunning()
-            Let lastFrameProta = framec
-        End If
-        
-        If framec - lastFrameEnemies >= ANIMATE_PERIOD_ENEMY Then
-            animateEnemies()
-            Let lastFrameEnemies = framec
-        End If
-        
-        If framec - lastFrameTiles >= ANIMATE_PERIOD_TILE Then
-            animateAnimatedTiles()
-            #ifdef IDLE_ENABLED
-                animateIdle()
-            #endif
-            Let lastFrameTiles = framec
-        End If
-        
         protaMovement()
         checkDamageByTile()
         moveEnemies()
         moveBullet()
         drawSprites()
+
+        RenderFrame()
+        
+        makeAnimations()
         
         If moveScreen <> 0 Then
             moveToScreen(moveScreen)
@@ -288,6 +274,26 @@ Sub playGame()
         #endif
     Loop
 End Sub
+
+Sub makeAnimations()
+    If framec - lastFrameProta >= ANIMATE_PERIOD_MAIN Then
+        protaFrame = getNextFrameRunning()
+        Let lastFrameProta = framec
+    End If
+    
+    If framec - lastFrameEnemies >= ANIMATE_PERIOD_ENEMY Then
+        animateEnemies()
+        Let lastFrameEnemies = framec
+    End If
+    
+    If framec - lastFrameTiles >= ANIMATE_PERIOD_TILE Then
+        animateAnimatedTiles()
+        #ifdef IDLE_ENABLED
+            animateIdle()
+        #endif
+        Let lastFrameTiles = framec
+    End If
+End sub
 
 Sub ending()
     #ifdef ENABLED_128k
