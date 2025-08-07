@@ -24,16 +24,18 @@ DIST_FOLDER = str(Path("../dist/")) + getOsSeparator()
 INITIAL_ADDRESS = 49152
 MEMORY_BANK_SIZE = 16384
 
-# Detectar el sistema operativo para poder apuntar especificamente a MacOS
+# Detectar eºl sistema operativo para poder apuntar especificamente a MacOS
 CURRENT_OS = platform.system()
 
 
 def getZx0():
     if os.name == "nt":
         return "zx0.exe"
+    elif CURRENT_OS == "Darwin": #MacOS
+        return "zx0-mac"
     else:
         return "zx0"
-
+ 
 verbose = False
 
 def setVerbose(value):
