@@ -5,6 +5,7 @@ import json
 import math
 from collections import defaultdict
 import os
+import platform
 from pprint import pprint
 import subprocess
 import sys
@@ -12,6 +13,13 @@ import sys
 def exitWithErrorMessage(message):
     print('\n\n=====================================================================================')
     sys.exit('ERROR: ' + message + '\n=====================================================================================\n\n')
+
+# Detectar el sistema operativo y en base a el el nombre del ejecutable zx0 
+CURRENT_OS = platform.system()
+if CURRENT_OS=='Darwin':
+    ZX0_EXEC="bin/zx0-mac"
+else:
+    ZX0_EXEC="bin/zx0"
 
 outputDir = 'output/'
 
@@ -492,7 +500,7 @@ for idx, screen in enumerate(screens):
     label = 'screen' + str(idx).zfill(3)
     with open(outputDir + label + '.bin', 'wb') as f:
         screen.tofile(f)
-    subprocess.run(['bin/zx0', '-f', outputDir + label + '.bin', outputDir + label + '.bin.zx0'])
+    subprocess.run([ZX0_EXEC, '-f', outputDir + label + '.bin', outputDir + label + '.bin.zx0'])
     currentOffset += os.path.getsize(outputDir + label + '.bin.zx0')
     screenOffsets.append(currentOffset)
 
@@ -658,7 +666,7 @@ for idx, enemiesScreen in enumerate(enemiesArray):
     label = 'enemiesInScreen' + str(idx).zfill(3)
     with open(outputDir + label + '.bin', 'wb') as f:
         enemiesScreen.tofile(f)
-    subprocess.run(['bin/zx0', '-f', outputDir + label + '.bin', outputDir + label + '.bin.zx0'])
+    subprocess.run([ZX0_EXEC, '-f', outputDir + label + '.bin', outputDir + label + '.bin.zx0'])
     currentOffset += os.path.getsize(outputDir + label + '.bin.zx0')
     enemiesInScreenOffsets.append(currentOffset)
 
