@@ -84,7 +84,7 @@ def hudTiledExport():
         tiled_path = os.path.join(applications, "Tiled.app/Contents/MacOS/Tiled")
         if os.path.exists(tiled_path):
             command = f'"{tiled_path}" --export-map json "{HUD_MAP_FILE}" "{str(Path("output/hud.json"))}"'
-            return command
+            runCommand(command)
         else:
             print("Error: Tiled no está instalado en /Applications/Tiled.app")
             exit(1)
