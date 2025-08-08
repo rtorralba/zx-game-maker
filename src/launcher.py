@@ -3,19 +3,21 @@ import platform
 import subprocess
 import sys
 
+# Detectar el sistema operativo 
+CURRENT_OS = platform.system()
+
 def install_requirements():
     """Ejecuta el script de instalación de dependencias según el sistema operativo."""
     try:
         # Detectar el sistema operativo
-        current_os = platform.system()
         script_name = ""
 
-        if current_os == "Windows":
+        if CURRENT_OS == "Windows":
             script_name = "install-requeriments.ps1"
-        elif current_os in ["Linux", "Darwin"]:  # Linux o macOS
+        elif CURRENT_OS in ["Linux", "Darwin"]:  # Linux o macOS
             script_name = "install-requeriments.sh"
         else:
-            print(f"Sistema operativo no soportado: {current_os}")
+            print(f"Sistema operativo no soportado: {CURRENT_OS}")
             sys.exit(1)
 
         # Construir la ruta completa del script
@@ -27,7 +29,7 @@ def install_requirements():
             sys.exit(1)
 
         # Ejecutar el script
-        if current_os == "Windows":
+        if CURRENT_OS == "Windows":
             subprocess.run(["powershell", "-ExecutionPolicy", "Bypass", "-File", script_path], check=True)
         else:
             subprocess.run(["bash", script_path], check=True)
@@ -63,9 +65,9 @@ def run_script(script_name, output_text, extra_args=None):
             output_text.delete(1.0, tk.END)
 
             # Detectar el sistema operativo y añadir la extensión adecuada
-            if platform.system() == "Windows":
+            if CURRENT_OS == "Windows":
                 script_name += ".ps1"
-            elif platform.system() in ["Linux", "Darwin"]:
+            elif CURRENT_OS in ["Linux", "Darwin"]:
                 script_name += ".sh"
             else:
                 output_text.insert(tk.END, f"El sistema operativo no es compatible.\n")
@@ -85,7 +87,7 @@ def run_script(script_name, output_text, extra_args=None):
                 command.extend(extra_args)
 
             # Ejecutar el script según el sistema operativo
-            if platform.system() == "Windows":
+            if CURRENT_OS == "Windows":
                 process = subprocess.Popen(
                     ["powershell", "-ExecutionPolicy", "Bypass", "-File"] + command,
                     stdout=subprocess.PIPE,
@@ -93,7 +95,7 @@ def run_script(script_name, output_text, extra_args=None):
                     text=True,
                     bufsize=1
                 )
-            elif platform.system() in ["Linux", "Darwin"]:
+            elif CURRENT_OS in ["Linux", "Darwin"]:
                 process = subprocess.Popen(
                     ["bash"] + command,
                     stdout=subprocess.PIPE,
@@ -133,9 +135,9 @@ def open_game_variant(variant):
             project_name += "-RF"
             
         # Detectar el sistema operativo y seleccionar el archivo ejecutable
-        if platform.system() == "Windows":
+        if CURRENT_OS == "Windows":
             game_path = os.path.join(os.getcwd(), DIST_FOLDER, f"{project_name}.exe")
-        elif platform.system() in ["Linux", "Darwin"]:
+        elif CURRENT_OS in ["Linux", "Darwin"]:
             game_path = os.path.join(os.getcwd(), DIST_FOLDER, f"{project_name}.linux")
         else:
             messagebox.showerror("Error", "El sistema operativo no es compatible.")
@@ -261,11 +263,11 @@ def open_memory_bank_image(image):
             return
 
         # Abrir la imagen con el visor predeterminado del sistema
-        if platform.system() == "Windows":
+        if CURRENT_OS == "Windows":
             os.startfile(image_path)
-        elif platform.system() == "Linux":
+        elif CURRENT_OS == "Linux":
             subprocess.Popen(["xdg-open", image_path])
-        elif platform.system() == "Darwin":  # macOS
+        elif CURRENT_OS == "Darwin":  # macOS
             subprocess.Popen(["open", image_path])
         else:
             messagebox.showerror("Error", "El sistema operativo no es compatible.")
@@ -283,10 +285,18 @@ def open_map_with_tiled():
     if not os.path.exists(MAPS_PROJECT):
         messagebox.showerror("Error", f"No se encontró el archivo del mapa: {MAPS_PROJECT}")
         return
-    
+
     if os.name == "nt":
         program_files = os.environ["ProgramFiles"]
         command = "\"" + program_files + "\\Tiled\\tiled.exe\" " + MAPS_PROJECT
+    elif CURRENT_OS == "Darwin":  # macOS
+        applications = "/Applications" # Ruta standard en MacOS
+        tiled_path = os.path.join(applications, "Tiled.app/Contents/MacOS/Tiled")
+        if os.path.exists(tiled_path):
+            command = f'"{tiled_path}" "{MAPS_PROJECT}"'
+        else:
+            print("Error: Tiled no está instalado en /Applications/Tiled.app")
+            exit(1)
     else:
         command = "tiled " + MAPS_PROJECT
     
