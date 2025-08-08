@@ -35,7 +35,7 @@ def getZx0():
         return "zx0-mac"
     else:
         return "zx0"
- 
+
 verbose = False
 
 def setVerbose(value):
