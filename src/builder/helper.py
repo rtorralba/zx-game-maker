@@ -24,7 +24,7 @@ DIST_FOLDER = str(Path("../dist/")) + getOsSeparator()
 INITIAL_ADDRESS = 49152
 MEMORY_BANK_SIZE = 16384
 
-# Detectar eºl sistema operativo para poder apuntar especificamente a MacOS
+# Detectar el sistema operativo para poder apuntar especificamente a MacOS
 CURRENT_OS = platform.system()
 
 
