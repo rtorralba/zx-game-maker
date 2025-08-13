@@ -1,4 +1,5 @@
 import os
+import platform
 import sys
 from pathlib import Path
 import json
@@ -14,9 +15,15 @@ def getOsSeparator():
 from configuración.folders import BIN_FOLDER, OUTPUT_FOLDER, DIST_FOLDER, ASSETS_FOLDER, SCREENS_FOLDER, MAP_FOLDER, MAPS_FILE, HUD_MAP_FILE, MAPS_PROJECT, MUSIC_FOLDER
 from configuración.memoria import INITIAL_ADDRESS, MEMORY_BANK_SIZE
 
+# Detectar el sistema operativo para poder apuntar especificamente a MacOS
+CURRENT_OS = platform.system()
+
+
 def getZx0():
     if os.name == "nt":
         return "zx0.exe"
+    elif CURRENT_OS == "Darwin": #MacOS
+        return "zx0-mac"
     else:
         return "zx0"
 
@@ -47,6 +54,15 @@ def getTiledExportCommand():
         program_files = os.environ["ProgramFiles"]
         return "\"" + program_files + "\\Tiled\\tiled.exe\" --export-map json " + str(MAPS_FILE) + \
         " " + str(OUTPUT_FOLDER / "maps.json")
+    elif CURRENT_OS == "Darwin":  # macOS
+        applications = "/Applications" # Ruta standard en MacOS
+        tiled_path = os.path.join(applications, "Tiled.app/Contents/MacOS/Tiled")
+        if os.path.exists(tiled_path):
+            command = f'"{tiled_path}" --export-map json "{MAPS_FILE}" "{str(Path("output/maps.json"))}"'
+            return command
+        else:
+            print("Error: Tiled no está instalado en /Applications/Tiled.app")
+            exit(1)
     else:
         return "tiled --export-map json " + str(MAPS_FILE) + " " + str(OUTPUT_FOLDER / "maps.json")
 
@@ -58,6 +74,15 @@ def hudTiledExport():
         program_files = os.environ["ProgramFiles"]
         runCommand("\"" + program_files + "\\Tiled\\tiled.exe\" --export-map json " + str(HUD_MAP_FILE) +
                    " " + str(OUTPUT_FOLDER / "hud.json"))
+    elif CURRENT_OS == "Darwin":  # macOS
+        applications = "/Applications" # Ruta standard en MacOS
+        tiled_path = os.path.join(applications, "Tiled.app/Contents/MacOS/Tiled")
+        if os.path.exists(tiled_path):
+            command = f'"{tiled_path}" --export-map json "{HUD_MAP_FILE}" "{str(Path("output/hud.json"))}"'
+            runCommand(command)
+        else:
+            print("Error: Tiled no está instalado en /Applications/Tiled.app")
+            exit(1)
     else:
         runCommand("tiled --export-map json " + str(HUD_MAP_FILE) + " " + str(OUTPUT_FOLDER / "hud.json"))
 

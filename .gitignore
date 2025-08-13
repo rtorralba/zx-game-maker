@@ -17,3 +17,6 @@ src/bin/.Spectral/*
 *.gif
 src/boriel/lib/Sprites.zxbas
 src/boriel/lib/sprites.bas
+
+# MacOS
+.DS_Store
