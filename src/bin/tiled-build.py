@@ -421,7 +421,7 @@ for layer in data['layers']:
                 if int(tile) in animatedTilesIds and len(screenAnimatedTiles[idx]) < maxAnimatedTilesPerScreen:
                     screenAnimatedTiles[idx].append([tile, mapX, mapY])
 
-                if tile == keyTile or tile == itemTile or tile == doorTile or tile == lifeTile or tile == ammoTile:
+                if tile == keyTile or tile == itemTile or tile == doorTile or tile == lifeTile or tile == ammoTile or tile == "63":
                     screenObjectsCount += 1
                 
 configStr += "const MAP_SCREENS_WIDTH_COUNT as ubyte = " + str(mapCols) + "\n"
@@ -446,7 +446,7 @@ configStr += "  #endif\n"
 configStr += "#endif\n"
 
 with open("output/screenObjects.bin", "wb") as f:
-    f.write(bytearray([0] * (screenObjectsCount + 1) * 4))
+    f.write(bytearray([0] * (screenObjectsCount) * 4))
 
 configStr += "CONST SCREEN_OBJECTS_COUNT as ubyte = " + str(screenObjectsCount) + "\n"
 
