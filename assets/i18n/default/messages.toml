@@ -1,0 +1,43 @@
+# Available colors black, blue, red, magenta, green, cyan, yellow, white
+
+[item_found]
+line1 = "ITEM"
+line2 = "FOUND!"
+ink = "green"
+paper = "black"
+
+[key_found]
+line1 = "KEY"
+line2 = "FOUND!"
+ink = "green"
+paper = "black"
+
+[ammo_found]
+line1 = "EXPEDIEN"
+line2 = "TE X"
+ink = "black"
+paper = "cyan"
+
+[life_found]
+line1 = "LIFE"
+line2 = "FOUND!"
+ink = "green"
+paper = "black"
+
+[no_keys]
+line1 = "NO KEYS"
+line2 = "LEFT!"
+ink = "red"
+paper = "black"
+
+[no_ammo]
+line1 = "NO AMMO"
+line2 = "LEFT!"
+ink = "red"
+paper = "black"
+
+[should_kill_all_enemies]
+line1 = "KILL ALL"
+line2 = "ENEMIES!"
+ink = "red"
+paper = "black"

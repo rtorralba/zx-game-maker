@@ -6,6 +6,7 @@ from builder.BinaryFilesToTapMerger import BinaryFilesToTapMerger
 from builder.SizesGetter import SizesGetter
 from builder.ChartGenerator import ChartGenerator
 from builder.ConfigWriter import ConfigWriter
+from builder.TranslationsRetriever import TranslationsRetriever
 from builder.helper import *
 
 class Builder:
@@ -21,5 +22,6 @@ class Builder:
         sizes = SizesGetter(OUTPUT_FOLDER, is128K, useBreakableTile).execute()
         ChartGenerator().execute(sizes, is128K)
         ConfigWriter(OUTPUT_FOLDER / "config.bas", INITIAL_ADDRESS, sizes).execute()
+        TranslationsRetriever().execute()
 
         return sizes

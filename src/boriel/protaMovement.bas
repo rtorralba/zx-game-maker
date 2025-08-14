@@ -534,7 +534,7 @@ Function checkTileObject(tile As Ubyte) As Ubyte
         #endif
         printLife()
         #ifdef MESSAGES_ENABLED
-            printMessage("ITEM    ", "FOUND!  ", 4, 0)
+            printMessage(ITEM_FOUND_LINE1, ITEM_FOUND_LINE2, ITEM_FOUND_INK, ITEM_FOUND_PAPER)
         #endif
         #ifdef ARCADE_MODE
             If currentItems = itemsToFind Then
@@ -563,7 +563,7 @@ Function checkTileObject(tile As Ubyte) As Ubyte
         #endif
         printLife()
         #ifdef MESSAGES_ENABLED
-            printMessage("KEY     ", "FOUND!  ", 4, 0)
+            printMessage(KEY_FOUND_LINE1, KEY_FOUND_LINE2, KEY_FOUND_INK, KEY_FOUND_PAPER)
         #endif
         BeepFX_Play(3)
         Return 1
@@ -574,12 +574,18 @@ Function checkTileObject(tile As Ubyte) As Ubyte
             resetBorder = 1
         #endif
         printLife()
+        #ifdef MESSAGES_ENABLED
+            printMessage(LIFE_FOUND_LINE1, LIFE_FOUND_LINE2, LIFE_FOUND_INK, LIFE_FOUND_PAPER)
+        #endif
         BeepFX_Play(6)
         Return 1
         #ifdef AMMO_ENABLED
         Elseif tile = AMMO_TILE Then
             currentAmmo = currentAmmo + AMMO_INCREMENT
             printLife()
+            #ifdef MESSAGES_ENABLED
+                printMessage(AMMO_FOUND_LINE1, AMMO_FOUND_LINE2, AMMO_FOUND_INK, AMMO_FOUND_PAPER)
+            #endif
             BeepFX_Play(6)
             Return 1
         #endif

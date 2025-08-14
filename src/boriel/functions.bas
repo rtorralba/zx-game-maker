@@ -118,7 +118,7 @@ function isSolidTileByColLin(col as ubyte, lin as ubyte) as ubyte
 
     #ifdef MESSAGES_ENABLED
         If tile = ENEMY_DOOR_TILE Then
-            printMessage("Kill All", "Enemies!", 2, 0)
+            printMessage(KILL_ALL_ENEMIES_LINE1, KILL_ALL_ENEMIES_LINE2, KILL_ALL_ENEMIES_INK, KILL_ALL_ENEMIES_PAPER)
         End If
     #endif
 
@@ -131,7 +131,7 @@ function isSolidTileByColLin(col as ubyte, lin as ubyte) as ubyte
                 removeTilesFromScreen(DOOR_TILE)
             Else
                 #ifdef MESSAGES_ENABLED
-                    printMessage("No keys ", "left!   ", 2, 0)
+                    printMessage(NO_KEYS_LINE1, NO_KEYS_LINE2, NO_KEYS_INK, NO_KEYS_PAPER)
                 #endif
             End If
         End If
