@@ -118,7 +118,7 @@ Sub checkAndDraw(enemyId as Ubyte, tile As Ubyte, enemyCol As Byte, enemyLin As 
     Draw2x2Sprite(tile + 1, enemyCol, enemyLin)
 End Sub
 
-Function checkShouldMoveBySpeed(enemySpeed As Ubyte) As Ubyte
+Function checkShouldSkipMoveBySpeed(enemySpeed As Ubyte) As Ubyte
     If enemySpeed = 0 Then
         If (framec bAnd 15) <> 0 Then Return 1
     Elseif enemySpeed = 1 Then
@@ -180,7 +180,7 @@ Sub moveEnemies()
                 End If
             End If
 
-            If checkShouldMoveBySpeed(enemySpeed) Then
+            If checkShouldSkipMoveBySpeed(enemySpeed) Then
                 If tile > 15 Then
                     If enemyHorizontalDirection = -1 Then
                         tile = tile + 16
@@ -231,13 +231,16 @@ Sub moveEnemies()
 
             saveAndDraw(enemyId, tile + 1, enemyHorizontalDirection, enemyVerticalDirection)
         Elseif enemyBehaviour = 1 Then
+            If checkShouldSkipMoveBySpeed(enemySpeed) Then
+                checkAndDraw(enemyId, tile, enemyCol, enemyLin)
+                Continue For
+            End If
+
             enemyHorizontalDirection = Sgn(enemyColEnd - enemyColIni)
             enemyVerticalDirection = Sgn(enemyLinEnd - enemyLinIni)
-
-            If Not checkShouldMoveBySpeed(enemySpeed) Then
-                decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) =  enemyCol + enemyHorizontalDirection
-                decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLin + enemyVerticalDirection
-            End If
+            
+            decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) =  enemyCol + enemyHorizontalDirection
+            decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLin + enemyVerticalDirection
 
             If enemyCol = enemyColIni And enemyLin = enemyLinIni Then
                 saveAndDraw(enemyId, tile + 17, enemyHorizontalDirection, enemyVerticalDirection)
