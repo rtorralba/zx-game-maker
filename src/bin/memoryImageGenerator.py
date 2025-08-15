@@ -26,6 +26,14 @@ for bar in bars:
 bankMemory = 16383
 free = bankMemory - total
 
+if free < 0:
+    print("\n\nError: La memoria total excede el límite de 16383 bytes.")
+    for key in weight_counts:
+        print(f"{key}: {weight_counts[key]} bytes")
+
+    print(f"Memoria excedida: {abs(free)} bytes\n\n")
+    sys.exit(1)
+
 weight_counts["Free-Memory"] = free
 
 colors = []
