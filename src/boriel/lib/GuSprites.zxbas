@@ -467,13 +467,6 @@ RENDER_FRAME:                                         ;TRASHES: BC, DE, HL, A
 #ifndef ENABLE_INTERRUPTS
 ei
 #endif
-;Aumentamos manualmente los frames en 23672
-push af
-push hl
-ld hl,23672
-inc (hl)
-pop hl
-pop af
 halt
 #ifndef ENABLE_INTERRUPTS
 di
