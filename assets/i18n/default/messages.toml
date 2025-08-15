@@ -13,8 +13,8 @@ ink = "green"
 paper = "black"
 
 [ammo_found]
-line1 = "EXPEDIEN"
-line2 = "TE X"
+line1 = "AMMO"
+line2 = "FOUND!"
 ink = "black"
 paper = "cyan"
 
