@@ -14,7 +14,7 @@ class Builder:
         is128K = getEnabled128K()
         useBreakableTile = getUseBreakableTile()
 
-        ScreensCompressor().execute(is128K, screenExists("intro"), screenExists("gameover"))
+        ScreensCompressor().execute(is128K)
         TilesGenerator().execute()
         MusicSetup().splitSongs()
         ConvertZXPToGuSprites.convert()

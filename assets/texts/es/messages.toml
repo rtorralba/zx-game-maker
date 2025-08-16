@@ -1,0 +1,43 @@
+# Available colors black, blue, red, magenta, green, cyan, yellow, white
+
+[item_found]
+line1 = "ELEMENTO"
+line2 = "COGIDO!"
+ink = "green"
+paper = "black"
+
+[key_found]
+line1 = "LLAVE"
+line2 = "COGIDA!"
+ink = "green"
+paper = "black"
+
+[ammo_found]
+line1 = "MUNICION"
+line2 = "COGIDA!"
+ink = "black"
+paper = "cyan"
+
+[life_found]
+line1 = "VIDA"
+line2 = "COGIDA!"
+ink = "green"
+paper = "black"
+
+[no_keys]
+line1 = "TE FALTAN"
+line2 = "LLAVES!"
+ink = "red"
+paper = "black"
+
+[no_ammo]
+line1 = "NO HAY"
+line2 = "MUNICION!"
+ink = "red"
+paper = "black"
+
+[should_kill_all_enemies]
+line1 = "MATALOS"
+line2 = "A TODOS!"
+ink = "red"
+paper = "black"

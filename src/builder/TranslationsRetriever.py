@@ -1,11 +1,20 @@
+import os
 from pathlib import Path
 from builder.HudMessage import HudMessage
 import tomllib
 
-from configuración.folders import CONFIG_FILE, I18N_FOLDER
+from configuración.folders import ASSETS_FOLDER, CONFIG_FILE, I18N_FOLDER
 
 class TranslationsRetriever:
     def execute(self):
+        language = os.getenv("ZXSGM_I18N_FOLDER", "default")
+
+        messagesFile = ASSETS_FOLDER / "texts" / "messages.toml"
+        if language != "default":
+            file = ASSETS_FOLDER / "texts" / language / "messages.toml"
+            if file.exists():
+                messagesFile = file
+
         item_found = HudMessage("ITEM", "FOUND!", "green", "black")
         key_found = HudMessage("KEY", "FOUND!", "green", "black")
         ammo_found = HudMessage("AMMO", "FOUND!", "green", "black")
@@ -14,39 +23,37 @@ class TranslationsRetriever:
         no_ammo = HudMessage("NO AMMO", "LEFT!", "red", "black")
         should_kill_all_enemies = HudMessage("KILL ALL", "ENEMIES!", "red", "black")
 
-        if Path(I18N_FOLDER).exists():
-            if Path(I18N_FOLDER / "default").exists():
-                if Path(I18N_FOLDER / "default" / "messages.toml").exists():
-                    with open(I18N_FOLDER / "default" / "messages.toml", mode="rb") as f:
-                        messages = tomllib.load(f)
-                    item_found = HudMessage(messages.get("item_found", {}).get("line1", "ITEM"),
-                                            messages.get("item_found", {}).get("line2", "FOUND!"),
-                                            messages.get("item_found", {}).get("ink", "green"),
-                                            messages.get("item_found", {}).get("paper", "black"))
-                    key_found = HudMessage(messages.get("key_found", {}).get("line1", "KEY"),
-                                           messages.get("key_found", {}).get("line2", "FOUND!"),
-                                             messages.get("key_found", {}).get("ink", "green"),
-                                             messages.get("key_found", {}).get("paper", "black"))
-                    ammo_found = HudMessage(messages.get("ammo_found", {}).get("line1", "AMMO"),
-                                            messages.get("ammo_found", {}).get("line2", "FOUND!"),
-                                            messages.get("ammo_found", {}).get("ink", "green"),
-                                            messages.get("ammo_found", {}).get("paper", "black"))
-                    life_found = HudMessage(messages.get("life_found", {}).get("line1", "LIFE"),
-                                            messages.get("life_found", {}).get("line2", "FOUND!"),
-                                            messages.get("life_found", {}).get("ink", "green"),
-                                            messages.get("life_found", {}).get("paper", "black"))
-                    no_keys = HudMessage(messages.get("no_keys", {}).get("line1", "NO KEYS"),
-                                         messages.get("no_keys", {}).get("line2", "LEFT!"),
-                                            messages.get("no_keys", {}).get("ink", "red"),
-                                            messages.get("no_keys", {}).get("paper", "black"))
-                    no_ammo = HudMessage(messages.get("no_ammo", {}).get("line1", "NO AMMO"),
-                                         messages.get("no_ammo", {}).get("line2", "LEFT!"),
-                                            messages.get("no_ammo", {}).get("ink", "red"),
-                                            messages.get("no_ammo", {}).get("paper", "black"))
-                    should_kill_all_enemies = HudMessage(messages.get("kill_all_enemies", {}).get("line1", "KILL ALL"),
-                                                         messages.get("kill_all_enemies", {}).get("line2", "ENEMIES!"),
-                                                         messages.get("kill_all_enemies", {}).get("ink", "red"),
-                                                         messages.get("kill_all_enemies", {}).get("paper", "black"))
+        if Path(messagesFile).exists():
+            with open(messagesFile, mode="rb") as f:
+                messages = tomllib.load(f)
+            item_found = HudMessage(messages.get("item_found", {}).get("line1", "ITEM"),
+                                    messages.get("item_found", {}).get("line2", "FOUND!"),
+                                    messages.get("item_found", {}).get("ink", "green"),
+                                    messages.get("item_found", {}).get("paper", "black"))
+            key_found = HudMessage(messages.get("key_found", {}).get("line1", "KEY"),
+                                    messages.get("key_found", {}).get("line2", "FOUND!"),
+                                        messages.get("key_found", {}).get("ink", "green"),
+                                        messages.get("key_found", {}).get("paper", "black"))
+            ammo_found = HudMessage(messages.get("ammo_found", {}).get("line1", "AMMO"),
+                                    messages.get("ammo_found", {}).get("line2", "FOUND!"),
+                                    messages.get("ammo_found", {}).get("ink", "green"),
+                                    messages.get("ammo_found", {}).get("paper", "black"))
+            life_found = HudMessage(messages.get("life_found", {}).get("line1", "LIFE"),
+                                    messages.get("life_found", {}).get("line2", "FOUND!"),
+                                    messages.get("life_found", {}).get("ink", "green"),
+                                    messages.get("life_found", {}).get("paper", "black"))
+            no_keys = HudMessage(messages.get("no_keys", {}).get("line1", "NO KEYS"),
+                                    messages.get("no_keys", {}).get("line2", "LEFT!"),
+                                    messages.get("no_keys", {}).get("ink", "red"),
+                                    messages.get("no_keys", {}).get("paper", "black"))
+            no_ammo = HudMessage(messages.get("no_ammo", {}).get("line1", "NO AMMO"),
+                                    messages.get("no_ammo", {}).get("line2", "LEFT!"),
+                                    messages.get("no_ammo", {}).get("ink", "red"),
+                                    messages.get("no_ammo", {}).get("paper", "black"))
+            should_kill_all_enemies = HudMessage(messages.get("kill_all_enemies", {}).get("line1", "KILL ALL"),
+                                                    messages.get("kill_all_enemies", {}).get("line2", "ENEMIES!"),
+                                                    messages.get("kill_all_enemies", {}).get("ink", "red"),
+                                                    messages.get("kill_all_enemies", {}).get("paper", "black"))
         # Write message config into boriel config file as a constants
         with open(CONFIG_FILE, "a") as config_file:
             config_file.write(f"\n' Messages\n")

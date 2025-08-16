@@ -1,5 +1,4 @@
 import os
-import shutil
 import sys
 from pathlib import Path
 import time
@@ -35,9 +34,7 @@ def compilingGame():
 def checkMemory():
     runPythonScript(str(BIN_FOLDER / "check-memory.py"))
 
-def tapsBuild():
-    OUTPUT_FILE = str((DIST_FOLDER / getProjectFileName()).with_suffix(".tap"))
-    
+def tapsBuild(outputFile):    
     runCommand("bin2tap " + str(BIN_FOLDER / "loader.bin") + " " + str(OUTPUT_FOLDER / "loader.tap") + " 10 --header \"" + getProjectName() + "\" --block_type 1")
     runCommand("bin2tap " + str(OUTPUT_FOLDER / "loading.bin") + " " + str(OUTPUT_FOLDER / "loading.tap") + " 16384")
     runCommand("bin2tap " + str(OUTPUT_FOLDER / "main.bin") + " " + str(OUTPUT_FOLDER / "main.tap") + " 24576")
@@ -104,26 +101,34 @@ def tapsBuild():
             str(OUTPUT_FOLDER / "files.tap"),
         ]
 
-    concatenateFiles(OUTPUT_FILE, input_files)
+    concatenateFiles(outputFile.with_suffix(".tap"), input_files)
 
-def snaBuild():
-    runCommand("tap2sna.py --sim-load-config machine=128 " + str((DIST_FOLDER / getProjectFileName()).with_suffix(".tap")) + " " + str((DIST_FOLDER / getProjectFileName()).with_suffix(".z80")))
+def snaBuild(outputFile):
+    runCommand("tap2sna.py --sim-load-config machine=128 " + str(outputFile.with_suffix(".tap")) + " " + str(outputFile.with_suffix(".z80")))
 
-def exeBuild():
-    concatenateFiles((DIST_FOLDER / getProjectFileName()).with_suffix(".exe"), [BIN_FOLDER / "spectral.exe", (DIST_FOLDER / getProjectFileName()).with_suffix(".z80")])
-    concatenateFiles(DIST_FOLDER / (getProjectFileName() + "-RF.exe"), [BIN_FOLDER / "spectral-rf.exe", (DIST_FOLDER / getProjectFileName()).with_suffix(".z80")])
+def exeBuild(outputFile):
+    concatenateFiles(outputFile.with_suffix(".exe"), [BIN_FOLDER / "spectral.exe", outputFile.with_suffix(".z80")])
+    concatenateFiles(outputFile.with_name(getProjectFileName() + "-RF").with_suffix(".exe"), [BIN_FOLDER / "spectral-rf.exe", outputFile.with_suffix(".z80")])
 
-def linuxBuild():
-    concatenateFiles(DIST_FOLDER / (getProjectFileName() + "-RF.linux"), [BIN_FOLDER / "spectral-rf.linux", (DIST_FOLDER / getProjectFileName()).with_suffix(".z80")])
-    concatenateFiles((DIST_FOLDER / getProjectFileName()).with_suffix(".linux"), [BIN_FOLDER / "spectral.linux", (DIST_FOLDER / getProjectFileName()).with_suffix(".z80")])
+def linuxBuild(outputFile):
+    concatenateFiles(outputFile.with_suffix(".linux"), [BIN_FOLDER / "spectral.linux", outputFile.with_suffix(".z80")])
+    concatenateFiles(outputFile.with_name(getProjectFileName() + "-RF").with_suffix(".linux"), [BIN_FOLDER / "spectral-rf.linux", outputFile.with_suffix(".z80")])
     # run_command("chmod +x " + str(Path(DIST_FOLDER + getProjectFileName() + "-RF.linux")))
     # run_command("chmod +x " + str(Path(DIST_FOLDER + getProjectFileName() + ".linux")))
 
 def distBuild():
-    tapsBuild()
-    snaBuild()
-    exeBuild()
-    linuxBuild()
+    outputFolder = DIST_FOLDER
+    language = os.getenv("ZXSGM_I18N_FOLDER", "default")
+    if language != "default":
+        if not os.path.exists(DIST_FOLDER / language):
+            os.makedirs(DIST_FOLDER / language)
+        outputFolder = DIST_FOLDER / language
+
+    outputFile = outputFolder / getProjectFileName()
+    tapsBuild(outputFile)
+    snaBuild(outputFile)
+    exeBuild(outputFile)
+    linuxBuild(outputFile)
 
 
 def removeTempFiles():
@@ -131,9 +136,75 @@ def removeTempFiles():
         if file.endswith(".zx0") or file.endswith(".bin") or file.endswith(".tap") or file.endswith(".bas"):
             os.remove(os.path.join("output", file))
 
+def showFolderSelectionModal():
+    import tkinter as tk
+    from tkinter import filedialog
+
+    root = tk.Tk()
+    root.withdraw()  # Hide the root window
+
+    # selected_folder = filedialog.askdirectory(initialdir=folder_path, title="Select Language Folder")
+
+    folder_path = ASSETS_FOLDER / "texts"
+    if len(os.listdir(folder_path)) > 0:
+        folders = [d for d in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, d))]
+
+        # keep only folder with 2 letters
+        folders = [f for f in folders if len(f) == 2]
+
+    # buscar carpetas tambien en screens de 2 letras y añadirlas si no estan ya
+    screens_path = ASSETS_FOLDER / "screens"
+    if len(os.listdir(screens_path)) > 0:
+        screens_folders = [d for d in os.listdir(screens_path) if os.path.isdir(os.path.join(screens_path, d))]
+
+        # keep only folder with 2 letters
+        screens_folders = [f for f in screens_folders if len(f) == 2]
+
+        for folder in screens_folders:
+            if folder not in folders:
+                folders.append(folder)
+
+    # Crear ventana modal
+    selection = tk.StringVar(value="default")
+
+    folders.insert(0, "default")
+
+    def on_ok():
+        win.destroy()
+
+    win = tk.Toplevel(root)
+    win_width = 400
+    win_height = 60 + len(folders) * 30  # 60 para el label y botón, 30 por opción
+    win.geometry(f"{win_width}x{win_height}")
+    win.title("Select Language Folder")
+    tk.Label(win, text="Select a language folder:").pack(anchor="w", padx=10, pady=5)
+    for folder in folders:
+        tk.Radiobutton(win, text=folder, variable=selection, value=folder).pack(anchor="w", padx=20)
+    tk.Button(win, text="OK", command=on_ok).pack(pady=10)
+    win.grab_set()
+    win.protocol("WM_DELETE_WINDOW", on_ok)
+    root.wait_window(win)
+
+    selected_folder = selection.get()
+    root.destroy()
+
+    if selected_folder in folders:
+        return selected_folder
+    else:
+        return None
+
 def build():
     global totalExecutionTime
     totalExecutionTime = 0
+
+    selected_folder = showFolderSelectionModal()
+
+    if selected_folder is None:
+        selected_folder = "default"
+
+    os.environ["ZXSGM_I18N_FOLDER"] = str(selected_folder)
+
+    print(f"Compiling for language: {selected_folder}\n")
 
     print("============================================")
     print("=          ZX SPECTRUM GAME MAKER          =")
