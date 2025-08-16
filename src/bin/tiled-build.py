@@ -274,7 +274,7 @@ damageTilesCount = len(damageTiles) - 1 if len(damageTiles) > 0 else 0
 animatedTilesIdsCount = len(animatedTilesIds) - 1 if len(animatedTilesIds) > 0 else 0
 
 configStr = "const MAX_ENEMIES_PER_SCREEN as ubyte = " + str(maxEnemiesPerScreen) + "\n"
-configStr += "const MAX_ANIMATED_TILES_PER_SCREEN as ubyte = " + str(maxAnimatedTilesPerScreen - 1) + "\n"
+configStr += "#define MAX_ANIMATED_TILES_PER_SCREEN " + str(maxAnimatedTilesPerScreen - 1) + "\n"
 configStr += "const screenWidth as ubyte = " + str(screenWidth) + "\n"
 configStr += "const screenHeight as ubyte = " + str(screenHeight) + "\n"
 configStr += "const INITIAL_LIFE as ubyte = " + str(initialLife) + "\n"

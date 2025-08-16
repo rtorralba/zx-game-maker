@@ -201,7 +201,7 @@ Sub animateAnimatedTiles()
     For i=0 To MAX_ANIMATED_TILES_PER_SCREEN:
         If animatedTilesInScreen(currentScreen, i, 0) <> 0 Then
             Dim tile As Ubyte = animatedTilesInScreen(currentScreen, i, 0) + animatedFrame
-            SetTile(tile, attrSet(tile), animatedTilesInScreen(currentScreen, i, 1), animatedTilesInScreen(currentScreen, i, 2))
+            SetTileAnimated(tile, attrSet(tile), animatedTilesInScreen(currentScreen, i, 1), animatedTilesInScreen(currentScreen, i, 2))
         End If
     Next i
     animatedFrame = Not animatedFrame

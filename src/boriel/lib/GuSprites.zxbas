@@ -251,7 +251,11 @@ TOTAL_1x1_OPS equ (ONSCREEN_1x1_SPRITES * SPRITE_1x1_SHIFTED_SIZE)
 TOTAL_1x2_OPS equ (ONSCREEN_1x2_SPRITES * SPRITE_1x2_SHIFTED_SIZE)
 TOTAL_2x2_OPS equ (ONSCREEN_2x2_SPRITES * SPRITE_2x2_SHIFTED_SIZE)
 
-TOTAL_DRAW_OPS equ ((TOTAL_1x1_OPS + TOTAL_1x2_OPS + TOTAL_2x2_OPS) * 2)
+#ifndef MAX_ANIMATED_TILES_PER_SCREEN
+    #define MAX_ANIMATED_TILES_PER_SCREEN 0
+#endif
+
+TOTAL_DRAW_OPS equ ((TOTAL_1x1_OPS + TOTAL_1x2_OPS + TOTAL_2x2_OPS + MAX_ANIMATED_TILES_PER_SCREEN) * 2)
 
 #ifdef ENABLE_TILES
 DRAW_OP_SIZE equ 5
@@ -368,10 +372,10 @@ asm
 
 #endif
 
-#ifndef ENABLE_TILES
+;#ifndef ENABLE_TILES
 EMPTY_CHAR:
 defs 8
-#endif
+;#endif
 
 #ifdef ENABLE_TILES
 TILE_SET:
@@ -2125,6 +2129,62 @@ ret
 ENDP
 
 PROC
+LOCAL CREATE_OP
+SET_TILE_ANIMATED:  ;input: a = tile number, c = color, e = x, l = y, trashes bc, de, hl, a
+
+ ld b,l     ;y
+ HL_POW2_5();y*32
+ add hl,de  ;y*32 + x = displacement in maps of 768 bytes
+ ld d,e
+ ld e,b
+ push de    ;D = x, E = y
+
+ ex de,hl   ;DE = displacement in maps of 768 bytes
+ ld hl,$5800
+ add hl,de
+ ld (hl),c  ;set tile color
+ ld hl,TILE_MAP
+ add hl,de
+ ld (hl),a  ;set tile number
+
+ ld l,a
+ ld h,0
+ HL_POW2_3();number*8
+ ld bc,(TILE_SET)
+ add hl,bc  ;HL = tile source
+ ld b,h
+ ld c,l     ;BC = tile source
+
+ ld hl,(CURRENT_DRAW_MAP)
+ add hl,de
+ ld a,(hl)  ;drawOPcode1based
+ and a
+ jr z,CREATE_OP;no op at CURRENT_DRAW_MAP
+ ld l,a
+ ld e,a
+ xor a
+ ld h,a     ;HL = drawOPcode1based
+ ld d,a     ;DE = drawOPcode1based
+ HL_POW2_2()
+ add hl,de  ;*5
+ ld de,(CURRENT_DRAW_OPS)
+ add hl,de  ;HL = (CDO) + drawOPcode*5 + 5
+ dec hl     ;HL = (CDO) + drawOPcode*5 + 4
+ ld a,(hl)  ;op type (draw op = 1, tile clear op = 2)
+ cp 2
+ jr nz,CREATE_OP;op type is not tile clear
+ dec hl     ;BC = new tile source
+ dec hl     ;(HL,HL+1) = old tile source
+ WRITE_HL_POINTER(b,c);replace old with new tile source
+
+CREATE_OP:
+ pop bc     ;B = x, C = y
+ ld hl,EMPTY_CHAR
+ jp CREATE_DRAW_OP
+
+ENDP
+
+PROC
 GET_TILE:               ;input: de = x, hl = y, trashes de, hl, a
 
 HL_POW2_5()              ;y * 32
@@ -2434,6 +2494,27 @@ end asm
 
 end sub
 
+sub fastcall SetTileAnimated(TileNumber as uByte, Attribute as uInteger, X as uInteger, Y as uInteger)
+
+asm
+    exx
+    pop hl
+    exx
+    pop bc
+    pop de
+    pop hl
+    exx
+    push hl
+    exx
+    push ix
+    push iy
+    call SET_TILE_ANIMATED
+    pop iy
+    pop ix
+end asm
+
+end sub
+
 function fastcall GetTile(X as uInteger, Y as uInteger) as uByte
 
 asm
@@ -2508,6 +2589,19 @@ sub FillWithTileChecked(TileIndex as uByte, Width as uByte, Height as uByte, Att
     for tmpX = X to X + Width - 1
         for tmpY = Y to Y + Height - 1
             SetTileChecked(TileIndex, Attribute, tmpX, tmpY)
+        next tmpY
+    next tmpX
+
+end sub
+
+sub FillWithTileAnimated(TileIndex as uByte, Width as uByte, Height as uByte, Attribute as uByte, X as uByte, Y as uByte)
+
+    Dim tmpX as uByte
+    Dim tmpY as uByte
+
+    for tmpX = X to X + Width - 1
+        for tmpY = Y to Y + Height - 1
+            SetTileAnimated(TileIndex, Attribute, tmpX, tmpY)
         next tmpY
     next tmpX
 
