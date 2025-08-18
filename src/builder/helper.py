@@ -33,38 +33,49 @@ def setVerbose(value):
     global verbose
     verbose = value
 
-def runCommand(command):
+def runCommand(command):    # solo acepta listas, no cadenas
     global verbose
     if verbose:
-        result = subprocess.call(command, shell=True)
+        result = subprocess.run(command, shell=False).returncode
     else:
-        result = subprocess.call(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        # result = subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode
+        result = subprocess.run(command, shell=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode
     if result != 0:
-        print("Error executing command: " + command)
+        print("Error executing command: " + str(command))
         sys.exit(1)
 
 def getPythonExecutable():
-    return str(Path(sys.executable)) + " "
+    return Path(sys.executable)
 
 def runPythonScript(script):
-    runCommand(getPythonExecutable() + script)
+    runCommand([getPythonExecutable()] + script)
 
 def getTiledExportCommand():
+    command = list()
     if os.name == "nt":
         program_files = os.environ["ProgramFiles"]
-        return "\"" + program_files + "\\Tiled\\tiled.exe\" --export-map json " + str(MAPS_FILE) + \
-        " " + str(OUTPUT_FOLDER / "maps.json")
+        command = [
+            Path(program_files, "Tiled", "tiled.exe"),
+            "--export-map", "json",
+            MAPS_FILE,
+            OUTPUT_FOLDER / "maps.json"
+        ]
     elif CURRENT_OS == "Darwin":  # macOS
-        applications = "/Applications" # Ruta standard en MacOS
-        tiled_path = os.path.join(applications, "Tiled.app/Contents/MacOS/Tiled")
-        if os.path.exists(tiled_path):
-            command = f'"{tiled_path}" --export-map json "{MAPS_FILE}" "{str(Path("output/maps.json"))}"'
-            return command
+        applications = Path("/Applications") # Ruta standard en MacOS
+        tiled_path = applications / "Tiled.app/Contents/MacOS/Tiled"
+        if tiled_path.exists():
+            command = [
+                f'"{tiled_path}"',
+                "--export-map", "json",
+                f'"{MAPS_FILE}"',
+                f'"{Path("output/maps.json")}"'
+            ]
         else:
             print("Error: Tiled no está instalado en /Applications/Tiled.app")
             exit(1)
     else:
-        return "tiled --export-map json " + str(MAPS_FILE) + " " + str(OUTPUT_FOLDER / "maps.json")
+        command = ["tiled", "--export-map", "json", MAPS_FILE, OUTPUT_FOLDER / "maps.json"]
+    return command
 
 def tiledExport():
     runCommand(getTiledExportCommand())
@@ -72,19 +83,28 @@ def tiledExport():
 def hudTiledExport():
     if os.name == "nt":
         program_files = os.environ["ProgramFiles"]
-        runCommand("\"" + program_files + "\\Tiled\\tiled.exe\" --export-map json " + str(HUD_MAP_FILE) +
-                   " " + str(OUTPUT_FOLDER / "hud.json"))
+        command = [
+            Path(program_files, "Tiled", "tiled.exe"),
+            "--export-map", "json",
+            HUD_MAP_FILE,
+            OUTPUT_FOLDER / "hud.json"
+        ]
     elif CURRENT_OS == "Darwin":  # macOS
-        applications = "/Applications" # Ruta standard en MacOS
-        tiled_path = os.path.join(applications, "Tiled.app/Contents/MacOS/Tiled")
-        if os.path.exists(tiled_path):
-            command = f'"{tiled_path}" --export-map json "{HUD_MAP_FILE}" "{str(Path("output/hud.json"))}"'
-            runCommand(command)
+        applications = Path("/Applications") # Ruta standard en MacOS
+        tiled_path = applications / "Tiled.app/Contents/MacOS/Tiled"
+        if tiled_path.exists():
+            command = [
+                f'"{tiled_path}"',
+                "--export-map", "json",
+                f'"{HUD_MAP_FILE}"',
+                f'"{Path("output/hud.json")}"'
+            ] 
         else:
             print("Error: Tiled no está instalado en /Applications/Tiled.app")
             exit(1)
     else:
-        runCommand("tiled --export-map json " + str(HUD_MAP_FILE) + " " + str(OUTPUT_FOLDER / "hud.json"))
+        command = ["tiled", "--export-map", "json", HUD_MAP_FILE,  OUTPUT_FOLDER / "hud.json"]
+    runCommand(command)
 
 def getProjectName():
     with open(OUTPUT_FOLDER / "maps.json", "r") as f:
