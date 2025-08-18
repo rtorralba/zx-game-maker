@@ -22,8 +22,8 @@ class ScreensCompressor:
         
         language = os.getenv("ZXSGM_I18N_FOLDER", "default")
         if language != "default":
-            file = str((SCREENS_FOLDER / language / screen_name).with_suffix(".scr"))
+            file = (SCREENS_FOLDER / language / screen_name).with_suffix(".scr")
             if Path(file).exists():
                 scrFile = file
 
-        runCommand(str(BIN_FOLDER / getZx0()) + " -f " + scrFile + " " + str((OUTPUT_FOLDER / screen_name).with_suffix(".scr.zx0")))
+        runCommand([BIN_FOLDER / getZx0(), "-f", scrFile, Path(OUTPUT_FOLDER / screen_name).with_suffix(".scr.zx0")])
