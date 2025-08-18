@@ -120,11 +120,11 @@ End Sub
 
 Function checkShouldSkipMoveBySpeed(enemySpeed As Ubyte) As Ubyte
     If enemySpeed = 0 Then
-        If (framec bAnd 15) <> 0 Then Return 1
+        If skipMove0 Then Return 1
     Elseif enemySpeed = 1 Then
-        If (framec bAnd 1) = 0 Then Return 1
+        If skipMove1 Then Return 1
     Elseif enemySpeed = 2 Then
-        If (framec bAnd 3) = 0 Then Return 1
+        If skipMove2 Then Return 1
     End If
     Return 0
 End Function
@@ -247,6 +247,8 @@ Sub moveEnemies()
                 continue For
             ElseIf enemyCol + enemyHorizontalDirection = enemyColEnd And enemyLin + enemyVerticalDirection = enemyLinEnd Then
                 saveAndDraw(enemyId, tile + 18, enemyHorizontalDirection, enemyVerticalDirection)
+                decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = enemyColIni
+                decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLinIni
                 continue For
             End If
 
