@@ -6,8 +6,8 @@ if not _fichero.exists():
     raise FileNotFoundError(f"fichero de configuración ({_fichero.resolve()}) no encontrado")
 with open(_fichero, mode="rb") as f:
     configuración = tomllib.load(f)
-if not (all((x in configuración) for x in ("version", "bin", "output", "dist", "assets"))
-    and all((x in configuración["assets"]) for x in ("folder", "screens", "map"))
+if not (all((x in configuración) for x in ("version", "src", "bin", "output", "config_file", "dist", "assets"))
+    and all((x in configuración["assets"]) for x in ("folder", "screens", "map", "music", "i18n"))
     and all((x in configuración["assets"]["screens"]) for x in ("folder", "hud_map"))
     and all((x in configuración["assets"]["map"]) for x in ("folder", "maps_file", "maps_project"))):
     raise Exception(f"error en el fichero de configuración {_fichero} {configuración}")
