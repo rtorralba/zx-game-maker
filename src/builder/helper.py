@@ -20,12 +20,7 @@ CURRENT_OS = platform.system()
 
 
 def getZx0():
-    if os.name == "nt":
-        return "zx0.exe"
-    elif CURRENT_OS == "Darwin": #MacOS
-        return "zx0-mac"
-    else:
-        return "zx0"
+    return {"Windows": "zx0.exe", "Darwin": "zx0-mac", "Linux": "zx0"}.get(CURRENT_OS, "zx0")
 
 verbose = False
 
@@ -38,7 +33,6 @@ def runCommand(command):    # solo acepta listas, no cadenas
     if verbose:
         result = subprocess.run(command, shell=False).returncode
     else:
-        # result = subprocess.run(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode
         result = subprocess.run(command, shell=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode
     if result != 0:
         print("Error executing command: " + str(command))
@@ -52,7 +46,7 @@ def runPythonScript(script):
 
 def getTiledExportCommand():
     command = list()
-    if os.name == "nt":
+    if CURRENT_OS == "Windows":
         program_files = os.environ["ProgramFiles"]
         command = [
             Path(program_files, "Tiled", "tiled.exe"),
@@ -61,17 +55,17 @@ def getTiledExportCommand():
             OUTPUT_FOLDER / "maps.json"
         ]
     elif CURRENT_OS == "Darwin":  # macOS
-        applications = Path("/Applications") # Ruta standard en MacOS
-        tiled_path = applications / "Tiled.app/Contents/MacOS/Tiled"
+        darwin_tiled_path = Path("/Applications", "Tiled.app")
+        tiled_path = darwin_tiled_path / "Contents/MacOS/Tiled"
         if tiled_path.exists():
             command = [
                 f'"{tiled_path}"',
                 "--export-map", "json",
                 f'"{MAPS_FILE}"',
-                f'"{Path("output/maps.json")}"'
+                f'"{OUTPUT_FOLDER / "maps.json"}"'
             ]
         else:
-            print("Error: Tiled no está instalado en /Applications/Tiled.app")
+            print(f"Error: Tiled no está instalado en {darwin_tiled_path}")
             exit(1)
     else:
         command = ["tiled", "--export-map", "json", MAPS_FILE, OUTPUT_FOLDER / "maps.json"]
@@ -81,7 +75,7 @@ def tiledExport():
     runCommand(getTiledExportCommand())
 
 def hudTiledExport():
-    if os.name == "nt":
+    if CURRENT_OS == "Windows":
         program_files = os.environ["ProgramFiles"]
         command = [
             Path(program_files, "Tiled", "tiled.exe"),
@@ -90,17 +84,17 @@ def hudTiledExport():
             OUTPUT_FOLDER / "hud.json"
         ]
     elif CURRENT_OS == "Darwin":  # macOS
-        applications = Path("/Applications") # Ruta standard en MacOS
-        tiled_path = applications / "Tiled.app/Contents/MacOS/Tiled"
+        darwin_tiled_path = Path("/Applications", "Tiled.app")
+        tiled_path = darwin_tiled_path / "Contents/MacOS/Tiled"
         if tiled_path.exists():
             command = [
                 f'"{tiled_path}"',
                 "--export-map", "json",
                 f'"{HUD_MAP_FILE}"',
-                f'"{Path("output/hud.json")}"'
-            ] 
+                f'"{OUTPUT_FOLDER / "hud.json"}"'
+            ]
         else:
-            print("Error: Tiled no está instalado en /Applications/Tiled.app")
+            print(f"Error: Tiled no está instalado en {darwin_tiled_path}")
             exit(1)
     else:
         command = ["tiled", "--export-map", "json", HUD_MAP_FILE,  OUTPUT_FOLDER / "hud.json"]
@@ -142,7 +136,7 @@ def concatenateFiles(output_file, input_files):
                 out_file.write(in_file.read())
 
 def screenExists(screen_name):  
-    return os.path.isfile((SCREENS_FOLDER / screen_name).with_suffix(".scr"))
+    return (SCREENS_FOLDER / screen_name).with_suffix(".scr").is_file()
 
 def musicExists(music_name):
-    return os.path.isfile((MUSIC_FOLDER / music_name).with_suffix(".tap"))
+    return (MUSIC_FOLDER / music_name).with_suffix(".tap").is_file()

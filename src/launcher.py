@@ -288,16 +288,16 @@ def open_map_with_tiled():
         messagebox.showerror("Error", f"No se encontró el archivo del mapa: {MAPS_PROJECT}")
         return
 
-    if os.name == "nt":
+    if CURRENT_OS == "Windows":
         program_files = os.environ["ProgramFiles"]
         command = "\"" + program_files + "\\Tiled\\tiled.exe\" " + str(MAPS_PROJECT)
     elif CURRENT_OS == "Darwin":  # macOS
-        applications = "/Applications" # Ruta standard en MacOS
-        tiled_path = os.path.join(applications, "Tiled.app/Contents/MacOS/Tiled")
-        if os.path.exists(tiled_path):
+        darwin_tiled_path = Path("/Applications", "Tiled.app")
+        tiled_path = darwin_tiled_path / "Contents/MacOS/Tiled"
+        if tiled_path.exists():
             command = f'"{tiled_path}" "{MAPS_PROJECT}"'
         else:
-            print("Error: Tiled no está instalado en /Applications/Tiled.app")
+            print(f"Error: Tiled no está instalado en {darwin_tiled_path}")
             exit(1)
     else:
         command = "tiled " + str(MAPS_PROJECT)
@@ -319,14 +319,14 @@ watcher_thread = threading.Thread(target=watcher.start, daemon=True)
 watcher_thread.start()
 
 # Establecer el icono de la aplicación
-icon_path = Path.cwd() / "ui/logo.png"
+icon_path = Path.cwd() / "ui" / "logo.png"
 if icon_path.exists():
     root.iconphoto(True, PhotoImage(file=icon_path))
 else:
     messagebox.showwarning("Advertencia", "No se encontró el icono en 'ui/logo.png'.")
 
 # Cargar el logo
-logo_path = Path.cwd() / "ui/logo.png"
+logo_path = Path.cwd() / "ui" / "logo.png"
 if logo_path.exists():
     logo = PhotoImage(file=logo_path)
     logo_label = tk.Label(root, image=logo)
