@@ -8,5 +8,15 @@ script_dir = Path(__file__).resolve().parent
 src_dir = script_dir / "src"
 os.chdir(src_dir)
 
-# Ejecuta launcher.py con el mismo intérprete de Python que ejecuta este script
-subprocess.run([sys.executable, "launcher.py"])
+path_venv = src_dir / "venv"
+path_venv_bin = path_venv / "bin"
+
+if not (path_venv).exists():
+    sys.exit("No existe el directorio del entorno virtual.")
+
+entorno = dict(os.environ)
+entorno.update({"PATH": f"{path_venv_bin}:{os.environ.get("PATH")}"})
+entorno.update({"PYTHONPATH": str(path_venv)})
+entorno.update({"VIRTUAL_ENV": str(path_venv)})
+
+subprocess.run([path_venv_bin / "python", "launcher.py"], env=entorno)
