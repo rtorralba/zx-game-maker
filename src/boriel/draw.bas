@@ -1,6 +1,11 @@
+Dim currentAnimatedTileKey As Ubyte = 0
+
 Sub mapDraw()
     Dim index As Uinteger
     Dim y, x As Ubyte
+
+    currentAnimatedTileKey = 0
+    resetAnimatedTilesInScreen()
     
     x = 0
     y = 0
@@ -29,6 +34,14 @@ Function checkScreenObjectAlreadyTaken(tile As Ubyte, x As Ubyte, y As Ubyte) As
     Return 0 ' Object not taken
 End Function
 
+Sub resetAnimatedTilesInScreen()
+    For i=0 To MAX_ANIMATED_TILES_PER_SCREEN:
+        animatedTilesInScreen(i, 0) = 0
+        animatedTilesInScreen(i, 1) = 0
+        animatedTilesInScreen(i, 2) = 0
+    Next i
+End Sub
+
 Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
     If tile < 1 Then Return
     
@@ -47,6 +60,16 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
             Return
         End If
     #endif
+
+    For i = 0 To ANIMATED_TILES_COUNT
+        If tile = animatedTiles(i) Then
+            animatedTilesInScreen(currentAnimatedTileKey, 0) = tile
+            animatedTilesInScreen(currentAnimatedTileKey, 1) = x
+            animatedTilesInScreen(currentAnimatedTileKey, 2) = y
+            currentAnimatedTileKey = currentAnimatedTileKey + 1
+            Exit For
+        End If
+    Next i
     
     #ifdef USE_BREAKABLE_TILE_ALL
         If tile = 62 Then
@@ -199,9 +222,9 @@ End Sub
 
 Sub animateAnimatedTiles()
     For i=0 To MAX_ANIMATED_TILES_PER_SCREEN:
-        If animatedTilesInScreen(currentScreen, i, 0) <> 0 Then
-            Dim tile As Ubyte = animatedTilesInScreen(currentScreen, i, 0) + animatedFrame
-            SetTileAnimated(tile, attrSet(tile), animatedTilesInScreen(currentScreen, i, 1), animatedTilesInScreen(currentScreen, i, 2))
+        If animatedTilesInScreen(i, 0) <> 0 Then
+            Dim tile As Ubyte = animatedTilesInScreen(i, 0) + animatedFrame
+            SetTileAnimated(tile, attrSet(tile), animatedTilesInScreen(i, 1), animatedTilesInScreen(i, 2))
         End If
     Next i
     animatedFrame = Not animatedFrame
