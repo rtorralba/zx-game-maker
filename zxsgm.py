@@ -33,13 +33,6 @@ def ensure_venv_and_requirements():
 
 python_path, venv_bin = ensure_venv_and_requirements()
 
-# Si no estamos en el venv, muestra mensaje y sale
-if Path(sys.executable).resolve() != python_path.resolve():
-    print("\nERROR: Este programa debe ejecutarse usando el Python del entorno virtual.")
-    print(f"En Linux/macOS: {python_path} {__file__}")
-    print(f"En Windows: {python_path} {__file__}\n")
-    sys.exit(1)
-
 # Prepara el entorno como si estuviera "activado"
 env = os.environ.copy()
 env["VIRTUAL_ENV"] = str(VENV_DIR)
