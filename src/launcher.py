@@ -37,6 +37,13 @@ import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def executeBuild(verbose=False):
+    selected_folder = showFolderSelectionModal()
+
+    if selected_folder is None:
+        selected_folder = "default"
+
+    os.environ["ZXSGM_I18N_FOLDER"] = str(selected_folder)
+
     def run():
         output_text.delete(1.0, tk.END)
         redirector = TextRedirector(output_text)
@@ -292,6 +299,60 @@ def open_map_with_tiled():
         command = "tiled " + str(MAPS_PROJECT)
     
     subprocess.Popen(command, shell=True)
+
+def showFolderSelectionModal():
+    import tkinter as tk
+
+    global root
+
+    # selected_folder = filedialog.askdirectory(initialdir=folder_path, title="Select Language Folder")
+
+    folder_path = ASSETS_FOLDER / "texts"
+    if len(os.listdir(folder_path)) > 0:
+        folders = [d for d in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, d))]
+
+        # keep only folder with 2 letters
+        folders = [f for f in folders if len(f) == 2]
+
+    # buscar carpetas tambien en screens de 2 letras y añadirlas si no estan ya
+    screens_path = ASSETS_FOLDER / "screens"
+    if len(os.listdir(screens_path)) > 0:
+        screens_folders = [d for d in os.listdir(screens_path) if os.path.isdir(os.path.join(screens_path, d))]
+
+        # keep only folder with 2 letters
+        screens_folders = [f for f in screens_folders if len(f) == 2]
+
+        for folder in screens_folders:
+            if folder not in folders:
+                folders.append(folder)
+
+    # Crear ventana modal
+    folders.insert(0, "default")
+
+    selection = tk.StringVar(value="default")
+
+    def on_ok():
+        win.destroy()
+
+    win = tk.Toplevel(root)
+    win_width = 400
+    win_height = 60 + len(folders) * 30  # 60 para el label y botón, 30 por opción
+    win.geometry(f"{win_width}x{win_height}")
+    win.title("Select Language Folder")
+    tk.Label(win, text="Select a language folder:").pack(anchor="w", padx=10, pady=5)
+    for folder in folders:
+        tk.Radiobutton(win, text=folder, variable=selection, value=folder).pack(anchor="w", padx=20)
+    tk.Button(win, text="OK", command=on_ok).pack(pady=10)
+    win.grab_set()
+    win.protocol("WM_DELETE_WINDOW", on_ok)
+    root.wait_window(win)
+
+    selected_folder = selection.get()
+
+    if selected_folder in folders:
+        return selected_folder
+    else:
+        return None
 
 # Crear la ventana principal
 root = tk.Tk()
