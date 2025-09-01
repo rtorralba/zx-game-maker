@@ -598,31 +598,36 @@ Sub checkObjectContact()
     Dim lin As Ubyte = protaY >> 1
     
     Dim tile As Ubyte = GetTile(col, lin)
-    
+    Dim attr As Ubyte
+
     If checkTileObject(tile) Then
         addScreenObject(tile, col, lin)
-        FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col, lin)
+        attr = attrSet(GetTile(col - 1, lin))
+        FillWithTileChecked(0, 1, 1, attr, col, lin)
         Return
     End If
     
     tile = GetTile(col + 1, lin)
     If checkTileObject(tile) Then
         addScreenObject(tile, col + 1, lin)
-        FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col + 1, lin)
+        attr = attrSet(GetTile(col, lin))
+        FillWithTileChecked(0, 1, 1, attr, col + 1, lin)
         Return
     End If
     
     tile = GetTile(col, lin + 1)
     If checkTileObject(tile) Then
         addScreenObject(tile, col, lin + 1)
-        FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col, lin + 1)
+        attr = attrSet(GetTile(col - 1, lin))
+        FillWithTileChecked(0, 1, 1, attr, col, lin + 1)
         Return
     End If
     
     tile = GetTile(col + 1, lin + 1)
     If checkTileObject(tile) Then
         addScreenObject(tile, col + 1, lin + 1)
-        FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col + 1, lin + 1)
+        attr = attrSet(GetTile(col, lin + 1))
+        FillWithTileChecked(0, 1, 1, attr, col + 1, lin + 1)
         Return
     End If
 End Sub

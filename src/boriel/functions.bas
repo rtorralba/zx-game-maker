@@ -304,6 +304,24 @@ Sub addScreenObject(tile As Ubyte, col As Ubyte, lin As Ubyte)
     screenObjectsCurrentIndex = screenObjectsCurrentIndex + 1
 End Sub
 
+Function getAttrFromTileAndApplyToOther(tile As Ubyte, targetTile As Ubyte) As Ubyte
+    ' Extract ink from attributes
+    Dim attr As Ubyte
+    Dim tinta As Ubyte
+    Dim papel As Ubyte
+    Dim brillo As Ubyte
+
+    attr = attrSet(tile)
+    tinta = attr bAnd 7
+
+    attr = attrSet(targetTile)
+    papel = (attr bAnd 56) / 8
+
+    brillo = (attr bAnd 112) / 16
+
+    Return (papel * 8) + tinta + (brillo * 16) ' Keep paper and bright from tile below and ink from this tile
+End Function
+
 sub debugA(value as BYTE)
     PRINT AT 0, 0; "----"
     PRINT AT 0, 0; value

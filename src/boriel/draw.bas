@@ -109,17 +109,23 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
         End If
     End If
 
+    Dim attr As Ubyte
+    Dim besideTile As Ubyte
+    besideTile = GetTile(x - 1, y)
+    attr = getAttrFromTileAndApplyToOther(tile, besideTile)
+
     If tile <> KEY_TILE Then
         If not checkScreenObjectAlreadyTaken(tile, x, y) Then
-            SetTileChecked(tile, attrSet(tile), x, y)
+            SetTileChecked(tile, attr, x, y)
         End If
     Else
         #ifdef ARCADE_MODE
             currentScreenKeyX = x
             currentScreenKeyY = y
+            SetTileChecked(besideTile, attrSet(besideTile), x, y)
         #Else
             If not checkScreenObjectAlreadyTaken(tile, x, y) Then
-                SetTileChecked(tile, attrSet(tile), x, y)
+                SetTileChecked(besideTile, attrSet(besideTile), x, y)
             End If
         #endif
     End If
@@ -127,7 +133,11 @@ End Sub
 
 #ifdef ARCADE_MODE
     Sub drawKey()
-        SetTile(KEY_TILE, attrSet(KEY_TILE), currentScreenKeyX, currentScreenKeyY)
+        Dim attr As Ubyte
+        Dim besideTile As Ubyte
+        besideTile = GetTile(currentScreenKeyX - 1, currentScreenKeyY)
+        attr = getAttrFromTileAndApplyToOther(KEY_TILE, besideTile)
+        SetTile(KEY_TILE, attr, currentScreenKeyX, currentScreenKeyY)
     End Sub
 #endif
 
