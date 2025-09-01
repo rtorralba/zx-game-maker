@@ -9,44 +9,6 @@ from configuración.memoria import INITIAL_ADDRESS, MEMORY_BANK_SIZE
 # Detectar el sistema operativo 
 CURRENT_OS = platform.system()
 
-def install_requirements():
-    """Ejecuta el script de instalación de dependencias según el sistema operativo."""
-    try:
-        # Detectar el sistema operativo
-        script_name = ""
-
-        if CURRENT_OS == "Windows":
-            script_name = "install-requeriments.ps1"
-        elif CURRENT_OS in ["Linux", "Darwin"]:  # Linux o macOS
-            script_name = "install-requeriments.sh"
-        else:
-            print(f"Sistema operativo no soportado: {CURRENT_OS}")
-            sys.exit(1)
-
-        # Construir la ruta completa del script
-        script_path = Path(os.path.dirname(__file__)) / "scripts" / script_name
-
-        # Verificar si el script existe
-        if not script_path.exists():
-            print(f"No se encontró el script: {script_path}")
-            sys.exit(1)
-
-        # Ejecutar el script
-        if CURRENT_OS == "Windows":
-            subprocess.run(["powershell", "-ExecutionPolicy", "Bypass", "-File", str(script_path)], check=True)
-        else:
-            subprocess.run(["bash", str(script_path)], check=True)
-
-    except subprocess.CalledProcessError as e:
-        print(f"Error al ejecutar el script de instalación de dependencias: {e}")
-        sys.exit(1)
-    except Exception as e:
-        print(f"Error inesperado: {e}")
-        sys.exit(1)
-
-# Ejecutar la instalación de dependencias antes de importar cualquier módulo
-install_requirements()
-
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import PhotoImage

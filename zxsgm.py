@@ -3,10 +3,46 @@ import sys
 from pathlib import Path
 import subprocess
 
-# Obtiene la ruta del script actual y cambia al subdirectorio src
-script_dir = Path(__file__).resolve().parent
-src_dir = script_dir / "src"
-os.chdir(src_dir)
+PROJECT_DIR = Path(__file__).resolve().parent
+SRC_DIR = PROJECT_DIR / "src"
+VENV_DIR = PROJECT_DIR / "venv"
+REQUIREMENTS = PROJECT_DIR / "requirements.txt"
 
-# Ejecuta launcher.py con el mismo intérprete de Python que ejecuta este script
-subprocess.run([sys.executable, "launcher.py"])
+def ensure_venv_and_requirements():
+    if sys.platform == "win32":
+        python_path = VENV_DIR / "Scripts" / "python.exe"
+        pip_path = VENV_DIR / "Scripts" / "pip.exe"
+        venv_bin = VENV_DIR / "Scripts"
+    else:
+        python_path = VENV_DIR / "bin" / "python"
+        pip_path = VENV_DIR / "bin" / "pip"
+        venv_bin = VENV_DIR / "bin"
+
+    if not VENV_DIR.exists():
+        print("Creando entorno virtual...")
+        subprocess.check_call([sys.executable, "-m", "venv", str(VENV_DIR)])
+        print("Instalando dependencias en el entorno virtual...")
+        subprocess.check_call([str(pip_path), "install", "-r", str(REQUIREMENTS)])
+
+        # rm venv/bin/bin2tap.py
+        bin2tap_path = VENV_DIR / "bin" / "bin2tap.py"
+        if bin2tap_path.exists():
+            bin2tap_path.unlink()
+
+    return python_path, venv_bin
+
+python_path, venv_bin = ensure_venv_and_requirements()
+
+# Si no estamos en el venv, muestra mensaje y sale
+if Path(sys.executable).resolve() != python_path.resolve():
+    print("\nERROR: Este programa debe ejecutarse usando el Python del entorno virtual.")
+    print(f"En Linux/macOS: {python_path} {__file__}")
+    print(f"En Windows: {python_path} {__file__}\n")
+    sys.exit(1)
+
+# Prepara el entorno como si estuviera "activado"
+env = os.environ.copy()
+env["VIRTUAL_ENV"] = str(VENV_DIR)
+env["PATH"] = str(venv_bin) + os.pathsep + env.get("PATH", "")
+
+subprocess.run([str(python_path), str(SRC_DIR / "launcher.py")], env=env, cwd=str(SRC_DIR))
