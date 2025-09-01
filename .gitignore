@@ -20,3 +20,15 @@ src/boriel/lib/sprites.bas
 
 # MacOS
 .DS_Store
+
+#Exceptions
+!.gitignore
+!.gitkeep
+!assets/fx/fx.tap
+!src/bin/vtplayer.tap
+!assets/music/music.tap
+!assets/music/music2.tap
+!assets/music/music3.tap
+!assets/music/ending.tap
+!assets/music/gameover.tap
+!src/bin/loader.bin
