@@ -193,9 +193,11 @@ def showFolderSelectionModal():
     else:
         return None
 
-def build():
+def build(verbose = False):
     global totalExecutionTime
     totalExecutionTime = 0
+
+    setVerbose(verbose)
 
     selected_folder = showFolderSelectionModal()
 
@@ -261,20 +263,3 @@ def executeFunction(function, message):
 
 def printSizes(sizes):
     print("Sizes:")
-
-def main():
-    global verbose
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Build and manage the ZX Spectrum game project.")
-    parser.add_argument("-v", "--verbose", action="store_true", help="Show detailed output")
-    
-    args = parser.parse_args()
-    verbose = args.verbose
-
-    setVerbose(verbose) 
-
-    build()
-
-if __name__ == "__main__":
-    main()

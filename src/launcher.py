@@ -2,7 +2,19 @@ import os
 from pathlib import Path
 import platform
 import subprocess
+import build
 import sys
+
+class TextRedirector:
+    def __init__(self, text_widget):
+        self.text_widget = text_widget
+
+    def write(self, s):
+        self.text_widget.insert('end', s)
+        self.text_widget.see('end')
+
+    def flush(self):
+        pass  # Necesario para compatibilidad con sys.stdout
 
 from configuración.folders import BIN_FOLDER, OUTPUT_FOLDER, DIST_FOLDER, ASSETS_FOLDER, SCREENS_FOLDER, MAP_FOLDER, MAPS_FILE, HUD_MAP_FILE, MAPS_PROJECT, SRC_FOLDER
 from configuración.memoria import INITIAL_ADDRESS, MEMORY_BANK_SIZE
@@ -23,6 +35,21 @@ import os
 
 # Establecer el directorio de trabajo al directorio del script
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+def executeBuild(verbose=False):
+    def run():
+        output_text.delete(1.0, tk.END)
+        redirector = TextRedirector(output_text)
+        old_stdout = sys.stdout
+        old_stderr = sys.stderr
+        sys.stdout = redirector
+        sys.stderr = redirector
+        try:
+            build.build(verbose=verbose)
+        finally:
+            sys.stdout = old_stdout
+            sys.stderr = old_stderr
+    threading.Thread(target=run).start()
 
 def run_script(script_name, output_text, extra_args=None):
     def execute(script_name):
@@ -301,8 +328,8 @@ menu_bar = tk.Menu(root)
 
 # Menú "Build"
 build_menu = tk.Menu(menu_bar, tearoff=0)
-build_menu.add_command(label="Game", command=lambda: run_script("make-game", output_text))
-build_menu.add_command(label="Game (verbose)", command=lambda: run_script("make-game", output_text, ["--verbose"]))
+build_menu.add_command(label="Game", command=lambda: executeBuild())
+build_menu.add_command(label="Game (verbose)", command=lambda: executeBuild(verbose=True))
 build_menu.add_command(label="FX", command=lambda: run_script("make-fx", output_text))
 build_menu.add_separator()
 build_menu.add_command(label="Exit", command=root.quit)
