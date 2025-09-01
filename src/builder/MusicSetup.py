@@ -4,7 +4,7 @@ from argparse import Namespace
 from zxtaputils import tapsplit
 import sys
 
-from configuración.folders import OUTPUT_FOLDER
+from configuration.folders import OUTPUT_FOLDER
 
 class MusicSetup:
     def __tapsplit(self, musicFile):

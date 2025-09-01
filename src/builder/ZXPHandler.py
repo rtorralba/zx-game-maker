@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from configuración.folders import SRC_FOLDER
+from configuration.folders import SRC_FOLDER
 from watchdog.events import FileSystemEventHandler
 
 WATCH_FILES = ["tiles.zxp", "sprites.zxp"]

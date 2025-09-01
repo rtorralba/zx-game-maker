@@ -12,8 +12,8 @@ def getOsSeparator():
     else:
         return "/"
 
-from configuración.folders import BIN_FOLDER, OUTPUT_FOLDER, DIST_FOLDER, ASSETS_FOLDER, SCREENS_FOLDER, MAP_FOLDER, MAPS_FILE, HUD_MAP_FILE, MAPS_PROJECT, MUSIC_FOLDER
-from configuración.memoria import INITIAL_ADDRESS, MEMORY_BANK_SIZE
+from configuration.folders import BIN_FOLDER, OUTPUT_FOLDER, DIST_FOLDER, ASSETS_FOLDER, SCREENS_FOLDER, MAP_FOLDER, MAPS_FILE, HUD_MAP_FILE, MAPS_PROJECT, MUSIC_FOLDER
+from configuration.memoria import INITIAL_ADDRESS, MEMORY_BANK_SIZE
 
 # Detectar el sistema operativo para poder apuntar especificamente a MacOS
 CURRENT_OS = platform.system()

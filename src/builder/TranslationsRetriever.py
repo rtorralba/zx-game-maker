@@ -3,7 +3,7 @@ from pathlib import Path
 from builder.HudMessage import HudMessage
 import tomllib
 
-from configuración.folders import ASSETS_FOLDER, CONFIG_FILE, I18N_FOLDER
+from configuration.folders import ASSETS_FOLDER, CONFIG_FILE, I18N_FOLDER
 
 class TranslationsRetriever:
     def execute(self):

@@ -5,7 +5,7 @@ from builder.GenerateUnshiftedData import GenerateUnshiftedData
 from builder.Charset import CharSet
 from builder.ZXPToSpritesConversor import ZXPToSpritesConversor
 from builder.PreshiftedSpritesWriter import PreshiftedSpritesWriter
-from configuración.folders import MAP_FOLDER
+from configuration.folders import MAP_FOLDER
 
 class ConvertZXPToGuSprites:
     @staticmethod

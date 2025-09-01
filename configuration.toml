@@ -1,4 +1,4 @@
-version  = "ZX SPECTRUM GAME MAKER V1"  # versión del fichero de configuración
+version  = "ZX SPECTRUM GAME MAKER V1"  # versión del fichero de configuration
 
 src = "."
 bin = "bin"   # BIN_FOLDER
