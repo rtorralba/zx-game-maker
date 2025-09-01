@@ -125,7 +125,7 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
             SetTileChecked(besideTile, attrSet(besideTile), x, y)
         #Else
             If not checkScreenObjectAlreadyTaken(tile, x, y) Then
-                SetTileChecked(besideTile, attrSet(besideTile), x, y)
+                SetTileChecked(tile, attrSet(tile), x, y)
             End If
         #endif
     End If

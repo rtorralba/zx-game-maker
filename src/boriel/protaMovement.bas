@@ -597,37 +597,54 @@ Sub checkObjectContact()
     Dim col As Ubyte = protaX >> 1
     Dim lin As Ubyte = protaY >> 1
     
-    Dim tile As Ubyte = GetTile(col, lin)
+    Dim besideTile As Ubyte
     Dim attr As Ubyte
 
+    Dim tile As Ubyte = GetTile(col, lin)
     If checkTileObject(tile) Then
         addScreenObject(tile, col, lin)
-        attr = attrSet(GetTile(col - 1, lin))
-        FillWithTileChecked(0, 1, 1, attr, col, lin)
+        besideTile = GetTile(col - 1, lin)
+        If besideTile = 0 Then
+            FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col, lin)
+        Else
+            FillWithTileChecked(0, 1, 1, attrSet(besideTile), col, lin)
+        End If
         Return
     End If
     
     tile = GetTile(col + 1, lin)
     If checkTileObject(tile) Then
         addScreenObject(tile, col + 1, lin)
-        attr = attrSet(GetTile(col, lin))
-        FillWithTileChecked(0, 1, 1, attr, col + 1, lin)
+        besideTile = GetTile(col + 1, lin)
+        If besideTile = 0 Then
+            FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col + 1, lin)
+        Else
+            FillWithTileChecked(0, 1, 1, attrSet(besideTile), col + 1, lin)
+        End If
         Return
     End If
     
     tile = GetTile(col, lin + 1)
     If checkTileObject(tile) Then
         addScreenObject(tile, col, lin + 1)
-        attr = attrSet(GetTile(col - 1, lin))
-        FillWithTileChecked(0, 1, 1, attr, col, lin + 1)
+        besideTile = GetTile(col - 1, lin + 1)
+        If besideTile = 0 Then
+            FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col, lin + 1)
+        Else
+            FillWithTileChecked(0, 1, 1, attrSet(besideTile), col, lin + 1)
+        End If
         Return
     End If
     
     tile = GetTile(col + 1, lin + 1)
     If checkTileObject(tile) Then
         addScreenObject(tile, col + 1, lin + 1)
-        attr = attrSet(GetTile(col, lin + 1))
-        FillWithTileChecked(0, 1, 1, attr, col + 1, lin + 1)
+        besideTile = GetTile(col, lin + 1)
+        If besideTile = 0 Then
+            FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col + 1, lin + 1)
+        Else
+            FillWithTileChecked(0, 1, 1, attrSet(besideTile), col + 1, lin + 1)
+        End If
         Return
     End If
 End Sub
