@@ -114,21 +114,25 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
     besideTile = GetTile(x - 1, y)
     attr = getAttrFromTileAndApplyToOther(tile, besideTile)
 
-    If tile <> KEY_TILE Then
-        If not checkScreenObjectAlreadyTaken(tile, x, y) Then
-            SetTileChecked(tile, attr, x, y)
-        End If
-    Else
-        #ifdef ARCADE_MODE
+    #ifdef ARCADE_MODE
+        If tile = KEY_TILE Then
             currentScreenKeyX = x
             currentScreenKeyY = y
             SetTileChecked(besideTile, attrSet(besideTile), x, y)
-        #Else
-            If not checkScreenObjectAlreadyTaken(tile, x, y) Then
-                SetTileChecked(tile, attrSet(tile), x, y)
+        Else
+            If Not checkScreenObjectAlreadyTaken(tile, x, y) Then
+                SetTileChecked(tile, attr, x, y)
+            Else
+                SetTile(besideTile, attrSet(besideTile), x, y)
             End If
-        #endif
-    End If
+        End If
+    #else
+        If Not checkScreenObjectAlreadyTaken(tile, x, y) Then
+            SetTileChecked(tile, attr, x, y)
+        Else
+            SetTile(besideTile, attrSet(besideTile), x, y)
+        End If
+    #endif
 End Sub
 
 #ifdef ARCADE_MODE
