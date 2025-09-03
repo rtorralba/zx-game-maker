@@ -2,7 +2,8 @@ from pathlib import Path
 from PIL import Image
 import webbrowser
 
-from builder.helper import MAP_FOLDER, OUTPUT_FOLDER
+from builder.helper import OUTPUT_FOLDER
+from configuration.folders import SRC_FOLDER
 
 sprite_width = 16
 sprite_height = 16
@@ -45,7 +46,7 @@ class SpritesPreviewGenerator:
     
     @staticmethod
     def generateGif(row, spriteFrom, spriteTo, gifPath):
-        spritesheet = Image.open(MAP_FOLDER / 'sprites.png')
+        spritesheet = Image.open(SRC_FOLDER / 'sprites.png')
         
         sprites = []
         
