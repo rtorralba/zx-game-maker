@@ -113,8 +113,10 @@ def exeBuild(outputFile):
 def linuxBuild(outputFile):
     concatenateFiles(outputFile.with_suffix(".linux"), [BIN_FOLDER / "spectral.linux", outputFile.with_suffix(".z80")])
     concatenateFiles(outputFile.with_name(getProjectFileName() + "-RF").with_suffix(".linux"), [BIN_FOLDER / "spectral-rf.linux", outputFile.with_suffix(".z80")])
-    # run_command("chmod +x " + str(Path(DIST_FOLDER + getProjectFileName() + "-RF.linux")))
-    # run_command("chmod +x " + str(Path(DIST_FOLDER + getProjectFileName() + ".linux")))
+    #check if os is not windows to run chmod
+    if os.name != 'nt':
+        runCommand("chmod +x " + str(outputFile.with_name(getProjectFileName() + "-RF").with_suffix(".linux")))
+        runCommand("chmod +x " + str(outputFile.with_suffix(".linux")))
 
 def distBuild():
     outputFolder = DIST_FOLDER
