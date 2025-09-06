@@ -313,11 +313,11 @@ Function getAttrFromTileAndApplyToOther(tile As Ubyte, besideTile As Ubyte) As U
 
     attr = attrSet(tile)
     tinta = attr bAnd 7
+    parpadeo = (attr bAnd 128) / 128
 
     attr = attrSet(besideTile)
     papel = (attr bAnd 56) / 8
     brillo = (attr bAnd 64) / 64
-    parpadeo = (attr bAnd 128) / 128
 
     ' Montar el atributo: papel, tinta, brillo, parpadeo
     Return (papel * 8) + tinta + (brillo * 64) + (parpadeo * 128)
