@@ -35,14 +35,14 @@ def checkMemory():
     runPythonScript(str(BIN_FOLDER / "check-memory.py"))
 
 def tapsBuild(outputFile):    
-    runCommand("bin2tap " + str(BIN_FOLDER / "loader.bin") + " " + str(OUTPUT_FOLDER / "loader.tap") + " 10 --header \"" + getProjectName() + "\" --block_type 1")
-    runCommand("bin2tap " + str(OUTPUT_FOLDER / "loading.bin") + " " + str(OUTPUT_FOLDER / "loading.tap") + " 16384")
-    runCommand("bin2tap " + str(OUTPUT_FOLDER / "main.bin") + " " + str(OUTPUT_FOLDER / "main.tap") + " 24576")
+    runCommand("zxbin2tap " + str(BIN_FOLDER / "loader.bin") + " " + str(OUTPUT_FOLDER / "loader.tap") + " 10 --header \"" + getProjectName() + "\" --block_type 1")
+    runCommand("zxbin2tap " + str(OUTPUT_FOLDER / "loading.bin") + " " + str(OUTPUT_FOLDER / "loading.tap") + " 16384")
+    runCommand("zxbin2tap " + str(OUTPUT_FOLDER / "main.bin") + " " + str(OUTPUT_FOLDER / "main.tap") + " 24576")
 
     if getEnabled128K():
-        runCommand("bin2tap " + str(OUTPUT_FOLDER / "title.scr.zx0") + " " + str(OUTPUT_FOLDER / "title.tap") + " 49152")
-        runCommand("bin2tap " + str(OUTPUT_FOLDER / "ending.scr.zx0") + " " + str(OUTPUT_FOLDER / "ending.tap") + " 16384")
-        runCommand("bin2tap " + str(OUTPUT_FOLDER / "hud.scr.zx0") + " " + str(OUTPUT_FOLDER / "hud.tap") + " 24576")
+        runCommand("zxbin2tap " + str(OUTPUT_FOLDER / "title.scr.zx0") + " " + str(OUTPUT_FOLDER / "title.tap") + " 49152")
+        runCommand("zxbin2tap " + str(OUTPUT_FOLDER / "ending.scr.zx0") + " " + str(OUTPUT_FOLDER / "ending.tap") + " 16384")
+        runCommand("zxbin2tap " + str(OUTPUT_FOLDER / "hud.scr.zx0") + " " + str(OUTPUT_FOLDER / "hud.tap") + " 24576")
         input_files = [
             str(OUTPUT_FOLDER / "loader.tap"),
             str(OUTPUT_FOLDER / "loading.tap"),
@@ -86,11 +86,11 @@ def tapsBuild(outputFile):
                 input_files.remove(str(OUTPUT_FOLDER / "music-gameover.tap"))
 
         if os.path.isfile(OUTPUT_FOLDER / "intro.scr.zx0"):
-            runCommand("bin2tap " + str(OUTPUT_FOLDER / "intro.scr.zx0") + " " + str(OUTPUT_FOLDER / "intro.tap") + " 49152")
+            runCommand("zxbin2tap " + str(OUTPUT_FOLDER / "intro.scr.zx0") + " " + str(OUTPUT_FOLDER / "intro.tap") + " 49152")
             input_files.append(OUTPUT_FOLDER / "intro.tap")
         
         if os.path.isfile(OUTPUT_FOLDER / "gameover.scr.zx0"):
-            runCommand("bin2tap " + str(OUTPUT_FOLDER / "gameover.scr.zx0") + " " + str(OUTPUT_FOLDER / "gameover.tap") + " 49152")
+            runCommand("zxbin2tap " + str(OUTPUT_FOLDER / "gameover.scr.zx0") + " " + str(OUTPUT_FOLDER / "gameover.tap") + " 49152")
             input_files.append(OUTPUT_FOLDER / "gameover.tap")
     else:
         input_files = [
