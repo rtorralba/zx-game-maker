@@ -24,11 +24,6 @@ def ensure_venv_and_requirements():
         print("Instalando dependencias en el entorno virtual...")
         subprocess.check_call([str(pip_path), "install", "-r", str(REQUIREMENTS)])
 
-        # rm venv/bin/bin2tap.py
-        bin2tap_path = VENV_DIR / "bin" / "bin2tap.py"
-        if bin2tap_path.exists():
-            bin2tap_path.unlink()
-
     return python_path, venv_bin
 
 python_path, venv_bin = ensure_venv_and_requirements()
