@@ -2,6 +2,7 @@ import os
 import sys
 from pathlib import Path
 import time
+import shutil,subprocess
 sys.path.append(str(Path(__file__).resolve().parent / 'src'))
 
 from builder.Builder import Builder 
@@ -110,6 +111,19 @@ def exeBuild(outputFile):
     concatenateFiles(outputFile.with_suffix(".exe"), [BIN_FOLDER / "spectral.exe", outputFile.with_suffix(".z80")])
     concatenateFiles(outputFile.with_name(getProjectFileName() + "-RF").with_suffix(".exe"), [BIN_FOLDER / "spectral-rf.exe", outputFile.with_suffix(".z80")])
 
+def macBuild(outputFile):
+    z=outputFile.with_suffix(".z80")
+    for s in("","-RF"):
+        d=DIST_FOLDER/f"{getProjectFileName()}{s}.app"
+        shutil.rmtree(d,ignore_errors=True);shutil.copytree(BIN_FOLDER/"spectral.app",d)
+        m=d/"Contents"/"MacOS";shutil.move(m/"spectral",m/"spectral.bin")
+        (m/"spectral").write_text(f'''#!/bin/bash
+DIR="$(cd "$(dirname "$0")"&&pwd)"
+"$DIR/spectral.bin" -a "$DIR/{getProjectFileName()}.z80"
+''')
+        shutil.copy2(z,m/f"{getProjectFileName()}.z80")
+        for p in(m/"spectral.bin",m/"spectral"):subprocess.run(["chmod","+x",str(p)])
+
 def linuxBuild(outputFile):
     concatenateFiles(outputFile.with_suffix(".linux"), [BIN_FOLDER / "spectral.linux", outputFile.with_suffix(".z80")])
     concatenateFiles(outputFile.with_name(getProjectFileName() + "-RF").with_suffix(".linux"), [BIN_FOLDER / "spectral-rf.linux", outputFile.with_suffix(".z80")])
@@ -131,6 +145,7 @@ def distBuild():
     snaBuild(outputFile)
     exeBuild(outputFile)
     linuxBuild(outputFile)
+    macBuild(outputFile)
 
 
 def removeTempFiles():
