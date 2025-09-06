@@ -1,6 +1,6 @@
 Pillow
 matplotlib
-bin2tap
+bin2tap-metsuos
 zxp2gus
 zxbasic
 skoolkit
