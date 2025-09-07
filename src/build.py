@@ -114,8 +114,9 @@ def exeBuild(outputFile):
 def macBuild(outputFile):
     z=outputFile.with_suffix(".z80")
     for s in("","-RF"):
+        src=BIN_FOLDER/("spectral.app" if s=="" else "spectral-rf.app")
         d=DIST_FOLDER/f"{getProjectFileName()}{s}.app"
-        shutil.rmtree(d,ignore_errors=True);shutil.copytree(BIN_FOLDER/"spectral.app",d)
+        shutil.rmtree(d,ignore_errors=True);shutil.copytree(src,d)
         m=d/"Contents"/"MacOS";shutil.move(m/"spectral",m/"spectral.bin")
         (m/"spectral").write_text(f'''#!/bin/bash
 DIR="$(cd "$(dirname "$0")"&&pwd)"
