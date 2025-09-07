@@ -615,7 +615,7 @@ Sub checkObjectContact()
     tile = GetTile(col + 1, lin)
     If checkTileObject(tile) Then
         addScreenObject(tile, col + 1, lin)
-        besideTile = GetTile(col + 1, lin)
+        besideTile = GetTile(col, lin)
         If besideTile = 0 Then
             FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col + 1, lin)
         Else
