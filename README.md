@@ -41,6 +41,7 @@ Libraries and other software that are included in this project or that it was in
 * [shiru8bit](http://shiru.untergrund.net) Beeper FX Sounds
 * [r-lyeh](https://github.com/r-lyeh) Spectral emulator
 * [S.V.Bulba](https://ay.strangled.net/) Vortex Tracker II
+* [Freepik](https://www.flaticon.com/authors/freepik) Launcher Icons
 
 ## Special Thanks
 

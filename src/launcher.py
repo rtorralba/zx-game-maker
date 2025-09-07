@@ -36,8 +36,10 @@ import os
 # Establecer el directorio de trabajo al directorio del script
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-def executeBuild(verbose=False):
-    selected_folder = showFolderSelectionModal()
+def executeBuild(verbose=False, selected_folder=None):
+
+    if selected_folder is None:
+        selected_folder = showFolderSelectionModal()
 
     if selected_folder is None:
         selected_folder = "default"
@@ -377,12 +379,110 @@ else:
 
 # Cargar el logo
 logo_path = Path.cwd() / "ui/logo.png"
+# Crear un frame horizontal para logo y botones
+top_frame = tk.Frame(root)
+top_frame.pack(pady=10, fill="x")
+
+# Logo alineado a la izquierda
 if logo_path.exists():
     logo = PhotoImage(file=logo_path)
-    logo_label = tk.Label(root, image=logo)
-    logo_label.pack(pady=10)
+    logo_label = tk.Label(top_frame, image=logo)
+    logo_label.grid(row=0, column=0, rowspan=2, sticky="w", padx=10)
 else:
-    messagebox.showwarning("Advertencia", "No se encontró el logo en 'ui/logo.png'.")
+    logo_label = tk.Label(top_frame, text="ZX Spectrum Game Maker", font=("Arial", 16))
+    logo_label.grid(row=0, column=0, rowspan=2, sticky="w", padx=10)
+
+# Detectar idiomas disponibles
+idiomas = []
+idiomas_path = ASSETS_FOLDER / "texts"
+if idiomas_path.exists():
+    idiomas = [d for d in os.listdir(idiomas_path) if os.path.isdir(idiomas_path / d) and len(d) == 2]
+idiomas.sort()
+
+settings_icon_path = Path.cwd() / "ui/settings.png"
+settings_icon = PhotoImage(file=settings_icon_path) if settings_icon_path.exists() else None
+open_map_icon_path = Path.cwd() / "ui/map.png"
+open_map_icon = PhotoImage(file=open_map_icon_path) if open_map_icon_path.exists() else None
+game_icon_path = Path.cwd() / "ui/game.png"
+game_icon = PhotoImage(file=game_icon_path) if game_icon_path.exists() else None
+doc_icon_path = Path.cwd() / "ui/doc.png"
+doc_icon = PhotoImage(file=doc_icon_path) if doc_icon_path.exists() else None
+
+# Frame para los botones a la derecha del logo
+button_frame = tk.Frame(top_frame)
+button_frame.grid(row=0, column=1, sticky="ne", padx=10)
+
+# Frame para la botonera izquierda (Open Game, Open Map, Open Doc)
+left_buttons_frame = tk.Frame(button_frame)
+left_buttons_frame.pack(side="left", anchor="n", padx=(0, 20))
+
+# Open Game
+open_game_button = tk.Button(
+    left_buttons_frame,
+    text="Open Game",
+    width=100,
+    image=game_icon,
+    compound="left",
+    anchor="w",
+    command=lambda: open_game_variant("normal")
+)
+open_game_button.image = game_icon
+open_game_button.pack(anchor="w", pady=(0, 10))
+
+# Open Map
+open_map_button = tk.Button(
+    left_buttons_frame,
+    text="Open Map",
+    width=100,
+    image=open_map_icon,
+    compound="left",
+    anchor="w",
+    command=open_map_with_tiled
+)
+open_map_button.image = open_map_icon
+open_map_button.pack(anchor="w", pady=(0, 10))
+
+# Open Doc
+open_doc_button = tk.Button(
+    left_buttons_frame,
+    text="Open Doc",
+    width=100,
+    image=doc_icon,
+    compound="left",
+    anchor="w",
+    command=lambda: webbrowser.open("https://gm.retrojuegos.org/")
+)
+open_doc_button.image = doc_icon
+open_doc_button.pack(anchor="w", pady=(0, 10))
+
+# Frame para la botonera derecha (un botón por idioma)
+right_buttons_frame = tk.Frame(button_frame)
+right_buttons_frame.pack(side="left", anchor="n")
+
+def build_for_language(lang):
+    os.environ["ZXSGM_I18N_FOLDER"] = lang
+    executeBuild(False, lang)
+
+tk.Button(
+    right_buttons_frame,
+    text="Build default",
+    width=100,
+    image=settings_icon,
+    compound="left",
+    anchor="w",
+    command=lambda l="default": build_for_language(l)
+).pack(anchor="w", pady=(0, 10))
+
+for lang in idiomas:
+    tk.Button(
+        right_buttons_frame,
+        text=f"Build {lang.upper()}",
+        width=100,
+        image=settings_icon,
+        compound="left",
+        anchor="w",
+        command=lambda l=lang: build_for_language(l)
+    ).pack(anchor="w", pady=(0, 10))
 
 # Crear el menú de barras
 menu_bar = tk.Menu(root)
