@@ -140,6 +140,7 @@ mainCharacterExtraFrame = 1
 idleTime = 0
 
 arcadeMode = 0
+arcadeModeFirstScreen = 0
 
 jetPackFuel = 0
 
@@ -242,6 +243,8 @@ if 'properties' in data:
             idleTime = property['value']
         elif property['name'] == 'arcadeMode':
             arcadeMode = 1 if property['value'] else 0
+        elif property['name'] == 'arcadeModeFirstScreen':
+            arcadeModeFirstScreen = property['value']
         elif property['name'] == 'jetPackFuel':
             jetPackFuel = property['value'] 
         elif property['name'] == 'jumpType':
@@ -616,6 +619,12 @@ for enemyId in objects:
     screenEnemies[enemy['screenId']].append(enemy)
 
 enemiesPerScreen = []
+
+if arcadeMode == 1:
+    if arcadeModeFirstScreen != 0:
+        initialScreen = arcadeModeFirstScreen
+    else:
+        initialScreen = 0
 
 configStr += "const INITIAL_SCREEN as ubyte = " + str(initialScreen) + "\n"
 configStr += "const INITIAL_MAIN_CHARACTER_X as ubyte = " + str(initialMainCharacterX) + "\n"

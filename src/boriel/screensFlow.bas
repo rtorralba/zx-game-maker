@@ -184,11 +184,7 @@ Sub playGame()
     
     Ink INK_VALUE: Paper PAPER_VALUE: Border BORDER_VALUE
     
-    #ifdef ARCADE_MODE
-        currentScreen = 0
-    #Else
-        currentScreen = INITIAL_SCREEN
-    #endif
+    currentScreen = INITIAL_SCREEN
     
     #ifdef INIT_TEXTS
         For i=0 To 2

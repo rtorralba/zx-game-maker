@@ -110,6 +110,11 @@
                 "value": false
             },
             {
+                "name": "arcadeModeFirstScreen",
+                "type": "int",
+                "value": 0
+            },
+            {
                 "name": "backgroundAttribute",
                 "type": "int",
                 "value": 7
