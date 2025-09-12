@@ -140,9 +140,13 @@ def open_game_variant(variant):
         if CURRENT_OS == "Windows":
             # game_path = os.path.join(os.getcwd(), DIST_FOLDER, f"{project_name}.exe")
             game_path = Path.cwd() / DIST_FOLDER / f"{project_name}.exe"
-        elif CURRENT_OS in ["Linux", "Darwin"]:
+        elif CURRENT_OS == "Linux":
             # game_path = os.path.join(os.getcwd(), DIST_FOLDER, f"{project_name}.linux")
-            game_path = Path.cwd() / DIST_FOLDER / f"{project_name}.linux"
+            game_path = Path.cwd() / DIST_FOLDER / f"{project_name}.linux"            
+        elif CURRENT_OS == "Darwin":
+            # game_path = os.path.join(os.getcwd(), DIST_FOLDER, f"{project_name}.app")
+            game_path = Path.cwd() / DIST_FOLDER / f"{project_name}.app"
+            subprocess.run(["open", game_path])
         else:
             messagebox.showerror("Error", "El sistema operativo no es compatible.")
             return
