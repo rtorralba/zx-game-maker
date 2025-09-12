@@ -258,9 +258,11 @@ sub removeTilesFromScreen(tile as ubyte)
 	for index=0 to SCREEN_LENGTH
 		if peek(@decompressedMap + index) - 1 = tile then
 			SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
-            If tile = DOOR_TILE Then
-                addScreenObject(DOOR_TILE, x, y)
-            End If
+            #ifndef ARCADE_MODE
+                If tile = DOOR_TILE Then
+                    addScreenObject(DOOR_TILE, x, y)
+                End If
+            #endif
 		end if
 
 		x = x + 1
@@ -293,6 +295,7 @@ sub saveProta(lin as ubyte, col as ubyte, tile as ubyte, directionRight as ubyte
     protaDirection = directionRight
 end sub
 
+#ifndef ARCADE_MODE
 Sub addScreenObject(tile As Ubyte, col As Ubyte, lin As Ubyte)
     If screenObjectsCurrentIndex >= SCREEN_OBJECTS_COUNT Then Return
     
@@ -303,6 +306,7 @@ Sub addScreenObject(tile As Ubyte, col As Ubyte, lin As Ubyte)
     
     screenObjectsCurrentIndex = screenObjectsCurrentIndex + 1
 End Sub
+#endif
 
 Function getAttrFromTileAndApplyToOther(tile As Ubyte, besideTile As Ubyte) As Ubyte
     Dim attr As Ubyte

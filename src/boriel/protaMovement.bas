@@ -602,7 +602,9 @@ Sub checkObjectContact()
 
     Dim tile As Ubyte = GetTile(col, lin)
     If checkTileObject(tile) Then
-        addScreenObject(tile, col, lin)
+        #ifndef ARCADE_MODE
+            addScreenObject(tile, col, lin)
+        #endif
         besideTile = GetTile(col - 1, lin)
         If besideTile = 0 Then
             FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col, lin)
@@ -614,7 +616,9 @@ Sub checkObjectContact()
     
     tile = GetTile(col + 1, lin)
     If checkTileObject(tile) Then
-        addScreenObject(tile, col + 1, lin)
+        #ifndef ARCADE_MODE
+            addScreenObject(tile, col + 1, lin)
+        #endif
         besideTile = GetTile(col, lin)
         If besideTile = 0 Then
             FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col + 1, lin)
@@ -626,7 +630,9 @@ Sub checkObjectContact()
     
     tile = GetTile(col, lin + 1)
     If checkTileObject(tile) Then
-        addScreenObject(tile, col, lin + 1)
+        #ifndef ARCADE_MODE
+            addScreenObject(tile, col, lin + 1)
+        #endif
         besideTile = GetTile(col - 1, lin + 1)
         If besideTile = 0 Then
             FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col, lin + 1)
@@ -638,7 +644,9 @@ Sub checkObjectContact()
     
     tile = GetTile(col + 1, lin + 1)
     If checkTileObject(tile) Then
-        addScreenObject(tile, col + 1, lin + 1)
+        #ifndef ARCADE_MODE
+            addScreenObject(tile, col + 1, lin + 1)
+        #endif
         besideTile = GetTile(col, lin + 1)
         If besideTile = 0 Then
             FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col + 1, lin + 1)
