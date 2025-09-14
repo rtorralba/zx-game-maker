@@ -7,6 +7,30 @@
 '     End If
 ' #endif
 
+' GuSprites
+#define PRECOMPUTED_SPRITES
+#define STORE_UNSHIFTED_SPRITES
+#define SPRITES_FILE "sprites.bas"
+' #define SPRITE_XY_IN_PIXELS
+#define ENABLE_1x1_SPRITES
+' #define ENABLE_1x2_SPRITES
+#define ENABLE_2x2_SPRITES
+#ifdef SIDE_VIEW
+    #define TOTAL_1x1_SPRITES 2
+#else
+    #define TOTAL_1x1_SPRITES 4
+#endif
+' #define TOTAL_1x2_SPRITES 0
+#define TOTAL_2x2_SPRITES 48
+#define ONSCREEN_1x1_SPRITES 1
+' #define ONSCREEN_1x2_SPRITES 0
+' #define ONSCREEN_2x2_SPRITES 4 Defined dinamically from Tiled
+#define ENABLE_TILES
+#define MERGE_TILES
+' #define MAX_ANIMATED_TILES_PER_SCREEN 48 Defined dinamically from Tiled
+#define ALL_NEEDED_PARAMETERS_ALREADY_DEFINED
+#define ENABLE_INTERRUPTS
+
 Const BULLET_SPRITE_RIGHT_ID As Ubyte = 49
 Const BULLET_SPRITE_LEFT_ID As Ubyte = 50
 #ifdef OVERHEAD_VIEW

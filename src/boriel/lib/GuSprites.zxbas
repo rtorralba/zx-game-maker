@@ -1,24 +1,46 @@
-﻿'CONFIG DEFINES
+'CONFIG DEFINES
+
+'Please, enable/define in your Boriel ZX Basic source code some of the following parameters
+'in order to choose the features of this library that you want to use.
+
+'Enabling this parameter tells the library that you have defined all needed parameters
+'before you included the library. If this parameter is not enabled/defined, the library
+'will define some parameters with standard values (such as 4 for ONSCREEN_1x2_SPRITES).
+'These standard values were loaded by default into the parameters till August 2025.
+'
+'#define ALL_NEEDED_PARAMETERS_ALREADY_DEFINED
+
+'Enabling this define tells the library to store unshifted sprites in SPRITE_BUFFER,
+'that is, each 1x1,1x2,2x2 sprite in 8,16,32 bytes. Therefore, the library will use
+'much less memory, but will be slower.
+'If not enabled, the library will store shifted sprites in SPRITE_BUFFER, which is
+'the default behavior: each 1x1,1x2,2x2 sprite in 48,72,120 bytes.
+'
+'#define STORE_UNSHIFTED_SPRITES
 
 'Enabling this define tells the library that we are going to use precomputed sprites.
 'Using precomputed sprites will help to reduce the library's memory footprint when
 'your program is going to use a single sprite set.
 'To generate the precomputed sprites I recommend to use the ResourceDesigner program
 'that you will find in my Github repository (https://github.com/gusmanb/ResourceDesigner).
-' 
-'Remember to modify also the include that is defined at the bottom of the 
-'assembler variable declarations if your file is not named "Sprites.zxbas".
+'
+'#define PRECOMPUTED_SPRITES
 
-#define PRECOMPUTED_SPRITES
+'When PRECOMPUTED_SPRITES is enabled, sprites are included into library at compile
+'time via including a file. Next parameter defines the name of this sprite file.
+'Please, choose a file whose contents are compatible with value of STORE_UNSHIFTED_SPRITES:
+'If STORE_UNSHIFTED_SPRITES is   defined, use a unshifted sprites file, e.g., "sprites.bas".
+'If STORE_UNSHIFTED_SPRITES is undefined, use a   shifted sprites file, e.g., "Sprites.zxbas".
+'
+'#define SPRITES_FILE "sprites.bas"
 
-'Enabling this define tells the library to store unshifted sprites in SPRITE_BUFFER,
-'that is, each 1x1,1x2,2x2 sprite in 8,16,32 bytes. Therefore, the library will use
-'much less memory, but will be slower.
-'If not enabled, the library will store shifted sprites in SPRITE_BUFFER, which is
-'the default behavior: each 1x1,1x2,2x2 sprite in 48,72,120 bytes
-#define STORE_UNSHIFTED_SPRITES
-'When this and previous defines are enabled, sprites are included from unshifted-sprites 
-'file "sprites.bas". This file is shorter than shifted-sprites file "Sprites.zxbas".
+'Enabling this define tells the library that sprite X,Y coordinates
+'are measured in pixels, i.e., X can range from 0 to almost 250,
+'and Y from 0 to almost 190 (0-240 and 0-176 for a 2x2 sprite).
+'Coordinates for tiles are measured in characters, as usual.
+'When enabled, unshifted sprites MUST be used.
+'
+'#define SPRITE_XY_IN_PIXELS
 
 'Enabling this define changes the merge of the sprites and tiles to be a XOR instead of an OR
 '#define MERGE_WITH_XOR
@@ -26,40 +48,67 @@
 'Enabling this define activates the fast print routines
 '#define ENABLE_PRINT
 
-#define ENABLE_1x1_SPRITES
+'The value of this parameter should be 256 bytes less than actual address
+'for ROM character set (see https://skoolkid.github.io/rom/asm/3D00.html).
+'You can use your own character set by setting this parameter appropriately;
+'moreover, you can use 256 different characters if you define them.
+'Requires ENABLE_PRINT
+'#define ROM_CHARSET 3C00h
+
+'When one of next 3 defines is not enabled, the corresponding size of sprite will not be used,
+'and value of corresponding TOTAL and ONSCREEN parameters will be set to zero automatically.
+'#define ENABLE_1x1_SPRITES
 '#define ENABLE_1x2_SPRITES
-#define ENABLE_2x2_SPRITES
+'#define ENABLE_2x2_SPRITES
 
 'Total number of 1x1 defined sprites
-#ifdef SIDE_VIEW
-    #define TOTAL_1x1_SPRITES 2
-#else
-    #define TOTAL_1x1_SPRITES 4
-#endif
+'#define TOTAL_1x1_SPRITES 4
 'Total number of 1x2 defined sprites
-'#define TOTAL_1x2_SPRITES 0
+'#define TOTAL_1x2_SPRITES 4
 'Total number of 2x2 defined sprites
-#define TOTAL_2x2_SPRITES 48
+'#define TOTAL_2x2_SPRITES 4
 
 'Maximum on-screen 1x1 sprites
-#define ONSCREEN_1x1_SPRITES 1
+'#define ONSCREEN_1x1_SPRITES 4
 'Maximum on-screen 1x2 sprites
-'#define ONSCREEN_1x2_SPRITES 0
+'#define ONSCREEN_1x2_SPRITES 4
 'Maximum on-screen 2x2 sprites
 '#define ONSCREEN_2x2_SPRITES 4
 
 'If defined enables the tile system in its basic mode (tiles erased when sprite enters on it)
-#define ENABLE_TILES
+'#define ENABLE_TILES
+
 'If defined tiles are merged with OR instead of erased
 'Requires ENABLE_TILES
-#define MERGE_TILES
+'#define MERGE_TILES
+
+'If defined, this amount of tiles can be changed each gameloop to perform an animation
+'Requires ENABLE_TILES
+'#define MAX_ANIMATED_TILES_PER_SCREEN 4
 
 'The lib by default disables interrupts, enabling this option
 'will reactivate them after each call to the lib
-#define ENABLE_INTERRUPTS
+'#define ENABLE_INTERRUPTS
 
+'END CONFIG DEFINES
 
 asm
+
+#ifndef ALL_NEEDED_PARAMETERS_ALREADY_DEFINED
+#define ENABLE_PRINT
+#define ENABLE_1x1_SPRITES
+#define ENABLE_1x2_SPRITES
+#define ENABLE_2x2_SPRITES
+#define TOTAL_1x1_SPRITES 4
+#define TOTAL_1x2_SPRITES 8
+#define TOTAL_2x2_SPRITES 4
+#define ONSCREEN_1x1_SPRITES 4
+#define ONSCREEN_1x2_SPRITES 4
+#define ONSCREEN_2x2_SPRITES 4
+#define ENABLE_TILES
+#define MERGE_TILES
+#define ENABLE_INTERRUPTS
+#endif
 
 ;MACROS
 
@@ -227,7 +276,15 @@ ldi \
 
 #endif
 
-#define ROM_CHARSET 3C00h
+#ifndef ROM_CHARSET
+  #define ROM_CHARSET 3C00h
+#endif
+
+#ifdef SPRITE_XY_IN_PIXELS
+  #ifndef STORE_UNSHIFTED_SPRITES
+    #define STORE_UNSHIFTED_SPRITES
+  #endif
+#endif
 
 #ifdef STORE_UNSHIFTED_SPRITES
 
@@ -251,20 +308,21 @@ TOTAL_1x1_OPS equ (ONSCREEN_1x1_SPRITES * SPRITE_1x1_SHIFTED_SIZE)
 TOTAL_1x2_OPS equ (ONSCREEN_1x2_SPRITES * SPRITE_1x2_SHIFTED_SIZE)
 TOTAL_2x2_OPS equ (ONSCREEN_2x2_SPRITES * SPRITE_2x2_SHIFTED_SIZE)
 
-#ifndef MAX_ANIMATED_TILES_PER_SCREEN
-    #define MAX_ANIMATED_TILES_PER_SCREEN 0
-#endif
-
-TOTAL_DRAW_OPS equ ((TOTAL_1x1_OPS + TOTAL_1x2_OPS + TOTAL_2x2_OPS + MAX_ANIMATED_TILES_PER_SCREEN) * 2)
+TOTAL_DRAW_OPS equ ((TOTAL_1x1_OPS + TOTAL_1x2_OPS + TOTAL_2x2_OPS) * 2)
 
 #ifdef ENABLE_TILES
 DRAW_OP_SIZE equ 5
 #else
 DRAW_OP_SIZE equ 4
+#define MAX_ANIMATED_TILES_PER_SCREEN 0
 #endif
 
-DRAW_OPS_SIZE equ (TOTAL_DRAW_OPS * DRAW_OP_SIZE)
-DRAW_OPS_DATA_SIZE equ (TOTAL_DRAW_OPS * 8)
+#ifndef MAX_ANIMATED_TILES_PER_SCREEN
+#define MAX_ANIMATED_TILES_PER_SCREEN 0
+#endif
+
+DRAW_OPS_SIZE equ ((TOTAL_DRAW_OPS + MAX_ANIMATED_TILES_PER_SCREEN * 2) * DRAW_OP_SIZE)
+DRAW_OPS_DATA_SIZE equ ((TOTAL_DRAW_OPS + MAX_ANIMATED_TILES_PER_SCREEN) * 8)
 
 SPRITE_BUFFER_SIZE equ ((TOTAL_1x1_SPRITES * SPRITE_1x1_BUFFER_SIZE)+(TOTAL_1x2_SPRITES * SPRITE_1x2_BUFFER_SIZE)+(TOTAL_2x2_SPRITES * SPRITE_2x2_BUFFER_SIZE))
 SPRITE_INDEX_SIZE equ ((TOTAL_1x1_SPRITES + TOTAL_1x2_SPRITES + TOTAL_2x2_SPRITES + 1) * 2)
@@ -320,8 +378,41 @@ defw 0
 CURRENT_CLEAR_MAP:          ;puntero a uno de los mapas de celdas que se usa para almacenar las id's de operaciones de limpieza por su posición
 defw 0
 
+
+#ifdef SPRITE_XY_IN_PIXELS
+                            ;Cantidad de bytes de cada tipo (v=vacío, g=gráfico)
+;SPRITE_XY_IN_PIXELS:       7v + g +...+ g + 7v
+#ifdef ENABLE_1x1_SPRITES
+TEMP_1x1_SPRITE:            ;Tenemos sprites 1x1:
+defs 38                     ;7v + 8g + 8v + 8g + 7v = 38
+#endif
+
+#ifdef ENABLE_1x2_SPRITES
+
+#ifndef ENABLE_2x2_SPRITES
+TEMP_1x2_SPRITE:            ;Tenemos sprites 1x2 pero NO 2x2:
+defs 54                     ;7v + 16g + 8v + 16g + 7v = 54
+#else
+TEMP_1x2_SPRITE:            ;Si tenemos sprites 1x2 AND 2x2,
+TEMP_2x2_SPRITE:            ;entonces comparten espacio en RAM:
+defs 78                     ;7v + 16g + 8v + 16g + 8v + 16g + 7v = 78
+#endif
+
+#else
+
+#ifdef ENABLE_2x2_SPRITES
+TEMP_2x2_SPRITE:            ;Tenemos sprites 2x2 pero NO 1x2:
+defs 78                     ;7v + 16g + 8v + 16g + 8v + 16g + 7v = 78
+#endif
+
+#endif
+
+#else
+;no SPRITE_XY_IN_PIXELS
+
 #ifdef STORE_UNSHIFTED_SPRITES
                             ;Cantidad de bytes de cada tipo (v=vacío, g=gráfico)
+;STORE_UNSHIFTED_SPRITES:   4v + g +...+ g + 4v
 #ifdef ENABLE_1x1_SPRITES
 TEMP_1x1_SPRITE:            ;Tenemos sprites 1x1:
 defs 32                     ;4v + 8g + 8v + 8g + 4v = 32
@@ -349,6 +440,21 @@ defs 72                     ;4v + 16g + 8v + 16g + 8v + 16g + 4v = 72
 
 #endif
 
+#endif
+;end SPRITE_XY_IN_PIXELS
+
+#ifndef SPRITES_FILE
+  #ifdef PRECOMPUTED_SPRITES
+    #ifdef STORE_UNSHIFTED_SPRITES
+      #define SPRITES_FILE "sprites.bas"
+    #else
+      #define SPRITES_FILE "Sprites.zxbas"
+    #endif
+  #else
+    #define SPRITES_FILE ""
+  #endif
+#endif
+
 #ifndef PRECOMPUTED_SPRITES
 
 SPRITE_BUFFER:              ;shifted sprite buffer
@@ -362,20 +468,14 @@ defb 0
 
 end asm
 
-#ifdef STORE_UNSHIFTED_SPRITES
-    #include "sprites.bas"
-#else
-    #include "Sprites.zxbas"
-#endif
+    #include SPRITES_FILE
 
 asm
 
 #endif
 
-;#ifndef ENABLE_TILES
 EMPTY_CHAR:
 defs 8
-;#endif
 
 #ifdef ENABLE_TILES
 TILE_SET:
@@ -465,7 +565,7 @@ ret
 ENDP
 
 PROC
-LOCAL RENDER_LOOP, END_RENDER, RESTORE_STACK
+LOCAL RENDER_LOOP, END_RENDER, RESTORE_STACK, STANDARD_OP, END_STANDARD_OP
 RENDER_FRAME:                                         ;TRASHES: BC, DE, HL, A
 
 #ifndef ENABLE_INTERRUPTS
@@ -497,6 +597,16 @@ inc hl
 
 push hl                     ;store current op address
 
+ ld a,d     ;Check whether D = %...11... (DE in ATTRIBUTES)
+ or %11100111
+ inc a
+ jp nz,STANDARD_OP;4+7+4+10 = 25 T-states extra per drawOP
+ ld a,c     ;C = tile attributes
+ ld (de),a  ;set tile color
+ jp END_STANDARD_OP
+
+STANDARD_OP:
+
 COPY_16B_REG(b,c, h,l)        ;hl = source, de = target, stack = op address
 
 ld (RESTORE_STACK + 1), sp      ;save stack address
@@ -525,6 +635,8 @@ ld (hl), d                      ;load second byte
 
 RESTORE_STACK:
 ld sp, 0                    ;Retore the data stack as we were using it for copy
+
+END_STANDARD_OP:
 
 ;more ops left?
 ld hl, CURRENT_DRAW_COUNT
@@ -816,9 +928,16 @@ ENDP
 
 PROC
 LOCAL EXISTING_OP, REAL_EXISTING_OP
-CREATE_DRAW_OP:                             ;input: b = xrow, c = ycol, hl=sprite data address. Trashes hl, bc, de, a, ix, iy
+CREATE_DRAW_OP:                             ;input: b = xcol, c = yrow, hl=sprite data address. Trashes hl, bc, de, a, ix, iy
 
 ;creates a draw op using the char data at de
+
+ld a, b
+cp 32
+ret nc  ;return if xcol >= 32 (or xcol < 0)
+ld a, c
+cp 24
+ret nc  ;return if yrow >= 24 (or yrow < 0)
 
 push hl
 push bc
@@ -826,9 +945,9 @@ push bc
 ld l, c                                     
 ld h, 0
 
-HL_POW2_5()                                  ;ycol * 32
+HL_POW2_5()                                  ;yrow * 32
 
-ld c, b                                     ;+ xrow
+ld c, b                                     ;+ xcol
 ld b, 0
 
 add hl, bc                                  ;hl cointains displacement in map
@@ -1292,14 +1411,98 @@ jr nz, LOOP
 ret
 ENDP
 
+PROC
+
+UBYTE_COORDS_TO_BCHL:
+; N = 2 or 8 depending on SPRITE_XY_IN_PIXELS is not defined or defined
+; input: a = sprite number, b = X [0,63] or [0,255], d = Y [0,47] or [0,191]
+;output: a = sprite number, b = XmodN = XintoCharPos, h = Int(X/N) = column
+;                           c = YmodN = YintoCharPos, l = Int(Y/N) = row
+ ex af,af'
+
+ ld a,b;    X
+ srl b
+#ifdef SPRITE_XY_IN_PIXELS
+    srl b
+    srl b
+#endif
+ ld h,b;    h = Int(X/N) = column
+#ifdef SPRITE_XY_IN_PIXELS
+    and 7
+#else
+    and 1
+#endif
+ ld b,a;    b = XmodN = XintoCharPos
+
+ ld a,d;    Y
+ srl d
+#ifdef SPRITE_XY_IN_PIXELS
+    srl d
+    srl d
+#endif
+ ld l,d;    l = Int(Y/N) = row
+#ifdef SPRITE_XY_IN_PIXELS
+    and 7
+#else
+    and 1
+#endif
+ ld c,a;    c = YmodN = YintoCharPos
+
+ ex af,af'
+ ret
+
+ENDP
+
+#ifdef SPRITE_XY_IN_PIXELS
+
+PROC
+
+INTEGER_COORDS_TO_BCHL:
+; input: a = sprite number, bc = X [-15,255], de = Y [-15,191]
+;output: a = sprite number, b = Xmod8 = XintoCharPos, h = Int(X/8) = column
+;                           c = Ymod8 = YintoCharPos, l = Int(Y/8) = row
+ ex af,af'
+
+ ld a,c;    If bc = -15, then c = -15 (and b = 255)
+ sra b
+ rra;       a = -8
+ sra b
+ rra;       a = -4
+ sra b
+ rra;       a = -2
+ ld h,a;    h = Int(X/8) = column
+ ld a,c
+ and 7
+ ld b,a;    b = Xmod8 = XintoCharPos
+
+ ld a,e;    If de = 191, then e = 191 (and d = 0)
+ sra d
+ rra;       a = 95
+ sra d
+ rra;       a = 47
+ sra d
+ rra;       a = 23
+ ld l,a;    l = Int(Y/8) = row
+ ld a,e
+ and 7
+ ld c,a;    c = Ymod8 = YintoCharPos
+
+ ex af,af'
+ ret
+
+ENDP
+
+#endif
+
 #ifdef ENABLE_1x1_SPRITES
 
 PROC
 LOCAL TEST_SHIFTS, HORIZONTAL_SHIFT, VERTICAL_SHIFT
-#ifdef STORE_UNSHIFTED_SPRITES
-LOCAL LOOP1, LOOP2
-#endif
-DRAW_1x1_SPRITE:            ;input: a = sprite number, b=x, c=y
+DRAW_1x1_SPRITE:
+; N = 2 or 8 depending on SPRITE_XY_IN_PIXELS is not defined or defined
+; input: a = sprite number, b = XmodN = XintoCharPos, h = Int(X/N) = column
+;                           c = YmodN = YintoCharPos, l = Int(Y/N) = row
+push hl
 
 dec a
 add a, a
@@ -1310,15 +1513,17 @@ add hl, de
 
 READ_HL_POINTER(d,e)    ;de contains the sprite data
 
+#ifdef STORE_UNSHIFTED_SPRITES
+ld a, 8
+ex af, af'; A'=8 for HSHIFT1to7_1xN_SPRITE and HSHIFT4_1xN_SPRITE
+#endif
 ld a, b
 or c
-and 1
 
 jp nz, TEST_SHIFTS
 
 ;unshifted sprite
-srl b                       ;calculate row/col
-srl c
+pop bc                      ;calculate row/col
 
 #ifdef STORE_UNSHIFTED_SPRITES
 ex de, hl
@@ -1333,44 +1538,35 @@ ret
 
 TEST_SHIFTS:
 ld a, c
-and 1
+and a
 jp z, HORIZONTAL_SHIFT
 ld a, b
-and 1
+and a
 jp z, VERTICAL_SHIFT
 
 ;diagonal shift
 
-srl b                       ;calculate row/col
-srl c
+#ifdef SPRITE_XY_IN_PIXELS
+ld ix, TEMP_1x1_SPRITE + 7
+ld iyl, c
+call HSHIFT1to7_1xN_SPRITE
+ld e, iyl
+ld d, 0;    DE = Ymod8 = 1,2,3,4,5,6,7
+ld hl, TEMP_1x1_SPRITE + 7
+sbc hl, de; HL=TEMP_1x1_SPRITE + 6,5,4,3,2,1,0
+#else
 
 #ifdef STORE_UNSHIFTED_SPRITES
 ld ix, TEMP_1x1_SPRITE + 4
-ld h, b
-ld b, 8
-LOOP1:
-ld a, (de)
-ld l, a
-xor a
-rl l
-rla
-rl l
-rla
-rl l
-rla
-rl l
-rla
-ld (ix+0), a
-ld (ix+16), l
-inc de
-inc ix
-djnz LOOP1
-ld b, h
+call HSHIFT4_1xN_SPRITE
 ld hl, TEMP_1x1_SPRITE
 #else
 ld hl, 16
 add hl, de
 #endif
+
+#endif
+pop bc                      ;calculate row/col
 
 push bc                     ;store coords
 ;push hl                     ;store data address
@@ -1387,36 +1583,23 @@ ret
 
 HORIZONTAL_SHIFT:
 
-srl b                       ;calculate col/row
-srl c
+#ifdef SPRITE_XY_IN_PIXELS
+ld ix, TEMP_1x1_SPRITE + 7
+call HSHIFT1to7_1xN_SPRITE
+ld hl, TEMP_1x1_SPRITE + 7
+#else
 
 #ifdef STORE_UNSHIFTED_SPRITES
 ld ix, TEMP_1x1_SPRITE + 4
-ld h, b
-ld b, 8
-LOOP2:
-ld a, (de)
-ld l, a
-xor a
-rl l
-rla
-rl l
-rla
-rl l
-rla
-rl l
-rla
-ld (ix+0), a
-ld (ix+16), l
-inc de
-inc ix
-djnz LOOP2
-ld b, h
+call HSHIFT4_1xN_SPRITE
 ld hl, TEMP_1x1_SPRITE + 4
 #else
 ld hl, 20                   ;skip 32 bytes; 12 bytes of padding and 1 char
 add hl, de                  ;hl now contains first line of real data
 #endif
+
+#endif
+pop bc                      ;calculate col/row
 
 push bc                     ;store coords
 push hl                     ;store data address
@@ -1437,17 +1620,27 @@ ret
 
 VERTICAL_SHIFT:
 
-srl b                       ;calculate row/col
-srl c
+#ifdef SPRITE_XY_IN_PIXELS
+ex de, hl
+ld de, TEMP_1x1_SPRITE + 7
+ld a, c
+LDI_8()
+ld e, a
+ld d, 0;    DE = Ymod8 = 1,2,3,4,5,6,7
+ld hl, TEMP_1x1_SPRITE + 7
+sbc hl, de; HL=TEMP_1x1_SPRITE + 6,5,4,3,2,1,0
+#else
 
 ex de, hl
 #ifdef STORE_UNSHIFTED_SPRITES
 ld de, TEMP_1x1_SPRITE + 4
-push bc
 LDI_8()
-pop bc
 ld hl, TEMP_1x1_SPRITE
 #endif
+
+#endif
+pop bc                      ;calculate row/col
+
 ld a, 2
 call DRAW_SPRITE_COLUMN
 
@@ -1460,10 +1653,11 @@ ENDP
 
 PROC
 LOCAL TEST_SHIFTS, HORIZONTAL_SHIFT, VERTICAL_SHIFT
-#ifdef STORE_UNSHIFTED_SPRITES
-LOCAL LOOP1, LOOP2
-#endif
-DRAW_1x2_SPRITE:            ;input: a = sprite number, b=x, c=y
+DRAW_1x2_SPRITE:
+; N = 2 or 8 depending on SPRITE_XY_IN_PIXELS is not defined or defined
+; input: a = sprite number, b = XmodN = XintoCharPos, h = Int(X/N) = column
+;                           c = YmodN = YintoCharPos, l = Int(Y/N) = row
+push hl
 
 dec a
 add a, a
@@ -1474,15 +1668,17 @@ add hl, de
 
 READ_HL_POINTER(d,e)    ;de contains the sprite data
 
+#ifdef STORE_UNSHIFTED_SPRITES
+ld a, 16
+ex af, af'; A'=16 for HSHIFT1to7_1xN_SPRITE and HSHIFT4_1xN_SPRITE
+#endif
 ld a, b
 or c
-and 1
 
 jp nz, TEST_SHIFTS
 
 ;unshifted sprite
-srl b                       ;calculate row/col
-srl c
+pop bc                      ;calculate row/col
 
 #ifdef STORE_UNSHIFTED_SPRITES
 ex de, hl
@@ -1498,44 +1694,35 @@ ret
 
 TEST_SHIFTS:
 ld a, c
-and 1
+and a
 jp z, HORIZONTAL_SHIFT
 ld a, b
-and 1
+and a
 jp z, VERTICAL_SHIFT
 
 ;diagonal shift
 
-srl b                       ;calculate row/col
-srl c
+#ifdef SPRITE_XY_IN_PIXELS
+ld ix, TEMP_1x2_SPRITE + 7
+ld iyl, c
+call HSHIFT1to7_1xN_SPRITE
+ld e, iyl
+ld d, 0;    DE = Ymod8 = 1,2,3,4,5,6,7
+ld hl, TEMP_1x2_SPRITE + 7
+sbc hl, de; HL=TEMP_1x2_SPRITE + 6,5,4,3,2,1,0
+#else
 
 #ifdef STORE_UNSHIFTED_SPRITES
 ld ix, TEMP_1x2_SPRITE + 4
-ld h, b
-ld b, 16
-LOOP1:
-ld a, (de)
-ld l, a
-xor a
-rl l
-rla
-rl l
-rla
-rl l
-rla
-rl l
-rla
-ld (ix+0), a
-ld (ix+24), l
-inc de
-inc ix
-djnz LOOP1
-ld b, h
+call HSHIFT4_1xN_SPRITE
 ld hl, TEMP_1x2_SPRITE
 #else
 ld hl, 24
 add hl, de
 #endif
+
+#endif
+pop bc                      ;calculate row/col
 
 push bc                     ;store coords
 ld a, 3
@@ -1550,36 +1737,23 @@ ret
 
 HORIZONTAL_SHIFT:
 
-srl b                       ;calculate col/row
-srl c
+#ifdef SPRITE_XY_IN_PIXELS
+ld ix, TEMP_1x2_SPRITE + 7
+call HSHIFT1to7_1xN_SPRITE
+ld hl, TEMP_1x2_SPRITE + 7
+#else
 
 #ifdef STORE_UNSHIFTED_SPRITES
 ld ix, TEMP_1x2_SPRITE + 4
-ld h, b
-ld b, 16
-LOOP2:
-ld a, (de)
-ld l, a
-xor a
-rl l
-rla
-rl l
-rla
-rl l
-rla
-rl l
-rla
-ld (ix+0), a
-ld (ix+24), l
-inc de
-inc ix
-djnz LOOP2
-ld b, h
+call HSHIFT4_1xN_SPRITE
 ld hl, TEMP_1x2_SPRITE + 4
 #else
 ld hl, 28                   ;skip 32 bytes; 12 bytes of padding and 1 char
 add hl, de                  ;hl now contains first line of real data
 #endif
+
+#endif
+pop bc                      ;calculate col/row
 
 push bc                     ;store coords
 ld a,2
@@ -1596,18 +1770,28 @@ ret
 
 VERTICAL_SHIFT:
 
-srl b                       ;calculate row/col
-srl c
+#ifdef SPRITE_XY_IN_PIXELS
+ex de, hl
+ld de, TEMP_1x2_SPRITE + 7
+ld a, c
+LDI_8()
+LDI_8()
+ld e, a
+ld d, 0;    DE = Ymod8 = 1,2,3,4,5,6,7
+ld hl, TEMP_1x2_SPRITE + 7
+sbc hl, de; HL=TEMP_1x2_SPRITE + 6,5,4,3,2,1,0
+#else
 
 ex de, hl
 #ifdef STORE_UNSHIFTED_SPRITES
 ld de, TEMP_1x2_SPRITE + 4
-push bc
 LDI_8()
 LDI_8()
-pop bc
 ld hl, TEMP_1x2_SPRITE
 #endif
+
+#endif
+pop bc                      ;calculate row/col
 ld a, 3
 call DRAW_SPRITE_COLUMN
 
@@ -1616,14 +1800,150 @@ ENDP
 
 #endif
 
+#ifdef ENABLE_1x1_SPRITES
+#define ENABLE_1xN_SPRITES
+#endif
+
+#ifdef ENABLE_1x2_SPRITES
+#ifndef ENABLE_1xN_SPRITES
+#define ENABLE_1xN_SPRITES
+#endif
+#endif
+
+#ifdef ENABLE_1xN_SPRITES
+
+#ifdef SPRITE_XY_IN_PIXELS
+
+PROC
+LOCAL A123, SHIFTL, SHIFTR, LOOP_L, LOOP_R, LDIXL, LDIXR
+HSHIFT1to7_1xN_SPRITE:
+; Input: a' = 8 or 16, b = Xmod8, c = Ymod8, ix = TEMPdest, de = graphdir
+; Destroys bc
+; Constraints: b should not be 0
+ ld a,b
+ cp 4
+ jr c,A123; 3/8
+
+;A4567      8-a = 4,3,2,1 shifts to the left, 3bytes/shift
+ add a,a
+ add a,b;   a = 12,15,18,21
+ ld hl, SHIFTL - 12
+ ld b,0
+ ld c,a;    bc = a
+ add hl,bc; hl = SHIFTL,SHIFTL+3,SHIFTL+6,SHIFTL+9
+ ex af,af'; 8 or 16 in a
+ ld b,a
+ add a,8;   a = 16 or 24
+ ld (LDIXL+2),a
+
+LOOP_L:
+ ld a,(de)
+ ld c,a
+ xor a
+ jp (hl);   jp hl is 6TS quicker than jp nn
+SHIFTL:
+ rl c
+ rla
+ rl c;      SHIFTL+3
+ rla
+ rl c;      SHIFTL+6
+ rla
+ rl c;      SHIFTL+9
+ rla
+ ld (ix+0),a
+LDIXL:
+ ld (ix+0),c; actually ix+16 or ix+24
+ inc de
+ inc ix
+djnz LOOP_L
+ ret
+
+;A123       a = 1,2,3 shifts to the right, 3bytes/shift
+A123:
+ ld c,a
+ add a,a
+ add a,c;   a = 3,6,9
+ ld hl, SHIFTR + 9
+ ld b,0
+ ld c,a;    bc = a
+ sbc hl,bc; hl = SHIFTR+6,SHIFTR+3,SHIFTR
+ ex af,af'; 8 or 16 in A
+ ld b,a
+ add a,8;   a = 16 or 24
+ ld (LDIXR+2),a
+
+LOOP_R:
+ ld a,(de)
+ ld c,a
+ xor a
+ jp (hl);   jp hl is 6TS quicker than jp nn
+SHIFTR:
+ rr c
+ rra
+ rr c;      SHIFTR+3
+ rra
+ rr c;      SHIFTR+6
+ rra
+ ld (ix+0),c
+LDIXR:
+ ld (ix+0),a; actually ix+16 or ix+24
+ inc de
+ inc ix
+ djnz LOOP_R
+ ret
+
+ENDP
+
+#else
+
+#ifdef STORE_UNSHIFTED_SPRITES
+
+PROC
+LOCAL LOOP, LDIX
+HSHIFT4_1xN_SPRITE:
+; Input: a' = 8 or 16, ix = TEMPdest, de = graphdir
+ ex af,af'; 8 or 16 in A
+ ld b,a
+ add a,8;   a = 16 or 24
+ ld (LDIX+2),a
+
+LOOP:
+ ld a,(de)
+ ld l,a
+ xor a
+ rl l
+ rla
+ rl l
+ rla
+ rl l
+ rla
+ rl l
+ rla
+ ld (ix+0),a
+LDIX:
+ ld (ix+0),l; actually ix+16 or ix+24
+ inc de
+ inc ix
+djnz LOOP
+ ret
+
+ENDP
+
+#endif
+
+#endif
+
+#endif
+
 #ifdef ENABLE_2x2_SPRITES
 
 PROC
-
-#ifdef STORE_UNSHIFTED_SPRITES
-LOCAL LOOP1, LOOP2
-#endif
-DRAW_2x2_SPRITE:            ;input: a = sprite number
+LOCAL TEST_SHIFTS, HORIZONTAL_SHIFT, VERTICAL_SHIFT
+DRAW_2x2_SPRITE:
+; N = 2 or 8 depending on SPRITE_XY_IN_PIXELS is not defined or defined
+; input: a = sprite number, b = XmodN = XintoCharPos, h = Int(X/N) = column
+;                           c = YmodN = YintoCharPos, l = Int(Y/N) = row
+push hl
 
 dec a
 add a, a
@@ -1636,13 +1956,11 @@ READ_HL_POINTER(d,e)    ;de contains the sprite data
 
 ld a, b
 or c
-and 1
 
 jp nz, TEST_SHIFTS
 
 ;unshifted sprite
-srl b                       ;calculate row/col
-srl c
+pop bc                      ;calculate row/col
 
 #ifdef STORE_UNSHIFTED_SPRITES
 ex de, hl
@@ -1669,47 +1987,32 @@ ret
 
 TEST_SHIFTS:
 ld a, c
-and 1
+and a
 jp z, HORIZONTAL_SHIFT
 ld a, b
-and 1
+and a
 jp z, VERTICAL_SHIFT
 
 ;diagonal shift
 
-srl b                       ;calculate row/col
-srl c
+#ifdef SPRITE_XY_IN_PIXELS
+call HSHIFT1to7_2x2_SPRITE
+ld e, c
+ld d, 0;    DE = Ymod8 = 1,2,3,4,5,6,7
+ld hl, TEMP_2x2_SPRITE + 7
+sbc hl, de; HL=TEMP_2x2_SPRITE + 6,5,4,3,2,1,0
+#else
 
 #ifdef STORE_UNSHIFTED_SPRITES
-ld iyh, d
-ld iyl, e
-ld ix, TEMP_2x2_SPRITE + 4
-ld d, b
-ld b, 16
-LOOP1:
-ld h, (iy+0)
-ld l, (iy+16)
-xor a
-add hl, hl
-rla
-add hl, hl
-rla
-add hl, hl
-rla
-add hl, hl
-rla
-ld (ix+0), a
-ld (ix+24), h
-ld (ix+48), l
-inc iy
-inc ix
-djnz LOOP1
-ld b, d
+call HSHIFT4_2x2_SPRITE
 ld hl, TEMP_2x2_SPRITE
 #else
 ld hl, 48
 add hl, de
 #endif
+
+#endif
+pop bc                      ;calculate row/col
 
 push bc                     ;store coords
 ld a, 3
@@ -1730,39 +2033,21 @@ ret
 
 HORIZONTAL_SHIFT:
 
-srl b                       ;calculate col/row
-srl c
+#ifdef SPRITE_XY_IN_PIXELS
+call HSHIFT1to7_2x2_SPRITE
+ld hl, TEMP_2x2_SPRITE + 7
+#else
 
 #ifdef STORE_UNSHIFTED_SPRITES
-ld iyh, d
-ld iyl, e
-ld ix, TEMP_2x2_SPRITE + 4
-ld d, b
-ld b, 16
-LOOP2:
-ld h, (iy+0)
-ld l, (iy+16)
-xor a
-add hl, hl
-rla
-add hl, hl
-rla
-add hl, hl
-rla
-add hl, hl
-rla
-ld (ix+0), a
-ld (ix+24), h
-ld (ix+48), l
-inc iy
-inc ix
-djnz LOOP2
-ld b, d
+call HSHIFT4_2x2_SPRITE
 ld hl, TEMP_2x2_SPRITE + 4
 #else
 ld hl, 52                   ;skip 32 bytes; 12 bytes of padding and 1 char
 add hl, de                  ;hl now contains first line of real data
 #endif
+
+#endif
+pop bc                      ;calculate col/row
 
 push bc                     ;store coords
 ld a,2                      ;column is 2 chars height
@@ -1787,8 +2072,20 @@ ret
 
 VERTICAL_SHIFT:
 
-srl b                       ;calculate row/col
-srl c
+#ifdef SPRITE_XY_IN_PIXELS
+ex de, hl
+ld de, TEMP_2x2_SPRITE + 7
+ld a, c
+LDI_8()
+LDI_8()
+ld de, TEMP_2x2_SPRITE + 31
+LDI_8()
+LDI_8()
+ld e, a
+ld d, 0;    DE = Ymod8 = 1,2,3,4,5,6,7
+ld hl, TEMP_2x2_SPRITE + 7
+sbc hl, de; HL=TEMP_2x2_SPRITE + 6,5,4,3,2,1,0
+#else
 
 ex de, hl
 #ifdef STORE_UNSHIFTED_SPRITES
@@ -1802,6 +2099,10 @@ LDI_8()
 pop bc
 ld hl, TEMP_2x2_SPRITE
 #endif
+
+#endif
+pop bc                      ;calculate row/col
+
 ld a, 3
 push bc
 call DRAW_SPRITE_COLUMN     ;draw first row
@@ -1813,6 +2114,129 @@ call DRAW_SPRITE_COLUMN     ;draw second row
 
 ret
 ENDP
+
+#ifdef SPRITE_XY_IN_PIXELS
+
+PROC
+LOCAL A123, SHIFTL, SHIFTR, LOOP_L, LOOP_R
+HSHIFT1to7_2x2_SPRITE:
+; Input: b = Xmod8, c = Ymod8, de = graphdir
+; Destroys b
+; Constraints: b should not be 0
+ ld iyh,d
+ ld iyl,e
+ ld ix, TEMP_2x2_SPRITE + 7
+ ld a,b
+ cp 4
+ ld b,16
+ jr c,A123; 3/8
+
+;A4567      8-a = 4,3,2,1 shifts to the left, 2bytes/shift
+ add a,a;   a = 8,10,12,14
+ ld hl, SHIFTL - 8
+ ld d,0
+ ld e,a;    de = a
+ add hl,de; hl = SHIFTL,SHIFTL+2,SHIFTL+4,SHIFTL+6
+ ld (SHIFTL - 2),hl
+
+LOOP_L:
+ ld h,(iy+0)
+ ld l,(iy+16)
+ xor a
+ jp $1234;  jp SHIFTL,SHIFTL+2,SHIFTL+4,SHIFTL+6
+SHIFTL:
+ add hl,hl; add hl,hl is 5TS quicker than rl l + rl h
+ rla
+ add hl,hl; SHIFTL+2
+ rla
+ add hl,hl; SHIFTL+4
+ rla
+ add hl,hl; SHIFTL+6
+ rla
+ ld (ix+0),a
+ ld (ix+24),h
+ ld (ix+48),l
+ inc iy
+ inc ix
+ djnz LOOP_L
+ ret
+
+;A123       a = 1,2,3 shifts to the right, 5bytes/shift
+A123:
+ ld e,a
+ add a,a
+ add a,a
+ add a,e;   a = 5,10,15
+ ld hl, SHIFTR + 15
+ ld d,0
+ ld e,a;    de = a
+ sbc hl,de; hl = SHIFTR+10,SHIFTR+5,SHIFTR
+ ld b,16
+
+LOOP_R:
+ ld d,(iy+0)
+ ld e,(iy+16)
+ xor a
+ jp (hl);   jp hl is 6TS quicker than jp nn
+SHIFTR:
+ rr d
+ rr e
+ rra
+ rr d;      SHIFTR+5
+ rr e
+ rra
+ rr d;      SHIFTR+10
+ rr e
+ rra
+ ld (ix+0),d
+ ld (ix+24),e
+ ld (ix+48),a
+ inc iy
+ inc ix
+ djnz LOOP_R
+ ret
+
+ENDP
+
+#else
+
+#ifdef STORE_UNSHIFTED_SPRITES
+
+PROC
+LOCAL LOOP
+HSHIFT4_2x2_SPRITE:
+; Input: de = graphdir
+; Destroys b
+ ld iyh,d
+ ld iyl,e
+ ld ix, TEMP_2x2_SPRITE + 4
+ ld b,16
+
+LOOP:
+ ld h,(iy+0)
+ ld l,(iy+16)
+ xor a
+ add hl,hl; add hl,hl is 5TS quicker than rl l + rl h
+ rla
+ add hl,hl
+ rla
+ add hl,hl
+ rla
+ add hl,hl
+ rla
+ ld (ix+0),a
+ ld (ix+24),h
+ ld (ix+48),l
+ inc iy
+ inc ix
+ djnz LOOP
+ ret
+
+ENDP
+
+#endif
+
+#endif
 
 #endif
 
@@ -2132,6 +2556,7 @@ PROC
 LOCAL CREATE_OP
 SET_TILE_ANIMATED:  ;input: a = tile number, c = color, e = x, l = y, trashes bc, de, hl, a
 
+; Compute displacement in maps of 768 bytes, and push x,y
  ld b,l     ;y
  HL_POW2_5();y*32
  add hl,de  ;y*32 + x = displacement in maps of 768 bytes
@@ -2139,44 +2564,75 @@ SET_TILE_ANIMATED:  ;input: a = tile number, c = color, e = x, l = y, trashes bc
  ld e,b
  push de    ;D = x, E = y
 
+; Set tile number in tile map, and compute attributes address
  ex de,hl   ;DE = displacement in maps of 768 bytes
- ld hl,$5800
- add hl,de
- ld (hl),c  ;set tile color
  ld hl,TILE_MAP
  add hl,de
  ld (hl),a  ;set tile number
+ ld hl,$5800;beginning of ATTRIBUTES, H = %...11...
+ add hl,de
+;ld (hl),c  ;set tile color
+ push bc    ;C = tile attributes
+ push hl    ;HL = attributes address
 
+; Add an unmapped drawOP to set tile attributes when RenderFrame() is called
+ ex af,af'
+ ld a,(CURRENT_DRAW_COUNT)
  ld l,a
- ld h,0
+ ld c,a
+ inc a
+ ld (CURRENT_DRAW_COUNT),a
+ xor a
+ ld h,a
+ ld b,a     ;BC = HL = drawOPcode0based
+ HL_POW2_2()
+ add hl,bc  ;*5
+ ld bc,(CURRENT_DRAW_OPS)
+ add hl,bc  ;HL = address for new drawOP
+ pop bc     ;B = %...11... (BC in ATTRIBUTES)
+ WRITE_HL_POINTER(b,c);attributes address
+ pop bc
+ ld (hl),c
+ inc hl
+ ld (hl),a
+ inc hl
+ ld (hl),a  ;drawOP = addressLow,addressHigh,color,0,0
+
+; Create a standard drawOP to draw tile when RenderFrame() is called
+; 1. Compute tile source in BC
+ ld h,a     ;A = 0
+ ex af,af'
+ ld l,a
  HL_POW2_3();number*8
  ld bc,(TILE_SET)
- add hl,bc  ;HL = tile source
+ add hl,bc
  ld b,h
  ld c,l     ;BC = tile source
-
+; 2. Check draw map
  ld hl,(CURRENT_DRAW_MAP)
  add hl,de
  ld a,(hl)  ;drawOPcode1based
  and a
  jr z,CREATE_OP;no op at CURRENT_DRAW_MAP
+; 3. Compute address for existing drawOP
  ld l,a
  ld e,a
  xor a
- ld h,a     ;HL = drawOPcode1based
- ld d,a     ;DE = drawOPcode1based
+ ld h,a
+ ld d,a     ;DE = HL = drawOPcode1based
  HL_POW2_2()
  add hl,de  ;*5
  ld de,(CURRENT_DRAW_OPS)
  add hl,de  ;HL = (CDO) + drawOPcode*5 + 5
  dec hl     ;HL = (CDO) + drawOPcode*5 + 4
+; 4. If op type is tile clear, then replace old with new tile source
  ld a,(hl)  ;op type (draw op = 1, tile clear op = 2)
  cp 2
  jr nz,CREATE_OP;op type is not tile clear
  dec hl     ;BC = new tile source
  dec hl     ;(HL,HL+1) = old tile source
  WRITE_HL_POINTER(b,c);replace old with new tile source
-
+; 5. Now everything is ready to create drawOP
 CREATE_OP:
  pop bc     ;B = x, C = y
  ld hl,EMPTY_CHAR
@@ -2273,7 +2729,7 @@ asm
 
     push ix
     push iy
-    ld c, d
+    call UBYTE_COORDS_TO_BCHL
     call DRAW_1x1_SPRITE
     pop iy
     pop ix
@@ -2281,6 +2737,45 @@ asm
 end asm
 
 end sub
+
+#ifdef SPRITE_XY_IN_PIXELS
+
+sub fastcall Draw1x1SpriteWithClipping(SpriteNumber as uByte, X as Integer, Y as Integer)
+
+asm
+
+    pop hl
+    pop bc;     X should range between -7 and 255
+    pop de;     Y should range between -7 and 191
+    push hl
+    ld hl,7
+    add hl,bc;  HL should be in [0,262]
+    push bc
+    ld bc,-263; DE=65273
+    add hl,bc;  HL should be in [65273,65535] (noCarry)
+    pop bc
+    ret c;      HL is not good
+
+    ld hl,7
+    add hl,de;  HL should be in [0,198]
+    push de
+    ld de,-199; DE=65337
+    add hl,de;  HL should be in [65337,65535] (noCarry)
+    pop de
+    ret c;      HL is not good
+
+    push ix
+    push iy
+    call INTEGER_COORDS_TO_BCHL
+    call DRAW_1x1_SPRITE
+    pop iy
+    pop ix
+
+end asm
+
+end sub
+
+#endif
 
 #endif
 
@@ -2319,6 +2814,7 @@ asm
     push ix
     push iy
     ld c, d
+    call UBYTE_COORDS_TO_BCHL
     call DRAW_1x2_SPRITE
     pop iy
     pop ix
@@ -2326,6 +2822,45 @@ asm
 end asm
 
 end sub
+
+#ifdef SPRITE_XY_IN_PIXELS
+
+sub fastcall Draw1x2SpriteWithClipping(SpriteNumber as uByte, X as Integer, Y as Integer)
+
+asm
+
+    pop hl
+    pop bc;     X should range between -7 and 255
+    pop de;     Y should range between -15 and 191
+    push hl
+    ld hl,7
+    add hl,bc;  HL should be in [0,262]
+    push bc
+    ld bc,-263; DE=65273
+    add hl,bc;  HL should be in [65273,65535] (noCarry)
+    pop bc
+    ret c;      HL is not good
+
+    ld hl,15
+    add hl,de;  HL should be in [0,206]
+    push de
+    ld de,-207; DE=65329
+    add hl,de;  HL should be in [65329,65535] (noCarry)
+    pop de
+    ret c;      HL is not good
+
+    push ix
+    push iy
+    call INTEGER_COORDS_TO_BCHL
+    call DRAW_1x2_SPRITE
+    pop iy
+    pop ix
+
+end asm
+
+end sub
+
+#endif
 
 #endif
 
@@ -2363,7 +2898,7 @@ asm
     exx
     push ix
     push iy
-    ld c, d
+    call UBYTE_COORDS_TO_BCHL
     call DRAW_2x2_SPRITE
     pop iy
     pop ix
@@ -2371,6 +2906,45 @@ asm
 end asm
 
 end sub
+
+#ifdef SPRITE_XY_IN_PIXELS
+
+sub fastcall Draw2x2SpriteWithClipping(SpriteNumber as uByte, X as Integer, Y as Integer)
+
+asm
+
+    pop hl
+    pop bc;     X should range between -15 and 255
+    pop de;     Y should range between -15 and 191
+    push hl
+    ld hl,15
+    add hl,bc;  HL should be in [0,270]
+    push bc
+    ld bc,-271; DE=65265
+    add hl,bc;  HL should be in [65265,65535] (noCarry)
+    pop bc
+    ret c;      HL is not good
+
+    ld hl,15
+    add hl,de;  HL should be in [0,206]
+    push de
+    ld de,-207; DE=65329
+    add hl,de;  HL should be in [65329,65535] (noCarry)
+    pop de
+    ret c;      HL is not good
+
+    push ix
+    push iy
+    call INTEGER_COORDS_TO_BCHL
+    call DRAW_2x2_SPRITE
+    pop iy
+    pop ix
+
+end asm
+
+end sub
+
+#endif
 
 #endif
 
@@ -2386,10 +2960,10 @@ end sub
 
 sub ClearScreen(NewInk as uByte, NewPaper as uByte, NewBright as uByte)
 
-    ' ink NewInk
-    ' paper NewPaper
-    ' bright NewBright
-    ' cls
+    ink NewInk
+    paper NewPaper
+    bright NewBright
+    cls
 
     asm
     call CLEAR_SCREEN
@@ -2589,6 +3163,20 @@ sub FillWithTileChecked(TileIndex as uByte, Width as uByte, Height as uByte, Att
     for tmpX = X to X + Width - 1
         for tmpY = Y to Y + Height - 1
             SetTileChecked(TileIndex, Attribute, tmpX, tmpY)
+        next tmpY
+    next tmpX
+
+end sub
+
+sub SetTiledObjectAnimated(ObjectTileIndex as uByte, Width as uByte, Height as uByte, Attribute as uByte, X as uByte, Y as uByte)
+
+    Dim tmpX as uByte
+    Dim tmpY as uByte
+
+    for tmpX = X to X + Width - 1
+        for tmpY = Y to Y + Height - 1
+            SetTileAnimated(ObjectTileIndex, Attribute, tmpX, tmpY)
+            ObjectTileIndex = ObjectTileIndex + 1
         next tmpY
     next tmpX
 

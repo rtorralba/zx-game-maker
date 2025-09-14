@@ -152,7 +152,9 @@ End Sub
 Sub redrawScreen()
     ' memset(22527,0,768)
     ' CancelOps()
-    ClearScreen(7, 0, 0) ' Modified For only cancelops And no clear Screen
+    asm
+    call CLEAR_SCREEN
+    end asm
     ' dzx0Standard(HUD_SCREEN_ADDRESS, $4000)
     FillWithTile(0, 32, 22, BACKGROUND_ATTRIBUTE, 0, 0)
     ' clearBox(0,0,120,112)
