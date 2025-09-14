@@ -172,3 +172,9 @@ Dim skipMove1 As Ubyte = 0
 Dim skipMove2 As Ubyte = 0
 
 Dim mainLoopCounter As Ubyte = 0
+
+#ifdef TIMER_ENABLED
+    Dim lastFrameTimer As Ubyte = 0
+    Dim timerSeconds as ubyte = initialTimerSeconds
+    Dim timerMinutes as ubyte = initialTimerMinutes
+#endif

@@ -160,6 +160,8 @@ borderColorItem = 0
 borderColorKey = 0
 borderColorLife = 0
 
+timerSeconds = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -268,6 +270,8 @@ if 'properties' in data:
             borderColorKey = property['value']
         elif property['name'] == 'borderColorLife':
             borderColorLife = property['value']
+        elif property['name'] == 'timerSeconds':
+            timerSeconds = property['value']
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -757,6 +761,15 @@ for i in hudData['layers'][1]['objects']:
             configStr += "#DEFINE HUD_MESSAGE_X " + str((i['x']//8)) + "\n"
             configStr += "#DEFINE HUD_MESSAGE_Y " + str((i['y']//8) - 1) + "\n"
             configStr += "#DEFINE HUD_MESSAGE_Y_2 " + str((i['y']//8)) + "\n"
+    elif i['name'] == "timer":
+        if timerSeconds > 0:
+            configStr += "#DEFINE TIMER_ENABLED\n"
+            configStr += "#DEFINE HUD_TIMER_X " + str((i['x']//8)) + "\n"
+            configStr += "#DEFINE HUD_TIMER_Y " + str((i['y']//8) - 1) + "\n"
+            seconds = timerSeconds % 60
+            minutes = timerSeconds // 60
+            configStr += "Dim initialTimerSeconds as ubyte = " + str(seconds) + "\n"
+            configStr += "Dim initialTimerMinutes as ubyte = " + str(minutes) + "\n"
 
 with open(outputDir + "config.bas", "w") as text_file:
     print(configStr, file=text_file)

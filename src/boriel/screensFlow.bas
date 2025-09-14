@@ -202,7 +202,7 @@ Sub playGame()
     #Else
         dzx0Standard(HUD_SCREEN_ADDRESS, $4000)
     #endif
-    
+
     #ifndef ARCADE_MODE
         #ifdef LIVES_MODE_ENABLED
             protaXRespawn = INITIAL_MAIN_CHARACTER_X
@@ -230,6 +230,10 @@ Sub playGame()
     
     Do
         calculateIfSkipMovementBySpeed()
+
+        #ifdef TIMER_ENABLED
+            updateTimer()
+        #endif
 
         If resetBorder Then
             Border BORDER_VALUE

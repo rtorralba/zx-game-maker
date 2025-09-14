@@ -309,6 +309,11 @@
                     "value": false
                 },
                 {
+                    "name": "timerSeconds",
+                    "type": "int",
+                    "value": 0
+                },
+                {
                     "name": "useBreakableTile",
                     "propertyType": "breakableTilesMode",
                     "type": "string",
