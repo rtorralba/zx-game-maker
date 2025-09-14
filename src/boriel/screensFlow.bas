@@ -275,8 +275,32 @@ Sub playGame()
             End If
         #endif
 
+        checkGameObjective()
+
         mainLoopCounter = mainLoopCounter + 1
     Loop
+End Sub
+
+Sub checkGameObjective()
+    #ifdef FINISH_GAME_OBJECTIVE_ITEM
+        If currentItems = GOAL_ITEMS Then
+            ending()
+        End If
+    #endif
+
+    #ifdef FINISH_GAME_OBJECTIVE_ENEMY
+        If enemyToKillAlreadyKilled Then
+            ending()
+        End If
+    #endif
+
+    #ifdef FINISH_GAME_OBJECTIVE_ITEMS_AND_ENEMY
+        If currentItems = GOAL_ITEMS Then
+            If enemyToKillAlreadyKilled Then
+                ending()
+            End If
+        End If
+    #endif
 End Sub
 
 Sub calculateIfSkipMovementBySpeed()

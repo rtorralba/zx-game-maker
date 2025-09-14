@@ -162,6 +162,9 @@ borderColorLife = 0
 
 timerSeconds = 0
 
+finishGameObjective = 0
+finishGameEnemy = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -272,6 +275,10 @@ if 'properties' in data:
             borderColorLife = property['value']
         elif property['name'] == 'timerSeconds':
             timerSeconds = property['value']
+        elif property['name'] == 'finishGameObjective':
+            finishGameObjective = property['value']
+        elif property['name'] == 'finishGameEnemy':
+            finishGameEnemy = property['value']
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -431,6 +438,21 @@ if idleTime > 0:
     configStr += "#DEFINE IDLE_ENABLED\n"
     configStr += "const IDLE_TIME as ubyte = " + str(idleTime) + "\n"
 
+if finishGameObjective == 'items' or finishGameObjective == 0:
+    configStr += "#define FINISH_GAME_OBJECTIVE_ITEM\n"
+elif finishGameObjective == 'killSpecificEnemy':
+    if finishGameEnemy == 0:
+        exitWithErrorMessage('You must specify the enemyToKill property when finishGameObjective is set to killSpecificEnemy')
+    configStr += "#define FINISH_GAME_OBJECTIVE_ENEMY\n"
+    configStr += "Const ENEMY_TO_KILL as ubyte = " + str(finishGameEnemy) + "\n"
+    configStr += "Dim enemyToKillAlreadyKilled as ubyte = 0\n"
+elif finishGameObjective == 'itemsAndKillEnemy':
+    if finishGameEnemy == 0:
+        exitWithErrorMessage('You must specify the enemyToKill property when finishGameObjective is set to itemsAndKillEnemy')
+    configStr += "#define FINISH_GAME_OBJECTIVE_ITEMS_AND_ENEMY\n"
+    configStr += "Const ENEMY_TO_KILL as ubyte = " + str(finishGameEnemy) + "\n"
+    configStr += "Dim enemyToKillAlreadyKilled as ubyte = 0\n"
+
 breakableTilesCount = 0
 screenObjectsCount = 0
 
@@ -566,6 +588,7 @@ for layer in data['layers']:
                     'life': '1',
                     'speed': '3',
                     'move': '0',
+                    'id': str(object['id'])
                 }
 
                 if 'properties' in object and len(object['properties']) > 0:
@@ -668,7 +691,8 @@ for layer in data['layers']:
                         arrayBuffer.append(int(enemy['life']))
                         arrayBuffer.append(int(enemy['move']))
                         arrayBuffer.append(int(verticalDirection))                  
-                        arrayBuffer.append(int(enemy['speed']))                  
+                        arrayBuffer.append(int(enemy['speed']))
+                        arrayBuffer.append(int(enemy['id']))               
                     else:
                         arrayBuffer.append(0)
                         arrayBuffer.append(0)
@@ -682,6 +706,7 @@ for layer in data['layers']:
                         arrayBuffer.append(0)
                         arrayBuffer.append(0) 
                         arrayBuffer.append(0)
+                        arrayBuffer.append(0)
             else:
                 for i in range(maxEnemiesPerScreen):
                     arrayBuffer.append(0)
@@ -694,6 +719,7 @@ for layer in data['layers']:
                     arrayBuffer.append(0)
                     arrayBuffer.append(0)
                     arrayBuffer.append(1)
+                    arrayBuffer.append(0)
                     arrayBuffer.append(0)
                     arrayBuffer.append(0)
                 enemiesPerScreen.append(0)

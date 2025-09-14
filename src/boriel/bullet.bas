@@ -139,6 +139,17 @@ sub damageEnemy(enemyToKill as Ubyte)
     if decompressedEnemiesScreen(enemyToKill, ENEMY_ALIVE) = 0 then
         dim attr, tile, x, y, col, lin, tmpX, tmpY as ubyte
 
+        #ifdef FINISH_GAME_OBJECTIVE_ENEMY
+            If decompressedEnemiesScreen(enemyToKill, ENEMY_ID) = ENEMY_TO_KILL and enemyToKillAlreadyKilled = 0 Then
+                enemyToKillAlreadyKilled = 1
+            End If
+        #endif
+        #ifdef FINISH_GAME_OBJECTIVE_ITEMS_AND_ENEMY
+            If decompressedEnemiesScreen(enemyToKill, ENEMY_ID) = ENEMY_TO_KILL and enemyToKillAlreadyKilled = 0 Then
+                enemyToKillAlreadyKilled = 1
+            End If
+        #endif
+
         x = decompressedEnemiesScreen(enemyToKill, ENEMY_CURRENT_COL)
         y = decompressedEnemiesScreen(enemyToKill, ENEMY_CURRENT_LIN)
         Draw2x2Sprite(BURST_SPRITE_ID, x, y)

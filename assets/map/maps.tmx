@@ -37,7 +37,6 @@
   <property name="redefineKeysEnabled" type="bool" value="true"/>
   <property name="shooting" type="bool" value="true"/>
   <property name="shouldKillEnemies" type="bool" value="true"/>
-  <property name="timerSeconds" type="int" value="30"/>
   <property name="useBreakableTile" propertytype="breakableTilesMode" value="individual"/>
  </properties>
  <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="192" columns="32">

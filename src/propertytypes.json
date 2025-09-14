@@ -70,6 +70,18 @@
         "valuesAsFlags": false
     },
     {
+        "id": 8,
+        "name": "objectiveType",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "items",
+            "killSpecificEnemy",
+            "itemsAndKillEnemy"
+        ],
+        "valuesAsFlags": false
+    },
+    {
         "color": "#ffa0a0a4",
         "drawFill": true,
         "id": 2,
@@ -158,6 +170,17 @@
                 "name": "enemiesRespawn",
                 "type": "bool",
                 "value": true
+            },
+            {
+                "name": "finishGameEnemy",
+                "type": "object",
+                "value": 0
+            },
+            {
+                "name": "finishGameObjective",
+                "propertyType": "objectiveType",
+                "type": "string",
+                "value": "items"
             },
             {
                 "name": "gameName",

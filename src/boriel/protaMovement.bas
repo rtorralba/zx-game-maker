@@ -540,10 +540,6 @@ Function checkTileObject(tile As Ubyte) As Ubyte
             If currentItems = itemsToFind Then
                 drawKey()
             End If
-        #Else
-            If currentItems = GOAL_ITEMS Then
-                ending()
-            End If
         #endif
         BeepFX_Play(5)
         Return 1
