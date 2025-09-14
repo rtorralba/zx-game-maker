@@ -541,6 +541,10 @@ Function checkTileObject(tile As Ubyte) As Ubyte
                 drawKey()
             End If
         #endif
+
+        If currentItems = ITEMS_TO_OPEN_DOORS Then
+            removeTilesFromScreen(ITEMS_DOOR_TILE)
+        End If
         BeepFX_Play(5)
         Return 1
     Elseif tile = KEY_TILE Then

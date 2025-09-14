@@ -22,6 +22,7 @@ class TranslationsRetriever:
         no_keys = HudMessage("NO KEYS", "LEFT!", "red", "black")
         no_ammo = HudMessage("NO AMMO", "LEFT!", "red", "black")
         should_kill_all_enemies = HudMessage("KILL ALL", "ENEMIES!", "red", "black")
+        need_items = HudMessage("NEED", "ITEMS!", "red", "black")
 
         if Path(messagesFile).exists():
             with open(messagesFile, mode="rb") as f:
@@ -54,6 +55,11 @@ class TranslationsRetriever:
                                                     messages.get("kill_all_enemies", {}).get("line2", "ENEMIES!"),
                                                     messages.get("kill_all_enemies", {}).get("ink", "red"),
                                                     messages.get("kill_all_enemies", {}).get("paper", "black"))
+            need_items = HudMessage(messages.get("need_items", {}).get("line1", "NEED"),
+                                    messages.get("need_items", {}).get("line2", "ITEMS!"),
+                                    messages.get("need_items", {}).get("ink", "red"),
+                                    messages.get("need_items", {}).get("paper", "black"))
+            
         # Write message config into boriel config file as a constants
         with open(CONFIG_FILE, "a") as config_file:
             config_file.write(f"\n' Messages\n")
@@ -85,3 +91,7 @@ class TranslationsRetriever:
             config_file.write(f"#define KILL_ALL_ENEMIES_LINE2 \"{should_kill_all_enemies.Line2}\"\n")
             config_file.write(f"#define KILL_ALL_ENEMIES_INK {should_kill_all_enemies.Ink}\n")
             config_file.write(f"#define KILL_ALL_ENEMIES_PAPER {should_kill_all_enemies.Paper}\n\n")
+            config_file.write(f"#define NEED_ITEMS_LINE1 \"{need_items.Line1}\"\n")
+            config_file.write(f"#define NEED_ITEMS_LINE2 \"{need_items.Line2}\"\n")
+            config_file.write(f"#define NEED_ITEMS_INK {need_items.Ink}\n")
+            config_file.write(f"#define NEED_ITEMS_PAPER {need_items.Paper}\n\n")

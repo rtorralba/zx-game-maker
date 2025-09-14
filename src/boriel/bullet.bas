@@ -69,14 +69,14 @@ sub checkBulletCollision()
     dim tile as ubyte = isSolidTileByColLin(xToCheck >> 1, bulletPositionY >> 1)
     if tile then
         #ifdef USE_BREAKABLE_TILE_ALL
-            if tile = 62 then
+            if tile = BREAKABLE_BY_BULLET_TILE then
                 brokenTiles(currentScreen) = 1
                 BeepFX_Play(0)
-                removeTilesFromScreen(62)
+                removeTilesFromScreen(BREAKABLE_BY_BULLET_TILE)
             end if
         #endif
         #ifdef USE_BREAKABLE_TILE_INDIVIDUAL
-            if tile = 62 then
+            if tile = BREAKABLE_BY_BULLET_TILE then
                 brokenTiles(brokenTilesCurrentIndex, 0) = currentScreen
                 brokenTiles(brokenTilesCurrentIndex, 1) = xToCheck >> 1
                 brokenTiles(brokenTilesCurrentIndex, 2) = bulletPositionY >> 1
@@ -94,14 +94,14 @@ sub checkBulletCollision()
         tile = isSolidTileByColLin(xToCheck >> 1, (bulletPositionY + 1) >> 1)
         if tile then
             #ifdef USE_BREAKABLE_TILE_ALL
-                if tile = 62 then
+                if tile = BREAKABLE_BY_BULLET_TILE then
                     brokenTiles(currentScreen) = 1
                     BeepFX_Play(0)
-                    removeTilesFromScreen(62)
+                    removeTilesFromScreen(BREAKABLE_BY_BULLET_TILE)
                 end if
             #endif
             #ifdef USE_BREAKABLE_TILE_INDIVIDUAL
-                if tile = 62 then
+                if tile = BREAKABLE_BY_BULLET_TILE then
                     brokenTiles(brokenTilesCurrentIndex, 0) = currentScreen
                     brokenTiles(brokenTilesCurrentIndex, 1) = xToCheck >> 1
                     brokenTiles(brokenTilesCurrentIndex, 2) = (bulletPositionY + 1) >> 1

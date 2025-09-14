@@ -41,3 +41,9 @@ line1 = "MATALOS"
 line2 = "A TODOS!"
 ink = "red"
 paper = "black"
+
+[need_items]
+line1 = "TE FALTAN"
+line2 = "ITEMS!"
+ink = "red"
+paper = "black"

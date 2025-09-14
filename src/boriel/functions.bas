@@ -164,18 +164,30 @@ function isSolidTileByColLin(col as ubyte, lin as ubyte) as ubyte
     #endif
 
     #ifdef KEYS_ENABLED
-        If tile = DOOR_TILE Then
+        If tile = KEY_DOOR_TILE Then
             If currentKeys <> 0 Then
                 currentKeys = currentKeys - 1
                 printLife()
                 BeepFX_Play(4)
-                removeTilesFromScreen(DOOR_TILE)
+                removeTilesFromScreen(KEY_DOOR_TILE)
             Else
                 #ifdef MESSAGES_ENABLED
                     printMessage(NO_KEYS_LINE1, NO_KEYS_LINE2, NO_KEYS_INK, NO_KEYS_PAPER)
                 #endif
             End If
         End If
+    #endif
+
+    if tile = ITEMS_DOOR_TILE then
+        #ifdef MESSAGES_ENABLED
+            printMessage(NEED_ITEMS_LINE1, NEED_ITEMS_LINE2, NEED_ITEMS_INK, NEED_ITEMS_PAPER)
+        #endif
+    end if
+
+    #ifdef USE_BREAKABLE_TILE_BY_TOUCH
+        if tile = BREAKABLE_BY_TOUCH_TILE then
+            removeTilesFromScreen(BREAKABLE_BY_TOUCH_TILE)
+        end if
     #endif
 
 	return tile
@@ -300,8 +312,8 @@ sub removeTilesFromScreen(tile as ubyte)
 		if peek(@decompressedMap + index) - 1 = tile then
 			SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
             #ifndef ARCADE_MODE
-                If tile = DOOR_TILE Then
-                    addScreenObject(DOOR_TILE, x, y)
+                If tile = KEY_DOOR_TILE Then
+                    addScreenObject(KEY_DOOR_TILE, x, y)
                 End If
             #endif
 		end if

@@ -72,7 +72,7 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
     Next i
     
     #ifdef USE_BREAKABLE_TILE_ALL
-        If tile = 62 Then
+        If tile = BREAKABLE_BY_BULLET_TILE Then
             If brokenTiles(currentScreen) Then
                 SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
             Else
@@ -83,7 +83,7 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
     #endif
     
     #ifdef USE_BREAKABLE_TILE_INDIVIDUAL
-        If tile = 62 Then
+        If tile = BREAKABLE_BY_BULLET_TILE Then
             For i = 0 To BREAKABLE_TILES_COUNT
                 If brokenTiles(i, 0) <> currentScreen Then Continue For
                 If brokenTiles(i, 1) <> x Then Continue For
@@ -96,9 +96,18 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
             Return
         End If
     #endif
+
+    If tile = ITEMS_DOOR_TILE Then
+        If currentItems = ITEMS_TO_OPEN_DOORS Then
+            SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
+        Else
+            SetTile(tile, attrSet(tile), x, y)
+        End If
+        Return
+    End If
     
     If tile < 187 Then
-        If tile = DOOR_TILE Then
+        If tile = KEY_DOOR_TILE Then
             If not checkScreenObjectAlreadyTaken(tile, x, y) Then
                 SetTileChecked(tile, attrSet(tile), x, y)
             End If

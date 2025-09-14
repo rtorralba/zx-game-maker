@@ -41,3 +41,9 @@ line1 = "KILL ALL"
 line2 = "ENEMIES!"
 ink = "red"
 paper = "black"
+
+[need_items]
+line1 = "NEED"
+line2 = "ITEMS!"
+ink = "red"
+paper = "black"

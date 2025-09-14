@@ -165,6 +165,9 @@ timerSeconds = 0
 finishGameObjective = 0
 finishGameEnemy = 0
 
+itemsToOpenDoors = 0
+useBreakableTileByTouch = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -279,6 +282,10 @@ if 'properties' in data:
             finishGameObjective = property['value']
         elif property['name'] == 'finishGameEnemy':
             finishGameEnemy = property['value']
+        elif property['name'] == 'itemsToOpenDoors':
+            itemsToOpenDoors = property['value']
+        elif property['name'] == 'useBreakableTileByTouch':
+            useBreakableTileByTouch = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -308,7 +315,7 @@ configStr += "const BULLET_DISTANCE as ubyte = " + str(bulletDistance) + "\n"
 configStr += "const SHOULD_KILL_ENEMIES as ubyte = " + str(shouldKillEnemies) + "\n"
 configStr += "const KEY_TILE as ubyte = " + keyTile + "\n"
 configStr += "const ITEM_TILE as ubyte = " + itemTile + "\n"
-configStr += "const DOOR_TILE as ubyte = " + doorTile + "\n"
+# configStr += "const DOOR_TILE as ubyte = " + doorTile + "\n"
 configStr += "const LIFE_TILE as ubyte = " + lifeTile + "\n"
 configStr += "const ANIMATE_PERIOD_MAIN as ubyte = " + str(animatePeriodMain) + "\n"
 configStr += "const ANIMATE_PERIOD_ENEMY as ubyte = " + str(animatePeriodEnemy) + "\n"
@@ -453,11 +460,18 @@ elif finishGameObjective == 'itemsAndKillEnemy':
     configStr += "Const ENEMY_TO_KILL as ubyte = " + str(finishGameEnemy) + "\n"
     configStr += "Dim enemyToKillAlreadyKilled as ubyte = 0\n"
 
+configStr += "Const ITEMS_TO_OPEN_DOORS as ubyte = " + str(itemsToOpenDoors) + "\n"
+
+if useBreakableTileByTouch == 1:
+    configStr += "#DEFINE USE_BREAKABLE_TILE_BY_TOUCH\n"
+
 breakableTilesCount = 0
 screenObjectsCount = 0
 
 animatedTilesArray = "{" + ', '.join(str(i) for i in animatedTilesIds) + "}"
 configStr += "Dim animatedTiles(ANIMATED_TILES_COUNT) As Ubyte = " + animatedTilesArray + "\n"
+
+breakableByBulletTile = '60'
 
 for layer in data['layers']:
     if layer['type'] == 'tilelayer':
@@ -477,7 +491,7 @@ for layer in data['layers']:
 
                 tile = str(cell - 1)
 
-                if tile == "62":
+                if tile == breakableByBulletTile:
                     breakableTilesCount += 1
 
                 # screens[idx][mapY][mapX % screenWidth] = tile

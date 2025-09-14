@@ -163,7 +163,6 @@ Const ENEMY_ID As Ubyte = 12
     Dim currentScreenKeyY As Ubyte
 #endif
 
-Const ENEMY_DOOR_TILE As Ubyte = 63
 Dim kempstonInterfaceAvailable As Ubyte = 0
 
 Dim resetBorder As Ubyte = 0
@@ -179,3 +178,9 @@ Dim mainLoopCounter As Ubyte = 0
     Dim timerSeconds as ubyte = initialTimerSeconds
     Dim timerMinutes as ubyte = initialTimerMinutes
 #endif
+
+Const ENEMY_DOOR_TILE As Ubyte = 63
+Const KEY_DOOR_TILE As Ubyte = 62
+Const ITEMS_DOOR_TILE As Ubyte = 61
+Const BREAKABLE_BY_BULLET_TILE As Ubyte = 60
+Const BREAKABLE_BY_TOUCH_TILE As Ubyte = 59
