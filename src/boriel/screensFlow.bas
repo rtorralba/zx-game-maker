@@ -234,6 +234,14 @@ Sub playGame()
         #ifdef TIMER_ENABLED
             updateTimer()
         #endif
+        
+        If lastFrameOnBreakableTiles <> 0 Then
+            If framec - lastFrameOnBreakableTiles >= BREAKABLE_BY_TOUCH_TILE_FRAMES Then
+                lastFrameOnBreakableTiles = 0
+                removeTilesFromScreen(BREAKABLE_BY_TOUCH_TILE)
+                BeepFX_Play(0)
+            End If
+        End If
 
         If resetBorder Then
             Border BORDER_VALUE

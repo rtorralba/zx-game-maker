@@ -167,6 +167,7 @@ finishGameEnemy = 0
 
 itemsToOpenDoors = 0
 useBreakableTileByTouch = 0
+useBreakableTileByTouchFrames = 30
 
 if 'properties' in data:
     for property in data['properties']:
@@ -286,6 +287,8 @@ if 'properties' in data:
             itemsToOpenDoors = property['value']
         elif property['name'] == 'useBreakableTileByTouch':
             useBreakableTileByTouch = 1 if property['value'] else 0
+        elif property['name'] == 'useBreakableTileByTouchFrames':
+            useBreakableTileByTouchFrames = property['value']
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -464,6 +467,7 @@ configStr += "Const ITEMS_TO_OPEN_DOORS as ubyte = " + str(itemsToOpenDoors) + "
 
 if useBreakableTileByTouch == 1:
     configStr += "#DEFINE USE_BREAKABLE_TILE_BY_TOUCH\n"
+    configStr += "Const BREAKABLE_BY_TOUCH_TILE_FRAMES as ubyte = " + str(useBreakableTileByTouchFrames) + "\n"
 
 breakableTilesCount = 0
 screenObjectsCount = 0

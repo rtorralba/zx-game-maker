@@ -184,3 +184,5 @@ Const KEY_DOOR_TILE As Ubyte = 62
 Const ITEMS_DOOR_TILE As Ubyte = 61
 Const BREAKABLE_BY_BULLET_TILE As Ubyte = 60
 Const BREAKABLE_BY_TOUCH_TILE As Ubyte = 59
+
+Dim lastFrameOnBreakableTiles As Ubyte = 0

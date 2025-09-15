@@ -353,6 +353,11 @@
                     "value": false
                 },
                 {
+                    "name": "useBreakableTileByTouchFrames",
+                    "type": "int",
+                    "value": 30
+                },
+                {
                     "name": "waitPressKeyAfterLoad",
                     "type": "bool",
                     "value": false
