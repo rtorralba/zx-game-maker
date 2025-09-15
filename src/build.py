@@ -123,7 +123,8 @@ DIR="$(cd "$(dirname "$0")"&&pwd)"
 "$DIR/spectral.bin" -a "$DIR/{getProjectFileName()}.z80"
 ''')
         shutil.copy2(z,m/f"{getProjectFileName()}.z80")
-        for p in(m/"spectral.bin",m/"spectral"):subprocess.run(["chmod","+x",str(p)])
+        if os.name != 'nt':
+            for p in(m/"spectral.bin",m/"spectral"):subprocess.run(["chmod","+x",str(p)])
 
 def linuxBuild(outputFile):
     concatenateFiles(outputFile.with_suffix(".linux"), [BIN_FOLDER / "spectral.linux", outputFile.with_suffix(".z80")])
