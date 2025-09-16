@@ -188,6 +188,8 @@ function isSolidTileByColLin(col as ubyte, lin as ubyte) as ubyte
         If tile = BREAKABLE_BY_TOUCH_TILE Then
             If lastFrameOnBreakableTiles = 0 Then
                 lastFrameOnBreakableTiles = framec
+                tileToBreakByTouchX = col
+                tileToBreakByTouchY = lin
             End If
         End If
     #endif
@@ -381,6 +383,10 @@ Function getAttrFromTileAndApplyToOther(tile As Ubyte, besideTile As Ubyte) As U
     ' Montar el atributo: papel, tinta, brillo, parpadeo
     Return (papel * 8) + tinta + (brillo * 64) + (parpadeo * 128)
 End Function
+
+Sub replaceTileWithBackground(col As Ubyte, lin As Ubyte)
+    SetTile(0, 0, col, lin)
+End Sub
 
 sub debugA(value as UBYTE)
     PRINT AT 0, 0; "----"

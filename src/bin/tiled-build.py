@@ -599,7 +599,7 @@ for layer in data['layers']:
                     'name': object['name'],
                     'screenId': screenId,
                     'linIni': str(int((object['y'] % (tileHeight * screenHeight))) // 4),
-                    'linEnd': "-1",
+                    'linEnd': "255",
                     'colIni': str(int((object['x'] % (tileWidth * screenWidth))) // 4),
                     'colEnd': str(int((object['x'] % (tileWidth * screenWidth))) // 4),
                     'tile': str(object['gid'] - spriteTileOffset),
@@ -688,14 +688,14 @@ for layer in data['layers']:
                     if i <= len(screen) - 1:
                         enemy = screen[i]
                         if (int(enemy['colIni']) < int(enemy['colEnd'])):
-                            horizontalDirection = '-1'
+                            horizontalDirection = '255'
                         else:
                             horizontalDirection = '1'
 
                         if (int(enemy['linIni']) > int(enemy['linEnd'])):
                             verticalDirection = '1'
                         else:
-                            verticalDirection = '-1'
+                            verticalDirection = '255'
 
                         enemiesPerScreen[idx] = enemiesPerScreen[idx] + 1
                         arrayBuffer.append(int(enemy['tile']))
@@ -741,7 +741,7 @@ for layer in data['layers']:
                     arrayBuffer.append(0)
                     arrayBuffer.append(0)
                 enemiesPerScreen.append(0)
-            enemiesArray.append(array.array('b', arrayBuffer))
+            enemiesArray.append(array.array('B', arrayBuffer))
 
 enemiesInScreenOffsets = []
 enemiesInScreenOffsets.append(0)

@@ -119,7 +119,7 @@ Dim enemiesPerScreenInitial(SCREENS_COUNT) As Ubyte at ENEMIES_PER_SCREEN_INITIA
 Dim screenObjects(SCREEN_OBJECTS_COUNT - 1, 4) As Ubyte at SCREEN_OBJECTS_DATA_ADDRESS
 Dim screenObjectsCurrentIndex As Ubyte = 0
 Dim screensWon(SCREENS_COUNT) As Ubyte at SCREENS_WON_DATA_ADDRESS
-Dim decompressedEnemiesScreen(MAX_ENEMIES_PER_SCREEN, 12) As Byte at DECOMPRESSED_ENEMIES_SCREEN_DATA_ADDRESS
+Dim decompressedEnemiesScreen(MAX_ENEMIES_PER_SCREEN, 12) As Ubyte at DECOMPRESSED_ENEMIES_SCREEN_DATA_ADDRESS
 
 #ifdef USE_BREAKABLE_TILE_ALL
     Dim brokenTiles(SCREENS_COUNT) As Ubyte at BROKEN_TILES_DATA_ADDRESS
@@ -186,3 +186,5 @@ Const BREAKABLE_BY_BULLET_TILE As Ubyte = 60
 Const BREAKABLE_BY_TOUCH_TILE As Ubyte = 59
 
 Dim lastFrameOnBreakableTiles As Ubyte = 0
+Dim tileToBreakByTouchX As Ubyte = 0
+Dim tileToBreakByTouchY As Ubyte = 0

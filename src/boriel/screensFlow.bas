@@ -238,7 +238,7 @@ Sub playGame()
         If lastFrameOnBreakableTiles <> 0 Then
             If framec - lastFrameOnBreakableTiles >= BREAKABLE_BY_TOUCH_TILE_FRAMES Then
                 lastFrameOnBreakableTiles = 0
-                removeTilesFromScreen(BREAKABLE_BY_TOUCH_TILE)
+                replaceTileWithBackground(tileToBreakByTouchX, tileToBreakByTouchY)
                 BeepFX_Play(0)
             End If
         End If
@@ -283,33 +283,37 @@ Sub playGame()
             End If
         #endif
 
-        checkGameObjective()
+        #ifndef ARCADE_MODE
+            checkGameObjective()
+        #endif
 
         mainLoopCounter = mainLoopCounter + 1
     Loop
 End Sub
 
-Sub checkGameObjective()
-    #ifdef FINISH_GAME_OBJECTIVE_ITEM
-        If currentItems = GOAL_ITEMS Then
-            ending()
-        End If
-    #endif
+#ifndef ARCADE_MODE
+    Sub checkGameObjective()
+        #ifdef FINISH_GAME_OBJECTIVE_ITEM
+            If currentItems = GOAL_ITEMS Then
+                ending()
+            End If
+        #endif
 
-    #ifdef FINISH_GAME_OBJECTIVE_ENEMY
-        If enemyToKillAlreadyKilled Then
-            ending()
-        End If
-    #endif
-
-    #ifdef FINISH_GAME_OBJECTIVE_ITEMS_AND_ENEMY
-        If currentItems = GOAL_ITEMS Then
+        #ifdef FINISH_GAME_OBJECTIVE_ENEMY
             If enemyToKillAlreadyKilled Then
                 ending()
             End If
-        End If
-    #endif
-End Sub
+        #endif
+
+        #ifdef FINISH_GAME_OBJECTIVE_ITEMS_AND_ENEMY
+            If currentItems = GOAL_ITEMS Then
+                If enemyToKillAlreadyKilled Then
+                    ending()
+                End If
+            End If
+        #endif
+    End Sub
+#endif
 
 Sub calculateIfSkipMovementBySpeed()
     skipMove0 = 0
