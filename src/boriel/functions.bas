@@ -17,10 +17,12 @@ sub decrementLife()
             
             #ifdef LIVES_MODE_GRAVEYARD
                 saveProta(protaY, protaX, 15, 0)
+                lastFrameOnBreakableTiles = 0
             #endif
 
             #ifdef LIVES_MODE_RESPAWN
                 saveProta(protaYRespawn, protaXRespawn, 1, protaDirection)
+                lastFrameOnBreakableTiles = 0
             #endif
 
             #ifdef TIMER_ENABLED
