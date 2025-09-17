@@ -28,6 +28,10 @@ sub decrementLife()
                 timerMinutes = initialTimerMinutes
                 updateTimerDisplay()
             #endif
+
+            #ifdef ARCADE_MODE_RESET_ON_KILL
+                mapDrawOnlyItems()
+            #endif
         else
             currentLife = 0
         end if
@@ -126,13 +130,17 @@ end sub
     end sub
 #endif
 
-Sub isDamageTileByColLin(col as Ubyte, lin as Ubyte)
+Function isDamageTileByColLin(col as Ubyte, lin as Ubyte) As Ubyte
     Dim tile as Ubyte = GetTile(col, lin)
 
     For i = 0 to DAMAGE_TILES_COUNT
-        if peek(@damageTiles + i) = tile then decrementLife()
+        If peek(@damageTiles + i) = tile Then
+            Return 1
+        End If
     Next i
-End Sub
+
+    Return 0
+End Function
 
 function allEnemiesKilled() as ubyte
     if enemiesPerScreen(currentScreen) = 0 then return 1
@@ -265,8 +273,7 @@ Function checkTypeOfTile(col as uByte, lin as uByte, type as Ubyte) as uByte
         Return isSolidTileByColLin(col, lin)
     End If
     If type = 0 Then
-        isDamageTileByColLin(col, lin)
-        Return 0
+        Return isDamageTileByColLin(col, lin)
     End If
     #ifdef LADDERS_ENABLED
         If type = 2 Then

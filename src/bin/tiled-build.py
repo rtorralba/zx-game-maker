@@ -169,6 +169,8 @@ itemsToOpenDoors = 0
 useBreakableTileByTouch = 0
 useBreakableTileByTouchFrames = 30
 
+arcadeModeResetOnKill = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -289,6 +291,8 @@ if 'properties' in data:
             useBreakableTileByTouch = 1 if property['value'] else 0
         elif property['name'] == 'useBreakableTileByTouchFrames':
             useBreakableTileByTouchFrames = property['value']
+        elif property['name'] == 'arcadeModeResetOnKill':
+            arcadeModeResetOnKill = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -360,6 +364,8 @@ configStr += "const BACKGROUND_ATTRIBUTE as ubyte = " + str(backgroundAttribute)
 
 if arcadeMode == 1:
     configStr += "#DEFINE ARCADE_MODE\n"
+    if arcadeModeResetOnKill == 1:
+        configStr += "#DEFINE ARCADE_MODE_RESET_ON_KILL\n"
 
 if messagesEnabled == 1:
     configStr += "#DEFINE MESSAGES_ENABLED\n"

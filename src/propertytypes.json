@@ -127,6 +127,11 @@
                 "value": 0
             },
             {
+                "name": "arcadeModeResetOnKill",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "backgroundAttribute",
                 "type": "int",
                 "value": 7

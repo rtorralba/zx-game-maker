@@ -660,7 +660,9 @@ End Sub
 Sub checkDamageByTile()
     If invincible Then Return
     
-    CheckCollision(protaX, protaY, 0) ' check If we are On a damage tile
+    If CheckCollision(protaX, protaY, 0) Then
+        decrementLife()
+    End If
 End Sub
 
 #ifdef IDLE_ENABLED

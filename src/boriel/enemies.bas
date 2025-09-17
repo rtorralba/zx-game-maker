@@ -85,7 +85,9 @@ Function checkProtaAndBulletCollision(enemyId As Ubyte) As Ubyte
 
     Dim damage As Ubyte = 0
     
-    If checkBulletProtaCollision(enemyX0, enemyY0, enemyX1, enemyY1, enemyId) Then Return 1
+    #ifdef SHOOTING_ENABLED
+        If checkBulletProtaCollision(enemyX0, enemyY0, enemyX1, enemyY1, enemyId) Then Return 1
+    #endif
 
     #ifdef SIDE_VIEW
         #ifdef KILL_JUMPING_ON_TOP
