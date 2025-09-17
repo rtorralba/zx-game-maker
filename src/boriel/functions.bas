@@ -31,6 +31,7 @@ sub decrementLife()
 
             #ifdef ARCADE_MODE_RESET_ON_KILL
                 mapDrawOnlyItems()
+                currentItems = 0
             #endif
         else
             currentLife = 0
@@ -66,8 +67,10 @@ sub printLife()
         #endif
     #endif
     #ifdef HISCORE_ENABLED
-        PRINT AT HUD_HISCORE_Y, HUD_HISCORE_X; hiScore;
-	    PRINT AT HUD_HISCORE_Y_2, HUD_HISCORE_X; score;
+        PRINT AT HUD_HISCORE_Y, HUD_HISCORE_X; "00000"
+        PRINT AT HUD_HISCORE_Y, HUD_HISCORE_X + 5 - LEN(STR$(hiScore)); hiScore
+        PRINT AT HUD_HISCORE_Y_2, HUD_HISCORE_X; "00000"
+	    PRINT AT HUD_HISCORE_Y_2, HUD_HISCORE_X + 5 - LEN(STR$(score)); score
     #endif
     #ifndef ARCADE_MODE
         #ifdef ITEMS_ENABLED
@@ -392,7 +395,10 @@ Function getAttrFromTileAndApplyToOther(tile As Ubyte, besideTile As Ubyte) As U
 End Function
 
 Sub replaceTileWithBackground(col As Ubyte, lin As Ubyte)
-    SetTile(0, 0, col, lin)
+    Dim tile As Ubyte = GetTile(col, lin)
+    Dim besideTile As Ubyte = GetTile(col, lin + 1)
+
+    SetTile(besideTile, attrSet(besideTile), col, lin)
 End Sub
 
 sub debugA(value as UBYTE)

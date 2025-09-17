@@ -223,9 +223,9 @@ Sub playGame()
     #endif
     
     #ifdef HISCORE_ENABLED
-        Print AT 22, 20; "00000"
-        PRINT AT 22, 25 - LEN(STR$(hiScore)); hiScore
-        Print AT 23, 20; "00000"
+        Print AT HUD_HISCORE_Y, HUD_HISCORE_X; "00000"
+        Print AT HUD_HISCORE_Y, HUD_HISCORE_X + 5 - LEN(STR$(hiScore)); hiScore
+        Print AT HUD_HISCORE_Y + 1, HUD_HISCORE_X; "00000"
     #endif
     
     Do
