@@ -20,8 +20,9 @@ Sub showMenu()
     #endif
     
     #ifdef HISCORE_ENABLED
-        Print AT 0, 22; "HI:"
-        Print AT 0, 26; hiScore
+        Print AT 22, 6; "HI:"
+        Print AT 22, 9; "00000"
+        Print AT 22, 14 - LEN(STR$(hiScore)); hiScore
     #endif
     
     Do
@@ -235,9 +236,11 @@ Sub playGame()
                 clearKey()
                 mapDrawOnlyItems()
                 currentItems = 0
+                score = pointsWhenLoadScreen
+                printLife()
             End If
         #endif
-        
+
         calculateIfSkipMovementBySpeed()
 
         #ifdef TIMER_ENABLED

@@ -549,6 +549,13 @@ Function checkTileObject(tile As Ubyte) As Ubyte
         Return 1
     Elseif tile = KEY_TILE Then
         #ifdef ARCADE_MODE
+            Dim remainingSeconds As Ubyte = timerSeconds + (timerMinutes * 60)
+            score = score + remainingSeconds
+            If score > hiScore Then
+                hiScore = score
+            End If
+            printLife()
+
             If currentScreen = SCREENS_COUNT Then
                 ending()
             Else

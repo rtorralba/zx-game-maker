@@ -163,6 +163,7 @@ Const ENEMY_ID As Ubyte = 12
     Dim currentScreenKeyY As Ubyte
     #ifdef ARCADE_MODE_RESET_ON_KILL
         Dim arcadeModeResetObjects As Ubyte = 0
+        Dim pointsWhenLoadScreen As Uinteger = 0
     #endif
 #endif
 
