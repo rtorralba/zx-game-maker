@@ -32,8 +32,7 @@ sub decrementLife()
             #endif
 
             #ifdef ARCADE_MODE_RESET_ON_KILL
-                mapDrawOnlyItems()
-                currentItems = 0
+                arcadeModeResetObjects = 1
             #endif
         else
             currentLife = 0

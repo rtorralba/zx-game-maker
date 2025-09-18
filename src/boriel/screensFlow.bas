@@ -229,6 +229,15 @@ Sub playGame()
     #endif
     
     Do
+        #ifdef ARCADE_MODE_RESET_ON_KILL
+            If arcadeModeResetObjects Then
+                arcadeModeResetObjects = 0
+                clearKey()
+                mapDrawOnlyItems()
+                currentItems = 0
+            End If
+        #endif
+        
         calculateIfSkipMovementBySpeed()
 
         #ifdef TIMER_ENABLED

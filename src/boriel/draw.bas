@@ -21,29 +21,6 @@ Sub mapDraw()
     Next index
 End Sub
 
-Sub mapDrawOnlyItems()
-    Dim index As Uinteger
-    Dim y, x As Ubyte
-
-    x = 0
-    y = 0
-    
-    For index=0 To SCREEN_LENGTH
-        Dim tile As Ubyte
-        tile = Peek(@decompressedMap + index) - 1
-
-        If tile = ITEM_TILE Or tile = BREAKABLE_BY_TOUCH_TILE Then
-            drawTile(tile, x, y)
-        End If
-        
-        x = x + 1
-        If x = screenWidth Then
-            x = 0
-            y = y + 1
-        End If
-    Next index
-End Sub
-
 Function checkScreenObjectAlreadyTaken(tile As Ubyte, x As Ubyte, y As Ubyte) As Ubyte
     For i = 0 To SCREEN_OBJECTS_COUNT - 1
         If screenObjects(i, 0) <> currentScreen Then Continue For
@@ -179,6 +156,41 @@ End Sub
         attr = getAttrFromTileAndApplyToOther(KEY_TILE, besideTile)
         SetTile(KEY_TILE, attr, currentScreenKeyX, currentScreenKeyY)
     End Sub
+
+    #ifdef ARCADE_MODE_RESET_ON_KILL
+        Sub mapDrawOnlyItems()
+            Dim index As Uinteger
+            Dim y, x As Ubyte
+
+            x = 0
+            y = 0
+            
+            For index=0 To SCREEN_LENGTH
+                Dim tile As Ubyte
+                tile = Peek(@decompressedMap + index) - 1
+
+                If tile = ITEM_TILE Or tile = BREAKABLE_BY_TOUCH_TILE Then
+                    drawTile(tile, x, y)
+                End If
+                
+                x = x + 1
+                If x = screenWidth Then
+                    x = 0
+                    y = y + 1
+                End If
+            Next index
+        End Sub
+
+        Sub clearKey()
+            Dim besideTile As Ubyte
+            besideTile = GetTile(currentScreenKeyX - 1, currentScreenKeyY)
+            If besideTile <> 0 Then
+                SetTile(besideTile, attrSet(besideTile), currentScreenKeyX, currentScreenKeyY)
+            Else
+                SetTile(0, BACKGROUND_ATTRIBUTE, currentScreenKeyX, currentScreenKeyY)
+            End If
+        End Sub
+    #endif
 #endif
 
 Sub redrawScreen()
