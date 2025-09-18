@@ -161,6 +161,9 @@ Const ENEMY_ID As Ubyte = 12
 #ifdef ARCADE_MODE
     Dim currentScreenKeyX As Ubyte
     Dim currentScreenKeyY As Ubyte
+    #ifdef ARCADE_MODE_RESET_ON_KILL
+        Dim arcadeModeResetObjects As Ubyte = 0
+    #endif
 #endif
 
 Dim kempstonInterfaceAvailable As Ubyte = 0
