@@ -170,7 +170,11 @@ End Sub
                 tile = Peek(@decompressedMap + index) - 1
 
                 If tile = ITEM_TILE Or tile = BREAKABLE_BY_TOUCH_TILE Then
-                    drawTile(tile, x, y)
+                    Dim attr As Ubyte
+                    Dim besideTile As Ubyte
+                    besideTile = GetTile(x - 1, y)
+                    attr = getAttrFromTileAndApplyToOther(tile, besideTile)
+                    SetTileChecked(tile, attr, x, y)
                 End If
                 
                 x = x + 1
