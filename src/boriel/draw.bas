@@ -61,15 +61,19 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
         End If
     #endif
 
-    For i = 0 To ANIMATED_TILES_COUNT
-        If tile = animatedTiles(i) Then
-            animatedTilesInScreen(currentAnimatedTileKey, 0) = tile
-            animatedTilesInScreen(currentAnimatedTileKey, 1) = x
-            animatedTilesInScreen(currentAnimatedTileKey, 2) = y
-            currentAnimatedTileKey = currentAnimatedTileKey + 1
-            Exit For
+    If tile > 73 Then
+        If tile < 187 Then
+            For i = 0 To ANIMATED_TILES_COUNT
+                If tile = Peek(@animatedTiles + i) Then
+                    animatedTilesInScreen(currentAnimatedTileKey, 0) = tile
+                    animatedTilesInScreen(currentAnimatedTileKey, 1) = x
+                    animatedTilesInScreen(currentAnimatedTileKey, 2) = y
+                    currentAnimatedTileKey = currentAnimatedTileKey + 1
+                    Exit For
+                End If
+            Next i
         End If
-    Next i
+    End If
     
     #ifdef USE_BREAKABLE_TILE_ALL
         If tile = BREAKABLE_BY_BULLET_TILE Then
