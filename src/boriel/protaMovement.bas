@@ -612,7 +612,7 @@ Sub checkObjectContact()
         #ifndef ARCADE_MODE
             addScreenObject(tile, col, lin)
         #endif
-        besideTile = GetTile(col - 1, lin)
+        besideTile = GetTile(col, lin - 1)
         If besideTile = 0 Then
             FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col, lin)
         Else
@@ -640,7 +640,7 @@ Sub checkObjectContact()
         #ifndef ARCADE_MODE
             addScreenObject(tile, col, lin + 1)
         #endif
-        besideTile = GetTile(col - 1, lin + 1)
+        besideTile = GetTile(col, lin)
         If besideTile = 0 Then
             FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col, lin + 1)
         Else
@@ -654,7 +654,7 @@ Sub checkObjectContact()
         #ifndef ARCADE_MODE
             addScreenObject(tile, col + 1, lin + 1)
         #endif
-        besideTile = GetTile(col, lin + 1)
+        besideTile = GetTile(col, lin)
         If besideTile = 0 Then
             FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col + 1, lin + 1)
         Else

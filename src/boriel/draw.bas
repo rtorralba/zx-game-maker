@@ -124,7 +124,7 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
 
     Dim attr As Ubyte
     Dim besideTile As Ubyte
-    besideTile = GetTile(x - 1, y)
+    besideTile = GetTile(x, y - 1)
     attr = getAttrFromTileAndApplyToOther(tile, besideTile)
 
     #ifdef ARCADE_MODE
