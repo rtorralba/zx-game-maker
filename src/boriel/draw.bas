@@ -146,7 +146,7 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
             SetTileChecked(tile, attr, x, y)
         Else
             if besideTile <> 0 Then
-                SetTile(besideTile, attrSet(besideTile), x, y)
+                SetTile(0, attrSet(besideTile), x, y)
             End If
         End If
     #endif
