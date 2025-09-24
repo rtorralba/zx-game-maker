@@ -183,11 +183,13 @@ End Function
             If pressingUp() And jumpEnergy > 0 Then
                 If Not CheckCollision(protaX, protaY - 1, 1) Then
                     saveProta(protaY - 1, protaX, getNextFrameJumpingFalling(), protaDirection)
+                Else
+                    saveProta(protaY, protaX, getNextFrameJumpingFalling(), protaDirection)
                 End If
                 jumpCurrentKey = jumpCurrentKey + 1
                 jumpEnergy = jumpEnergy - 1
-                Print AT 23, 5; "   "
-                Print AT 23, 5; jumpEnergy
+                PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; "   ";  
+	            PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; jumpEnergy;
                 Return
             End If
             
