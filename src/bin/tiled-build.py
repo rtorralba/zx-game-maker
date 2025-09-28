@@ -174,6 +174,8 @@ arcadeModeResetOnKill = 0
 messagesDefaultPaper = 7
 messagesDefaultInk = 0
 
+arcadeShowIntermediateScreen = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -300,6 +302,8 @@ if 'properties' in data:
             messagesDefaultPaper = property['value']
         elif property['name'] == 'messagesDefaultInk':
             messagesDefaultInk = property['value']
+        elif property['name'] == 'arcadeShowIntermediateScreen':
+            arcadeShowIntermediateScreen = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -373,6 +377,8 @@ if arcadeMode == 1:
     configStr += "#DEFINE ARCADE_MODE\n"
     if arcadeModeResetOnKill == 1:
         configStr += "#DEFINE ARCADE_MODE_RESET_ON_KILL\n"
+    if arcadeShowIntermediateScreen == 1:
+        configStr += "#DEFINE ARCADE_SHOW_INTERMEDIATE_SCREEN\n"
 
 if messagesEnabled == 1:
     configStr += "#DEFINE MESSAGES_ENABLED\n"

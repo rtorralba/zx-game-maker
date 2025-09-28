@@ -201,18 +201,17 @@ End Sub
     #endif
 #endif
 
-Sub redrawScreen()
-    ' memset(22527,0,768)
-    ' CancelOps()
-    asm
+Sub clearScreen()
+    Asm
     call CLEAR_SCREEN
-    end asm
-    ' dzx0Standard(HUD_SCREEN_ADDRESS, $4000)
+    End Asm
     FillWithTile(0, 32, 22, BACKGROUND_ATTRIBUTE, 0, 0)
-    ' clearBox(0,0,120,112)
+End Sub
+
+Sub redrawScreen()
+    clearScreen()
     mapDraw()
     printLife()
-    ' enemiesDraw(currentScreen)
 End Sub
 
 Sub moveToScreen(direction As Ubyte)
@@ -246,7 +245,21 @@ Sub moveToScreen(direction As Ubyte)
         #endif
     End If
 
-    swapScreen()
+    #ifdef ARCADE_MODE
+        #ifdef HISCORE_ENABLED
+            #ifdef ARCADE_SHOW_INTERMEDIATE_SCREEN
+                If direction = 6 Then
+                    showIntermediateScreen()
+                End If
+            #else
+                swapScreen()
+            #endif
+        #else
+            swapScreen()
+        #endif
+    #else
+        swapScreen()
+    #endif
 
     If direction = 8 Then
         #ifdef SIDE_VIEW

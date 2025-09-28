@@ -143,6 +143,11 @@
                     "value": false
                 },
                 {
+                    "name": "arcadeShowIntermediateScreen",
+                    "type": "bool",
+                    "value": true
+                },
+                {
                     "name": "backgroundAttribute",
                     "type": "int",
                     "value": 7

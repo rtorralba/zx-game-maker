@@ -525,10 +525,7 @@ Function checkTileObject(tile As Ubyte) As Ubyte
     If tile = ITEM_TILE Then
         currentItems = currentItems + ITEMS_INCREMENT
         #ifdef HISCORE_ENABLED
-            score = score + 100
-            If score > hiScore Then
-                hiScore = score
-            End If
+            incrementScore(100)
         #endif
         #ifdef BORDER_COLOR_ITEM
             Border BORDER_COLOR_ITEM
@@ -551,11 +548,9 @@ Function checkTileObject(tile As Ubyte) As Ubyte
         Return 1
     Elseif tile = KEY_TILE Then
         #ifdef ARCADE_MODE
-            Dim remainingSeconds As Ubyte = timerSeconds + (timerMinutes * 60)
-            score = score + remainingSeconds
-            If score > hiScore Then
-                hiScore = score
-            End If
+            #ifndef ARCADE_SHOW_INTERMEDIATE_SCREEN
+                incrementScore(timerSeconds)
+            #endif
             printLife()
 
             If currentScreen = SCREENS_COUNT Then

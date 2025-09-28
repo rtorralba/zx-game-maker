@@ -10,7 +10,7 @@
   <object id="6" name="life" gid="1" x="40" y="184" width="8" height="8"/>
   <object id="7" name="ammo" gid="2" x="72" y="184" width="8" height="8"/>
   <object id="8" name="keys" gid="3" x="128" y="184" width="8" height="8"/>
-  <object id="9" name="score" gid="4" x="160" y="192" width="8" height="8"/>
+  <object id="9" name="score" gid="4" x="144" y="184" width="8" height="8"/>
   <object id="10" name="items" gid="5" x="240" y="184" width="8" height="8"/>
   <object id="11" name="messages" gid="6" x="152" y="184" width="8" height="8"/>
   <object id="12" name="fuel" gid="7" x="40" y="192" width="8" height="8"/>

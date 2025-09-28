@@ -302,7 +302,38 @@ Sub playGame()
     Loop
 End Sub
 
-#ifndef ARCADE_MODE
+#ifdef ARCADE_MODE
+    #ifdef HISCORE_ENABLED
+        Sub showIntermediateScreen()
+            VortexTracker_Stop()
+            clearScreen()
+            doubleSizeTexto(0, 160, "SCREEN CLEARED!")
+            ' Print current score and remaining time and subtractr second and increase score
+            #ifdef TIMER_ENABLED
+                Print AT 6, 8; "TIME LEFT: "; timerSeconds
+                Print AT 8, 8; "SCORE: "; score
+
+                Print AT 14, 8; "PRESS ENTER To Continue"
+                Do
+                Loop Until skipScreenPressed()
+
+                While timerSeconds > 0
+                    timerSeconds = timerSeconds - 1
+                    Print AT 6, 8; "TIME LEFT: "; "  "
+                    Print AT 6, 8; "TIME LEFT: "; timerSeconds
+                    incrementScore(1)
+                    Print AT 8, 8; "SCORE: "; score
+                    Beep .02, 12
+                Wend
+            #endif
+
+            Do
+            Loop Until skipScreenPressed()
+            VortexTracker_Stop()
+            swapScreen()
+        End Sub
+    #endif
+#else
     Sub checkGameObjective()
         #ifdef FINISH_GAME_OBJECTIVE_ITEM
             If currentItems = GOAL_ITEMS Then
