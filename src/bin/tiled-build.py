@@ -653,8 +653,11 @@ for layer in data['layers']:
                         if int(initialMainCharacterX) < 2 or int(initialMainCharacterX) > 60 or int(initialMainCharacterY) < 0 or int(initialMainCharacterY) > 38:
                             exitWithErrorMessage('Main character initial position is out of bounds. X: ' + initialMainCharacterX + ', Y: ' + initialMainCharacterY)
                         
-                    if arcadeMode == 1: # Voy guardando en un array cuyo indice sea la pantalla y el valor sea la posición de inicio
-                        keys[str(screenId)] = [int(initialMainCharacterX), int(initialMainCharacterY)]
+                    if arcadeMode == 1:
+                        # Voy guardando en un array cuyo indice sea la pantalla y el valor sea la posición de inicio
+                        x = int((object['x'] % (tileWidth * screenWidth))) // 4
+                        y = int((object['y'] % (tileHeight * screenHeight))) // 4
+                        keys[str(screenId)] = [x, y]
                 elif object['type'] == 'music2':
                     configStr += "Const MUSIC_2_SCREEN_ID as Uinteger = " + str(screenId) + "\n"
                     configStr += "Dim music2alreadyPlayed as Ubyte = 0\n"
