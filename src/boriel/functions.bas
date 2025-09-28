@@ -118,16 +118,20 @@ end sub
         Paper p: Ink i: Flash 1
         PRINT AT HUD_MESSAGE_Y, HUD_MESSAGE_X; line1
         PRINT AT HUD_MESSAGE_Y_2, HUD_MESSAGE_X; line2
-        Paper 0: Ink 7: Flash 0
+        Paper PAPER_VALUE: Ink INK_VALUE: Flash 0
         messageLoopCounter = 0
     end sub
 
     sub checkMessageForDelete()
         If messageLoopCounter = MESSAGE_LOOPS_VISIBLE Then
+            Paper MESSAGE_DEFAULT_PAPER: Ink MESSAGE_DEFAULT_INK: Flash 0
             PRINT AT HUD_MESSAGE_Y, HUD_MESSAGE_X; "        "
             PRINT AT HUD_MESSAGE_Y_2, HUD_MESSAGE_X; "        "
+            Paper PAPER_VALUE: Ink INK_VALUE: Flash 0
         End If
-        messageLoopCounter = messageLoopCounter + 1
+        If messageLoopCounter < MESSAGE_LOOPS_VISIBLE Then
+            messageLoopCounter = messageLoopCounter + 1
+        End If
     end sub
 #endif
 

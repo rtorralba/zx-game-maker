@@ -171,6 +171,9 @@ useBreakableTileByTouchFrames = 30
 
 arcadeModeResetOnKill = 0
 
+messagesDefaultPaper = 7
+messagesDefaultInk = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -293,6 +296,10 @@ if 'properties' in data:
             useBreakableTileByTouchFrames = property['value']
         elif property['name'] == 'arcadeModeResetOnKill':
             arcadeModeResetOnKill = 1 if property['value'] else 0
+        elif property['name'] == 'messagesDefaultPaper':
+            messagesDefaultPaper = property['value']
+        elif property['name'] == 'messagesDefaultInk':
+            messagesDefaultInk = property['value']
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -371,6 +378,8 @@ if messagesEnabled == 1:
     configStr += "#DEFINE MESSAGES_ENABLED\n"
     configStr += "Dim messageLoopCounter As Ubyte = 0\n"
     configStr += "#Define MESSAGE_LOOPS_VISIBLE 30\n"
+    configStr += "Const MESSAGE_DEFAULT_PAPER As Ubyte = " + str(messagesDefaultPaper) + "\n"
+    configStr += "Const MESSAGE_DEFAULT_INK As Ubyte = " + str(messagesDefaultInk) + "\n"
 
 if laddersEnabled == 1:
     configStr += "#DEFINE LADDERS_ENABLED\n"

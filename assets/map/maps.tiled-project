@@ -302,6 +302,16 @@
                     "value": 5
                 },
                 {
+                    "name": "messagesDefaultInk",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "messagesDefaultPaper",
+                    "type": "int",
+                    "value": 7
+                },
+                {
                     "name": "messagesEnabled",
                     "type": "bool",
                     "value": false

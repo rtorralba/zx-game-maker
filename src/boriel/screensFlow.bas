@@ -236,7 +236,6 @@ Sub playGame()
                 clearKey()
                 mapDrawOnlyItems()
                 currentItems = 0
-                score = pointsWhenLoadScreen
                 printLife()
             End If
         #endif
