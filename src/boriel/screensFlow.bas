@@ -481,6 +481,10 @@ Sub resetValues()
     #ifdef MUSIC_3_ENABLED
         music3alreadyPlayed = 0
     #endif
+
+    #ifdef TIMER_ENABLED
+        timerSeconds = initialTimerSeconds
+    #endif
 End Sub
 
 Sub swapScreen()
@@ -516,6 +520,11 @@ Sub swapScreen()
                 End If
             #endif
         #endif
+    #endif
+
+    #ifdef TIMER_ENABLED
+        timerSeconds = initialTimerSeconds
+        updateTimerDisplay()
     #endif
     redrawScreen()
 End Sub

@@ -27,7 +27,6 @@ sub decrementLife()
 
             #ifdef TIMER_ENABLED
                 timerSeconds = initialTimerSeconds
-                timerMinutes = initialTimerMinutes
                 updateTimerDisplay()
             #endif
 
@@ -84,12 +83,15 @@ end sub
 #ifdef TIMER_ENABLED
     Sub updateTimerDisplay()
         PRINT AT HUD_TIMER_Y, HUD_TIMER_X; " :"
-        PRINT AT HUD_TIMER_Y, HUD_TIMER_X; timerMinutes;
-        If timerSeconds < 10 Then
+        PRINT AT HUD_TIMER_Y, HUD_TIMER_X; timerSeconds / 60;
+
+        Dim timerSecondsRemaining as Ubyte = timerSeconds MOD 60
+
+        If timerSecondsRemaining < 10 Then
             PRINT AT HUD_TIMER_Y, HUD_TIMER_X + 2; "0";
-            PRINT AT HUD_TIMER_Y, HUD_TIMER_X + 3; timerSeconds;
+            PRINT AT HUD_TIMER_Y, HUD_TIMER_X + 3; timerSecondsRemaining;
         Else
-            PRINT AT HUD_TIMER_Y, HUD_TIMER_X + 2; timerSeconds;
+            PRINT AT HUD_TIMER_Y, HUD_TIMER_X + 2; timerSecondsRemaining;
         End If
     End Sub
     Sub updateTimer()
@@ -97,16 +99,11 @@ end sub
             lastFrameTimer = framec
 
             If timerSeconds = 0 Then
-                If timerMinutes = 0 Then
-                    #ifdef LIVES_MODE_ENABLED
-                        decrementLife()
-                    #else
-                        currentLife = 0
-                    #endif
-                Else
-                    timerMinutes = timerMinutes - 1
-                    timerSeconds = 59
-                End If
+                #ifdef LIVES_MODE_ENABLED
+                    decrementLife()
+                #else
+                    currentLife = 0
+                #endif
             Else
                 timerSeconds = timerSeconds - 1
             End If
