@@ -307,6 +307,12 @@ End Sub
         Sub showIntermediateScreen()
             VortexTracker_Stop()
             clearScreen()
+
+            Dim tinta As Ubyte = BACKGROUND_ATTRIBUTE bAND 7
+            Dim papel As Ubyte = (BACKGROUND_ATTRIBUTE bAND 56) / 8
+            Dim brillante As Ubyte = (BACKGROUND_ATTRIBUTE bAND 64) / 64
+            Ink tinta: Paper papel: Bright brillante: Flash 0
+
             doubleSizeTexto(0, 160, "SCREEN CLEARED!")
             ' Print current score and remaining time and subtractr second and increase score
             #ifdef TIMER_ENABLED
@@ -319,7 +325,7 @@ End Sub
 
                 While timerSeconds > 0
                     timerSeconds = timerSeconds - 1
-                    Print AT 6, 8; "TIME LEFT: "; "  "
+                    Print AT 6, 8; "TIME LEFT: "; "   "
                     Print AT 6, 8; "TIME LEFT: "; timerSeconds
                     incrementScore(1)
                     Print AT 8, 8; "SCORE: "; score
@@ -330,6 +336,9 @@ End Sub
             Do
             Loop Until skipScreenPressed()
             VortexTracker_Stop()
+
+            Ink INK_VALUE: Paper PAPER_VALUE: Border BORDER_VALUE
+
             swapScreen()
         End Sub
     #endif

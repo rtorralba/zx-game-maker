@@ -124,15 +124,19 @@ end sub
 
     sub checkMessageForDelete()
         If messageLoopCounter = MESSAGE_LOOPS_VISIBLE Then
-            Paper MESSAGE_DEFAULT_PAPER: Ink MESSAGE_DEFAULT_INK: Flash 0
-            PRINT AT HUD_MESSAGE_Y, HUD_MESSAGE_X; "        "
-            PRINT AT HUD_MESSAGE_Y_2, HUD_MESSAGE_X; "        "
-            Paper PAPER_VALUE: Ink INK_VALUE: Flash 0
+            clearMessage()
         End If
         If messageLoopCounter < MESSAGE_LOOPS_VISIBLE Then
             messageLoopCounter = messageLoopCounter + 1
         End If
     end sub
+
+    Sub clearMessage()
+        Paper MESSAGE_DEFAULT_PAPER: Ink MESSAGE_DEFAULT_INK: Flash 0
+        PRINT AT HUD_MESSAGE_Y, HUD_MESSAGE_X; "        "
+        PRINT AT HUD_MESSAGE_Y_2, HUD_MESSAGE_X; "        "
+        Paper PAPER_VALUE: Ink INK_VALUE: Flash 0
+    End Sub
 #endif
 
 #ifdef HISCORE_ENABLED

@@ -206,6 +206,9 @@ Sub clearScreen()
     call CLEAR_SCREEN
     End Asm
     FillWithTile(0, 32, 22, BACKGROUND_ATTRIBUTE, 0, 0)
+    #ifdef MESSAGES_ENABLED
+        clearMessage()
+    #endif
 End Sub
 
 Sub redrawScreen()
