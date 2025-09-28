@@ -645,15 +645,16 @@ for layer in data['layers']:
                     objects[str(object['properties'][0]['value'])]['linEnd'] = str(int((object['y'] % (tileHeight * screenHeight))) // 4)
                     objects[str(object['properties'][0]['value'])]['colEnd'] = str(int((object['x'] % (tileWidth * screenWidth))) // 4)
                 elif object['type'] == 'mainCharacter':
-                    initialScreen = screenId
-                    initialMainCharacterX = str(int((object['x'] % (tileWidth * screenWidth))) // 4)
-                    initialMainCharacterY = str(int((object['y'] % (tileHeight * screenHeight))) // 4)
+                    if initialMainCharacterX == 8 and initialMainCharacterY == 8:
+                        initialScreen = screenId
+                        initialMainCharacterX = str(int((object['x'] % (tileWidth * screenWidth))) // 4)
+                        initialMainCharacterY = str(int((object['y'] % (tileHeight * screenHeight))) // 4)
 
-                    if int(initialMainCharacterX) < 2 or int(initialMainCharacterX) > 60 or int(initialMainCharacterY) < 0 or int(initialMainCharacterY) > 38:
-                        exitWithErrorMessage('Main character initial position is out of bounds. X: ' + initialMainCharacterX + ', Y: ' + initialMainCharacterY)
-                    
-                    if arcadeMode == 1: # Voy guardando en un array cuyo indice sea la pantalla y el valor sea la posición de inicio
-                        keys[str(screenId)] = [int(initialMainCharacterX), int(initialMainCharacterY)]
+                        if int(initialMainCharacterX) < 2 or int(initialMainCharacterX) > 60 or int(initialMainCharacterY) < 0 or int(initialMainCharacterY) > 38:
+                            exitWithErrorMessage('Main character initial position is out of bounds. X: ' + initialMainCharacterX + ', Y: ' + initialMainCharacterY)
+                        
+                        if arcadeMode == 1: # Voy guardando en un array cuyo indice sea la pantalla y el valor sea la posición de inicio
+                            keys[str(screenId)] = [int(initialMainCharacterX), int(initialMainCharacterY)]
                 elif object['type'] == 'music2':
                     configStr += "Const MUSIC_2_SCREEN_ID as Uinteger = " + str(screenId) + "\n"
                     configStr += "Dim music2alreadyPlayed as Ubyte = 0\n"
