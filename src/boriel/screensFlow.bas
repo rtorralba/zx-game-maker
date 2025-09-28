@@ -335,7 +335,14 @@ End Sub
 
             Do
             Loop Until skipScreenPressed()
-            VortexTracker_Stop()
+                        
+            If music2alreadyPlayed = 0 Then
+                VortexTracker_Play(MUSIC_ADDRESS)
+            Else If music2alreadyPlayed = 1 And music3alreadyPlayed = 0 Then
+                VortexTracker_Play(MUSIC_2_ADDRESS)
+            Else If music3alreadyPlayed = 1 Then
+                VortexTracker_Play(MUSIC_3_ADDRESS)
+            End If
 
             Ink INK_VALUE: Paper PAPER_VALUE: Border BORDER_VALUE
 
