@@ -311,7 +311,7 @@ End Sub
             Dim tinta As Ubyte = BACKGROUND_ATTRIBUTE bAND 7
             Dim papel As Ubyte = (BACKGROUND_ATTRIBUTE bAND 56) / 8
             Dim brillante As Ubyte = (BACKGROUND_ATTRIBUTE bAND 64) / 64
-            Ink tinta: Paper papel: Bright brillante: Flash 0
+            Ink tinta: Paper papel: Bright brillante
 
             doubleSizeTexto(0, 160, "SCREEN CLEARED!")
             ' Print current score and remaining time and subtractr second and increase score
