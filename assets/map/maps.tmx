@@ -40,7 +40,7 @@
   <property name="redefineKeysEnabled" type="bool" value="true"/>
   <property name="shooting" type="bool" value="true"/>
   <property name="shouldKillEnemies" type="bool" value="true"/>
-  <property name="timerSeconds" type="int" value="360"/>
+  <property name="timerSeconds" type="int" value="60"/>
   <property name="useBreakableTile" propertytype="breakableTilesMode" value="individual"/>
   <property name="useBreakableTileByTouch" type="bool" value="true"/>
  </properties>
