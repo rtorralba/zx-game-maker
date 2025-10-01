@@ -159,6 +159,9 @@ End Sub
         besideTile = GetTile(currentScreenKeyX - 1, currentScreenKeyY)
         attr = getAttrFromTileAndApplyToOther(KEY_TILE, besideTile)
         SetTile(KEY_TILE, attr, currentScreenKeyX, currentScreenKeyY)
+        #ifdef ARCADE_MODE_SPRITE_ID
+            showKeySprite = 1
+        #endif
     End Sub
 
     #ifdef ARCADE_MODE_RESET_ON_KILL
@@ -249,6 +252,9 @@ Sub moveToScreen(direction As Ubyte)
     End If
 
     #ifdef ARCADE_MODE
+        #ifdef ARCADE_MODE_SPRITE_ID
+            showKeySprite = 0
+        #endif
         #ifdef HISCORE_ENABLED
             #ifdef ARCADE_SHOW_INTERMEDIATE_SCREEN
                 If direction = 6 Then

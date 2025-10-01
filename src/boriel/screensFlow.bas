@@ -230,14 +230,22 @@ Sub playGame()
     #endif
     
     Do
-        #ifdef ARCADE_MODE_RESET_ON_KILL
-            If arcadeModeResetObjects Then
-                arcadeModeResetObjects = 0
-                clearKey()
-                mapDrawOnlyItems()
-                currentItems = 0
-                printLife()
-            End If
+        #ifdef ARCADE_MODE
+            #ifdef ARCADE_MODE_RESET_ON_KILL
+                If arcadeModeResetObjects Then
+                    arcadeModeResetObjects = 0
+                    clearKey()
+                    mapDrawOnlyItems()
+                    currentItems = 0
+                    printLife()
+                End If
+            #endif
+
+            #ifdef ARCADE_MODE_SPRITE_ID
+                If showKeySprite Then
+                    Draw2x2Sprite(ARCADE_MODE_SPRITE_ID, currentScreenKeyX * 2, currentScreenKeyY * 2)
+                End If
+            #endif
         #endif
 
         calculateIfSkipMovementBySpeed()

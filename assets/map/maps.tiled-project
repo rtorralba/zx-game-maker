@@ -143,6 +143,11 @@
                     "value": false
                 },
                 {
+                    "name": "arcadeModeUseSpriteId",
+                    "type": "int",
+                    "value": 0
+                },
+                {
                     "name": "arcadeShowIntermediateScreen",
                     "type": "bool",
                     "value": true

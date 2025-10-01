@@ -30,8 +30,13 @@ sub decrementLife()
                 updateTimerDisplay()
             #endif
 
-            #ifdef ARCADE_MODE_RESET_ON_KILL
-                arcadeModeResetObjects = 1
+            #ifdef ARCADE_MODE
+                #ifdef ARCADE_MODE_RESET_ON_KILL
+                    arcadeModeResetObjects = 1
+                    #ifdef ARCADE_MODE_SPRITE_ID
+                        showKeySprite = 0
+                    #endif
+                #endif
             #endif
         else
             currentLife = 0
