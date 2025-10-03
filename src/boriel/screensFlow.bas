@@ -243,7 +243,7 @@ Sub playGame()
 
             #ifdef ARCADE_MODE_SPRITE_ID
                 If showKeySprite Then
-                    Draw2x2Sprite(ARCADE_MODE_SPRITE_ID, currentScreenKeyX * 2, currentScreenKeyY * 2)
+                    Draw2x2Sprite(ARCADE_MODE_SPRITE_ID, currentScreenKeyX * 2, (currentScreenKeyY * 2) - 2)
                 End If
             #endif
         #endif
