@@ -193,3 +193,5 @@ Const BREAKABLE_BY_TOUCH_TILE As Ubyte = 59
 Dim lastFrameOnBreakableTiles As Ubyte = 0
 Dim tileToBreakByTouchX As Ubyte = 0
 Dim tileToBreakByTouchY As Ubyte = 0
+
+#Define PROTA_IDLE_SPRITE_ID 13

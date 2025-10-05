@@ -20,6 +20,7 @@ Sub showMenu()
     #endif
     
     #ifdef HISCORE_ENABLED
+        ' TODO: Customize paper, ink, flash for hiscore Ink 0: Paper 7: Bright 1
         Print AT 22, 6; "HI:"
         Print AT 22, 9; "00000"
         Print AT 22, 14 - LEN(STR$(hiScore)); hiScore
@@ -330,8 +331,14 @@ End Sub
                 Print AT 8, 8; "SCORE:          ";
                 Print AT 8, 24 - LEN(STR$(score)); score
 
-                Print AT 14, 4; "PRESS ENTER To Continue"
+                Print AT 16, 4; "PRESS ENTER To Continue"
+
+                protaX = 30
+                protaY = 22
+                protaTile = PROTA_IDLE_SPRITE_ID
+
                 Do
+                    animateProtaForIntermediateScreen()
                 Loop Until skipScreenPressed()
 
                 While timerSeconds > 0
@@ -343,7 +350,11 @@ End Sub
 
                     Print AT 8, 8; "SCORE:          ";
                     Print AT 8, 24 - LEN(STR$(score)); score
-                    Beep .02, 12
+                    Beep .01, 12
+
+                    protaTile = getNextProtaIdleSprite()
+                    Draw2x2Sprite(protaTile, protaX, protaY)
+                    RenderFrame()
                 Wend
 
                 If score > hiScore Then
@@ -352,6 +363,7 @@ End Sub
             #endif
 
             Do
+                animateProtaForIntermediateScreen()
             Loop Until skipScreenPressed()
                         
             If music2alreadyPlayed = 0 Then
@@ -365,6 +377,14 @@ End Sub
             Ink INK_VALUE: Paper PAPER_VALUE: Border BORDER_VALUE
 
             swapScreen()
+        End Sub
+
+        Sub animateProtaForIntermediateScreen()
+            If framec mod 50 = 0 Then
+                protaTile = getNextProtaIdleSprite()
+            End If
+            Draw2x2Sprite(protaTile, protaX, protaY)
+            RenderFrame()
         End Sub
     #endif
 #else

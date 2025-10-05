@@ -676,11 +676,7 @@ End Sub
             If isFalling() Then Return
             If CheckCollision(protaX, protaY, 2) Then Return
             
-            If protaTile = 13 Then
-                saveProta(protaY, protaX, 14, protaDirection)
-            Else
-                saveProta(protaY, protaX, 13, protaDirection)
-            End If
+            saveProta(protaY, protaX, getNextProtaIdleSprite(), protaDirection)
         End If
     End Sub
 #endif

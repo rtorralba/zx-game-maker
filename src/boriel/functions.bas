@@ -484,6 +484,16 @@ Sub replaceTileWithBackground(col As Ubyte, lin As Ubyte)
     SetTile(besideTile, attrSet(besideTile), col, lin)
 End Sub
 
+#ifdef IDLE_ENABLED
+    Function getNextProtaIdleSprite() As Ubyte
+        If protaTile = PROTA_IDLE_SPRITE_ID Then
+            Return PROTA_IDLE_SPRITE_ID + 1
+        Else
+            Return PROTA_IDLE_SPRITE_ID
+        End If
+    End Function
+#endif
+
 sub debugA(value as UBYTE)
     PRINT AT 0, 0; "----"
     PRINT AT 0, 0; value
