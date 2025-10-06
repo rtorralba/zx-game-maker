@@ -136,13 +136,15 @@ End Sub
         keyArray(DOWN) = LeerTecla()
         ' keyOption = Inkey$
         ' Print AT 14,20; keyOption
-        
-        Print AT 16,10;"Fire"
-        keyArray(FIRE) = LeerTecla()
-        ' keyOption = Inkey$
-        ' Print AT 16,20; keyOption
-        '
-        ' keyOption = ""
+
+        #ifdef SHOOTING_ENABLED
+            Print AT 16,10;"Fire"
+            keyArray(FIRE) = LeerTecla()
+            ' keyOption = Inkey$
+            ' Print AT 16,20; keyOption
+            '
+            ' keyOption = ""
+        #endif
         
         showMenu()
     End Sub
