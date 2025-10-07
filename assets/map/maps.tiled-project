@@ -362,6 +362,11 @@
                     "value": false
                 },
                 {
+                    "name": "spriteCollisionPixelPerfect",
+                    "type": "bool",
+                    "value": false
+                },
+                {
                     "name": "timerSeconds",
                     "type": "int",
                     "value": 0

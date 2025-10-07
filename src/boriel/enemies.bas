@@ -75,13 +75,13 @@ End Function
 Function checkProtaAndBulletCollision(enemyId As Ubyte) As Ubyte
     If invincible Then Return 0
     
-    Dim protaX1 As Ubyte = protaX + 3
-    Dim protaY1 As Ubyte = protaY + 3
+    Dim protaX1 As Ubyte = protaX + SPRITE_COLLISION_SIZE
+    Dim protaY1 As Ubyte = protaY + SPRITE_COLLISION_SIZE
     
     Dim enemyX0 As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL)
     Dim enemyY0 As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
-    Dim enemyX1 As Ubyte = enemyX0 + 3
-    Dim enemyY1 As Ubyte = enemyY0 + 3
+    Dim enemyX1 As Ubyte = enemyX0 + SPRITE_COLLISION_SIZE
+    Dim enemyY1 As Ubyte = enemyY0 + SPRITE_COLLISION_SIZE
 
     Dim damage As Ubyte = 0
     

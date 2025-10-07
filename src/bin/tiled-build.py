@@ -178,6 +178,8 @@ arcadeShowIntermediateScreen = 0
 
 arcadeModeUseSpriteId = 0
 
+spriteCollisionPixelPerfect = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -308,6 +310,8 @@ if 'properties' in data:
             arcadeShowIntermediateScreen = 1 if property['value'] else 0
         elif property['name'] == 'arcadeModeUseSpriteId':
             arcadeModeUseSpriteId = property['value']
+        elif property['name'] == 'spriteCollisionPixelPerfect':
+            spriteCollisionPixelPerfect = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -322,6 +326,11 @@ configStr += "const screenWidth as ubyte = " + str(screenWidth) + "\n"
 configStr += "const screenHeight as ubyte = " + str(screenHeight) + "\n"
 configStr += "const INITIAL_LIFE as ubyte = " + str(initialLife) + "\n"
 configStr += "const MAX_LINE as ubyte = " + str(screenHeight * 2 - 4) + "\n"
+
+if spriteCollisionPixelPerfect == 1:
+    configStr += "#DEFINE SPRITE_COLLISION_SIZE 3\n"
+else:
+    configStr += "#DEFINE SPRITE_COLLISION_SIZE 2\n"
 
 if livesMode == 1:
     configStr += "#DEFINE LIVES_MODE_ENABLED\n"
