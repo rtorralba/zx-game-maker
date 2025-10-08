@@ -172,6 +172,11 @@
                 "value": 0
             },
             {
+                "name": "currentStageEnabled",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "damageAmount",
                 "type": "int",
                 "value": 10

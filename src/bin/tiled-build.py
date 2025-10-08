@@ -180,6 +180,8 @@ arcadeModeUseSpriteId = 0
 
 spriteCollisionPixelPerfect = 0
 
+currentStageEnabled = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -312,6 +314,8 @@ if 'properties' in data:
             arcadeModeUseSpriteId = property['value']
         elif property['name'] == 'spriteCollisionPixelPerfect':
             spriteCollisionPixelPerfect = 1 if property['value'] else 0
+        elif property['name'] == 'currentStageEnabled':
+            currentStageEnabled = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -331,6 +335,9 @@ if spriteCollisionPixelPerfect == 1:
     configStr += "#DEFINE SPRITE_COLLISION_SIZE 3\n"
 else:
     configStr += "#DEFINE SPRITE_COLLISION_SIZE 2\n"
+
+if currentStageEnabled == 1:
+    configStr += "#DEFINE CURRENT_STAGE_ENABLED\n"
 
 if livesMode == 1:
     configStr += "#DEFINE LIVES_MODE_ENABLED\n"
@@ -851,6 +858,9 @@ for i in hudData['layers'][1]['objects']:
             configStr += "#DEFINE HUD_TIMER_X " + str((i['x']//8)) + "\n"
             configStr += "#DEFINE HUD_TIMER_Y " + str((i['y']//8) - 1) + "\n"
             configStr += "Dim initialTimerSeconds as ubyte = " + str(timerSeconds) + "\n"
+    elif i['name'] == "stage":
+        configStr += "#DEFINE HUD_STAGE_X " + str((i['x']//8)) + "\n"
+        configStr += "#DEFINE HUD_STAGE_Y " + str((i['y']//8) - 1) + "\n"
 
 with open(outputDir + "config.bas", "w") as text_file:
     print(configStr, file=text_file)
