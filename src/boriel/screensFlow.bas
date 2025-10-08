@@ -333,15 +333,9 @@ End Sub
                 Print AT 8, 8; "SCORE:          ";
                 Print AT 8, 24 - LEN(STR$(score)); score
 
-                Print AT 16, 4; "PRESS ENTER To Continue"
-
                 protaX = 30
                 protaY = 22
                 protaTile = PROTA_IDLE_SPRITE_ID
-
-                Do
-                    animateProtaForIntermediateScreen()
-                Loop Until skipScreenPressed()
 
                 While timerSeconds > 0
                     timerSeconds = timerSeconds - 1
@@ -358,6 +352,10 @@ End Sub
                     Draw2x2Sprite(protaTile, protaX, protaY)
                     RenderFrame()
                 Wend
+
+                Flash 1
+                Print AT 16, 4; "PRESS ENTER To Continue"
+                Flash 0
 
                 If score > hiScore Then
                     hiScore = score
