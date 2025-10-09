@@ -241,6 +241,7 @@ Sub playGame()
                     mapDrawOnlyItems()
                     currentItems = 0
                     printLife()
+                    dzx0Standard(ENEMIES_DATA_ADDRESS + enemiesInScreenOffsets(currentScreen), @decompressedEnemiesScreen)
                 End If
             #endif
 
