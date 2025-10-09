@@ -383,7 +383,11 @@ End Sub
 
             Ink INK_VALUE: Paper PAPER_VALUE: Border BORDER_VALUE
 
-            swapScreen()
+            If currentScreen <= SCREENS_COUNT Then
+                swapScreen()
+            Else
+                ending()
+            End If
         End Sub
 
         Sub animateProtaForIntermediateScreen()

@@ -548,17 +548,19 @@ Function checkTileObject(tile As Ubyte) As Ubyte
         Return 1
     Elseif tile = KEY_TILE Then
         #ifdef ARCADE_MODE
-            #ifndef ARCADE_SHOW_INTERMEDIATE_SCREEN
-                incrementScore(timerSeconds)
-            #endif
-            printLife()
-
-            If currentScreen = SCREENS_COUNT Then
-                ending()
-            Else
+            #ifdef ARCADE_SHOW_INTERMEDIATE_SCREEN
                 moveScreen = 6
                 Return 1
-            End If
+            #else
+                incrementScore(timerSeconds)
+                printLife()
+                If currentScreen = SCREENS_COUNT Then
+                    ending()
+                Else
+                    moveScreen = 6
+                    Return 1
+                End If
+            #endif
         #endif
         currentKeys = currentKeys + 1
         #ifdef BORDER_COLOR_KEY
