@@ -85,7 +85,7 @@ sub printLife()
     #endif
     #ifdef CURRENT_STAGE_ENABLED
         PRINT AT HUD_STAGE_Y, HUD_STAGE_X; "  ";
-        PRINT AT HUD_STAGE_Y, HUD_STAGE_X; currentScreen + 1; "/"; SCREENS_COUNT + 1;
+        PRINT AT HUD_STAGE_Y, HUD_STAGE_X; currentScreen + 1;
     #endif
 end sub
 

@@ -324,6 +324,12 @@ End Sub
             Dim brillante As Ubyte = (BACKGROUND_ATTRIBUTE bAND 64) / 64
             Ink tinta: Paper papel: Bright brillante
 
+            Print At 6, 8; "TIME LEFT:      ";
+            Print At 6, 24 - LEN(STR$(timerSeconds)); timerSeconds
+
+            Print AT 8, 8; "SCORE:          ";
+            Print AT 8, 24 - LEN(STR$(score)); score
+
             doubleSizeTexto(10, 160, "SCREEN CLEARED!")
             ' Print current score and remaining time and subtractr second and increase score
             #ifdef TIMER_ENABLED
