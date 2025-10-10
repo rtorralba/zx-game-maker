@@ -325,23 +325,22 @@ End Sub
             Dim brillante As Ubyte = (BACKGROUND_ATTRIBUTE bAND 64) / 64
             Ink tinta: Paper papel: Bright brillante
 
+            Dim currentLives As Ubyte = currentLife
+
             Print At 6, 8; "TIME LEFT:      ";
             Print At 6, 24 - LEN(STR$(timerSeconds)); timerSeconds
 
-            Print AT 8, 8; "SCORE:          ";
-            Print AT 8, 24 - LEN(STR$(score)); score
+            Print AT 8, 8; "LIVES LEFT:    ";
+            Print AT 8, 24 - LEN(STR$(currentLives)); currentLives
+
+            Print AT 10, 8; "SCORE:          ";
+            Print AT 10, 24 - LEN(STR$(score)); score
 
             doubleSizeTexto(10, 160, "SCREEN CLEARED!")
             ' Print current score and remaining time and subtractr second and increase score
             #ifdef TIMER_ENABLED
-                Print At 6, 8; "TIME LEFT:      ";
-                Print At 6, 24 - LEN(STR$(timerSeconds)); timerSeconds
-
-                Print AT 8, 8; "SCORE:          ";
-                Print AT 8, 24 - LEN(STR$(score)); score
-
                 protaX = 30
-                protaY = 22
+                protaY = 26
                 protaTile = PROTA_IDLE_SPRITE_ID
 
                 While timerSeconds > 0
@@ -351,8 +350,8 @@ End Sub
                     Print At 6, 8; "TIME LEFT:      ";
                     Print At 6, 24 - LEN(STR$(timerSeconds)); timerSeconds
 
-                    Print AT 8, 8; "SCORE:          ";
-                    Print AT 8, 24 - LEN(STR$(score)); score
+                    Print AT 10, 8; "SCORE:          ";
+                    Print AT 10, 24 - LEN(STR$(score)); score
                     Beep .01, 12
 
                     protaTile = getNextProtaIdleSprite()
@@ -360,8 +359,28 @@ End Sub
                     RenderFrame()
                 Wend
 
+                While currentLives > 0
+                    currentLives = currentLives - 1
+                    incrementScore(50)
+
+                    Print AT 8, 8; "LIVES LEFT:    ";
+                    Print AT 8, 24 - LEN(STR$(currentLives)); currentLives
+
+                    Print AT 10, 8; "SCORE:          ";
+                    Print AT 10, 24 - LEN(STR$(score)); score
+                    Beep .01, 12
+
+                    protaTile = getNextProtaIdleSprite()
+                    Draw2x2Sprite(protaTile, protaX, protaY)
+                    RenderFrame()
+                Wend
+
+                Ink INK_VALUE: Paper PAPER_VALUE: Border BORDER_VALUE
+                printLife()
+                Ink tinta: Paper papel: Bright brillante
+
                 Flash 1
-                Print AT 16, 4; "PRESS ENTER To Continue"
+                Print AT 18, 4; "PRESS ENTER To Continue"
                 Flash 0
 
                 If score > hiScore Then
