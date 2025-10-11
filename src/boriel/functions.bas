@@ -56,10 +56,15 @@ sub decrementLife()
 end sub
 
 sub printLife()
-	PRINT AT HUD_LIFE_Y, HUD_LIFE_X; "   ";
-	PRINT AT HUD_LIFE_Y, HUD_LIFE_X; currentLife;
+    #ifdef LIVES_MODE_ENABLED
+        PRINT AT HUD_LIFE_Y, HUD_LIFE_X; "  ";
+    #else
+        PRINT AT HUD_LIFE_Y, HUD_LIFE_X; "   ";
+    #endif
+    PRINT AT HUD_LIFE_Y, HUD_LIFE_X; currentLife;
+    
     #ifdef JETPACK_FUEL
-        PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; "   ";  
+        PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; "  ";  
 	    PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; jumpEnergy;
     #endif
     #ifdef AMMO_ENABLED
