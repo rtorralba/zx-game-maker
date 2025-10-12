@@ -241,7 +241,7 @@ Sub playGame()
                     mapDrawOnlyItems()
                     currentItems = 0
                     printLife()
-                    dzx0Standard(ENEMIES_DATA_ADDRESS + enemiesInScreenOffsets(currentScreen), @decompressedEnemiesScreen)
+                    dzx0Standard(ENEMIES_DATA_ADDRESS + enemiesInScreenOffsets(currentScreen), arrayBasePtr(decompressedEnemiesScreen))
                 End If
             #endif
 
@@ -540,6 +540,7 @@ Sub resetValues()
     currentLife = INITIAL_LIFE
     currentKeys = 2 Mod 2
     currentKeys = 0
+    moveScreen = 0
 
     #ifdef USE_BREAKABLE_TILE_INDIVIDUAL
         For i = 0 To BREAKABLE_TILES_COUNT
