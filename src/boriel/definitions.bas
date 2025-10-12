@@ -172,3 +172,5 @@ Dim skipMove1 As Ubyte = 0
 Dim skipMove2 As Ubyte = 0
 
 Dim mainLoopCounter As Ubyte = 0
+
+#define arrayBasePtr(x) (PEEK(Uinteger, @x + 2))
