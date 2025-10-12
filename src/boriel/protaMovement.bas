@@ -188,7 +188,7 @@ End Function
                 End If
                 jumpCurrentKey = jumpCurrentKey + 1
                 jumpEnergy = jumpEnergy - 1
-                PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; "   ";  
+                PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; "  ";  
 	            PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; jumpEnergy;
                 Return
             End If
