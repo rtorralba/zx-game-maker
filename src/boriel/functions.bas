@@ -87,9 +87,12 @@ end sub
 
 Sub isDamageTileByColLin(col as Ubyte, lin as Ubyte)
     Dim tile as Ubyte = GetTile(col, lin)
+    DIM basePtr as UInteger
+
+    basePtr = arrayBasePtr(damageTiles)
 
     For i = 0 to DAMAGE_TILES_COUNT
-        if peek(@damageTiles + i) = tile then decrementLife()
+        if peek(basePtr + i) = tile then decrementLife()
     Next i
 End Sub
 
@@ -143,14 +146,16 @@ end function
 #ifdef ARCADE_MODE
     sub countItemsOnTheScreen()
         dim index, y, x as integer
+        Dim basePtr as UInteger
 
         x = 0
         y = 0
+        basePtr = arrayBasePtr(decompressedMap)
 
         itemsToFind = 0
         currentItems = 0
         for index=0 to SCREEN_LENGTH
-            if peek(@decompressedMap + index) - 1 = ITEM_TILE then
+            if peek(basePtr + index) - 1 = ITEM_TILE then
                 itemsToFind = itemsToFind + 1
             end if
 
@@ -249,14 +254,15 @@ Function CheckCollision(x as Ubyte, y as Ubyte, type as Ubyte) as Ubyte
 End Function
 
 sub removeTilesFromScreen(tile as ubyte)
-	dim index as uinteger
+	dim index, basePtr as uinteger
     dim y, x as ubyte
 
 	x = 0
 	y = 0
+    basePtr = arrayBasePtr(decompressedMap)
 	
 	for index=0 to SCREEN_LENGTH
-		if peek(@decompressedMap + index) - 1 = tile then
+		if peek(basePtr + index) - 1 = tile then
 			SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
             #ifndef ARCADE_MODE
                 If tile = DOOR_TILE Then
