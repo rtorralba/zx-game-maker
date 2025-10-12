@@ -45,6 +45,8 @@ End Sub
 
 Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
     If tile < 1 Then Return
+
+    Dim basePtr As Uinteger
     
     #ifdef SHOULD_KILL_ENEMIES_ENABLED
         If tile = ENEMY_DOOR_TILE Then
@@ -64,8 +66,9 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
 
     If tile > 73 Then
         If tile < 187 Then
+            basePtr = arrayBasePtr(animatedTiles)
             For i = 0 To ANIMATED_TILES_COUNT
-                If tile = Peek(@animatedTiles + i) Then
+                If tile = Peek(basePtr + i) Then
                     animatedTilesInScreen(currentAnimatedTileKey, 0) = tile
                     animatedTilesInScreen(currentAnimatedTileKey, 1) = x
                     animatedTilesInScreen(currentAnimatedTileKey, 2) = y
@@ -167,15 +170,16 @@ End Sub
 
     #ifdef ARCADE_MODE_RESET_ON_KILL
         Sub mapDrawOnlyItems()
-            Dim index As Uinteger
+            Dim index, basePtr As Uinteger
             Dim y, x As Ubyte
 
             x = 0
             y = 0
             
+            basePtr = arrayBasePtr(decompressedMap)
             For index=0 To SCREEN_LENGTH
                 Dim tile As Ubyte
-                tile = Peek(@decompressedMap + index) - 1
+                tile = Peek(basePtr + index) - 1
 
                 If tile = ITEM_TILE Or tile = BREAKABLE_BY_TOUCH_TILE Then
                     Dim attr As Ubyte
