@@ -2,7 +2,7 @@ Pillow
 matplotlib
 bin2tap
 zxp2gus
-zxbasic
+zxbasic==1.18.2
 skoolkit
 zxtaputils
 watchdog
