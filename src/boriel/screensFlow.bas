@@ -602,8 +602,8 @@ Sub resetValues()
 End Sub
 
 Sub swapScreen()
-    dzx0Standard(MAPS_DATA_ADDRESS + screensOffsets(currentScreen), @decompressedMap)
-    dzx0Standard(ENEMIES_DATA_ADDRESS + enemiesInScreenOffsets(currentScreen), @decompressedEnemiesScreen)
+    dzx0Standard(MAPS_DATA_ADDRESS + screensOffsets(currentScreen), arrayBasePtr(decompressedMap))
+    dzx0Standard(ENEMIES_DATA_ADDRESS + enemiesInScreenOffsets(currentScreen), arrayBasePtr(decompressedEnemiesScreen))
     bulletPositionX = 0
     #ifdef ARCADE_MODE
         countItemsOnTheScreen()

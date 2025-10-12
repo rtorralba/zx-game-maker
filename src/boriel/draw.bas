@@ -1,7 +1,7 @@
 Dim currentAnimatedTileKey As Ubyte = 0
 
 Sub mapDraw()
-    Dim index As Uinteger
+    Dim index, base As Uinteger
     Dim y, x As Ubyte
 
     currentAnimatedTileKey = 0
@@ -9,9 +9,10 @@ Sub mapDraw()
     
     x = 0
     y = 0
-    
+    base = arrayBasePtr(decompressedMap)
+
     For index=0 To SCREEN_LENGTH
-        drawTile(Peek(@decompressedMap + index) - 1, x, y)
+        drawTile(Peek(base + index) - 1, x, y)
         
         x = x + 1
         If x = screenWidth Then

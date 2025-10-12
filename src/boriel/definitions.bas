@@ -195,3 +195,4 @@ Dim tileToBreakByTouchX As Ubyte = 0
 Dim tileToBreakByTouchY As Ubyte = 0
 
 #Define PROTA_IDLE_SPRITE_ID 13
+#define arrayBasePtr(x) (PEEK(Uinteger, @x + 2))
