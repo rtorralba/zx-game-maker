@@ -376,7 +376,7 @@ End Sub
                 Wend
 
                 Ink INK_VALUE: Paper PAPER_VALUE: Border BORDER_VALUE
-                printLife()
+                printScore()
                 Ink tinta: Paper papel: Bright brillante
 
                 Flash 1

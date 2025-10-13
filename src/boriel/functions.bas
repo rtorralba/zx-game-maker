@@ -77,10 +77,7 @@ sub printLife()
         #endif
     #endif
     #ifdef HISCORE_ENABLED
-        PRINT AT HUD_HISCORE_Y, HUD_HISCORE_X; "00000"
-        PRINT AT HUD_HISCORE_Y, HUD_HISCORE_X + 5 - LEN(STR$(hiScore)); hiScore
-        PRINT AT HUD_HISCORE_Y_2, HUD_HISCORE_X; "00000"
-	    PRINT AT HUD_HISCORE_Y_2, HUD_HISCORE_X + 5 - LEN(STR$(score)); score
+        printScore()
     #endif
     #ifndef ARCADE_MODE
         #ifdef ITEMS_ENABLED
@@ -93,6 +90,15 @@ sub printLife()
         PRINT AT HUD_STAGE_Y, HUD_STAGE_X; currentScreen + 1;
     #endif
 end sub
+
+#ifdef HISCORE_ENABLED
+    Sub printScore()
+        PRINT AT HUD_HISCORE_Y, HUD_HISCORE_X; "00000"
+        PRINT AT HUD_HISCORE_Y, HUD_HISCORE_X + 5 - LEN(STR$(hiScore)); hiScore
+        PRINT AT HUD_HISCORE_Y_2, HUD_HISCORE_X; "00000"
+        PRINT AT HUD_HISCORE_Y_2, HUD_HISCORE_X + 5 - LEN(STR$(score)); score
+    End Sub
+#endif
 
 #ifdef TIMER_ENABLED
     Sub updateTimerDisplay()
