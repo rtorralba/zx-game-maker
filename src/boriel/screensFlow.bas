@@ -20,10 +20,10 @@ Sub showMenu()
     #endif
     
     #ifdef HISCORE_ENABLED
-        ' TODO: Customize paper, ink, flash for hiscore Ink 0: Paper 7: Bright 1
-        Print AT 22, 6; "HI:"
-        Print AT 22, 9; "00000"
-        Print AT 22, 14 - LEN(STR$(hiScore)); hiScore
+        Ink getFirstCharInk(): Paper getFirstCharPaper(): Bright getFirstCharBright()
+        Print AT 23, 6; "HI:"
+        Print AT 23, 9; "00000"
+        Print AT 23, 14 - LEN(STR$(hiScore)); hiScore
     #endif
     
     Do
@@ -274,11 +274,13 @@ Sub playGame()
         protaMovement()
         checkDamageByTile()
         moveEnemies()
-        moveBullet()
+        #ifdef SHOOTING_ENABLED
+            moveBullet()
+        #endif
         drawSprites()
 
         RenderFrame()
-        
+
         makeAnimations()
         
         If moveScreen <> 0 Then
@@ -528,7 +530,9 @@ Sub gameOver()
 End Sub
 
 Sub resetValues()
-    bulletPositionX = 0
+    #ifdef SHOOTING_ENABLED
+        bulletPositionX = 0
+    #endif
     #ifdef SIDE_VIEW
         jumpCurrentKey = jumpStopValue
     #endif
@@ -605,7 +609,9 @@ End Sub
 Sub swapScreen()
     dzx0Standard(MAPS_DATA_ADDRESS + screensOffsets(currentScreen), arrayBasePtr(decompressedMap))
     dzx0Standard(ENEMIES_DATA_ADDRESS + enemiesInScreenOffsets(currentScreen), arrayBasePtr(decompressedEnemiesScreen))
-    bulletPositionX = 0
+    #ifdef SHOOTING_ENABLED
+        bulletPositionX = 0
+    #endif
     #ifdef ARCADE_MODE
         countItemsOnTheScreen()
         saveProta(mainCharactersArray(currentScreen, 1), mainCharactersArray(currentScreen, 0), 1, 1)

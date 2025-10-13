@@ -53,24 +53,26 @@
     #endif
 #endif
 
-Function checkBulletProtaCollision(enemyX0 As Ubyte, enemyY0 As Ubyte, enemyX1 As Ubyte, enemyY1 As Ubyte, enemyId As Ubyte) As Ubyte
-    If bulletPositionX = 0 Then Return 0
+#ifdef SHOOTING_ENABLED
+    Function checkBulletProtaCollision(enemyX0 As Ubyte, enemyY0 As Ubyte, enemyX1 As Ubyte, enemyY1 As Ubyte, enemyId As Ubyte) As Ubyte
+        If bulletPositionX = 0 Then Return 0
 
-    Dim bulletX0 As Ubyte = bulletPositionX
-    Dim bulletX1 As Ubyte = bulletPositionX + 1
-    Dim bulletY0 As Ubyte = bulletPositionY
-    Dim bulletY1 As Ubyte = bulletPositionY + 1
-    
-    If bulletX1 < enemyX0 Then Return 0
-    If bulletX0 > enemyX1 Then Return 0
-    If bulletY1 < enemyY0 Then Return 0
-    If bulletY0 > enemyY1 Then Return 0
-    
-    damageEnemy(enemyId)
-    resetBullet()
+        Dim bulletX0 As Ubyte = bulletPositionX
+        Dim bulletX1 As Ubyte = bulletPositionX + 1
+        Dim bulletY0 As Ubyte = bulletPositionY
+        Dim bulletY1 As Ubyte = bulletPositionY + 1
+        
+        If bulletX1 < enemyX0 Then Return 0
+        If bulletX0 > enemyX1 Then Return 0
+        If bulletY1 < enemyY0 Then Return 0
+        If bulletY0 > enemyY1 Then Return 0
+        
+        damageEnemy(enemyId)
+        resetBullet()
 
-    Return 1
-End Function
+        Return 1
+    End Function
+#endif
 
 Function checkProtaAndBulletCollision(enemyId As Ubyte) As Ubyte
     If invincible Then Return 0

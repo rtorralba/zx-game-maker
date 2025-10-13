@@ -240,130 +240,134 @@ End Function
             landed = 0
         End If
     End Sub
-    
-    Sub shoot()
-        If Not noKeyPressedForShoot Then Return
-        noKeyPressedForShoot = 0
-        
-        If bulletPositionX <> 0 Then Return
-        
-        #ifdef AMMO_ENABLED
-            If currentAmmo = 0 Then Return
-            currentAmmo = currentAmmo - 1
-            printLife()
-        #endif
-        
-        currentBulletSpriteId = BULLET_SPRITE_RIGHT_ID
-        If protaDirection Then
-            #ifdef IDLE_ENABLED
-                saveProta(protaY, protaX, 1, 1)
+
+    #ifdef SHOOTING_ENABLED
+        Sub shoot()
+            If Not noKeyPressedForShoot Then Return
+            noKeyPressedForShoot = 0
+            
+            If bulletPositionX <> 0 Then Return
+            
+            #ifdef AMMO_ENABLED
+                If currentAmmo = 0 Then Return
+                currentAmmo = currentAmmo - 1
+                printLife()
             #endif
             
             currentBulletSpriteId = BULLET_SPRITE_RIGHT_ID
-            bulletPositionX = protaX + 2
-            If BULLET_DISTANCE <> 0 Then
-                If protaX + BULLET_DISTANCE > maxXScreenRight Then
+            If protaDirection Then
+                #ifdef IDLE_ENABLED
+                    saveProta(protaY, protaX, 1, 1)
+                #endif
+                
+                currentBulletSpriteId = BULLET_SPRITE_RIGHT_ID
+                bulletPositionX = protaX + 2
+                If BULLET_DISTANCE <> 0 Then
+                    If protaX + BULLET_DISTANCE > maxXScreenRight Then
+                        bulletEndPositionX = maxXScreenRight
+                    Else
+                        bulletEndPositionX = protaX + BULLET_DISTANCE + 1
+                    End If
+                Else
                     bulletEndPositionX = maxXScreenRight
-                Else
-                    bulletEndPositionX = protaX + BULLET_DISTANCE + 1
                 End If
-            Else
-                bulletEndPositionX = maxXScreenRight
-            End If
-        Elseif protaDirection = 0
-            #ifdef IDLE_ENABLED
-                saveProta(protaY, protaX, 5, 0)
-            #endif
-            currentBulletSpriteId = BULLET_SPRITE_LEFT_ID
-            bulletPositionX = protaX
-            If BULLET_DISTANCE <> 0 Then
-                If BULLET_DISTANCE > protaX Then
+            Elseif protaDirection = 0
+                #ifdef IDLE_ENABLED
+                    saveProta(protaY, protaX, 5, 0)
+                #endif
+                currentBulletSpriteId = BULLET_SPRITE_LEFT_ID
+                bulletPositionX = protaX
+                If BULLET_DISTANCE <> 0 Then
+                    If BULLET_DISTANCE > protaX Then
+                        bulletEndPositionX = maxXScreenLeft
+                    Else
+                        bulletEndPositionX = protaX - BULLET_DISTANCE + 1
+                    End If
+                Else
                     bulletEndPositionX = maxXScreenLeft
-                Else
-                    bulletEndPositionX = protaX - BULLET_DISTANCE + 1
                 End If
-            Else
-                bulletEndPositionX = maxXScreenLeft
             End If
-        End If
-        
-        bulletPositionY = protaY + 1
-        bulletDirection = protaDirection
-        BeepFX_Play(2)
-    End Sub
+            
+            bulletPositionY = protaY + 1
+            bulletDirection = protaDirection
+            BeepFX_Play(2)
+        End Sub
+    #endif
 #endif
 
 #ifdef OVERHEAD_VIEW
-    Sub shoot()
-        If Not noKeyPressedForShoot Then Return
-        
-        noKeyPressedForShoot = 0
-        
-        #ifdef AMMO_ENABLED
-            If currentAmmo = 0 Then Return
-            currentAmmo = currentAmmo - 1
-            printLife()
-        #endif
-        
-        If bulletPositionX <> 0 Then Return
-        
-        If protaDirection = 1 Then
-            currentBulletSpriteId = BULLET_SPRITE_RIGHT_ID
-            bulletPositionX = protaX + 2
-            bulletPositionY = protaY + 1
-            If BULLET_DISTANCE <> 0 Then
-                If protaX + BULLET_DISTANCE > maxXScreenRight Then
+    #ifdef SHOOTING_ENABLED
+        Sub shoot()
+            If Not noKeyPressedForShoot Then Return
+            
+            noKeyPressedForShoot = 0
+            
+            #ifdef AMMO_ENABLED
+                If currentAmmo = 0 Then Return
+                currentAmmo = currentAmmo - 1
+                printLife()
+            #endif
+            
+            If bulletPositionX <> 0 Then Return
+            
+            If protaDirection = 1 Then
+                currentBulletSpriteId = BULLET_SPRITE_RIGHT_ID
+                bulletPositionX = protaX + 2
+                bulletPositionY = protaY + 1
+                If BULLET_DISTANCE <> 0 Then
+                    If protaX + BULLET_DISTANCE > maxXScreenRight Then
+                        bulletEndPositionX = maxXScreenRight
+                    Else
+                        bulletEndPositionX = protaX + BULLET_DISTANCE + 1
+                    End If
+                Else
                     bulletEndPositionX = maxXScreenRight
-                Else
-                    bulletEndPositionX = protaX + BULLET_DISTANCE + 1
                 End If
-            Else
-                bulletEndPositionX = maxXScreenRight
-            End If
-        Elseif protaDirection = 0
-            currentBulletSpriteId = BULLET_SPRITE_LEFT_ID
-            bulletPositionX = protaX
-            bulletPositionY = protaY + 1
-            If BULLET_DISTANCE <> 0 Then
-                If BULLET_DISTANCE > protaX Then
+            Elseif protaDirection = 0
+                currentBulletSpriteId = BULLET_SPRITE_LEFT_ID
+                bulletPositionX = protaX
+                bulletPositionY = protaY + 1
+                If BULLET_DISTANCE <> 0 Then
+                    If BULLET_DISTANCE > protaX Then
+                        bulletEndPositionX = maxXScreenLeft
+                    Else
+                        bulletEndPositionX = protaX - BULLET_DISTANCE + 1
+                    End If
+                Else
                     bulletEndPositionX = maxXScreenLeft
-                Else
-                    bulletEndPositionX = protaX - BULLET_DISTANCE + 1
                 End If
-            Else
-                bulletEndPositionX = maxXScreenLeft
-            End If
-        Elseif protaDirection = 8
-            currentBulletSpriteId = BULLET_SPRITE_UP_ID
-            bulletPositionX = protaX + 1
-            bulletPositionY = protaY + 1
-            If BULLET_DISTANCE <> 0 Then
-                If BULLET_DISTANCE > protaY Then
+            Elseif protaDirection = 8
+                currentBulletSpriteId = BULLET_SPRITE_UP_ID
+                bulletPositionX = protaX + 1
+                bulletPositionY = protaY + 1
+                If BULLET_DISTANCE <> 0 Then
+                    If BULLET_DISTANCE > protaY Then
+                        bulletEndPositionY = maxYScreenTop
+                    Else
+                        bulletEndPositionY = protaY - BULLET_DISTANCE + 1
+                    End If
+                Else
                     bulletEndPositionY = maxYScreenTop
-                Else
-                    bulletEndPositionY = protaY - BULLET_DISTANCE + 1
                 End If
             Else
-                bulletEndPositionY = maxYScreenTop
-            End If
-        Else
-            currentBulletSpriteId = BULLET_SPRITE_DOWN_ID
-            bulletPositionX = protaX + 1
-            bulletPositionY = protaY + 2
-            If BULLET_DISTANCE <> 0 Then
-                If protaY + BULLET_DISTANCE > maxYScreenBottom Then
+                currentBulletSpriteId = BULLET_SPRITE_DOWN_ID
+                bulletPositionX = protaX + 1
+                bulletPositionY = protaY + 2
+                If BULLET_DISTANCE <> 0 Then
+                    If protaY + BULLET_DISTANCE > maxYScreenBottom Then
+                        bulletEndPositionY = maxYScreenBottom
+                    Else
+                        bulletEndPositionY = protaY + BULLET_DISTANCE + 1
+                    End If
+                Else
                     bulletEndPositionY = maxYScreenBottom
-                Else
-                    bulletEndPositionY = protaY + BULLET_DISTANCE + 1
                 End If
-            Else
-                bulletEndPositionY = maxYScreenBottom
             End If
-        End If
-        
-        bulletDirection = protaDirection
-        BeepFX_Play(2)
-    End Sub
+            
+            bulletDirection = protaDirection
+            BeepFX_Play(2)
+        End Sub
+    #endif
 #endif
 
 Sub leftKey()

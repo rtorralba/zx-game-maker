@@ -514,6 +514,21 @@ End Sub
     End Function
 #endif
 
+Function getFirstCharInk() As Ubyte
+    Dim attr As Ubyte = Peek(22528)  ' Primer carácter (0,0)
+    Return attr bAnd 7               ' Bits 0-2: INK
+End Function
+
+Function getFirstCharPaper() As Ubyte
+    Dim attr As Ubyte = Peek(22528)  ' Primer carácter (0,0)
+    Return (attr bAnd 56) >> 3       ' Bits 3-5: PAPER (desplazar 3 bits)
+End Function
+
+Function getFirstCharBright() As Ubyte
+    Dim attr As Ubyte = Peek(22528)  ' Primer carácter (0,0)
+    Return (attr bAnd 64) >> 6       ' Bit 6: BRIGHT (desplazar 6 bits)
+End Function
+
 sub debugA(value as UBYTE)
     PRINT AT 0, 0; "----"
     PRINT AT 0, 0; value
