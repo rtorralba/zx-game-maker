@@ -181,12 +181,16 @@ End Sub
                 Dim tile As Ubyte
                 tile = Peek(basePtr + index) - 1
 
-                If tile = ITEM_TILE Or tile = BREAKABLE_BY_TOUCH_TILE Then
+                If tile = ITEM_TILE Then
                     Dim attr As Ubyte
                     Dim besideTile As Ubyte
                     besideTile = GetTile(x - 1, y)
                     attr = getAttrFromTileAndApplyToOther(tile, besideTile)
                     SetTileChecked(tile, attr, x, y)
+                End If
+
+                If tile = BREAKABLE_BY_TOUCH_TILE Then
+                    SetTileChecked(tile, attrSet(tile), x, y)
                 End If
                 
                 x = x + 1
