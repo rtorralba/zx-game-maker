@@ -117,33 +117,23 @@ End Sub
             #endif
         #endif
         
-        Print AT 8,10;"<"
+        doubleSizeTexto(96, 120, "KEYS")
+        
+        Print AT 13,8;"LEFT"
         keyArray(LEFT) = LeerTecla()
-        ' keyOption = Inkey$
-        ' Print AT 8,20; keyOption
         
-        Print AT 10,10;">"
+        Print AT 15,8;"RIGHT"
         keyArray(RIGHT) = LeerTecla()
-        ' keyOption = Inkey$
-        ' Print AT 10,20; keyOption
         
-        Print AT 12,10;"^"
+        Print AT 17,8;"UP"
         keyArray(UP) = LeerTecla()
-        ' keyOption = Inkey$
-        ' Print AT 12,20; keyOption
         
-        Print AT 14,10;"v"
+        Print AT 19,8;"DOWN"
         keyArray(DOWN) = LeerTecla()
-        ' keyOption = Inkey$
-        ' Print AT 14,20; keyOption
 
         #ifdef SHOOTING_ENABLED
-            Print AT 16,10;"Fire"
+            Print AT 21,8;"FIRE"
             keyArray(FIRE) = LeerTecla()
-            ' keyOption = Inkey$
-            ' Print AT 16,20; keyOption
-            '
-            ' keyOption = ""
         #endif
         
         showMenu()
