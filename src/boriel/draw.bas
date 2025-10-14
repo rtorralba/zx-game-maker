@@ -171,19 +171,16 @@ End Sub
     #ifdef ARCADE_MODE_RESET_ON_KILL
         Sub mapDrawOnlyItems()
             Dim index, basePtr As Uinteger
-            Dim y, x As Ubyte
+            Dim y, x, tile, attr, besideTile As Ubyte
 
             x = 0
             y = 0
             
             basePtr = arrayBasePtr(decompressedMap)
             For index=0 To SCREEN_LENGTH
-                Dim tile As Ubyte
                 tile = Peek(basePtr + index) - 1
 
                 If tile = ITEM_TILE Then
-                    Dim attr As Ubyte
-                    Dim besideTile As Ubyte
                     besideTile = GetTile(x - 1, y)
                     attr = getAttrFromTileAndApplyToOther(tile, besideTile)
                     SetTileChecked(tile, attr, x, y)
