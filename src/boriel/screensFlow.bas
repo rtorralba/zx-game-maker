@@ -117,7 +117,7 @@ End Sub
             #endif
         #endif
         
-        doubleSizeTexto(96, 120, "KEYS")
+        Print AT 11,8;"KEYS"
         
         Print AT 13,8;"LEFT"
         keyArray(LEFT) = LeerTecla()
