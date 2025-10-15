@@ -85,7 +85,7 @@ Dim protaTile As Ubyte
     dim protaYRespawn as ubyte
 #endif
 
-Dim animatedFrame As Ubyte = 0
+Dim animatedFrame As Ubyte = 1
 
 Dim inMenu As Ubyte = 1
 

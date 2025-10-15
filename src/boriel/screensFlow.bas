@@ -208,10 +208,6 @@ Sub playGame()
     resetValues()
     swapScreen()
     
-    Let lastFrameProta = framec
-    Let lastFrameEnemies = framec
-    Let lastFrameTiles = framec
-    
     #ifdef NEW_BEEPER_PLAYER
         Let lastFrameBeep = framec
     #endif
@@ -451,14 +447,14 @@ Sub makeAnimations()
     
     If framec - lastFrameEnemies >= ANIMATE_PERIOD_ENEMY Then
         animateEnemies()
+        #ifdef IDLE_ENABLED
+            animateIdle()
+        #endif
         Let lastFrameEnemies = framec
     End If
     
     If framec - lastFrameTiles >= ANIMATE_PERIOD_TILE Then
         animateAnimatedTiles()
-        #ifdef IDLE_ENABLED
-            animateIdle()
-        #endif
         Let lastFrameTiles = framec
     End If
 End sub
