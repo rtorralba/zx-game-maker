@@ -273,11 +273,11 @@ Sub moveToScreen(direction As Ubyte)
         #ifdef ARCADE_MODE_SPRITE_ID
             showKeySprite = 0
         #endif
-        #ifdef MUSIC_ARCADE_GOAL_ACHIEVED_ENABLED
+        #ifdef MUSIC_STAGE_CLEAR_ENABLED
             #ifdef HURRY_UP_SECONDS
                 vortexTracker2x = 0
             #endif
-            VortexTracker_Play(MUSIC_ARCADE_GOAL_ACHIEVED_ADDRESS)
+            VortexTracker_Play(MUSIC_STAGE_CLEAR_ADDRESS)
             ' wait 4 seconds
             Dim startFrame As Ubyte = framec
             While framec - startFrame < 180: Wend

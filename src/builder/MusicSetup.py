@@ -59,11 +59,11 @@ class MusicSetup:
 
             os.rename("output/gameover-001.tap", "output/music-gameover.tap")
         
-        musicFile = Path("../assets/music/arcade-goal-achieved.tap")
+        musicFile = Path("../assets/music/stage-clear.tap")
         if musicFile.is_file():
             self.__tapsplit(musicFile)
 
-            os.rename("output/arcade-goal-achieved-001.tap", "output/music-arcade-goal-achieved.tap")
+            os.rename("output/stage-clear-001.tap", "output/music-stage-clear.tap")
         
         musicFile = Path("../assets/music/intro.tap")
         if musicFile.is_file():

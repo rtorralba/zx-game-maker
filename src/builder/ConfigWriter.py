@@ -41,8 +41,8 @@ class ConfigWriter:
                 if musicExists("gameover"):
                     self.__write("#DEFINE MUSIC_GAMEOVER_ENABLED\n")
                 
-                if musicExists("arcade-goal-achieved"):
-                    self.__write("#DEFINE MUSIC_ARCADE_GOAL_ACHIEVED_ENABLED\n")
+                if musicExists("stage-clear"):
+                    self.__write("#DEFINE MUSIC_STAGE_CLEAR_ENABLED\n")
                 
                 if musicExists("intro"):
                     self.__write("#DEFINE MUSIC_INTRO_ENABLED\n")
@@ -62,8 +62,8 @@ class ConfigWriter:
                     currentAddress = self.__writeDeclarationAndIncrement(Sizes.MUSIC_ENDING_STRING(), currentAddress)
                 if musicExists("gameover"):
                     currentAddress = self.__writeDeclarationAndIncrement(Sizes.MUSIC_GAMEOVER_STRING(), currentAddress)
-                if musicExists("arcade-goal-achieved"):
-                    currentAddress = self.__writeDeclarationAndIncrement(Sizes.MUSIC_ARCADE_GOAL_ACHIEVED_STRING(), currentAddress)
+                if musicExists("stage-clear"):
+                    currentAddress = self.__writeDeclarationAndIncrement(Sizes.MUSIC_STAGE_CLEAR_STRING(), currentAddress)
                 if musicExists("intro"):
                     currentAddress = self.__writeDeclarationAndIncrement(Sizes.MUSIC_INTRO_STRING(), currentAddress)
 

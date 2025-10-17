@@ -57,7 +57,7 @@ def tapsBuild(outputFile):
             str(OUTPUT_FOLDER / "music3.tap"),
             str(OUTPUT_FOLDER / "music-ending.tap"),
             str(OUTPUT_FOLDER / "music-gameover.tap"),
-            str(OUTPUT_FOLDER / "music-arcade-goal-achieved.tap"),
+            str(OUTPUT_FOLDER / "music-stage-clear.tap"),
             str(OUTPUT_FOLDER / "music-intro.tap"),
             str(OUTPUT_FOLDER / "title.tap"),
             str(OUTPUT_FOLDER / "ending.tap"),
@@ -72,7 +72,7 @@ def tapsBuild(outputFile):
             input_files.remove(str(OUTPUT_FOLDER / "music3.tap"))
             input_files.remove(str(OUTPUT_FOLDER / "music-ending.tap"))
             input_files.remove(str(OUTPUT_FOLDER / "music-gameover.tap"))
-            input_files.remove(str(OUTPUT_FOLDER / "music-arcade-goal-achieved.tap"))
+            input_files.remove(str(OUTPUT_FOLDER / "music-stage-clear.tap"))
             input_files.remove(str(OUTPUT_FOLDER / "music-intro.tap"))
         else:
             if not musicExists("title"):
@@ -90,8 +90,8 @@ def tapsBuild(outputFile):
             if not musicExists("gameover"):
                 input_files.remove(str(OUTPUT_FOLDER / "music-gameover.tap"))
             
-            if not musicExists("arcade-goal-achieved"):
-                input_files.remove(str(OUTPUT_FOLDER / "music-arcade-goal-achieved.tap"))
+            if not musicExists("stage-clear"):
+                input_files.remove(str(OUTPUT_FOLDER / "music-stage-clear.tap"))
             
             if not musicExists("intro"):
                 input_files.remove(str(OUTPUT_FOLDER / "music-intro.tap"))
