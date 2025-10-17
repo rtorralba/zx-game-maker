@@ -114,6 +114,8 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
         Return
     End If
     
+    Dim attr, besideTile As Ubyte
+
     If tile < 187 Then
         If tile = KEY_DOOR_TILE Then
             If not checkScreenObjectAlreadyTaken(tile, x, y) Then
@@ -121,13 +123,23 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
             End If
             Return
         Else
-            SetTile(tile, attrSet(tile), x, y)
+            #ifdef PLATFORM_MIMIC_ENABLED
+                If tile > 63 And tile < 70 Then
+                    Dim index As Uinteger
+                    index = ((y + 1) * screenWidth) + x
+                    besideTile = decompressedMap(index) - 1
+                    attr = getAttrFromTileAndApplyToOther(tile, besideTile)
+                    SetTile(tile, attr, x, y)
+                Else
+                    SetTile(tile, attrSet(tile), x, y)
+                End If
+            #else
+                SetTile(tile, attrSet(tile), x, y)
+            #endif
             Return
         End If
     End If
 
-    Dim attr As Ubyte
-    Dim besideTile As Ubyte
     besideTile = GetTile(x, y - 1)
     attr = getAttrFromTileAndApplyToOther(tile, besideTile)
 

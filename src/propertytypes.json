@@ -351,6 +351,11 @@
                 "value": ""
             },
             {
+                "name": "platformMimicEnabled",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "redefineKeysEnabled",
                 "type": "bool",
                 "value": false

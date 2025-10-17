@@ -186,6 +186,8 @@ messagesFlashEnabled = 1
 
 arcadeHurryUpSeconds = 0
 
+platformMimicEnabled = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -324,6 +326,8 @@ if 'properties' in data:
             messagesFlashEnabled = 1 if property['value'] else 0
         elif property['name'] == 'arcadeHurryUpSeconds':
             arcadeHurryUpSeconds = property['value']
+        elif property['name'] == 'platformMimicEnabled':
+            platformMimicEnabled = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -334,7 +338,7 @@ animatedTilesIdsCount = len(animatedTilesIds) - 1 if len(animatedTilesIds) > 0 e
 configStr = "const MAX_ENEMIES_PER_SCREEN as ubyte = " + str(maxEnemiesPerScreen) + "\n"
 configStr += "#define MAX_ANIMATED_TILES_PER_SCREEN " + str(maxAnimatedTilesPerScreen - 1) + "\n"
 configStr += "const ANIMATED_TILES_COUNT as ubyte = " + str(animatedTilesIdsCount) + "\n"
-configStr += "const screenWidth as ubyte = " + str(screenWidth) + "\n"
+configStr += "const screenWidth as uinteger = " + str(screenWidth) + "\n"
 configStr += "const screenHeight as ubyte = " + str(screenHeight) + "\n"
 configStr += "const INITIAL_LIFE as ubyte = " + str(initialLife) + "\n"
 configStr += "const MAX_LINE as ubyte = " + str(screenHeight * 2 - 4) + "\n"
@@ -343,6 +347,9 @@ if spriteCollisionPixelPerfect == 1:
     configStr += "#DEFINE SPRITE_COLLISION_SIZE 3\n"
 else:
     configStr += "#DEFINE SPRITE_COLLISION_SIZE 2\n"
+
+if platformMimicEnabled == 1:
+    configStr += "#DEFINE PLATFORM_MIMIC_ENABLED\n"
 
 if currentStageEnabled == 1:
     configStr += "#DEFINE CURRENT_STAGE_ENABLED\n"
