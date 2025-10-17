@@ -142,7 +142,7 @@ End Sub
                 #ifdef HURRY_UP_SECONDS
                     If timerSeconds < 31 Then
                         vortexTracker2x = 1
-                        printMessage("HURRY", "UP!!!", ITEM_FOUND_PAPER, ITEM_FOUND_INK)
+                        printMessage("HURRY   ", "UP!!!   ", ITEM_FOUND_PAPER, ITEM_FOUND_INK)
                     End If
                 #endif
             End If
