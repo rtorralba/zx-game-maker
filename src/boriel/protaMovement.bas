@@ -556,7 +556,9 @@ Function checkTileObject(tile As Ubyte) As Ubyte
                 moveScreen = 6
                 Return 1
             #else
-                incrementScore(timerSeconds)
+                #ifdef HISCORE_ENABLED
+                    incrementScore(timerSeconds)
+                #endif
                 printLife()
                 If currentScreen = SCREENS_COUNT Then
                     ending()
