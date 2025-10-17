@@ -273,6 +273,13 @@ Sub moveToScreen(direction As Ubyte)
         #ifdef ARCADE_MODE_SPRITE_ID
             showKeySprite = 0
         #endif
+        #ifdef MUSIC_ARCADE_GOAL_ACHIEVED_ENABLED
+            VortexTracker_Play(MUSIC_ARCADE_GOAL_ACHIEVED_ADDRESS)
+            ' wait 4 seconds
+            Dim startFrame As Ubyte = framec
+            While framec - startFrame < 180: Wend
+            VortexTracker_Stop()
+        #endif
         #ifdef HISCORE_ENABLED
             #ifdef ARCADE_SHOW_INTERMEDIATE_SCREEN
                 If direction = 6 Then

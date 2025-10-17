@@ -138,10 +138,18 @@ class Sizes:
     @staticmethod
     def MUSIC_GAMEOVER_STRING():
         return "MUSIC_GAMEOVER"
+    
+    @staticmethod
+    def MUSIC_INTRO_STRING():
+        return "MUSIC_INTRO"
+
+    @staticmethod
+    def MUSIC_ARCADE_GOAL_ACHIEVED_STRING():
+        return "MUSIC_ARCADE_GOAL_ACHIEVED"
 
     @staticmethod
     def getKeysToMemoryBank():
-        return ["BEEP_FX", "TITLE_SCREEN", "ENDING_SCREEN", "HUD_SCREEN", "INTRO_SCREEN", "GAMEOVER_SCREEN", "MUSIC", "BROKEN_TILES_DATA", "MUSIC_TITLE", "MUSIC_2", "MUSIC_3", "MUSIC_ENDING", "MUSIC_GAMEOVER", "VTPLAYER"]
+        return ["BEEP_FX", "TITLE_SCREEN", "ENDING_SCREEN", "HUD_SCREEN", "INTRO_SCREEN", "GAMEOVER_SCREEN", "MUSIC", "BROKEN_TILES_DATA", "MUSIC_TITLE", "MUSIC_2", "MUSIC_3", "MUSIC_ENDING", "MUSIC_GAMEOVER", "MUSIC_ARCADE_GOAL_ACHIEVED", "MUSIC_INTRO", "VTPLAYER"]
 
     def printAllSizesByMemoryBankFor128(self):
 

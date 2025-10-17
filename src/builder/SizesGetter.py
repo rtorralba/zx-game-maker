@@ -41,6 +41,8 @@ class SizesGetter:
             sizes.MUSIC_3 = self.__getFileSize(OUTPUT_FOLDER / "music3.tap") if musicExists("music3") else 0
             sizes.MUSIC_ENDING = self.__getFileSize(OUTPUT_FOLDER / "music-ending.tap") if musicExists("ending") else 0
             sizes.MUSIC_GAMEOVER = self.__getFileSize(OUTPUT_FOLDER / "music-gameover.tap") if musicExists("gameover") else 0
+            sizes.MUSIC_ARCADE_GOAL_ACHIEVED = self.__getFileSize(OUTPUT_FOLDER / "music-arcade-goal-achieved.tap") if musicExists("arcade-goal-achieved") else 0
+            sizes.MUSIC_INTRO = self.__getFileSize(OUTPUT_FOLDER / "music-intro.tap") if musicExists("intro") else 0
             sizes.INTRO_SCREEN = self.__getOutputFileSize("intro.scr.zx0") if screenExists("intro") else 0
             sizes.GAMEOVER_SCREEN = self.__getOutputFileSize("gameover.scr.zx0") if screenExists("gameover") else 0
 

@@ -680,6 +680,9 @@ for layer in data['layers']:
                         elif property['name'] == 'move':
                             if property['value'] == 'noReturn':
                                 objects[str(object['id'])]['move'] = '1'
+if arcadeMode == 1:
+    songsByScreen = {}
+
 for layer in data['layers']:
     if layer['type'] == 'objectgroup':
         for object in layer['objects']:
@@ -704,12 +707,21 @@ for layer in data['layers']:
                         x = int((object['x'] % (tileWidth * screenWidth))) // 4
                         y = int((object['y'] % (tileHeight * screenHeight))) // 4
                         keys[str(screenId)] = [x, y]
+                elif object['type'] == 'music1':
+                    if arcadeMode == 1:
+                        songsByScreen[screenId] = 1
                 elif object['type'] == 'music2':
-                    configStr += "Const MUSIC_2_SCREEN_ID as Uinteger = " + str(screenId) + "\n"
-                    configStr += "Dim music2alreadyPlayed as Ubyte = 0\n"
+                    if arcadeMode == 1:
+                        songsByScreen[screenId] = 2
+                    else:
+                        configStr += "Const MUSIC_2_SCREEN_ID as Uinteger = " + str(screenId) + "\n"
+                        configStr += "Dim music2alreadyPlayed as Ubyte = 0\n"
                 elif object['type'] == 'music3':
-                    configStr += "Const MUSIC_3_SCREEN_ID as Uinteger = " + str(screenId) + "\n"
-                    configStr += "Dim music3alreadyPlayed as Ubyte = 0\n"
+                    if arcadeMode == 1:
+                        songsByScreen[screenId] = 3
+                    else:
+                        configStr += "Const MUSIC_3_SCREEN_ID as Uinteger = " + str(screenId) + "\n"
+                        configStr += "Dim music3alreadyPlayed as Ubyte = 0\n"
                 else:
                     exitWithErrorMessage('Unknown object type. Only "enemy" and "mainCharacter" are allowed')   
                     
@@ -717,6 +729,15 @@ if arcadeMode == 1: # Defino el array de posiciones iniciales del personaje prin
     configStr += "dim mainCharactersArray(" + str(screensCount - 1) + ", 1) as ubyte = { _\n"
     for key in keys:
         configStr += '\t{' + str(keys[key][0]) + ', ' + str(keys[key][1]) + '}, _\n'
+    configStr = configStr[:-4]
+    configStr += " _\n}\n\n"
+
+    configStr += "dim musicPerScreenArray(" + str(screensCount - 1) + ") as ubyte = { _\n"
+    for i in range(screensCount):
+        if i in songsByScreen:
+            configStr += "    " + str(songsByScreen[i]) + ", _\n"
+        else:
+            configStr += "    0, _\n"
     configStr = configStr[:-4]
     configStr += " _\n}\n\n"
 

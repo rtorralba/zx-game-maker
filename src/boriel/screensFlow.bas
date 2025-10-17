@@ -171,6 +171,7 @@ Sub playGame()
             PaginarMemoria(DATA_BANK)
             dzx0Standard(INTRO_SCREEN_ADDRESS, $4000)
             PaginarMemoria(0)
+            VortexTracker_Play(MUSIC_INTRO_ADDRESS)
             Do
             Loop Until skipScreenPressed()
         #endif
@@ -190,8 +191,10 @@ Sub playGame()
         PaginarMemoria(DATA_BANK)
         dzx0Standard(HUD_SCREEN_ADDRESS, $4000)
         PaginarMemoria(0)
-        #ifdef MUSIC_ENABLED
-            VortexTracker_Play(MUSIC_ADDRESS)
+        #ifndef ARCADE_MODE
+            #ifdef MUSIC_ENABLED
+                VortexTracker_Play(MUSIC_ADDRESS)
+            #endif
         #endif
     #Else
         dzx0Standard(HUD_SCREEN_ADDRESS, $4000)
@@ -378,14 +381,16 @@ End Sub
             Do
                 animateProtaForIntermediateScreen()
             Loop Until skipScreenPressed()
-                        
-            If music2alreadyPlayed = 0 Then
-                VortexTracker_Play(MUSIC_ADDRESS)
-            Else If music2alreadyPlayed = 1 And music3alreadyPlayed = 0 Then
-                VortexTracker_Play(MUSIC_2_ADDRESS)
-            Else If music3alreadyPlayed = 1 Then
-                VortexTracker_Play(MUSIC_3_ADDRESS)
-            End If
+
+            #ifndef ARCADE_MODE     
+                If music2alreadyPlayed = 0 Then
+                    VortexTracker_Play(MUSIC_ADDRESS)
+                Else If music2alreadyPlayed = 1 And music3alreadyPlayed = 0 Then
+                    VortexTracker_Play(MUSIC_2_ADDRESS)
+                Else If music3alreadyPlayed = 1 Then
+                    VortexTracker_Play(MUSIC_3_ADDRESS)
+                End If
+            #endif
 
             Ink INK_VALUE: Paper PAPER_VALUE: Border BORDER_VALUE
 
@@ -609,21 +614,32 @@ Sub swapScreen()
 
     #ifdef ENABLED_128k
         #ifdef MUSIC_ENABLED
-            #ifdef MUSIC_2_ENABLED
-                If currentScreen = MUSIC_2_SCREEN_ID Then
-                    If music2alreadyPlayed = 0 Then
-                        VortexTracker_Play(MUSIC_2_ADDRESS)
-                        music2alreadyPlayed = 1
-                    End If
+            #ifdef ARCADE_MODE
+                dim musicNumber as ubyte = musicPerScreenArray(currentScreen)
+                If musicNumber = 1 Then
+                    VortexTracker_Play(MUSIC_ADDRESS)
+                ElseIf musicNumber = 2 Then
+                    VortexTracker_Play(MUSIC_2_ADDRESS)
+                ElseIf musicNumber = 3 Then
+                    VortexTracker_Play(MUSIC_3_ADDRESS)
                 End If
-            #endif
-            #ifdef MUSIC_3_ENABLED
-                If currentScreen = MUSIC_3_SCREEN_ID Then
-                    If music3alreadyPlayed = 0 Then
-                        VortexTracker_Play(MUSIC_3_ADDRESS)
-                        music3alreadyPlayed = 1
+            #else
+                #ifdef MUSIC_2_ENABLED
+                    If currentScreen = MUSIC_2_SCREEN_ID Then
+                        If music2alreadyPlayed = 0 Then
+                            VortexTracker_Play(MUSIC_2_ADDRESS)
+                            music2alreadyPlayed = 1
+                        End If
                     End If
-                End If
+                #endif
+                #ifdef MUSIC_3_ENABLED
+                    If currentScreen = MUSIC_3_SCREEN_ID Then
+                        If music3alreadyPlayed = 0 Then
+                            VortexTracker_Play(MUSIC_3_ADDRESS)
+                            music3alreadyPlayed = 1
+                        End If
+                    End If
+                #endif
             #endif
         #endif
     #endif

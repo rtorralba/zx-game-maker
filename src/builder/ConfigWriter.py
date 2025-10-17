@@ -40,6 +40,12 @@ class ConfigWriter:
 
                 if musicExists("gameover"):
                     self.__write("#DEFINE MUSIC_GAMEOVER_ENABLED\n")
+                
+                if musicExists("arcade-goal-achieved"):
+                    self.__write("#DEFINE MUSIC_ARCADE_GOAL_ACHIEVED_ENABLED\n")
+                
+                if musicExists("intro"):
+                    self.__write("#DEFINE MUSIC_INTRO_ENABLED\n")
 
                 currentAddress = self.initialAddress
                 self.__write("\n' Memory bank 4\n")
@@ -56,6 +62,10 @@ class ConfigWriter:
                     currentAddress = self.__writeDeclarationAndIncrement(Sizes.MUSIC_ENDING_STRING(), currentAddress)
                 if musicExists("gameover"):
                     currentAddress = self.__writeDeclarationAndIncrement(Sizes.MUSIC_GAMEOVER_STRING(), currentAddress)
+                if musicExists("arcade-goal-achieved"):
+                    currentAddress = self.__writeDeclarationAndIncrement(Sizes.MUSIC_ARCADE_GOAL_ACHIEVED_STRING(), currentAddress)
+                if musicExists("intro"):
+                    currentAddress = self.__writeDeclarationAndIncrement(Sizes.MUSIC_INTRO_STRING(), currentAddress)
 
                 self.__write("\n")
                 currentAddress = self.initialAddress
