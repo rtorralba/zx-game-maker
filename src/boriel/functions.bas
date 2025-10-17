@@ -64,13 +64,8 @@ sub decrementLife()
     BeepFX_Play(1)
 end sub
 
-sub printLife()
-    #ifdef LIVES_MODE_ENABLED
-        PRINT AT HUD_LIFE_Y, HUD_LIFE_X; "  ";
-    #else
-        PRINT AT HUD_LIFE_Y, HUD_LIFE_X; "   ";
-    #endif
-    PRINT AT HUD_LIFE_Y, HUD_LIFE_X; currentLife;
+sub printHud()
+    printLife()
     
     #ifdef JETPACK_FUEL
         PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; "  ";  
@@ -99,6 +94,15 @@ sub printLife()
         PRINT AT HUD_STAGE_Y, HUD_STAGE_X; currentScreen + 1;
     #endif
 end sub
+
+Sub printLife()
+    #ifdef LIVES_MODE_ENABLED
+        PRINT AT HUD_LIFE_Y, HUD_LIFE_X; "  ";
+    #else
+        PRINT AT HUD_LIFE_Y, HUD_LIFE_X; "   ";
+    #endif
+    PRINT AT HUD_LIFE_Y, HUD_LIFE_X; currentLife;
+End Sub
 
 #ifdef HISCORE_ENABLED
     Sub printScore()
@@ -231,7 +235,7 @@ function isSolidTileByColLin(col as ubyte, lin as ubyte) as ubyte
         If tile = KEY_DOOR_TILE Then
             If currentKeys <> 0 Then
                 currentKeys = currentKeys - 1
-                printLife()
+                printHud()
                 BeepFX_Play(4)
                 removeTilesFromScreen(KEY_DOOR_TILE)
             Else

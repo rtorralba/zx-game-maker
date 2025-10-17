@@ -132,7 +132,7 @@ sub damageEnemy(enemyToKill as Ubyte)
     decompressedEnemiesScreen(enemyToKill, ENEMY_ALIVE) = decompressedEnemiesScreen(enemyToKill, ENEMY_ALIVE) - 1
     #ifdef HISCORE_ENABLED
         incrementScore(5)
-        printLife()
+        printHud()
     #endif
 
     if decompressedEnemiesScreen(enemyToKill, ENEMY_ALIVE) = 0 then
