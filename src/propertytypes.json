@@ -321,6 +321,11 @@
                 "value": false
             },
             {
+                "name": "messagesFlashEnabled",
+                "type": "bool",
+                "value": true
+            },
+            {
                 "name": "musicEnabled",
                 "type": "bool",
                 "value": false

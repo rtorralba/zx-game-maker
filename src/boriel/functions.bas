@@ -135,7 +135,7 @@ end sub
 
 #ifdef MESSAGES_ENABLED
     sub printMessage(line1 as string, line2 as string, p as ubyte, i as ubyte)
-        Paper p: Ink i: Flash 1
+        Paper p: Ink i: Flash MESSAGES_FLASH_ENABLED
         PRINT AT HUD_MESSAGE_Y, HUD_MESSAGE_X; line1
         PRINT AT HUD_MESSAGE_Y_2, HUD_MESSAGE_X; line2
         Paper PAPER_VALUE: Ink INK_VALUE: Flash 0

@@ -182,6 +182,8 @@ spriteCollisionPixelPerfect = 0
 
 currentStageEnabled = 0
 
+messagesFlashEnabled = 1
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -316,6 +318,8 @@ if 'properties' in data:
             spriteCollisionPixelPerfect = 1 if property['value'] else 0
         elif property['name'] == 'currentStageEnabled':
             currentStageEnabled = 1 if property['value'] else 0
+        elif property['name'] == 'messagesFlashEnabled':
+            messagesFlashEnabled = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -408,6 +412,7 @@ if messagesEnabled == 1:
     configStr += "#Define MESSAGE_LOOPS_VISIBLE 30\n"
     configStr += "Const MESSAGE_DEFAULT_PAPER As Ubyte = " + str(messagesDefaultPaper) + "\n"
     configStr += "Const MESSAGE_DEFAULT_INK As Ubyte = " + str(messagesDefaultInk) + "\n"
+    configStr += "#DEFINE MESSAGES_FLASH_ENABLED " + str(messagesFlashEnabled) + "\n"
 
 if laddersEnabled == 1:
     configStr += "#DEFINE LADDERS_ENABLED\n"
