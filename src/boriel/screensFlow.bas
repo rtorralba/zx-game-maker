@@ -588,7 +588,7 @@ Sub resetValues()
     #endif
 
     #ifdef TIMER_ENABLED
-        timerSeconds = initialTimerSeconds
+        resetTimer()
     #endif
 End Sub
 
@@ -630,7 +630,7 @@ Sub swapScreen()
     #endif
 
     #ifdef TIMER_ENABLED
-        timerSeconds = initialTimerSeconds
+        resetTimer()
         updateTimerDisplay()
     #endif
     redrawScreen()

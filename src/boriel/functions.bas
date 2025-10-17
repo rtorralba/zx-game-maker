@@ -3,6 +3,15 @@ sub pauseUntilPressKey()
     while INKEY$="":wend
 end sub
 
+#ifdef TIMER_ENABLED
+    Sub resetTimer()
+        timerSeconds = initialTimerSeconds
+        #ifdef HURRY_UP_SECONDS
+            vortexTracker2x = 0
+        #endif
+    End Sub
+#endif
+
 sub decrementLife()
     if (currentLife = 0) then
         return
@@ -26,7 +35,7 @@ sub decrementLife()
             #endif
 
             #ifdef TIMER_ENABLED
-                timerSeconds = initialTimerSeconds
+                resetTimer()
                 updateTimerDisplay()
             #endif
 
@@ -126,6 +135,12 @@ end sub
                 #endif
             Else
                 timerSeconds = timerSeconds - 1
+                #ifdef HURRY_UP_SECONDS
+                    If timerSeconds < 31 Then
+                        vortexTracker2x = 1
+                        printMessage("HURRY", "UP!!!", ITEM_FOUND_PAPER, ITEM_FOUND_INK)
+                    End If
+                #endif
             End If
 
             updateTimerDisplay()

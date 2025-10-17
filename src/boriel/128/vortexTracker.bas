@@ -46,6 +46,15 @@ Sub Fastcall VortexTracker_NextNote()
     If VortexTracker_Status <> 1 Then Return
     
     callVtAddress($C005)
+    #ifdef TIMER_ENABLED
+        #ifdef HURRY_UP_SECONDS
+            If vortexTracker2x Then
+                If framec Mod 2 = 0 Then
+                    callVtAddress($C005)
+                End If
+            End If
+        #endif
+    #endif
 End Sub
 
 ' This Sub used PaginarMemoria previously, which included DI/EI.

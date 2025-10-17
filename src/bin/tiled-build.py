@@ -184,6 +184,8 @@ currentStageEnabled = 0
 
 messagesFlashEnabled = 1
 
+arcadeHurryUpSeconds = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -320,6 +322,8 @@ if 'properties' in data:
             currentStageEnabled = 1 if property['value'] else 0
         elif property['name'] == 'messagesFlashEnabled':
             messagesFlashEnabled = 1 if property['value'] else 0
+        elif property['name'] == 'arcadeHurryUpSeconds':
+            arcadeHurryUpSeconds = property['value']
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -405,6 +409,8 @@ if arcadeMode == 1:
         configStr += "#DEFINE ARCADE_SHOW_INTERMEDIATE_SCREEN\n"
     if arcadeModeUseSpriteId > 0:
         configStr += "#DEFINE ARCADE_MODE_SPRITE_ID " + str(arcadeModeUseSpriteId) + "\n"
+    if arcadeHurryUpSeconds > 0:
+        configStr += "#DEFINE HURRY_UP_SECONDS " + str(arcadeHurryUpSeconds) + "\n"
 
 if messagesEnabled == 1:
     configStr += "#DEFINE MESSAGES_ENABLED\n"

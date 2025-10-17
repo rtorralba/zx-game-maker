@@ -184,6 +184,9 @@ Dim mainLoopCounter As Ubyte = 0
 #ifdef TIMER_ENABLED
     Dim lastFrameTimer As Ubyte = 0
     Dim timerSeconds as ubyte = initialTimerSeconds
+    #ifdef HURRY_UP_SECONDS
+        Dim vortexTracker2x As Ubyte = 0
+    #endif
 #endif
 
 Const ENEMY_DOOR_TILE As Ubyte = 63
