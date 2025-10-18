@@ -201,3 +201,11 @@ Dim tileToBreakByTouchY As Ubyte = 0
 
 #Define PROTA_IDLE_SPRITE_ID 13
 #define arrayBasePtr(x) (PEEK(Uinteger, @x + 2))
+
+#ifdef AMMO_ENABLED
+    Const AMMO_TILE As Ubyte = 187
+    Const LAST_PRINTABLE_TILE As Ubyte = 186
+#else
+    Const AMMO_TILE As Ubyte = 188
+    Const LAST_PRINTABLE_TILE As Ubyte = 187
+#endif

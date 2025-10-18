@@ -479,7 +479,6 @@ if killJumpingOnTop == 1:
     configStr += "#DEFINE KILL_JUMPING_ON_TOP\n"
 
 if ammo > -1:
-    configStr += "const AMMO_TILE as ubyte = " + str(ammoTile) + "\n"
     configStr += "#DEFINE AMMO_ENABLED\n"
     configStr += "const INITIAL_AMMO as ubyte = " + str(ammo) + "\n"
     configStr += "dim currentAmmo as ubyte = " + str(ammo) + "\n"

@@ -116,7 +116,7 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
     
     Dim attr, besideTile As Ubyte
 
-    If tile < 187 Then
+    If tile < LAST_PRINTABLE_TILE + 1 Then
         If tile = KEY_DOOR_TILE Then
             If not checkScreenObjectAlreadyTaken(tile, x, y) Then
                 SetTileChecked(tile, attrSet(tile), x, y)
