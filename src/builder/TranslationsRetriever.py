@@ -23,6 +23,8 @@ class TranslationsRetriever:
         no_ammo = HudMessage("NO AMMO", "LEFT!", "red", "black")
         should_kill_all_enemies = HudMessage("KILL ALL", "ENEMIES!", "red", "black")
         need_items = HudMessage("NEED", "ITEMS!", "red", "black")
+        hurry_up = HudMessage("HURRY UP", "HURRY UP", "red", "black")
+        arcade_goal = HudMessage("REACH", "THE KEY!", "blue", "black")
 
         if Path(messagesFile).exists():
             with open(messagesFile, mode="rb") as f:
@@ -59,7 +61,15 @@ class TranslationsRetriever:
                                     messages.get("need_items", {}).get("line2", "ITEMS!"),
                                     messages.get("need_items", {}).get("ink", "red"),
                                     messages.get("need_items", {}).get("paper", "black"))
-            
+            hurry_up = HudMessage(messages.get("hurry_up", {}).get("line1", "HURRY UP"),
+                                    messages.get("hurry_up", {}).get("line2", "HURRY UP"),
+                                    messages.get("hurry_up", {}).get("ink", "red"),
+                                    messages.get("hurry_up", {}).get("paper", "black"))
+            arcade_goal = HudMessage(messages.get("arcade_goal", {}).get("line1", "REACH"),
+                                    messages.get("arcade_goal", {}).get("line2", "THE KEY!"),
+                                    messages.get("arcade_goal", {}).get("ink", "blue"),
+                                    messages.get("arcade_goal", {}).get("paper", "black"))
+
         # Write message config into boriel config file as a constants
         with open(CONFIG_FILE, "a") as config_file:
             config_file.write(f"\n' Messages\n")
@@ -95,3 +105,11 @@ class TranslationsRetriever:
             config_file.write(f"#define NEED_ITEMS_LINE2 \"{need_items.Line2}\"\n")
             config_file.write(f"#define NEED_ITEMS_INK {need_items.Ink}\n")
             config_file.write(f"#define NEED_ITEMS_PAPER {need_items.Paper}\n\n")
+            config_file.write(f"#define HURRY_UP_LINE1 \"{hurry_up.Line1}\"\n")
+            config_file.write(f"#define HURRY_UP_LINE2 \"{hurry_up.Line2}\"\n")
+            config_file.write(f"#define HURRY_UP_INK {hurry_up.Ink}\n")
+            config_file.write(f"#define HURRY_UP_PAPER {hurry_up.Paper}\n\n")
+            config_file.write(f"#define ARCADE_GOAL_LINE1 \"{arcade_goal.Line1}\"\n")
+            config_file.write(f"#define ARCADE_GOAL_LINE2 \"{arcade_goal.Line2}\"\n")
+            config_file.write(f"#define ARCADE_GOAL_INK {arcade_goal.Ink}\n")
+            config_file.write(f"#define ARCADE_GOAL_PAPER {arcade_goal.Paper}\n\n")

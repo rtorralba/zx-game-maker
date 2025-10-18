@@ -47,3 +47,15 @@ line1 = "NEED"
 line2 = "ITEMS!"
 ink = "red"
 paper = "black"
+
+[hurry_up]
+line1 = "HURRY UP"
+line2 = "HURRY UP"
+ink = "red"
+paper = "black"
+
+[arcade_goal]
+line1 = "REACH"
+line2 = "THE KEY!"
+ink = "blue"
+paper = "black"

@@ -223,6 +223,18 @@ Sub playGame()
     
     Do
         #ifdef ARCADE_MODE
+            #ifdef HURRY_UP_SECONDS
+                If timerSeconds > HURRY_UP_SECONDS Then
+                    If currentItems = itemsToFind Then
+                        printMessage(ARCADE_GOAL_LINE1, ARCADE_GOAL_LINE2, ARCADE_GOAL_PAPER, ARCADE_GOAL_INK)
+                    End If
+                End If
+            #else
+                If currentItems = itemsToFind Then
+                    printMessage(ARCADE_GOAL_LINE1, ARCADE_GOAL_LINE2, ARCADE_GOAL_PAPER, ARCADE_GOAL_INK)
+                End If
+            #endif
+
             #ifdef ARCADE_MODE_RESET_ON_KILL
                 If arcadeModeResetObjects Then
                     arcadeModeResetObjects = 0
