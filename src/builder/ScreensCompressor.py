@@ -26,4 +26,4 @@ class ScreensCompressor:
             if Path(file).exists():
                 scrFile = file
 
-        runCommand(str(BIN_FOLDER / getZx0()) + " -f " + scrFile + " " + str((OUTPUT_FOLDER / screen_name).with_suffix(".scr.zx0")))
+        runCommand(str(BIN_FOLDER / getZx0()) + " " + scrFile + " " + str((OUTPUT_FOLDER / screen_name).with_suffix(".scr.zx0")))

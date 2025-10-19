@@ -35,6 +35,7 @@ Libraries and other software that are included in this project or that it was in
 
 * [Juan J. Martínez](https://github.com/reidrac) png2src
 * [Einar Saukas](https://github.com/einar-saukas) ZX0
+* [Emmanuel Marty](https://github.com/emmanuel-marty) [salvador](https://github.com/emmanuel-marty/salvador)
 * [PixelArtM](https://twitter.com/PixelArtM) Sprites
 * [Jimmy Devesa](https://twitter.com/Jimmy_Devesa) Música In Game
 * [Beyker](https://elbeyker.blogspot.com/?m=1) Music in title, ingame 2, ingame 3, ending, game over.

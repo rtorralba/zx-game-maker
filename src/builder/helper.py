@@ -21,11 +21,11 @@ CURRENT_OS = platform.system()
 
 def getZx0():
     if os.name == "nt":
-        return "zx0.exe"
+        return "salvador.exe"
     elif CURRENT_OS == "Darwin": #MacOS
         return "zx0-mac"
     else:
-        return "zx0"
+        return "salvador"
 
 verbose = False
 
