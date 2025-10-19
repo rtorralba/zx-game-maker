@@ -17,7 +17,7 @@ def exitWithErrorMessage(message):
 # Detectar el sistema operativo y en base a el el nombre del ejecutable zx0 
 CURRENT_OS = platform.system()
 if CURRENT_OS=='Darwin':
-    ZX0_EXEC="salvador-mac"
+    ZX0_EXEC="bin/salvador-mac"
 else:
     ZX0_EXEC="bin/salvador"
 
