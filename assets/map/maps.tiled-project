@@ -95,6 +95,31 @@
         {
             "color": "#ffa0a0a4",
             "drawFill": true,
+            "id": 10,
+            "members": [
+                {
+                    "name": "enemy",
+                    "type": "object",
+                    "value": 0
+                }
+            ],
+            "name": "ZXSGMPointers",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
             "id": 2,
             "members": [
                 {
@@ -417,6 +442,43 @@
             "type": "class",
             "useAs": [
                 "map",
+                "object",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 9,
+            "members": [
+                {
+                    "name": "X Speed",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "Y Speed",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "movement",
+                    "propertyType": "enemyMovementTypes",
+                    "type": "string",
+                    "value": "default"
+                }
+            ],
+            "name": "ZXSpectrumGameMakerEnemies",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
                 "project"
             ]
         }
