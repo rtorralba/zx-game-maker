@@ -3,7 +3,7 @@
     "commands": [
     ],
     "compatibilityVersion": 1100,
-    "extensionsPath": "extensions",
+    "extensionsPath": "./../../src/scripts/tiled",
     "folders": [
         "."
     ],
@@ -171,6 +171,26 @@
                 "itemsAndKillEnemy"
             ],
             "valuesAsFlags": false
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 16,
+            "members": [
+            ],
+            "name": "platform",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
         },
         {
             "color": "#ffa0a0a4",
@@ -546,26 +566,6 @@
             "type": "class",
             "useAs": [
                 "map",
-                "project"
-            ]
-        },
-        {
-            "color": "#ffa0a0a4",
-            "drawFill": true,
-            "id": 16,
-            "members": [
-            ],
-            "name": "platform",
-            "type": "class",
-            "useAs": [
-                "property",
-                "map",
-                "layer",
-                "object",
-                "tile",
-                "tileset",
-                "wangcolor",
-                "wangset",
                 "project"
             ]
         }
