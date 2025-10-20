@@ -5,7 +5,6 @@ function setClassByShape(obj) {
     // Sprites (shape === 0)
     if (obj.shape === 0 && (!obj.className || obj.className === "")) {
         obj.className = "ZXSGMEnemy";
-        obj.setProperty("enemy", null);
         tiled.log("✓ Class 'ZXSGMEnemy' assigned to sprite: " + (obj.name || "ID:" + obj.id));
         return true;
     }
