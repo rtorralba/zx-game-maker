@@ -1,55 +1,43 @@
-/* Script para Tiled: Asigna clase automáticamente a objetos según su tipo */
 
-tiled.log("Script ZXSGM iniciado...");
+tiled.log("Script ZXSGM started...");
 
-// Función para asignar clase a un objeto según su shape
-function asignarClaseSegunShape(obj) {
+function setClassByShape(obj) {
     // Sprites (shape === 0)
     if (obj.shape === 0 && (!obj.className || obj.className === "")) {
-        obj.className = "ZXSpectrumGameMakerEnemies";
+        obj.className = "ZXSGMEnemy";
         obj.setProperty("enemy", null);
-        tiled.log("✓ Clase 'ZXSpectrumGameMakerEnemies' asignada al sprite: " + (obj.name || "ID:" + obj.id));
+        tiled.log("✓ Class 'ZXSGMEnemy' assigned to sprite: " + (obj.name || "ID:" + obj.id));
         return true;
     }
-    // Punteros (shape === 5)
+    // Pointers (shape === 5)
     else if (obj.shape === 5 && (!obj.className || obj.className === "")) {
-        obj.className = "ZXSGMPointers";
-        tiled.log("✓ Clase 'ZXSGMPointers' asignada al puntero: " + (obj.name || "ID:" + obj.id));
+        obj.className = "ZXSGMPointer";
+        tiled.log("✓ Class 'ZXSGMPointer' assigned to pointer: " + (obj.name || "ID:" + obj.id));
         return true;
     }
     return false;
 }
 
-// Conectar eventos del mapa
-function conectarEventosMapa(map) {
+function connectToMapEvents(map) {
     if (!map || !map.isTileMap) return;
-    
-    tiled.log("Conectando eventos al mapa: " + (map.fileName || "sin nombre"));
-    
-    // Conectar a selectedObjectsChanged
+    // Connect to selectedObjectsChanged
     if (map.selectedObjectsChanged && typeof map.selectedObjectsChanged.connect === 'function') {
         map.selectedObjectsChanged.connect(function() {
             var selectedObjects = map.selectedObjects;
             
-            // Procesar cada objeto seleccionado
             selectedObjects.forEach(function(obj) {
-                asignarClaseSegunShape(obj);
+                setClassByShape(obj);
             });
         });
-        tiled.log("✓ Conectado a: selectedObjectsChanged");
     }
 }
 
-// Conectar cuando cambia el asset
 tiled.activeAssetChanged.connect(function(asset) {
     if (asset && asset.isTileMap) {
-        conectarEventosMapa(asset);
+        connectToMapEvents(asset);
     }
 });
 
-// Conectar al mapa actual si existe
 if (tiled.activeAsset && tiled.activeAsset.isTileMap) {
-    conectarEventosMapa(tiled.activeAsset);
+    connectToMapEvents(tiled.activeAsset);
 }
-
-tiled.log("Script ZXSGM listo. Las clases se asignarán automáticamente al seleccionar objetos.");

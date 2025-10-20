@@ -81,6 +81,86 @@
             "valuesAsFlags": false
         },
         {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 12,
+            "members": [
+            ],
+            "name": "mainCharacter",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 13,
+            "members": [
+            ],
+            "name": "music1",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 14,
+            "members": [
+            ],
+            "name": "music2",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 15,
+            "members": [
+            ],
+            "name": "music3",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
             "id": 8,
             "name": "objectiveType",
             "storageType": "string",
@@ -95,26 +175,50 @@
         {
             "color": "#ffa0a0a4",
             "drawFill": true,
-            "id": 10,
+            "id": 9,
             "members": [
                 {
-                    "name": "enemy",
+                    "name": "life",
+                    "type": "int",
+                    "value": 1
+                },
+                {
+                    "name": "move",
+                    "propertyType": "enemyMovementTypes",
+                    "type": "string",
+                    "value": "default"
+                },
+                {
+                    "name": "speed",
+                    "propertyType": "enemySpeed",
+                    "type": "int",
+                    "value": 3
+                }
+            ],
+            "name": "ZXSGMEnemy",
+            "type": "class",
+            "useAs": [
+                "property",
+                "object",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 11,
+            "members": [
+                {
+                    "name": "sprite",
                     "type": "object",
                     "value": 0
                 }
             ],
-            "name": "ZXSGMPointers",
+            "name": "ZXSGMPointer",
             "type": "class",
             "useAs": [
                 "property",
-                "map",
-                "layer",
-                "object",
-                "tile",
-                "tileset",
-                "wangcolor",
-                "wangset",
-                "project"
+                "object"
             ]
         },
         {
@@ -442,33 +546,16 @@
             "type": "class",
             "useAs": [
                 "map",
-                "object",
                 "project"
             ]
         },
         {
             "color": "#ffa0a0a4",
             "drawFill": true,
-            "id": 9,
+            "id": 16,
             "members": [
-                {
-                    "name": "X Speed",
-                    "type": "int",
-                    "value": 0
-                },
-                {
-                    "name": "Y Speed",
-                    "type": "int",
-                    "value": 0
-                },
-                {
-                    "name": "movement",
-                    "propertyType": "enemyMovementTypes",
-                    "type": "string",
-                    "value": "default"
-                }
             ],
-            "name": "ZXSpectrumGameMakerEnemies",
+            "name": "platform",
             "type": "class",
             "useAs": [
                 "property",

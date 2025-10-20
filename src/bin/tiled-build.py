@@ -689,7 +689,7 @@ for layer in data['layers']:
                 xScreenPosition = math.ceil(object['x'] / screenPixelsWidth) - 1
                 yScreenPosition = math.ceil(object['y'] / screenPixelsHeight) - 1
                 screenId = xScreenPosition + (yScreenPosition * mapCols)
-                if object['type'] == '' and 'properties' in object:
+                if object['type'] == 'ZXSGMPointer' and 'properties' in object:
                     objects[str(object['properties'][0]['value'])]['linEnd'] = str(int((object['y'] % (tileHeight * screenHeight))) // 4)
                     objects[str(object['properties'][0]['value'])]['colEnd'] = str(int((object['x'] % (tileWidth * screenWidth))) // 4)
                 elif object['type'] == 'mainCharacter':
@@ -722,7 +722,8 @@ for layer in data['layers']:
                         configStr += "Const MUSIC_3_SCREEN_ID as Uinteger = " + str(screenId) + "\n"
                         configStr += "Dim music3alreadyPlayed as Ubyte = 0\n"
                 else:
-                    exitWithErrorMessage('Unknown object type. Only "enemy" and "mainCharacter" are allowed')   
+                    exitWithErrorMessage('Unknown object type ' + object['type'] + '.')
+                    print(object)
                     
 if arcadeMode == 1: # Defino el array de posiciones iniciales del personaje principal
     configStr += "dim mainCharactersArray(" + str(screensCount - 1) + ", 1) as ubyte = { _\n"
