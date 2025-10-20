@@ -171,7 +171,11 @@ Sub playGame()
             PaginarMemoria(DATA_BANK)
             dzx0Standard(INTRO_SCREEN_ADDRESS, $4000)
             PaginarMemoria(0)
-            VortexTracker_Play(MUSIC_INTRO_ADDRESS)
+            #ifdef MUSIC_ENABLED
+                #ifdef MUSIC_INTRO_ENABLED
+                    VortexTracker_Play(MUSIC_INTRO_ADDRESS)
+                #endif
+            #endif
             Do
             Loop Until skipScreenPressed()
         #endif
