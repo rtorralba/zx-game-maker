@@ -23,7 +23,7 @@ def getZx0():
     if os.name == "nt":
         return "salvador.exe"
     elif CURRENT_OS == "Darwin": #MacOS
-        return "zx0-mac"
+        return "salvador-mac"
     else:
         return "salvador"
 
