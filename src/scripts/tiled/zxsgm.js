@@ -1,12 +1,19 @@
-
 tiled.log("Script ZXSGM started...");
 
 function setClassByShape(obj) {
     // Sprites (shape === 0)
     if (obj.shape === 0 && (!obj.className || obj.className === "")) {
-        obj.className = "ZXSGMEnemy";
-        tiled.log("✓ Class 'ZXSGMEnemy' assigned to sprite: " + (obj.name || "ID:" + obj.id));
-        return true;
+        if (obj.tile > 15) {
+            obj.className = "ZXSGMEnemy";
+            tiled.log("✓ Class 'ZXSGMEnemy' assigned to sprite: " + (obj.name || "ID:" + obj.id));
+            return true;
+        }
+
+        if (obj.tile.id === 8 || obj.tile.id === 10) {
+            obj.className = "platform";
+            tiled.log("✓ Class 'platform' assigned to sprite: " + (obj.name || "ID:" + obj.id));
+            return true;
+        }
     }
     // Pointers (shape === 5)
     else if (obj.shape === 5 && (!obj.className || obj.className === "")) {
@@ -39,4 +46,11 @@ tiled.activeAssetChanged.connect(function(asset) {
 
 if (tiled.activeAsset && tiled.activeAsset.isTileMap) {
     connectToMapEvents(tiled.activeAsset);
+}
+
+function debugObject(obj) {
+    tiled.log("Debugging object properties:");
+    for (const [key, value] of Object.entries(obj)) {
+        tiled.log(` - ${key}: ${value}`);
+    }
 }
