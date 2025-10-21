@@ -19,6 +19,12 @@ function setClassByShape(obj) {
             }
             return false;
         }
+        if (obj.tile.id === 0) {
+            obj.className = "mainCharacter";
+            tiled.log("✓ Class 'mainCharacter' assigned to sprite: " + (obj.name || "ID:" + obj.id));
+            return true;
+        }
+
         if (obj.tile.id > 15) {
             obj.className = "ZXSGMEnemy";
             tiled.log("✓ Class 'ZXSGMEnemy' assigned to sprite: " + (obj.name || "ID:" + obj.id));

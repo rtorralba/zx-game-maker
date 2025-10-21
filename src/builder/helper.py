@@ -126,3 +126,43 @@ def screenExists(screen_name):
 
 def musicExists(music_name):
     return os.path.isfile((MUSIC_FOLDER / music_name).with_suffix(".tap"))
+
+def blackoutForbiddenSprites(sprites_png_path):
+    """
+    Pone en negro los sprites prohibidos de una imagen de sprites 16x3.
+    
+    Args:
+        sprites_png_path: Path al archivo sprites.png
+    """
+    from PIL import Image
+    
+    # Sprites no permitidos (array empieza en 0)
+    sprites_to_black = [1, 2, 3, 4, 5, 6, 7, 9, 11, 12, 13, 14, 15, 17, 19, 21, 23, 25, 27, 29, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47]
+    
+    if not os.path.exists(sprites_png_path):
+        return
+    
+    img = Image.open(sprites_png_path)
+    pixels = img.load()
+    
+    # Matriz de 16x3 sprites de 16x16 píxeles
+    sprite_width = 16
+    sprite_height = 16
+    cols = 16
+    
+    for sprite_id in sprites_to_black:
+        # Calcular posición del sprite en la matriz
+        col = sprite_id % cols
+        row = sprite_id // cols
+        
+        # Coordenadas del sprite
+        x_start = col * sprite_width
+        y_start = row * sprite_height
+        
+        # Poner todos los píxeles en negro
+        for y in range(y_start, y_start + sprite_height):
+            for x in range(x_start, x_start + sprite_width):
+                pixels[x, y] = (0, 0, 0, 255)  # Negro con alpha
+    
+    img.save(sprites_png_path)
+    print(f"✓ Sprites prohibidos limpiados en {Path(sprites_png_path).name}")

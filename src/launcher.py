@@ -366,10 +366,22 @@ root.title("ZX Spectrum Game Maker")
 root.geometry("600x750")
 root.resizable(False, False)
 
-os.system("zxp2gus -t tiles -i " + str(ASSETS_FOLDER / "map/tiles.zxp") + " -o " + str(SRC_FOLDER) + " -f png")
-os.system("zxp2gus -t sprites -i " + str(ASSETS_FOLDER / "map/sprites.zxp") + " -o " + str(SRC_FOLDER) + " -f png")
-
 from builder.ZXPWatcher import ZXPWatcher
+from builder.ZXPHandler import ZXPHandler
+from configuration.folders import MAP_FOLDER
+
+# Procesar archivos ZXP inicialmente
+handler = ZXPHandler()
+for zxp_file in ["tiles.zxp", "sprites.zxp"]:
+    zxp_path = MAP_FOLDER / zxp_file
+    if zxp_path.exists():
+        class FakeEvent:
+            def __init__(self, path):
+                self.src_path = str(path)
+                self.is_directory = False
+        handler.on_modified(FakeEvent(zxp_path))
+
+# Iniciar el watcher
 watcher = ZXPWatcher()
 watcher_thread = threading.Thread(target=watcher.start, daemon=True)
 watcher_thread.start()
