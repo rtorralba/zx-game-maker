@@ -6,14 +6,10 @@ function setClassByShape(obj) {
     // Sprites (shape === 0)
     if (obj.shape === 0) {
         debugObject(obj); // Debugging line to inspect object properties
-        // Si las propiedades x o y del objeto no son multiplos de 8 mostrar error y eliminar el objeto
+        // Si las propiedades x o y del objeto no son multiplos de 8 poner el valor multible de 8 más proximo
         if (obj.x % 8 !== 0 || obj.y % 8 !== 0) {
-            tiled.alert("⚠️ La posición del sprite no esta alineada a la rejilla. Pulsa CTRL para colocarlo.");
-            if (obj.layer && obj.layer.removeObject) {
-                obj.layer.removeObject(obj);
-                tiled.log("✗ Objeto eliminado por posición inválida: " + (obj.name || "ID:" + obj.id));
-            }
-            return false;
+            obj.x = Math.round(obj.x / 8) * 8;
+            obj.y = Math.round(obj.y / 8) * 8;
         }
         if (forbiddenSprites.includes(obj.tile.id)) {
             tiled.alert("⚠️ Sprite no permitido.");
