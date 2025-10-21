@@ -648,13 +648,46 @@ objects = {}
 keys = {}
 items = {}
 
+if arcadeMode == 1:
+    songsByScreen = {}
+
 for layer in data['layers']:
     if layer['type'] == 'objectgroup':
         for object in layer['objects']:
-            if 'gid' in object:
-                xScreenPosition = math.ceil(object['x'] / screenPixelsWidth) - 1
-                yScreenPosition = math.ceil(object['y'] / screenPixelsHeight) - 1
-                screenId = xScreenPosition + (yScreenPosition * mapCols)
+            xScreenPosition = math.ceil(object['x'] / screenPixelsWidth) - 1
+            yScreenPosition = math.ceil(object['y'] / screenPixelsHeight) - 1
+            screenId = xScreenPosition + (yScreenPosition * mapCols)
+
+            if object['type'] == 'mainCharacter':
+                if initialMainCharacterX == 8 and initialMainCharacterY == 8:
+                    initialScreen = screenId
+                    initialMainCharacterX = str(int((object['x'] % (tileWidth * screenWidth))) // 4)
+                    initialMainCharacterY = str(int((object['y'] % (tileHeight * screenHeight))) // 4)
+
+                    if int(initialMainCharacterX) < 2 or int(initialMainCharacterX) > 60 or int(initialMainCharacterY) < 0 or int(initialMainCharacterY) > 38:
+                        exitWithErrorMessage('Main character initial position is out of bounds. X: ' + initialMainCharacterX + ', Y: ' + initialMainCharacterY)
+                    
+                if arcadeMode == 1:
+                    # Voy guardando en un array cuyo indice sea la pantalla y el valor sea la posición de inicio
+                    x = int((object['x'] % (tileWidth * screenWidth))) // 4
+                    y = int((object['y'] % (tileHeight * screenHeight))) // 4
+                    keys[str(screenId)] = [x, y]
+            elif object['type'] == 'music1':
+                if arcadeMode == 1:
+                    songsByScreen[screenId] = 1
+            elif object['type'] == 'music2':
+                if arcadeMode == 1:
+                    songsByScreen[screenId] = 2
+                else:
+                    configStr += "Const MUSIC_2_SCREEN_ID as Uinteger = " + str(screenId) + "\n"
+                    configStr += "Dim music2alreadyPlayed as Ubyte = 0\n"
+            elif object['type'] == 'music3':
+                if arcadeMode == 1:
+                    songsByScreen[screenId] = 3
+                else:
+                    configStr += "Const MUSIC_3_SCREEN_ID as Uinteger = " + str(screenId) + "\n"
+                    configStr += "Dim music3alreadyPlayed as Ubyte = 0\n"
+            elif object['type'] == 'ZXSGMEnemy' or object['type'] == 'platform':
                 objects[str(object['id'])] = {
                     'name': object['name'],
                     'screenId': screenId,
@@ -679,9 +712,14 @@ for layer in data['layers']:
                         elif property['name'] == 'move':
                             if property['value'] == 'noReturn':
                                 objects[str(object['id'])]['move'] = '1'
-if arcadeMode == 1:
-    songsByScreen = {}
+            elif object['type'] == 'ZXSGMPointer':
+                # Pointers are processed in a second pass
+                pass
+            else:
+                exitWithErrorMessage('Unknown object type ' + object['type'] + '.')
+                print(object)
 
+# Find end of paths
 for layer in data['layers']:
     if layer['type'] == 'objectgroup':
         for object in layer['objects']:
@@ -692,38 +730,6 @@ for layer in data['layers']:
                 if object['type'] == 'ZXSGMPointer' and 'properties' in object:
                     objects[str(object['properties'][0]['value'])]['linEnd'] = str(int((object['y'] % (tileHeight * screenHeight))) // 4)
                     objects[str(object['properties'][0]['value'])]['colEnd'] = str(int((object['x'] % (tileWidth * screenWidth))) // 4)
-                elif object['type'] == 'mainCharacter':
-                    if initialMainCharacterX == 8 and initialMainCharacterY == 8:
-                        initialScreen = screenId
-                        initialMainCharacterX = str(int((object['x'] % (tileWidth * screenWidth))) // 4)
-                        initialMainCharacterY = str(int((object['y'] % (tileHeight * screenHeight))) // 4)
-
-                        if int(initialMainCharacterX) < 2 or int(initialMainCharacterX) > 60 or int(initialMainCharacterY) < 0 or int(initialMainCharacterY) > 38:
-                            exitWithErrorMessage('Main character initial position is out of bounds. X: ' + initialMainCharacterX + ', Y: ' + initialMainCharacterY)
-                        
-                    if arcadeMode == 1:
-                        # Voy guardando en un array cuyo indice sea la pantalla y el valor sea la posición de inicio
-                        x = int((object['x'] % (tileWidth * screenWidth))) // 4
-                        y = int((object['y'] % (tileHeight * screenHeight))) // 4
-                        keys[str(screenId)] = [x, y]
-                elif object['type'] == 'music1':
-                    if arcadeMode == 1:
-                        songsByScreen[screenId] = 1
-                elif object['type'] == 'music2':
-                    if arcadeMode == 1:
-                        songsByScreen[screenId] = 2
-                    else:
-                        configStr += "Const MUSIC_2_SCREEN_ID as Uinteger = " + str(screenId) + "\n"
-                        configStr += "Dim music2alreadyPlayed as Ubyte = 0\n"
-                elif object['type'] == 'music3':
-                    if arcadeMode == 1:
-                        songsByScreen[screenId] = 3
-                    else:
-                        configStr += "Const MUSIC_3_SCREEN_ID as Uinteger = " + str(screenId) + "\n"
-                        configStr += "Dim music3alreadyPlayed as Ubyte = 0\n"
-                else:
-                    exitWithErrorMessage('Unknown object type ' + object['type'] + '.')
-                    print(object)
                     
 if arcadeMode == 1: # Defino el array de posiciones iniciales del personaje principal
     configStr += "dim mainCharactersArray(" + str(screensCount - 1) + ", 1) as ubyte = { _\n"

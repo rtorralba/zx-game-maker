@@ -38,7 +38,7 @@ function setClassByShape(obj) {
         }
     }
     // Pointers (shape === 5)
-    else if (obj.shape === 5) {
+    else if (obj.shape === 5 && obj.className === "") {
         obj.className = "ZXSGMPointer";
         tiled.log("✓ Class 'ZXSGMPointer' assigned to pointer: " + (obj.name || "ID:" + obj.id));
         return true;
