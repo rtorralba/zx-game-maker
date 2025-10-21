@@ -3,7 +3,7 @@ tiled.log("Script ZXSGM started...");
 function setClassByShape(obj) {
     // Sprites (shape === 0)
     if (obj.shape === 0 && (!obj.className || obj.className === "")) {
-        if (obj.tile > 15) {
+        if (obj.tile.id > 15) {
             obj.className = "ZXSGMEnemy";
             tiled.log("✓ Class 'ZXSGMEnemy' assigned to sprite: " + (obj.name || "ID:" + obj.id));
             return true;
