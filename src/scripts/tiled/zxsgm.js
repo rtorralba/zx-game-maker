@@ -1,11 +1,21 @@
 tiled.log("Script ZXSGM started...");
 
-const forbiddenTiles = [1, 2, 3, 4, 5, 6, 7, 12, 13, 14, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47];
+const forbiddenSprites = [1, 2, 3, 4, 5, 6, 7, 9, 11, 12, 13, 14, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37, 39, 41, 43, 45, 47];
 
 function setClassByShape(obj) {
     // Sprites (shape === 0)
     if (obj.shape === 0) {
-        if (forbiddenTiles.includes(obj.tile.id)) {
+        debugObject(obj); // Debugging line to inspect object properties
+        // Si las propiedades x o y del objeto no son multiplos de 8 mostrar error y eliminar el objeto
+        if (obj.x % 8 !== 0 || obj.y % 8 !== 0) {
+            tiled.alert("⚠️ La posición del sprite no esta alineada a la rejilla. Pulsa CTRL para colocarlo.");
+            if (obj.layer && obj.layer.removeObject) {
+                obj.layer.removeObject(obj);
+                tiled.log("✗ Objeto eliminado por posición inválida: " + (obj.name || "ID:" + obj.id));
+            }
+            return false;
+        }
+        if (forbiddenSprites.includes(obj.tile.id)) {
             tiled.alert("⚠️ Sprite no permitido.");
             if (obj.layer && obj.layer.removeObject) {
                 obj.layer.removeObject(obj);
