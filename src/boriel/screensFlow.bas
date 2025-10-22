@@ -25,6 +25,7 @@ Sub showMenu()
     #endif
     
     Do
+        kempston = 0
         If MultiKeys(KEY1) Then
             If Not keyArray(LEFT) Then
                 Let keyArray(LEFT) = KEYO
