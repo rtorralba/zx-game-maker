@@ -32,7 +32,7 @@
   <property name="laddersEnabled" type="bool" value="true"/>
   <property name="lifeAmount" type="int" value="5"/>
   <property name="mainCharacterExtraFrame" type="bool" value="true"/>
-  <property name="maxAnimatedTilesPerScreen" type="int" value="15"/>
+  <property name="maxAnimatedTilesPerScreen" type="int" value="10"/>
   <property name="maxEnemiesPerScreen" type="int" value="5"/>
   <property name="messagesEnabled" type="bool" value="true"/>
   <property name="musicEnabled" type="bool" value="true"/>
@@ -139,7 +139,7 @@
 3,3,1,1,61,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,109,110,1,1,1,1,1,3,
 3,3,1,1,61,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,141,142,1,1,1,1,1,63,
 3,3,1,1,61,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,190,1,1,173,174,1,188,1,188,1,63,
-4,4,4,4,4,4,129,129,129,129,129,129,129,129,129,167,167,167,167,4,4,4,4,4,4,4,4,4,4,4,4,4,
+4,4,4,4,4,4,129,129,129,129,129,129,129,129,167,167,167,167,167,4,4,4,4,4,4,4,4,4,4,4,4,4,
 36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36
 </chunk>
    <chunk x="32" y="22" width="32" height="22">
