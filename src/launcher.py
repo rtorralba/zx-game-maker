@@ -26,6 +26,7 @@ from tkinter import messagebox
 from tkinter import PhotoImage
 import threading
 import webbrowser
+from PIL import Image, ImageTk
 
 from builder.SpritesPreviewGenerator import SpritesPreviewGenerator
 # from builder.helper import DIST_FOLDER, MAPS_PROJECT, getProjectFileName
@@ -161,16 +162,46 @@ def open_game_variant(variant):
     except Exception as e:
         messagebox.showerror("Error", f"No se pudo abrir el juego: {e}")
 
+
+# Mostrar GIF animado en ventana Tkinter
 def show_modal_with_animation(gif_path):
-    """Abre el GIF en el navegador predeterminado."""
     try:
-        # Verificar si el archivo existe
         if not gif_path.exists():
             messagebox.showerror("Error", f"No se encontró el archivo: {gif_path}")
             return
 
-        # Abrir el archivo GIF en el navegador predeterminado
-        webbrowser.open(f"file://{os.path.abspath(gif_path)}")
+        win = tk.Toplevel(root)
+        win.title("Preview")
+        win.transient(root)  # Ventana hija
+        win.grab_set()       # Modal
+        win.attributes('-topmost', True)  # Siempre encima
+        lbl = tk.Label(win)
+        lbl.pack()
+
+        pil_img = Image.open(gif_path)
+        scale = 2  # Factor de escala (2x)
+        frames = []
+        durations = []
+        try:
+            while True:
+                frame = pil_img.copy()
+                w, h = frame.size
+                frame = frame.resize((w*scale, h*scale), Image.NEAREST)
+                frames.append(ImageTk.PhotoImage(frame))
+                durations.append(pil_img.info.get('duration', 100))
+                pil_img.seek(len(frames))
+        except EOFError:
+            pass
+        if not frames:
+            messagebox.showerror("Error", "El GIF no tiene frames.")
+            win.destroy()
+            return
+
+        def update(idx=0):
+            lbl.config(image=frames[idx])
+            win.after(durations[idx], update, (idx + 1) % len(frames))
+
+        update()
     except Exception as e:
         messagebox.showerror("Error", f"No se pudo abrir el GIF: {e}")
 
