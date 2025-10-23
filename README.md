@@ -10,6 +10,10 @@ Recomendamos usar [ZX Paintbrush](https://sourcesolutions.itch.io/zx-paintbrush)
 
 ZX Game Maker usa [Boriel's ZX Basic](https://zxbasic.readthedocs.io/en/docs/), [GuSprites sprites library](https://github.com/gusmanb/GuSprites) y python para scripting
 
+<a href="https://zxbasic.readthedocs.io/en/docs/" target="_blank">
+    <img src="https://zxbasic.readthedocs.io/en/docs/img/zxbasic_logo.png" alt="Boriel Basic" width="100"/>
+</a>
+
 ## Como empezar
 
 Puedes aprender como usar el ZX Game Maker en la siguiente documentación
