@@ -7,7 +7,7 @@ if (-not (Test-Path $filePath)) {
     exit 1
 }
 
-.\pasmo.exe --tap ..\boriel\player.asm ..\assets\fx\fx.tap
+..\pasmo.exe --tap .\boriel\player.asm ..\assets\fx\fx.tap
 
 Write-Host "FX creado correctamente."
 
