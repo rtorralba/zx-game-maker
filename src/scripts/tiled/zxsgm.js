@@ -7,6 +7,14 @@ const forbiddenSprites = [1, 2, 3, 4, 5, 6, 7, 9, 11, 12, 13, 14, 15, 17, 19, 21
 function setClassByShape(obj) {
     // Sprites (shape === 0)
     if (obj.shape === 0) {
+        if (obj.tile.tileset.name == "tiles") {
+            tiled.alert("No puedes poner un tile en la capa de sprites (objects).");
+            if (obj.layer && obj.layer.removeObject) {
+                obj.layer.removeObject(obj);
+                tiled.log("✗ Objeto eliminado: " + (obj.name || "ID:" + obj.id));
+            }
+            return false;
+        }
         // Si las propiedades x o y del objeto no son multiplos de 8 poner el valor multible de 8 más proximo
         if (obj.x % 8 !== 0 || obj.y % 8 !== 0) {
             obj.x = Math.round(obj.x / 8) * 8;
@@ -56,17 +64,17 @@ function connectToMapEvents(map) {
     if (!map || !map.isTileMap) return;
     // Connect to selectedObjectsChanged
     if (map.selectedObjectsChanged && typeof map.selectedObjectsChanged.connect === 'function') {
-        map.selectedObjectsChanged.connect(function() {
+        map.selectedObjectsChanged.connect(function () {
             var selectedObjects = map.selectedObjects;
-            
-            selectedObjects.forEach(function(obj) {
+
+            selectedObjects.forEach(function (obj) {
                 setClassByShape(obj);
             });
         });
     }
 }
 
-tiled.activeAssetChanged.connect(function(asset) {
+tiled.activeAssetChanged.connect(function (asset) {
     if (asset && asset.isTileMap) {
         connectToMapEvents(asset);
     }
@@ -77,7 +85,7 @@ if (tiled.activeAsset && tiled.activeAsset.isTileMap) {
 }
 
 // Evento al guardar el mapa: escanea la capa 'map' y loguea tiles animados
-tiled.assetSaved.connect(function(asset) {
+tiled.assetSaved.connect(function (asset) {
     tiled.log("Mapa guardado, comprobando tiles animados por room...");
     if (!asset || !asset.isTileMap) return;
     var mapLayer = getLayerByName(asset, "map");
@@ -96,20 +104,29 @@ tiled.assetSaved.connect(function(asset) {
     for (var y = 0; y < mapLayer.height; y++) {
         for (var x = 0; x < mapLayer.width; x++) {
             var tile = mapLayer.tileAt(x, y);
-            if (tile && (tile.className === 'animated' || tile.className === 'animated-damage')) {
-                var room = getRoomFromTile(x, y);
-                var key = room.col + "," + room.row;
-                if (!animatedCountByRoom[key]) animatedCountByRoom[key] = 0;
-                animatedCountByRoom[key]++;
+            if (!tile) continue;
+
+            var room = getRoomFromTile(x, y);
+            var screen = room.col + "," + room.row;
+
+            if (tile.tileset.name === "sprites") {
+                let relativeX = x % roomWidth;
+                let relativeY = y % roomHeight;
+                tiled.alert(`ERROR: Sprite en la capa de mapa en:\n\nPantalla (${screen}).\nCoordenadas: (${relativeX}, ${relativeY})`);
+                return;
+            }
+            if ((tile.className === 'animated' || tile.className === 'animated-damage')) {
+                if (!animatedCountByRoom[screen]) animatedCountByRoom[screen] = 0;
+                animatedCountByRoom[screen]++;
             }
         }
     }
     // Mostrar el recuento y avisar si alguna room supera el límite
-    for (var key in animatedCountByRoom) {
-        var count = animatedCountByRoom[key];
-        tiled.log(`Room ${key} tiene ${count} tiles animados (límite: ${maxAnimated}).`);
+    for (var screen in animatedCountByRoom) {
+        var count = animatedCountByRoom[screen];
+        tiled.log(`Room ${screen} tiene ${count} tiles animados (límite: ${maxAnimated}).`);
         if (count > maxAnimated) {
-            tiled.alert(`La pantalla (${key}) tiene más de ${maxAnimated} tiles animados (${count})`);
+            tiled.alert(`La pantalla (${screen}) tiene más de ${maxAnimated} tiles animados (${count})`);
         }
     }
 });
