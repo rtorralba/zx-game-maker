@@ -1,6 +1,7 @@
 version  = "ZX SPECTRUM GAME MAKER V1"  # versión del fichero de configuration
 
 src = "."
+ui = "ui"     # UI_FOLDER
 bin = "bin"   # BIN_FOLDER
 output = "output"    # OUTPUT_FOLDER
 config_file = "output/config.bas"

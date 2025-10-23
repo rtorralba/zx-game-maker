@@ -17,6 +17,7 @@ if versión != "ZX SPECTRUM GAME MAKER V1":
 del _fichero
 
 SRC_FOLDER = Path(configuration["src"])
+UI_FOLDER = Path(configuration["ui"])
 BIN_FOLDER = Path(configuration["bin"])
 OUTPUT_FOLDER = Path(configuration["output"])
 CONFIG_FILE = Path(configuration["config_file"])

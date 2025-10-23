@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from configuration.folders import SRC_FOLDER
+from configuration.folders import SRC_FOLDER, UI_FOLDER
 from watchdog.events import FileSystemEventHandler
 from builder.helper import blackoutForbiddenSprites
 
@@ -16,7 +16,8 @@ class ZXPHandler(FileSystemEventHandler):
                     os.system("zxp2gus -t tiles -i " + str(file_path) + " -o " + str(SRC_FOLDER) + " -f png")
                 elif file_path.name == "sprites.zxp":
                     os.system("zxp2gus -t sprites -i " + str(file_path) + " -o " + str(SRC_FOLDER) + " -f png")
-                    
+                    os.system("zxp2gus -t sprites -i " + str(file_path) + " -o " + str(UI_FOLDER) + " -f png")
+
                     # Limpiar sprites no permitidos
                     sprites_png = SRC_FOLDER / "sprites.png"
                     blackoutForbiddenSprites(sprites_png)
