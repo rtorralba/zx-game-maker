@@ -13,7 +13,7 @@ function setClassByShape(obj) {
             obj.y = Math.round(obj.y / 8) * 8;
         }
         if (forbiddenSprites.includes(obj.tile.id)) {
-            tiled.alert("⚠️ Sprite no permitido.");
+            tiled.alert("Sprite no permitido.");
             if (obj.layer && obj.layer.removeObject) {
                 obj.layer.removeObject(obj);
                 tiled.log("✗ Objeto eliminado: " + (obj.name || "ID:" + obj.id));
