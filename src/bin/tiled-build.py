@@ -833,7 +833,17 @@ for layer in data['layers']:
                     arrayBuffer.append(0)
                     arrayBuffer.append(0)
                 enemiesPerScreen.append(0)
-            enemiesArray.append(array.array('B', arrayBuffer))
+            try:
+                enemiesArray.append(array.array('B', arrayBuffer))
+            except OverflowError:
+                print('\n\nERROR: OverflowError creating enemy array')
+                print('ArrayBuffer contents:', arrayBuffer)
+                print('Screen index:', idx)
+                if idx in screenEnemies:
+                    print('Enemies in screen:')
+                    for enemy in screenEnemies[idx]:
+                        print('  Enemy ID:', enemy['id'], 'Tile:', enemy['tile'], 'Position:', enemy['colIni'], enemy['linIni'])
+                exitWithErrorMessage('unsigned byte integer is greater than maximum - Check enemy values are within valid range (0-255)')
 
 enemiesInScreenOffsets = []
 enemiesInScreenOffsets.append(0)
