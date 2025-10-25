@@ -514,13 +514,11 @@ elif finishGameObjective == 'killSpecificEnemy':
     if finishGameEnemy == 0:
         exitWithErrorMessage('You must specify the enemyToKill property when finishGameObjective is set to killSpecificEnemy')
     configStr += "#define FINISH_GAME_OBJECTIVE_ENEMY\n"
-    configStr += "Const ENEMY_TO_KILL as ubyte = " + str(finishGameEnemy) + "\n"
     configStr += "Dim enemyToKillAlreadyKilled as ubyte = 0\n"
 elif finishGameObjective == 'itemsAndKillEnemy':
     if finishGameEnemy == 0:
         exitWithErrorMessage('You must specify the enemyToKill property when finishGameObjective is set to itemsAndKillEnemy')
     configStr += "#define FINISH_GAME_OBJECTIVE_ITEMS_AND_ENEMY\n"
-    configStr += "Const ENEMY_TO_KILL as ubyte = " + str(finishGameEnemy) + "\n"
     configStr += "Dim enemyToKillAlreadyKilled as ubyte = 0\n"
 
 configStr += "Const ITEMS_TO_OPEN_DOORS as ubyte = " + str(itemsToOpenDoors) + "\n"
@@ -703,6 +701,10 @@ for layer in data['layers']:
                     'move': '0',
                     'id': str(enemyIdCounter)
                 }
+
+                if finishGameObjective == 'killSpecificEnemy' or finishGameObjective == 'itemsAndKillEnemy':
+                    if object['id'] == finishGameEnemy:
+                        configStr += "Const ENEMY_TO_KILL as Ubyte = " + str(enemyIdCounter) + "\n"
 
                 enemyIdCounter += 1
 
