@@ -651,6 +651,8 @@ items = {}
 if arcadeMode == 1:
     songsByScreen = {}
 
+enemyIdCounter = 0
+
 for layer in data['layers']:
     if layer['type'] == 'objectgroup':
         for object in layer['objects']:
@@ -699,8 +701,10 @@ for layer in data['layers']:
                     'life': '1',
                     'speed': '3',
                     'move': '0',
-                    'id': str(object['id'])
+                    'id': str(enemyIdCounter)
                 }
+
+                enemyIdCounter += 1
 
                 if 'properties' in object and len(object['properties']) > 0:
                     for property in object['properties']:
