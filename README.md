@@ -1,4 +1,4 @@
-<img src="https://gm.retrojuegos.org/images/logo_boriel.png" alt="drawing" width="200" align="center"/>
+<img src="https://gm.retrojuegos.org/images/logo_boriel_200.png" alt="drawing" width="200" align="center"/>
 
 # ZX Spectrum Game Maker
 
