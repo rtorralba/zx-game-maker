@@ -46,7 +46,7 @@ Libraries and other software that are included in this project or that it was in
 * [r-lyeh](https://github.com/r-lyeh) Spectral emulator
 * [S.V.Bulba](https://ay.strangled.net/) Vortex Tracker II
 * [Freepik](https://www.flaticon.com/authors/freepik) Launcher Icons
-* [Duefectu](https://github.com/Duefectu/BorielBasicManualParaTorpes) [Libro Boriel Basic](https://www.amazon.es/Boriel-Basic-para-ZX-Spectrum/dp/B0CQD65FXZ/)
+* [Juan Segura Duran](https://github.com/Duefectu/BorielBasicManualParaTorpes) [Libro Boriel Basic (2023)](https://www.amazon.es/Boriel-Basic-para-ZX-Spectrum/dp/B0CQD65FXZ/)
 
 ## Special Thanks
 
