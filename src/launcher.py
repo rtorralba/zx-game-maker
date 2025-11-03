@@ -16,6 +16,7 @@ class TextRedirector:
     def flush(self):
         pass  # Necesario para compatibilidad con sys.stdout
 
+from builder.PlayerFxBuilder import PlayerFxBuilder
 from configuration.folders import BIN_FOLDER, OUTPUT_FOLDER, DIST_FOLDER, ASSETS_FOLDER, SCREENS_FOLDER, MAP_FOLDER, MAPS_FILE, HUD_MAP_FILE, MAPS_PROJECT, SRC_FOLDER
 from configuration.memoria import INITIAL_ADDRESS, MEMORY_BANK_SIZE
 # Detectar el sistema operativo 
@@ -391,6 +392,12 @@ def showFolderSelectionModal():
     else:
         return None
 
+def fxBuild():
+    if PlayerFxBuilder().build():
+        messagebox.showinfo("Éxito", "Los FX se han construido correctamente.")
+    else:
+        messagebox.showerror("Error", "Hubo un error al construir los FX.")
+
 # Crear la ventana principal
 root = tk.Tk()
 root.title("ZX Spectrum Game Maker")
@@ -538,7 +545,7 @@ menu_bar = tk.Menu(root)
 build_menu = tk.Menu(menu_bar, tearoff=0)
 build_menu.add_command(label="Game", command=lambda: executeBuild())
 build_menu.add_command(label="Game (verbose)", command=lambda: executeBuild(verbose=True))
-build_menu.add_command(label="FX", command=lambda: run_script("make-fx", output_text))
+build_menu.add_command(label="FX", command=lambda: fxBuild())
 build_menu.add_separator()
 build_menu.add_command(label="Exit", command=root.quit)
 menu_bar.add_cascade(label="Build", menu=build_menu)

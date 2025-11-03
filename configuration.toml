@@ -10,6 +10,7 @@ dist = "../dist"     # DIST_FOLDER
 [assets]
 folder = "../assets"         # ASSETS_FOLDER
 screens.folder = "screens"   # SCREENS_FOLDER
+fx.folder = "fx"             # FX_FOLDER
 map.folder = "map"           # MAP_FOLDER
 music = "music"              # MUSIC_FOLDER
 i18n = "i18n"
