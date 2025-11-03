@@ -17,7 +17,7 @@ class PlayerFxBuilder:
                 f_out.write(f_player.read())
                 f_out.write('\n')
                 f_out.write(f_fx.read())
-            result = subprocess.call(["zxbasm", "-t", "-o", str(self.TAP_PATH), str(self.OUTPUT_PATH)])
-            return result == 0
+            result = subprocess.run(["zxbasm", "-t", "-o", str(self.TAP_PATH), str(self.OUTPUT_PATH)])
+            return result.returncode == 0
         except Exception:
             return False
