@@ -3,6 +3,7 @@ from pathlib import Path
 import sys
 sys.path.append(str(Path(__file__).parent.parent))
 from configuration.folders import OUTPUT_FOLDER, SRC_FOLDER, FX_FOLDER
+import subprocess
 
 class PlayerFxBuilder:
     PLAYER_PATH = SRC_FOLDER / 'boriel' / 'player.asm'
@@ -16,7 +17,7 @@ class PlayerFxBuilder:
                 f_out.write(f_player.read())
                 f_out.write('\n')
                 f_out.write(f_fx.read())
-            result = os.system(f"zxbasm -t -o {self.TAP_PATH} {self.OUTPUT_PATH}")
+            result = subprocess.call(["zxbasm", "-t", "-o", str(self.TAP_PATH), str(self.OUTPUT_PATH)])
             return result == 0
         except Exception:
             return False
