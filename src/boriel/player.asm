@@ -194,3 +194,4 @@ FX:
 
 FXAddress:
 ; Archivo asm generado por BeepFX sin reproductor
+#include once "../../assets/fx/fx.asm"

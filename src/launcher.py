@@ -393,7 +393,7 @@ def showFolderSelectionModal():
         return None
 
 def fxBuild():
-    if PlayerFxBuilder().build():
+    if PlayerFxBuilder.build():
         messagebox.showinfo("Éxito", "Los FX se han construido correctamente.")
     else:
         messagebox.showerror("Error", "Hubo un error al construir los FX.")
