@@ -611,6 +611,12 @@ Sub resetValues()
     #ifdef TIMER_ENABLED
         resetTimer()
     #endif
+    #ifdef FINISH_GAME_OBJECTIVE_ENEMY
+        enemyToKillAlreadyKilled = 0
+    #endif
+    #ifdef FINISH_GAME_OBJECTIVE_ITEMS_AND_ENEMY
+        enemyToKillAlreadyKilled = 0
+    #endif
 End Sub
 
 Sub swapScreen()
