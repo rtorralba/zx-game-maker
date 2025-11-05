@@ -583,7 +583,6 @@ Sub resetValues()
         protaYRespawn = INITIAL_MAIN_CHARACTER_Y
     #endif
 
-    enemiesPerScreen = enemiesPerScreenInitial
     For i = 0 To SCREENS_COUNT
         screensWon(i) = 0
     Next i

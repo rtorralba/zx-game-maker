@@ -25,7 +25,6 @@ class SizesGetter:
         sizes.ANIMATED_TILES_IN_SCREEN_DATA = self.__getOutputFileSize("animatedTilesInScreen.bin")
         sizes.DAMAGE_TILES_DATA = self.__getOutputFileSize("damageTiles.bin")
         sizes.ENEMIES_PER_SCREEN_DATA = self.__getOutputFileSize("enemiesPerScreen.bin")
-        sizes.ENEMIES_PER_SCREEN_INITIAL_DATA = self.__getOutputFileSize("enemiesPerScreen.bin")
         sizes.SCREEN_OBJECTS_DATA = self.__getOutputFileSize("screenObjects.bin")
         sizes.SCREENS_WON_DATA = self.__getOutputFileSize("screensWon.bin")
         sizes.DECOMPRESSED_ENEMIES_SCREEN_DATA = self.__getOutputFileSize("decompressedEnemiesScreen.bin")

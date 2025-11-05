@@ -4,7 +4,7 @@ from builder.helper import BIN_FOLDER, runPythonScript
 
 class ChartGenerator:
     def execute(self, sizes: Sizes, is128k):
-        enemiesSize = sizes.ENEMIES_DATA + sizes.ENEMIES_IN_SCREEN_OFFSETS_DATA + sizes.ENEMIES_PER_SCREEN_DATA + sizes.ENEMIES_PER_SCREEN_INITIAL_DATA + sizes.DECOMPRESSED_ENEMIES_SCREEN_DATA
+        enemiesSize = sizes.ENEMIES_DATA + sizes.ENEMIES_IN_SCREEN_OFFSETS_DATA + sizes.ENEMIES_PER_SCREEN_DATA + sizes.DECOMPRESSED_ENEMIES_SCREEN_DATA
         mapsSize = sizes.MAPS_DATA + sizes.SCREEN_OFFSETS_DATA + sizes.SCREEN_OBJECTS_DATA + sizes.SCREENS_WON_DATA
         if is128k:
             paramsMap0 = "Maps:" + str(mapsSize) + ",Enemies:" + str(enemiesSize) + ",Tileset:" + str(sizes.TILESET_DATA) + ",Attributes:" + str(sizes.ATTR_DATA) + ",Objects:" + str(sizes.SCREEN_OBJECTS_DATA) + ",Damage-Tiles:" + str(sizes.DAMAGE_TILES_DATA) + ",Animated-Tiles:" + str(sizes.ANIMATED_TILES_IN_SCREEN_DATA) + " memory-bank-0-128K.png"
