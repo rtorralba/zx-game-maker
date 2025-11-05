@@ -50,6 +50,7 @@ keyTile = 0
 itemTile = 0
 doorTile = 0
 lifeTile = 0
+enemyDoorTile = 62
 
 for tileset in data['tilesets']:
     if tileset['name'] == 'tiles':
@@ -565,7 +566,7 @@ for layer in data['layers']:
 
                 # screens[idx][mapY][mapX % screenWidth] = tile
 
-                if tile == keyTile or tile == itemTile or tile == doorTile or tile == lifeTile or tile == ammoTile or tile == "63":
+                if tile == keyTile or tile == itemTile or tile == doorTile or tile == lifeTile or tile == ammoTile or tile == enemyDoorTile:
                     screenObjectsCount += 1
                 
 configStr += "const MAP_SCREENS_WIDTH_COUNT as ubyte = " + str(mapCols) + "\n"
