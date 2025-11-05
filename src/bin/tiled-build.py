@@ -188,6 +188,8 @@ arcadeHurryUpSeconds = 0
 
 platformMimicEnabled = 0
 
+mainCharacterInvincible = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -328,6 +330,8 @@ if 'properties' in data:
             arcadeHurryUpSeconds = property['value']
         elif property['name'] == 'platformMimicEnabled':
             platformMimicEnabled = 1 if property['value'] else 0
+        elif property['name'] == 'mainCharacterInvincible':
+            mainCharacterInvincible = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -353,6 +357,9 @@ if platformMimicEnabled == 1:
 
 if currentStageEnabled == 1:
     configStr += "#DEFINE CURRENT_STAGE_ENABLED\n"
+
+if mainCharacterInvincible == 1:
+    configStr += "#DEFINE MAIN_CHARACTER_INVINCIBLE\n"
 
 if livesMode == 1:
     configStr += "#DEFINE LIVES_MODE_ENABLED\n"

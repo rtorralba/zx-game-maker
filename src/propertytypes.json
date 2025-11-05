@@ -450,6 +450,11 @@
                 "value": true
             },
             {
+                "name": "mainCharacterInvincible",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "maxAnimatedTilesPerScreen",
                 "type": "int",
                 "value": 6

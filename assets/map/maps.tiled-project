@@ -3,7 +3,7 @@
     "commands": [
     ],
     "compatibilityVersion": 1100,
-    "extensionsPath": "./../../src/scripts/tiled",
+    "extensionsPath": "../../src/scripts/tiled",
     "folders": [
         "."
     ],
@@ -459,6 +459,11 @@
                     "name": "mainCharacterExtraFrame",
                     "type": "bool",
                     "value": true
+                },
+                {
+                    "name": "mainCharacterInvincible",
+                    "type": "bool",
+                    "value": false
                 },
                 {
                     "name": "maxAnimatedTilesPerScreen",

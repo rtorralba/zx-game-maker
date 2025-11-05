@@ -13,6 +13,10 @@ end sub
 #endif
 
 sub decrementLife()
+    #ifdef MAIN_CHARACTER_INVINCIBLE
+        return
+    #endif
+    
     if (currentLife = 0) then
         return
     end if
