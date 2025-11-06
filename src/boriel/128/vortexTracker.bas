@@ -22,7 +22,8 @@ Sub Fastcall VortexTracker_Play(address As Uinteger)
         ld a,($5b5c)
         push af
         And %11111000
-        Or  MUSIC_BANK; Memory Bank
+        ld  bc, (_musicBank)
+        Or c
         ld bc,$7ffd
         push bc
         Out (c),a
@@ -79,7 +80,8 @@ Sub Fastcall callVtAddress(address As Uinteger)
         ld a,($5b5c)
         push af
         And %11111000
-        Or  MUSIC_BANK; Memory Bank
+        ld  bc, (_musicBank)
+        Or c
         ld bc,$7ffd
         push bc
         Out (c),a

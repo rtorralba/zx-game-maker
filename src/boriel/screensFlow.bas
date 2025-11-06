@@ -7,7 +7,7 @@ Sub showMenu()
     inMenu = 1
     Ink 7: Paper 0: Border 0: BRIGHT 0: FLASH 0: Cls
     #ifdef ENABLED_128k
-        PaginarMemoria(DATA_BANK)
+        PaginarMemoria(screensBank)
         dzx0Standard(TITLE_SCREEN_ADDRESS, $4000)
         PaginarMemoria(0)
         #ifdef MUSIC_ENABLED
@@ -169,7 +169,7 @@ Sub playGame()
     
     #ifdef ENABLED_128k
         #ifdef INTRO_SCREEN_ENABLED
-            PaginarMemoria(DATA_BANK)
+            PaginarMemoria(screensBank)
             dzx0Standard(INTRO_SCREEN_ADDRESS, $4000)
             PaginarMemoria(0)
             #ifdef MUSIC_ENABLED
@@ -193,7 +193,7 @@ Sub playGame()
     #endif
     
     #ifdef ENABLED_128k
-        PaginarMemoria(DATA_BANK)
+        PaginarMemoria(screensBank)
         dzx0Standard(HUD_SCREEN_ADDRESS, $4000)
         PaginarMemoria(0)
         #ifndef ARCADE_MODE
@@ -490,7 +490,7 @@ Sub ending()
                 VortexTracker_Stop()
             #endif
         #endif
-        PaginarMemoria(DATA_BANK)
+        PaginarMemoria(screensBank)
         dzx0Standard(ENDING_SCREEN_ADDRESS, $4000)
         PaginarMemoria(0)
     #Else
@@ -519,7 +519,7 @@ Sub gameOver()
     
     #ifdef ENABLED_128k
         #ifdef GAMEOVER_SCREEN_ENABLED
-            PaginarMemoria(DATA_BANK)
+            PaginarMemoria(screensBank)
             dzx0Standard(GAMEOVER_SCREEN_ADDRESS, $4000)
             PaginarMemoria(0)
         #Else
