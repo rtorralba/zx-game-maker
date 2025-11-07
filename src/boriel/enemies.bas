@@ -114,9 +114,11 @@ Sub saveAndDraw(enemyId as Ubyte, tile As Ubyte, horizontalDirection As Ubyte, v
 End Sub
 
 Sub checkAndDraw(enemyId as Ubyte, tile As Ubyte, enemyCol As Byte, enemyLin As Byte)
-    if checkProtaAndBulletCollision(enemyId) Then
-        If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <= 0 Then
-            Return
+    If tile > 15 Then
+        if checkProtaAndBulletCollision(enemyId) Then
+            If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <= 0 Then
+                Return
+            End If
         End If
     End If
     Draw2x2Sprite(tile + 1, enemyCol, enemyLin)
