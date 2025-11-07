@@ -157,3 +157,70 @@ function getLayerByName(map, name) {
     }
     return null;
 }
+
+var countSameTileObjectsAction = tiled.registerAction("CountSameTileObjects", function (action) {
+    const asset = tiled.activeAsset;
+    if (!asset || !asset.isTileMap) {
+        tiled.alert("No active map.");
+        return;
+    }
+
+    var mapLayer = getLayerByName(asset, "map");
+    if (!mapLayer || !mapLayer.isTileLayer) {
+        tiled.alert("No se encontró la capa 'map'.");
+        return;
+    }
+    const ammoTile = 187
+    const keyTile = 191
+    const itemTile = 190
+    const doorTile = 62
+    const lifeTile = 189
+    const enemyDoorTile = 63
+
+    let countByTile = {
+        'ammoTile': 0,
+        'keyTile': 0,
+        'itemTile': 0,
+        'doorTile': 0,
+        'lifeTile': 0,
+        'enemyDoorTile': 0
+    };
+
+    for (var y = 0; y < mapLayer.height; y++) {
+        for (var x = 0; x < mapLayer.width; x++) {
+            var tile = mapLayer.tileAt(x, y);
+            if (!tile) continue;
+
+            if (tile.id === ammoTile) {
+                countByTile.ammoTile++;
+            } else if (tile.id === keyTile) {
+                countByTile.keyTile++;
+            } else if (tile.id === itemTile) {
+                countByTile.itemTile++;
+            } else if (tile.id === doorTile) {
+                countByTile.doorTile++;
+            } else if (tile.id === lifeTile) {
+                countByTile.lifeTile++;
+            } else if (tile.id === enemyDoorTile) {
+                countByTile.enemyDoorTile++;
+            }
+        }
+    }
+
+    let summary = 
+        `keyTile (${keyTile}): ${countByTile.keyTile}\n` +
+        `itemTile (${itemTile}): ${countByTile.itemTile}\n` +
+        `doorTile (${doorTile}): ${countByTile.doorTile}\n` +
+        `lifeTile (${lifeTile}): ${countByTile.lifeTile}\n` +
+        `ammoTile (${ammoTile}): ${countByTile.ammoTile}\n` +
+        `enemyDoorTile (${enemyDoorTile}): ${countByTile.enemyDoorTile}`;
+    tiled.alert(summary);
+});
+
+countSameTileObjectsAction.text = "Elements summary";
+countSameTileObjectsAction.iconVisibleInMenu = false;
+
+// Add to Edit menu (adjust menu if you prefer another location)
+tiled.extendMenu("Edit", [
+    { action: "CountSameTileObjects" }
+]);
