@@ -184,7 +184,11 @@
    </properties>
    <point/>
   </object>
-  <object id="32" name="platform_1" type="platform" gid="201" x="280" y="296" width="16" height="16"/>
+  <object id="32" name="platform_1" type="platform" gid="201" x="280" y="296" width="16" height="16">
+   <properties>
+    <property name="speed" type="int" propertytype="enemySpeed" value="2"/>
+   </properties>
+  </object>
   <object id="33" name="platform_1_end" type="ZXSGMPointer" x="344" y="296">
    <properties>
     <property name="sprite" type="object" value="32"/>
@@ -220,7 +224,7 @@
    </properties>
    <point/>
   </object>
-  <object id="49" type="music2" x="288" y="320">
+  <object id="49" type="music2" x="472" y="208">
    <point/>
   </object>
   <object id="50" type="music3" x="408" y="152">

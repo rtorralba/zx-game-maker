@@ -48,8 +48,9 @@ animatedTilesIds = []
 ammoTile = 0
 keyTile = 0
 itemTile = 0
-doorTile = 0
+doorTile = "62"
 lifeTile = 0
+enemyDoorTile = "63"
 
 for tileset in data['tilesets']:
     if tileset['name'] == 'tiles':
@@ -60,8 +61,6 @@ for tileset in data['tilesets']:
                 keyTile = str(tile['id'])
             if tile['type'] == 'item':
                 itemTile = str(tile['id'])
-            if tile['type'] == 'door':
-                doorTile = str(tile['id'])
             if tile['type'] == 'life':
                 lifeTile = str(tile['id'])
             if tile['type'] == 'animated':
@@ -551,6 +550,9 @@ for layer in data['layers']:
         screens = []
         screenObjects = defaultdict(dict)
 
+        collectableTiles = [keyTile, itemTile, doorTile, lifeTile, ammoTile, enemyDoorTile]
+        collectableCountByTile = defaultdict(int)
+
         for idx, screen in enumerate(layer['chunks']):
             screens.append(array.array('B', screen['data']))
 
@@ -565,9 +567,20 @@ for layer in data['layers']:
 
                 # screens[idx][mapY][mapX % screenWidth] = tile
 
-                if tile == keyTile or tile == itemTile or tile == doorTile or tile == lifeTile or tile == ammoTile or tile == "63":
+                if tile in collectableTiles:
+                    collectableCountByTile[tile] += 1
                     screenObjectsCount += 1
                 
+        print('Collectable items by tile:')
+        print({
+            'keyTile (' + keyTile + ')': collectableCountByTile[keyTile],
+            'itemTile (' + itemTile + ')': collectableCountByTile[itemTile],
+            'doorTile (' + doorTile + ')': collectableCountByTile[doorTile],
+            'lifeTile (' + lifeTile + ')': collectableCountByTile[lifeTile],
+            'ammoTile (' + ammoTile + ')': collectableCountByTile[ammoTile],
+            'enemyDoorTile (' + enemyDoorTile + ')': collectableCountByTile[enemyDoorTile]
+        })
+
 configStr += "const MAP_SCREENS_WIDTH_COUNT as ubyte = " + str(mapCols) + "\n"
 configStr += "const SCREEN_OBJECT_ITEM_INDEX as ubyte = 0 \n"
 configStr += "const SCREEN_OBJECT_KEY_INDEX as ubyte = 1 \n"
@@ -593,10 +606,6 @@ with open("output/screenObjects.bin", "wb") as f:
     f.write(bytearray([0] * (screenObjectsCount) * 4))
 
 configStr += "CONST SCREEN_OBJECTS_COUNT as ubyte = " + str(screenObjectsCount) + "\n"
-
-with open("output/objectsInScreen.bin", "wb") as f:
-    for screen in screenObjects:
-        f.write(bytearray([screenObjects[screen]['item'], screenObjects[screen]['key'], screenObjects[screen]['door'], screenObjects[screen]['life'], screenObjects[screen]['ammo']]))
 
 with open("output/animatedTilesInScreen.bin", "wb") as f:
     for i in range(maxAnimatedTilesPerScreen):
