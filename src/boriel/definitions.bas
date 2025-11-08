@@ -192,11 +192,13 @@ Const ENEMY_DOOR_TILE As Ubyte = 63
 Const KEY_DOOR_TILE As Ubyte = 62
 Const ITEMS_DOOR_TILE As Ubyte = 61
 Const BREAKABLE_BY_BULLET_TILE As Ubyte = 60
-Const BREAKABLE_BY_TOUCH_TILE As Ubyte = 59
 
+#ifdef USE_BREAKABLE_TILE_BY_TOUCH
+    Const BREAKABLE_BY_TOUCH_TILE As Ubyte = 59
+    Dim tileToBreakByTouchX As Ubyte = 0
+    Dim tileToBreakByTouchY As Ubyte = 0
+#endif
 Dim lastFrameOnBreakableTiles As Ubyte = 0
-Dim tileToBreakByTouchX As Ubyte = 0
-Dim tileToBreakByTouchY As Ubyte = 0
 
 #Define PROTA_IDLE_SPRITE_ID 13
 #define arrayBasePtr(x) (PEEK(Uinteger, @x + 2))
@@ -207,4 +209,8 @@ Dim tileToBreakByTouchY As Ubyte = 0
 #else
     Const AMMO_TILE As Ubyte = 188
     Const LAST_PRINTABLE_TILE As Ubyte = 187
+#endif
+
+#ifdef PASSWORD_ENABLED
+    Dim passwordOk As Ubyte = 0
 #endif
