@@ -550,7 +550,7 @@ for layer in data['layers']:
         screens = []
         screenObjects = defaultdict(dict)
 
-        collectableTiles = [keyTile, itemTile, doorTile, lifeTile, ammoTile, enemyDoorTile]
+        collectableTiles = [keyTile, itemTile, doorTile, lifeTile, ammoTile]
         collectableCountByTile = defaultdict(int)
 
         for idx, screen in enumerate(layer['chunks']):
@@ -580,6 +580,7 @@ for layer in data['layers']:
             'ammoTile (' + ammoTile + ')': collectableCountByTile[ammoTile],
             'enemyDoorTile (' + enemyDoorTile + ')': collectableCountByTile[enemyDoorTile]
         })
+        print('Total screen objects: ' + str(screenObjectsCount))
 
 configStr += "const MAP_SCREENS_WIDTH_COUNT as ubyte = " + str(mapCols) + "\n"
 configStr += "const SCREEN_OBJECT_ITEM_INDEX as ubyte = 0 \n"

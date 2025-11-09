@@ -64,49 +64,47 @@ End Sub
 
 
 #ifdef PASSWORD_ENABLED
-    Function readKey() As Ubyte
-        Let k = GetKey
-        Let keyOption = chr(k)
-        If keyOption = " " Then showMenu()
-        Return k
-    End Function
-    
-    Sub passwordScreen()
-        Ink 7: Paper 0: Border 0: BRIGHT 0: FLASH 0: Cls
-        Print AT 10, 10; "INSERT PASSWORD"
-        Print AT 18, 0; "PRESS SPACE To Return To MENU"
-        For i=0 To 7
-            Print AT 12, 10 + i; "*"
-        Next i
-        
-        Let keyOption = ""
-        Dim pass(7) As Ubyte
-        Dim passwordIndex As Ubyte = 0
-        
-        For i=0 To 7
-            While GetKeyScanCode() <> 0
-            Wend
-            pass(i) = readKey()
-            Print AT 12, 10 + i; chr(pass(i))
-        Next i
-        
-        For i=0 To 7
-            If chr(pass(i)) <> password(i) Then
-                passwordScreen()
-            End If
-        Next i
-        
-        playGame()
-    End Sub
-#endif
-
-#ifdef REDEFINE_KEYS_ENABLED
     Function LeerTecla() As Uinteger
         Do Loop While GetKeyScanCode()
         Do Loop Until GetKeyScanCode()
         Return GetKeyScanCode()
     End Function
     
+    Sub passwordScreen()
+        If passwordOk Then Return
+
+        Cls
+
+        Dim failed As Ubyte = 0
+
+        doubleSizeTexto(96, 120, "PASS")
+
+        For i=0 To 4
+            LeerTecla()
+            Print AT 10,12 + i; "*"
+            If Inkey$ <> password(i) Then
+                failed = 1
+            End If
+        Next i
+
+        If failed Then
+            showMenu()
+        End If
+
+        passwordOk = 1
+        
+        playGame()
+    End Sub
+#endif
+
+#ifdef REDEFINE_KEYS_ENABLED
+    #ifndef PASSWORD_ENABLED
+        Function LeerTecla() As Uinteger
+            Do Loop While GetKeyScanCode()
+            Do Loop Until GetKeyScanCode()
+            Return GetKeyScanCode()
+        End Function
+    #endif
     Sub redefineKeys()
         Ink 7: Paper 0: Border 0: BRIGHT 0: FLASH 0: Cls
 
@@ -158,6 +156,9 @@ End Function
 
 Sub playGame()
     inMenu = 0
+    #ifdef PASSWORD_ENABLED
+        passwordScreen()
+    #Endif
     
     #ifdef ENABLED_128k
         #ifdef MUSIC_ENABLED

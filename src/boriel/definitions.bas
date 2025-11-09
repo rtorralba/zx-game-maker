@@ -115,7 +115,7 @@ Dim enemiesInScreenOffsets(SCREENS_COUNT) As Uinteger at ENEMIES_IN_SCREEN_OFFSE
 Dim animatedTilesInScreen(MAX_ANIMATED_TILES_PER_SCREEN, 2) As Ubyte at ANIMATED_TILES_IN_SCREEN_DATA_ADDRESS
 Dim damageTiles(DAMAGE_TILES_COUNT) As Ubyte at DAMAGE_TILES_DATA_ADDRESS
 Dim enemiesPerScreen(SCREENS_COUNT) As Ubyte at ENEMIES_PER_SCREEN_DATA_ADDRESS
-Dim screenObjects(SCREEN_OBJECTS_COUNT - 1, 4) As Ubyte at SCREEN_OBJECTS_DATA_ADDRESS
+Dim screenObjects(SCREEN_OBJECTS_COUNT - 1, 3) As Ubyte at SCREEN_OBJECTS_DATA_ADDRESS
 Dim screenObjectsCurrentIndex As Ubyte = 0
 Dim screensWon(SCREENS_COUNT) As Ubyte at SCREENS_WON_DATA_ADDRESS
 Dim decompressedEnemiesScreen(MAX_ENEMIES_PER_SCREEN, 12) As Ubyte at DECOMPRESSED_ENEMIES_SCREEN_DATA_ADDRESS
@@ -192,11 +192,13 @@ Const ENEMY_DOOR_TILE As Ubyte = 63
 Const KEY_DOOR_TILE As Ubyte = 62
 Const ITEMS_DOOR_TILE As Ubyte = 61
 Const BREAKABLE_BY_BULLET_TILE As Ubyte = 60
-Const BREAKABLE_BY_TOUCH_TILE As Ubyte = 59
 
+#ifdef USE_BREAKABLE_TILE_BY_TOUCH
+    Const BREAKABLE_BY_TOUCH_TILE As Ubyte = 59
+    Dim tileToBreakByTouchX As Ubyte = 0
+    Dim tileToBreakByTouchY As Ubyte = 0
+#endif
 Dim lastFrameOnBreakableTiles As Ubyte = 0
-Dim tileToBreakByTouchX As Ubyte = 0
-Dim tileToBreakByTouchY As Ubyte = 0
 
 #Define PROTA_IDLE_SPRITE_ID 13
 #define arrayBasePtr(x) (PEEK(Uinteger, @x + 2))
@@ -207,4 +209,8 @@ Dim tileToBreakByTouchY As Ubyte = 0
 #else
     Const AMMO_TILE As Ubyte = 188
     Const LAST_PRINTABLE_TILE As Ubyte = 187
+#endif
+
+#ifdef PASSWORD_ENABLED
+    Dim passwordOk As Ubyte = 0
 #endif
