@@ -550,7 +550,7 @@ for layer in data['layers']:
         screens = []
         screenObjects = defaultdict(dict)
 
-        collectableTiles = [keyTile, itemTile, doorTile, lifeTile, ammoTile, enemyDoorTile]
+        collectableTiles = [keyTile, itemTile, doorTile, lifeTile, ammoTile]
         collectableCountByTile = defaultdict(int)
 
         for idx, screen in enumerate(layer['chunks']):
