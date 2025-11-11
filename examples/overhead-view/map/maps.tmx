@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" class="ZXSpectrumGameMaker" orientation="orthogonal" renderorder="left-down" width="132" height="116" tilewidth="8" tileheight="8" infinite="1" nextlayerid="3" nextobjectid="37">
+<map version="1.10" tiledversion="1.11.1-99-gec89c545" class="ZXSpectrumGameMaker" orientation="orthogonal" renderorder="left-down" width="132" height="116" tilewidth="8" tileheight="8" infinite="1" nextlayerid="3" nextobjectid="38">
  <editorsettings>
   <chunksize width="32" height="22"/>
  </editorsettings>
  <properties>
   <property name="128Kenabled" type="bool" value="true"/>
-  <property name="VTPLAYER_INIT" value="EFAD"/>
-  <property name="VTPLAYER_MUTE" value="EFB5"/>
-  <property name="VTPLAYER_NEXTNOTE" value="EFB2"/>
   <property name="ammo" type="int" value="0"/>
   <property name="animatePeriodEnemy" type="int" value="3"/>
   <property name="animatePeriodTile" type="int" value="10"/>
@@ -155,47 +152,45 @@
   </data>
  </layer>
  <objectgroup id="2" name="objects">
-  <object id="12" name="enemy_2" type="enemy" gid="209" x="376" y="320" width="16" height="16">
+  <object id="12" name="enemy_2" type="ZXSGMEnemy" gid="209" x="376" y="320" width="16" height="16">
    <properties>
     <property name="life" type="int" value="3"/>
    </properties>
   </object>
-  <object id="13" name="enemy_2_end" x="448" y="272">
+  <object id="13" name="enemy_2_end" type="ZXSGMPointer" x="448" y="272">
    <properties>
-    <property name="enemy" type="object" value="12"/>
+    <property name="sprite" type="object" value="12"/>
    </properties>
    <point/>
   </object>
-  <object id="17" name="enemy_4" type="enemy" gid="209" x="264" y="128" width="16" height="16"/>
-  <object id="18" name="enemy_4_end" x="336" y="128">
+  <object id="17" name="enemy_4" type="ZXSGMEnemy" gid="209" x="264" y="128" width="16" height="16"/>
+  <object id="18" name="enemy_4_end" type="ZXSGMPointer" x="336" y="128">
    <properties>
-    <property name="enemy" type="object" value="17"/>
+    <property name="sprite" type="object" value="17"/>
    </properties>
    <point/>
   </object>
-  <object id="19" name="enemy_5" type="enemy" gid="213" x="96" y="112" width="16" height="16"/>
-  <object id="20" x="152" y="104">
+  <object id="19" name="enemy_5" type="ZXSGMEnemy" gid="213" x="96" y="112" width="16" height="16"/>
+  <object id="20" type="ZXSGMPointer" x="152" y="104">
    <properties>
-    <property name="enemy" type="object" value="19"/>
+    <property name="sprite" type="object" value="19"/>
    </properties>
    <point/>
   </object>
-  <object id="26" name="mainCharacter" type="mainCharacter" x="136" y="280">
-   <point/>
-  </object>
-  <object id="30" gid="217" x="408" y="256" width="16" height="16"/>
-  <object id="31" x="376" y="256">
+  <object id="30" type="ZXSGMEnemy" gid="217" x="408" y="256" width="16" height="16"/>
+  <object id="31" type="ZXSGMPointer" x="376" y="256">
    <properties>
-    <property name="enemy" type="object" value="30"/>
+    <property name="sprite" type="object" value="30"/>
    </properties>
    <point/>
   </object>
-  <object id="34" type="enemy" gid="217" x="304" y="48" width="16" height="16"/>
-  <object id="35" x="408" y="120">
+  <object id="34" type="ZXSGMEnemy" gid="217" x="304" y="48" width="16" height="16"/>
+  <object id="35" type="ZXSGMPointer" x="408" y="120">
    <properties>
-    <property name="enemy" type="object" value="34"/>
+    <property name="sprite" type="object" value="34"/>
    </properties>
    <point/>
   </object>
+  <object id="37" type="mainCharacter" gid="193" x="128" y="272" width="16" height="16"/>
  </objectgroup>
 </map>
