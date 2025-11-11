@@ -1,11 +1,15 @@
 #include "../output/config.bas"
 
-' #ifdef ENABLED_128k
-'     Dim isAmstrad As Ubyte = 0
-'     If Peek(23312) = 1
-'         isAmstrad = 1
-'     End If
-' #endif
+#ifdef ENABLED_128k
+    Dim screensBank As Ubyte = 3
+    Dim musicBank As Ubyte = 4
+    Dim fxBank As Ubyte = 6
+    If Peek(23312) = 1 Then ' Amstrad
+        screensBank = 4
+        musicBank = 3
+        fxBank = 1
+    End If
+#endif
 
 ' GuSprites
 #define PRECOMPUTED_SPRITES
@@ -95,10 +99,6 @@ Dim inMenu As Ubyte = 1
 
 #ifdef SHOOTING_ENABLED
     Dim noKeyPressedForShoot As Ubyte = 1
-#endif
-#ifdef ENABLED_128k
-    #define DATA_BANK 4
-    #define MUSIC_BANK 3
 #endif
 
 #ifdef SIDE_VIEW
