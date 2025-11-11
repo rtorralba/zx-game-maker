@@ -681,7 +681,13 @@ End Sub
     Sub animateIdle()
         If protaLoopCounter >= IDLE_TIME Then
             If jumpCurrentKey <> jumpStopValue Then Return
-            If isFalling() Then Return
+            
+            #ifdef SIDE_VIEW
+                #ifdef JETPACK_FUEL
+                    If isFalling() Then Return
+                #endif
+            #endif
+
             If CheckCollision(protaX, protaY, 2) Then Return
             
             saveProta(protaY, protaX, getNextProtaIdleSprite(), protaDirection)

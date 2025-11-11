@@ -403,10 +403,12 @@ Function checkTypeOfTile(col as uByte, lin as uByte, type as Ubyte) as uByte
     If type = 0 Then
         Return isDamageTileByColLin(col, lin)
     End If
-    #ifdef LADDERS_ENABLED
-        If type = 2 Then
-            Return isLadder(col, lin)
-        End If
+    #ifdef SIDE_VIEW
+        #ifdef LADDERS_ENABLED
+            If type = 2 Then
+                Return isLadder(col, lin)
+            End If
+        #endif
     #endif
     Return 0
 End Function

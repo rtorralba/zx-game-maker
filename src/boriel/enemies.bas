@@ -199,8 +199,8 @@ Sub moveEnemies()
             enemyCol = enemyCol + enemyHorizontalDirection
             enemyLin = enemyLin + enemyVerticalDirection
 
-            If tile < 16 Then
-                #ifdef SIDE_VIEW
+            #ifdef SIDE_VIEW
+                If tile < 16 Then
                     If checkPlatformHasProtaOnTop(enemyCol, enemyLin) Then
                         jumpCurrentKey = jumpStopValue
                         If enemyVerticalDirection Then
@@ -215,18 +215,30 @@ Sub moveEnemies()
                             End If
                         End If
                     End If
-                #endif
-            Else
-                If checkProtaAndBulletCollision(enemyId) Then
-                    If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <= 0 Then
-                        continue For
+                Else
+                    If checkProtaAndBulletCollision(enemyId) Then
+                        If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <= 0 Then
+                            continue For
+                        End If
+                    End If
+                    
+                    If enemyHorizontalDirection = -1 Then
+                        tile = tile + 16
                     End If
                 End If
-                
-                If enemyHorizontalDirection = -1 Then
-                    tile = tile + 16
+            #else
+                If tile > 15 Then
+                    If checkProtaAndBulletCollision(enemyId) Then
+                        If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <= 0 Then
+                            continue For
+                        End If
+                    End If
+                    
+                    If enemyHorizontalDirection = -1 Then
+                        tile = tile + 16
+                    End If
                 End If
-            End If
+            #endif
             
             If enemFrame Then
                 tile = tile + 1
