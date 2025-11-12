@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.1-99-gec89c545" orientation="orthogonal" renderorder="right-down" width="32" height="24" tilewidth="8" tileheight="8" infinite="0" nextlayerid="4" nextobjectid="15">
+ <tileset firstgid="1" name="objects" tilewidth="8" tileheight="8" tilecount="9" columns="9">
+  <image source="hud-tileset.png" width="72" height="8"/>
+ </tileset>
+ <imagelayer id="2" name="background">
+  <image source="hud.png" width="256" height="192"/>
+ </imagelayer>
+ <objectgroup id="3" name="objects">
+  <object id="6" name="life" gid="1" x="40" y="184" width="8" height="8"/>
+  <object id="7" name="ammo" gid="2" x="72" y="184" width="8" height="8"/>
+  <object id="8" name="keys" gid="3" x="128" y="184" width="8" height="8"/>
+  <object id="9" name="score" gid="4" x="144" y="184" width="8" height="8"/>
+  <object id="10" name="items" gid="5" x="240" y="184" width="8" height="8"/>
+  <object id="11" name="messages" gid="6" x="152" y="184" width="8" height="8"/>
+  <object id="12" name="fuel" gid="7" x="40" y="192" width="8" height="8"/>
+  <object id="13" name="timer" gid="8" x="72" y="192" width="8" height="8"/>
+  <object id="14" name="stage" gid="9" x="120" y="192" width="8" height="8"/>
+ </objectgroup>
+</map>
