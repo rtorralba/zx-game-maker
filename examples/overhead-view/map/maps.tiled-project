@@ -3,13 +3,49 @@
     "commands": [
     ],
     "compatibilityVersion": 1100,
-    "extensionsPath": "extensions",
+    "extensionsPath": "../../src/scripts/tiled",
     "folders": [
         "."
     ],
     "properties": [
     ],
     "propertyTypes": [
+        {
+            "id": 7,
+            "name": "breakableTilesMode",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "disabled",
+                "all",
+                "individual"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "id": 6,
+            "name": "enemyMovementTypes",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "default",
+                "noReturn"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "id": 3,
+            "name": "enemySpeed",
+            "storageType": "int",
+            "type": "enum",
+            "values": [
+                "0",
+                "1",
+                "2",
+                "3"
+            ],
+            "valuesAsFlags": false
+        },
         {
             "id": 1,
             "name": "gameView",
@@ -22,6 +58,190 @@
             "valuesAsFlags": false
         },
         {
+            "id": 4,
+            "name": "jumpType",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "constant",
+                "accelerated"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "id": 5,
+            "name": "livesMode",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "disabled",
+                "instant respawn",
+                "show graveyard"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 12,
+            "members": [
+            ],
+            "name": "mainCharacter",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 13,
+            "members": [
+            ],
+            "name": "music1",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 14,
+            "members": [
+            ],
+            "name": "music2",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 15,
+            "members": [
+            ],
+            "name": "music3",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
+            "id": 8,
+            "name": "objectiveType",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "items",
+                "killSpecificEnemy",
+                "itemsAndKillEnemy"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 16,
+            "members": [
+            ],
+            "name": "platform",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 9,
+            "members": [
+                {
+                    "name": "life",
+                    "type": "int",
+                    "value": 1
+                },
+                {
+                    "name": "move",
+                    "propertyType": "enemyMovementTypes",
+                    "type": "string",
+                    "value": "default"
+                },
+                {
+                    "name": "speed",
+                    "propertyType": "enemySpeed",
+                    "type": "int",
+                    "value": 3
+                }
+            ],
+            "name": "ZXSGMEnemy",
+            "type": "class",
+            "useAs": [
+                "property",
+                "object",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 11,
+            "members": [
+                {
+                    "name": "sprite",
+                    "type": "object",
+                    "value": 0
+                }
+            ],
+            "name": "ZXSGMPointer",
+            "type": "class",
+            "useAs": [
+                "property",
+                "object"
+            ]
+        },
+        {
             "color": "#ffa0a0a4",
             "drawFill": true,
             "id": 2,
@@ -30,21 +250,6 @@
                     "name": "128Kenabled",
                     "type": "bool",
                     "value": false
-                },
-                {
-                    "name": "VTPLAYER_INIT",
-                    "type": "string",
-                    "value": "EFAD"
-                },
-                {
-                    "name": "VTPLAYER_MUTE",
-                    "type": "string",
-                    "value": "EFB5"
-                },
-                {
-                    "name": "VTPLAYER_NEXTNOTE",
-                    "type": "string",
-                    "value": "EFB2"
                 },
                 {
                     "name": "ammo",
@@ -72,6 +277,36 @@
                     "value": 10
                 },
                 {
+                    "name": "arcadeHurryUpSeconds",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "arcadeMode",
+                    "type": "bool",
+                    "value": false
+                },
+                {
+                    "name": "arcadeModeFirstScreen",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "arcadeModeResetOnKill",
+                    "type": "bool",
+                    "value": false
+                },
+                {
+                    "name": "arcadeModeUseSpriteId",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "arcadeShowIntermediateScreen",
+                    "type": "bool",
+                    "value": true
+                },
+                {
                     "name": "backgroundAttribute",
                     "type": "int",
                     "value": 7
@@ -82,9 +317,29 @@
                     "value": "0"
                 },
                 {
+                    "name": "borderColorItem",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "borderColorKey",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "borderColorLife",
+                    "type": "int",
+                    "value": 0
+                },
+                {
                     "name": "bulletDistance",
                     "type": "int",
                     "value": 0
+                },
+                {
+                    "name": "currentStageEnabled",
+                    "type": "bool",
+                    "value": false
                 },
                 {
                     "name": "damageAmount",
@@ -92,9 +347,25 @@
                     "value": 10
                 },
                 {
+                    "name": "disableContinuousJump",
+                    "type": "bool",
+                    "value": false
+                },
+                {
                     "name": "enemiesRespawn",
                     "type": "bool",
                     "value": true
+                },
+                {
+                    "name": "finishGameEnemy",
+                    "type": "object",
+                    "value": 0
+                },
+                {
+                    "name": "finishGameObjective",
+                    "propertyType": "objectiveType",
+                    "type": "string",
+                    "value": "items"
                 },
                 {
                     "name": "gameName",
@@ -118,6 +389,11 @@
                     "value": false
                 },
                 {
+                    "name": "idleTime",
+                    "type": "int",
+                    "value": 0
+                },
+                {
                     "name": "initialLife",
                     "type": "int",
                     "value": 50
@@ -128,9 +404,45 @@
                     "value": "7"
                 },
                 {
+                    "name": "itemsCountdown",
+                    "type": "bool",
+                    "value": false
+                },
+                {
+                    "name": "itemsEnabled",
+                    "type": "bool",
+                    "value": true
+                },
+                {
+                    "name": "itemsToOpenDoors",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "jetPackFuel",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "jumpType",
+                    "propertyType": "jumpType",
+                    "type": "string",
+                    "value": "accelerated"
+                },
+                {
+                    "name": "keysEnabled",
+                    "type": "bool",
+                    "value": true
+                },
+                {
                     "name": "killJumpingOnTop",
                     "type": "bool",
                     "value": false
+                },
+                {
+                    "name": "laddersEnabled",
+                    "type": "bool",
+                    "value": true
                 },
                 {
                     "name": "lifeAmount",
@@ -138,14 +450,60 @@
                     "value": 5
                 },
                 {
+                    "name": "livesMode",
+                    "propertyType": "livesMode",
+                    "type": "string",
+                    "value": "disabled"
+                },
+                {
+                    "name": "mainCharacterExtraFrame",
+                    "type": "bool",
+                    "value": true
+                },
+                {
+                    "name": "mainCharacterInvincible",
+                    "type": "bool",
+                    "value": false
+                },
+                {
+                    "name": "maxAnimatedTilesPerScreen",
+                    "type": "int",
+                    "value": 6
+                },
+                {
                     "name": "maxEnemiesPerScreen",
                     "type": "int",
                     "value": 5
                 },
                 {
+                    "name": "messagesDefaultInk",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "messagesDefaultPaper",
+                    "type": "int",
+                    "value": 7
+                },
+                {
+                    "name": "messagesEnabled",
+                    "type": "bool",
+                    "value": false
+                },
+                {
+                    "name": "messagesFlashEnabled",
+                    "type": "bool",
+                    "value": true
+                },
+                {
                     "name": "musicEnabled",
                     "type": "bool",
                     "value": false
+                },
+                {
+                    "name": "newBeeperPlayer",
+                    "type": "bool",
+                    "value": true
                 },
                 {
                     "name": "paper",
@@ -158,6 +516,16 @@
                     "value": ""
                 },
                 {
+                    "name": "platformMimicEnabled",
+                    "type": "bool",
+                    "value": false
+                },
+                {
+                    "name": "redefineKeysEnabled",
+                    "type": "bool",
+                    "value": false
+                },
+                {
                     "name": "shooting",
                     "type": "bool",
                     "value": true
@@ -166,6 +534,32 @@
                     "name": "shouldKillEnemies",
                     "type": "bool",
                     "value": false
+                },
+                {
+                    "name": "spriteCollisionPixelPerfect",
+                    "type": "bool",
+                    "value": false
+                },
+                {
+                    "name": "timerSeconds",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "useBreakableTile",
+                    "propertyType": "breakableTilesMode",
+                    "type": "string",
+                    "value": "disabled"
+                },
+                {
+                    "name": "useBreakableTileByTouch",
+                    "type": "bool",
+                    "value": false
+                },
+                {
+                    "name": "useBreakableTileByTouchFrames",
+                    "type": "int",
+                    "value": 30
                 },
                 {
                     "name": "waitPressKeyAfterLoad",
