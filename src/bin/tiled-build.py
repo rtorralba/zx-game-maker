@@ -890,7 +890,7 @@ with open("output/enemiesPerScreen.bin", "wb") as f:
 
 with open("output/decompressedEnemiesScreen.bin", "wb") as f:
     for i in range(maxEnemiesPerScreen):
-        f.write(bytearray([0] * 12))
+        f.write(bytearray([0] * 13))
 
 # get hud.json
 hudFile = open(outputDir + 'hud.json')
