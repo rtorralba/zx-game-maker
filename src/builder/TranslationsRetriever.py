@@ -53,10 +53,10 @@ class TranslationsRetriever:
                                     messages.get("no_ammo", {}).get("line2", "LEFT!"),
                                     messages.get("no_ammo", {}).get("ink", "red"),
                                     messages.get("no_ammo", {}).get("paper", "black"))
-            should_kill_all_enemies = HudMessage(messages.get("kill_all_enemies", {}).get("line1", "KILL ALL"),
-                                                    messages.get("kill_all_enemies", {}).get("line2", "ENEMIES!"),
-                                                    messages.get("kill_all_enemies", {}).get("ink", "red"),
-                                                    messages.get("kill_all_enemies", {}).get("paper", "black"))
+            should_kill_all_enemies = HudMessage(messages.get("should_kill_all_enemies", {}).get("line1", "KILL ALL"),
+                                                    messages.get("should_kill_all_enemies", {}).get("line2", "ENEMIES!"),
+                                                    messages.get("should_kill_all_enemies", {}).get("ink", "red"),
+                                                    messages.get("should_kill_all_enemies", {}).get("paper", "black"))
             need_items = HudMessage(messages.get("need_items", {}).get("line1", "NEED"),
                                     messages.get("need_items", {}).get("line2", "ITEMS!"),
                                     messages.get("need_items", {}).get("ink", "red"),
