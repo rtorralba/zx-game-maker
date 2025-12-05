@@ -7,9 +7,9 @@ Sub showMenu()
     inMenu = 1
     Ink 7: Paper 0: Border 0: BRIGHT 0: FLASH 0: Cls
     #ifdef ENABLED_128k
-        PaginarMemoria(screensBank)
+        SetBank(screensBank)
         dzx0Standard(TITLE_SCREEN_ADDRESS, $4000)
-        PaginarMemoria(0)
+        SetBank(0)
         #ifdef MUSIC_ENABLED
             #ifdef MUSIC_TITLE_ENABLED
                 VortexTracker_Play(MUSIC_TITLE_ADDRESS)
@@ -170,9 +170,9 @@ Sub playGame()
     
     #ifdef ENABLED_128k
         #ifdef INTRO_SCREEN_ENABLED
-            PaginarMemoria(screensBank)
+            SetBank(screensBank)
             dzx0Standard(INTRO_SCREEN_ADDRESS, $4000)
-            PaginarMemoria(0)
+            SetBank(0)
             #ifdef MUSIC_ENABLED
                 #ifdef MUSIC_INTRO_ENABLED
                     VortexTracker_Play(MUSIC_INTRO_ADDRESS)
@@ -194,9 +194,9 @@ Sub playGame()
     #endif
     
     #ifdef ENABLED_128k
-        PaginarMemoria(screensBank)
+        SetBank(screensBank)
         dzx0Standard(HUD_SCREEN_ADDRESS, $4000)
-        PaginarMemoria(0)
+        SetBank(0)
         #ifndef ARCADE_MODE
             #ifdef MUSIC_ENABLED
                 VortexTracker_Play(MUSIC_ADDRESS)
@@ -491,9 +491,9 @@ Sub ending()
                 VortexTracker_Stop()
             #endif
         #endif
-        PaginarMemoria(screensBank)
+        SetBank(screensBank)
         dzx0Standard(ENDING_SCREEN_ADDRESS, $4000)
-        PaginarMemoria(0)
+        SetBank(0)
     #Else
         dzx0Standard(ENDING_SCREEN_ADDRESS, $4000)
     #endif
@@ -520,9 +520,9 @@ Sub gameOver()
     
     #ifdef ENABLED_128k
         #ifdef GAMEOVER_SCREEN_ENABLED
-            PaginarMemoria(screensBank)
+            SetBank(screensBank)
             dzx0Standard(GAMEOVER_SCREEN_ADDRESS, $4000)
-            PaginarMemoria(0)
+            SetBank(0)
         #Else
             saveProta(protaY, protaX, 15, 0)
             Print AT 7, 12; "GAME OVER"

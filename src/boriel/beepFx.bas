@@ -3,7 +3,7 @@ Sub Fastcall BeepFX_Play(Sound As Ubyte)
         ASM
             push af
         End ASM
-        PaginarMemoria(fxBank)
+        SetBank(fxBank)
         ASM
             pop af
         End ASM
@@ -15,32 +15,32 @@ Sub Fastcall BeepFX_Play(Sound As Ubyte)
         pop ix ; Recuperamos ix
     End ASM
     #ifdef ENABLED_128k
-        PaginarMemoria(0)
+        SetBank(0)
     #endif
 End Sub
 
 #ifdef NEW_BEEPER_PLAYER
     Sub Fastcall BeepFX_NextNote()
         #ifdef ENABLED_128k
-            PaginarMemoria(fxBank)
+            SetBank(fxBank)
         #endif
         ASM
             call 49169 ; Siguiente nota
         End ASM
         #ifdef ENABLED_128k
-            PaginarMemoria(0)
+            SetBank(0)
         #endif
     End Sub
     
     Sub Fastcall BeepFX_Reset()
         #ifdef ENABLED_128k
-            PaginarMemoria(fxBank)
+            SetBank(fxBank)
         #endif
         ASM
             call 49361 ; Reset
         End ASM
         #ifdef ENABLED_128k
-            PaginarMemoria(0)
+            SetBank(0)
         #endif
     End Sub
 #endif

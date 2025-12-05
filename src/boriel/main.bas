@@ -7,7 +7,7 @@
 
 #ifdef ENABLED_128k
     #include "128/vortexTracker.bas"
-    #include "128/functions.bas"
+    #include <memorybank.bas>
 
     #ifdef MUSIC_ENABLED
         VortexTracker_Init()

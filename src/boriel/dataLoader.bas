@@ -1,8 +1,8 @@
 Sub loadDataFromTape()
     #ifdef ENABLED_128k
-        PaginarMemoria(fxBank)
+        SetBank(fxBank)
         load "" CODE $c000 ' Load fx
-        PaginarMemoria(0)
+        SetBank(0)
     #Else
         load "" CODE ' Load fx
     #endif
@@ -11,7 +11,7 @@ Sub loadDataFromTape()
     
     #ifdef ENABLED_128k
         #ifdef MUSIC_ENABLED
-            PaginarMemoria(musicBank)
+            SetBank(musicBank)
             load "" CODE ' Load vtplayer
             load "" CODE MUSIC_ADDRESS ' Load ingame music
 
@@ -45,7 +45,7 @@ Sub loadDataFromTape()
 
         #endif
         
-        PaginarMemoria(screensBank)
+        SetBank(screensBank)
         load "" CODE TITLE_SCREEN_ADDRESS ' Load title Screen
         load "" CODE ENDING_SCREEN_ADDRESS ' Load ending Screen
         load "" CODE HUD_SCREEN_ADDRESS ' Load hud Screen
@@ -55,6 +55,6 @@ Sub loadDataFromTape()
         #ifdef GAMEOVER_SCREEN_ENABLED
             load "" CODE GAMEOVER_SCREEN_ADDRESS ' Load game over Screen
         #endif
-        PaginarMemoria(0)
+        SetBank(0)
     #endif
 End Sub
