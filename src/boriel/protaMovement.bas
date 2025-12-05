@@ -389,6 +389,14 @@ Sub leftKey()
             moveScreen = 4
         #endif
     Elseif canMoveLeft()
+        #ifdef SIDE_VIEW
+            #ifdef LADDERS_ENABLED
+                If CheckCollision(protaX, protaY, 2) Then
+                    saveProta(protaY, protaX - 1, getNextFrameLadder(), 0)
+                    Return
+                End If
+            #endif
+        #endif
         saveProta(protaY, protaX - 1, protaFrame + 1, 0)
     End If
 End Sub
@@ -408,6 +416,14 @@ Sub rightKey()
             moveScreen = 6
         #endif
     Elseif canMoveRight()
+        #ifdef SIDE_VIEW
+            #ifdef LADDERS_ENABLED
+                If CheckCollision(protaX, protaY, 2) Then
+                    saveProta(protaY, protaX + 1, getNextFrameLadder(), 1)
+                    Return
+                End If
+            #endif
+        #endif
         saveProta(protaY, protaX + 1, protaFrame + 1, 1)
     End If
 End Sub
