@@ -208,6 +208,7 @@ End Function
         Else
             If landed = 0 And jumpCurrentKey = jumpStopValue Then
                 landed = 1
+                wallJumpTimer = 0
                 jumpCurrentKey = jumpStopValue
                 #ifdef JETPACK_FUEL
                     jumpEnergy = jumpStepsCount
@@ -509,6 +510,24 @@ Sub fireKey()
 End Sub
 
 Sub keyboardListen()
+    #ifdef SIDE_VIEW
+        If wallJumpTimer > 0 Then
+            wallJumpTimer = wallJumpTimer - 1
+            If protaDirection = 0 Then
+                leftKey()
+            Else
+                rightKey()
+            End If
+            
+            If kempston Then
+                If In(31) bAND %10000 Then fireKey()
+            Else
+                If MultiKeys(keyArray(FIRE))<>0 Then fireKey()
+            End If
+            Return
+        End If
+    #endif
+
     If kempston Then
         Dim n As Ubyte = In(31)
         If n bAND %10 Then leftKey()

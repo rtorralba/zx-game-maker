@@ -476,7 +476,24 @@ end sub
                 noKeyPressedForJump = 0
             #endif
         #endif
-        if jumpCurrentKey = jumpStopValue and landed then
+
+        Dim wallJump As Ubyte = 0
+
+        If CheckCollision(protaX + 1, protaY, 1) Then
+            wallJump = 1
+            protaDirection = 0
+            protaFrame = 4
+            If protaX > 0 Then protaX = protaX - 1
+            wallJumpTimer = 8
+        Elseif CheckCollision(protaX - 1, protaY, 1) Then
+            wallJump = 1
+            protaDirection = 1
+            protaFrame = 1
+            If protaX < 60 Then protaX = protaX + 1
+            wallJumpTimer = 8
+        End If
+
+        if (jumpCurrentKey = jumpStopValue and landed) or wallJump then
             landed = 0
             jumpCurrentKey = 0
         end if

@@ -214,3 +214,5 @@ Dim lastFrameOnBreakableTiles As Ubyte = 0
 #ifdef PASSWORD_ENABLED
     Dim passwordOk As Ubyte = 0
 #endif
+
+Dim wallJumpTimer As Ubyte = 0
