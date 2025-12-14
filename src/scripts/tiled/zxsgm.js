@@ -62,6 +62,12 @@ function setClassByShape(obj) {
 
 function connectToMapEvents(map) {
     if (!map || !map.isTileMap) return;
+
+    const fileName = map.fileName.split('/').pop().split('\\').pop();
+    if (fileName !== "maps.tmx") return;
+    
+    tiled.log("Conectando eventos al mapa: " + fileName);
+
     // Connect to selectedObjectsChanged
     if (map.selectedObjectsChanged && typeof map.selectedObjectsChanged.connect === 'function') {
         map.selectedObjectsChanged.connect(function () {
