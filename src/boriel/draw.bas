@@ -310,6 +310,11 @@ End Sub
 
 Sub drawSprites()
     If (protaY < 41) Then
+        #ifdef DASH_ENABLED
+            If dashGhostActive Then
+                Draw2x2Sprite(dashGhostTile, dashGhostX, dashGhostY)
+            End If
+        #endif
         #ifdef LADDERS_ENABLED
             If CheckCollision(protaX, protaY, 2) Then
                 If protaTile < 11 Then

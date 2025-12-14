@@ -550,7 +550,12 @@ Sub keyboardListen()
         #endif
 
         #ifdef DASH_ENABLED
+            dashGhostActive = 0
             If dashTimer > 0 Then
+                dashGhostX = protaX
+                dashGhostY = protaY
+                dashGhostTile = protaTile
+                dashGhostActive = 1
                 dashTimer = dashTimer - 1
                 Dim i As Ubyte
                 For i = 1 To 2

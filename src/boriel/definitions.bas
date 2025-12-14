@@ -223,4 +223,8 @@ Dim lastFrameOnBreakableTiles As Ubyte = 0
     Dim hasDashed As Ubyte = 0
     Dim dashTimer As Ubyte = 0
     Const DASH_DURATION As Ubyte = 8
+    Dim dashGhostX As Ubyte = 0
+    Dim dashGhostY As Ubyte = 0
+    Dim dashGhostTile As Ubyte = 0
+    Dim dashGhostActive As Ubyte = 0
 #endif
