@@ -37,12 +37,6 @@ SoundEffect3Data:
 	defb 1 ;tone
 	defw 1,500,500,100,384
 	defb 1 ;tone
-	defw 1,500,500,100,384
-	defb 1 ;tone
-	defw 1,500,1000,100,64
-	defb 1 ;tone
-	defw 1,500,1000,100,64
-	defb 1 ;tone
 	defw 1,500,1000,100,64
 	defb 1 ;tone
 	defw 1,500,1000,100,64
@@ -63,6 +57,28 @@ SoundEffect4Data:
 	defb 0
 SoundEffect5Data:
 	defb 1 ;tone
+	defw 1,500,800,0,128
+	defb 1 ;tone
+	defw 1,500,800,0,128
+	defb 1 ;tone
+	defw 1,500,800,0,128
+	defb 1 ;tone
+	defw 1,500,1000,0,16
+	defb 1 ;tone
+	defw 1,500,1000,0,16
+	defb 1 ;tone
+	defw 1,500,1000,0,16
+	defb 1 ;tone
+	defw 1,500,1200,0,128
+	defb 1 ;tone
+	defw 1,500,1200,0,16
+	defb 1 ;tone
+	defw 1,500,1400,0,128
+	defb 1 ;tone
+	defw 1,500,1400,0,16
+	defb 0
+SoundEffect6Data:
+	defb 1 ;tone
 	defw 1,500,400,0,128
 	defb 1 ;tone
 	defw 1,500,400,1000,16
@@ -70,34 +86,4 @@ SoundEffect5Data:
 	defw 1,500,800,0,128
 	defb 1 ;tone
 	defw 1,500,600,0,16
-	defb 0
-SoundEffect6Data:
-	defb 1 ;tone
-	defw 1,500,800,0,128
-	defb 1 ;tone
-	defw 1,500,800,0,128
-	defb 1 ;tone
-	defw 1,500,800,0,128
-	defb 1 ;tone
-	defw 1,500,800,0,128
-	defb 1 ;tone
-	defw 1,500,1000,0,16
-	defb 1 ;tone
-	defw 1,500,1000,0,16
-	defb 1 ;tone
-	defw 1,500,1000,0,16
-	defb 1 ;tone
-	defw 1,500,1000,0,16
-	defb 1 ;tone
-	defw 1,500,1200,0,128
-	defb 1 ;tone
-	defw 1,500,1200,0,128
-	defb 1 ;tone
-	defw 1,500,1200,0,16
-	defb 1 ;tone
-	defw 1,500,1200,0,16
-	defb 1 ;tone
-	defw 1,500,1400,0,128
-	defb 1 ;tone
-	defw 1,500,1400,0,16
 	defb 0
