@@ -208,7 +208,12 @@ End Function
         Else
             If landed = 0 And jumpCurrentKey = jumpStopValue Then
                 landed = 1
-                wallJumpTimer = 0
+                #ifdef WALL_JUMP_ENABLED
+                    wallJumpTimer = 0
+                #endif
+                #ifdef DASH_ENABLED
+                    hasDashed = 0
+                #endif
                 jumpCurrentKey = jumpStopValue
                 #ifdef JETPACK_FUEL
                     jumpEnergy = jumpStepsCount
@@ -228,6 +233,9 @@ End Function
     End Function
     
     Sub gravity()
+        #ifdef DASH_ENABLED
+            If dashTimer > 0 Then Return
+        #endif
         If jumpCurrentKey = jumpStopValue And isFalling() Then
             If protaY >= MAX_LINE Then
                 moveScreen = 2
@@ -398,7 +406,13 @@ Sub leftKey()
                 End If
             #endif
         #endif
-        saveProta(protaY, protaX - 1, protaFrame + 1, 0)
+        Dim nextSprite as Ubyte = protaFrame + 1
+        #ifdef SIDE_VIEW
+            #ifdef DASH_ENABLED
+                If dashTimer > 0 Then nextSprite = getNextFrameJumpingFalling()
+            #endif
+        #endif
+        saveProta(protaY, protaX - 1, nextSprite, 0)
     End If
 End Sub
 
@@ -425,7 +439,13 @@ Sub rightKey()
                 End If
             #endif
         #endif
-        saveProta(protaY, protaX + 1, protaFrame + 1, 1)
+        Dim nextSprite as Ubyte = protaFrame + 1
+        #ifdef SIDE_VIEW
+            #ifdef DASH_ENABLED
+                If dashTimer > 0 Then nextSprite = getNextFrameJumpingFalling()
+            #endif
+        #endif
+        saveProta(protaY, protaX + 1, nextSprite, 1)
     End If
 End Sub
 
@@ -511,21 +531,41 @@ End Sub
 
 Sub keyboardListen()
     #ifdef SIDE_VIEW
-        If wallJumpTimer > 0 Then
-            wallJumpTimer = wallJumpTimer - 1
-            If protaDirection = 0 Then
-                leftKey()
-            Else
-                rightKey()
+        #ifdef WALL_JUMP_ENABLED
+            If wallJumpTimer > 0 Then
+                wallJumpTimer = wallJumpTimer - 1
+                If protaDirection = 0 Then
+                    leftKey()
+                Else
+                    rightKey()
+                End If
+                
+                If kempston Then
+                    If In(31) bAND %10000 Then fireKey()
+                Else
+                    If MultiKeys(keyArray(FIRE))<>0 Then fireKey()
+                End If
+                Return
             End If
-            
-            If kempston Then
-                If In(31) bAND %10000 Then fireKey()
-            Else
-                If MultiKeys(keyArray(FIRE))<>0 Then fireKey()
+        #endif
+
+        #ifdef DASH_ENABLED
+            If dashTimer > 0 Then
+                dashTimer = dashTimer - 1
+                Dim i As Ubyte
+                For i = 1 To 2
+                    If protaDirection = 0 Then
+                        leftKey()
+                    Else
+                        rightKey()
+                    End If
+                    #ifdef WALL_JUMP_ENABLED
+                        If wallJumpTimer > 0 Then Exit For ' Break if wall hit (optional)
+                    #endif
+                Next i
+                Return
             End If
-            Return
-        End If
+        #endif
     #endif
 
     If kempston Then
