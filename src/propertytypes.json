@@ -336,6 +336,11 @@
                 "value": 10
             },
             {
+                "name": "dashEnabled",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "disableContinuousJump",
                 "type": "bool",
                 "value": false
@@ -552,6 +557,11 @@
             },
             {
                 "name": "waitPressKeyAfterLoad",
+                "type": "bool",
+                "value": false
+            },
+            {
+                "name": "wallJumpEnabled",
                 "type": "bool",
                 "value": false
             }

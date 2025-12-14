@@ -189,6 +189,9 @@ platformMimicEnabled = 0
 
 mainCharacterInvincible = 0
 
+wallJumpEnabled = 0
+dashEnabled = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -331,6 +334,10 @@ if 'properties' in data:
             platformMimicEnabled = 1 if property['value'] else 0
         elif property['name'] == 'mainCharacterInvincible':
             mainCharacterInvincible = 1 if property['value'] else 0
+        elif property['name'] == 'wallJumpEnabled':
+            wallJumpEnabled = 1 if property['value'] else 0
+        elif property['name'] == 'dashEnabled':
+            dashEnabled = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -353,6 +360,12 @@ else:
 
 if platformMimicEnabled == 1:
     configStr += "#DEFINE PLATFORM_MIMIC_ENABLED\n"
+
+if wallJumpEnabled == 1:
+    configStr += "#DEFINE WALL_JUMP_ENABLED\n"
+
+if dashEnabled == 1:
+    configStr += "#DEFINE DASH_ENABLED\n"
 
 if currentStageEnabled == 1:
     configStr += "#DEFINE CURRENT_STAGE_ENABLED\n"
