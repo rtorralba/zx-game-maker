@@ -381,6 +381,7 @@ End Function
 
 Sub leftKey()
     If protaDirection <> 0 Then
+        If swordTimer > 0 Then swordDirection = 0
         #ifdef SIDE_VIEW
             protaFrame = 4
         #Else
@@ -418,6 +419,7 @@ End Sub
 
 Sub rightKey()
     If protaDirection <> 1 Then
+        If swordTimer > 0 Then swordDirection = 1
         protaFrame = 0
         protaDirection = 1
         saveProta(protaY, protaX, getNextFrameRunning(), protaDirection)
