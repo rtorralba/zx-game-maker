@@ -337,6 +337,19 @@ Sub drawSprites()
             End If
         #endif
     End If
+    
+    If swordTimer > 0 Then
+        Dim swordX As Ubyte
+        If swordDirection = 1 Then 
+            swordX = protaX + 4
+            If swordX >= 60 Then swordX = 60 ' Bound check if needed, though Draw1x1Sprite handles clipping usually
+            Draw1x1Sprite(SWORD_SPRITE_RIGHT_ID, swordX, protaY + 1)
+        Else 
+            If protaX >= 2 Then swordX = protaX - 2 Else swordX = 0
+            Draw1x1Sprite(SWORD_SPRITE_LEFT_ID, swordX, protaY + 1)
+        End If
+    End If
+
     #ifdef SHOOTING_ENABLED
         If bulletPositionX <> 0 Then
             Draw1x1Sprite(currentBulletSpriteId, bulletPositionX, bulletPositionY)

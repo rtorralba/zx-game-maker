@@ -486,6 +486,43 @@ Sub upKey()
 End Sub
 
 Sub downKey()
+    ' Sword Attack Logic
+    If swordTimer = 0 Then
+        swordTimer = SWORD_DURATION
+        swordDirection = protaDirection
+        BeepFX_Play(2)
+    End If
+
+    ' Allow movement if sword is not active? Or just block it?
+    ' "instead of shooting bullet" implies it's an action.
+    ' If we want to allow crouching/climbing concurrently, we remove the return.
+    ' But typically attacks block movement or are mutually exclusive with ladders in simple engines.
+    ' Given the prompt "when pressing down INSTEAD OF ...", I will assume it replaces the old behavior
+    ' OR the user meant "instead of the bullet behavior that I might have bound to down"
+    ' But wait, the user said "en vez de disparar bala", did they mean default down behavior was shoot?
+    ' Only if they mapped Fire to Down?
+    ' Regardles, I will keep the original movement logic BUT only if sword is not active?
+    ' actually, if I want strict "sword instad of bullet", and bullet was bound to fire...
+    ' The user wants Down -> Sword.
+    ' And explicitly "en vez de disparar bala" suggests comparable action.
+    
+    ' I will COMMENT OUT the original movement logic to strictly follow "instead of".
+    ' But if I block movement, they can't go down ladders.
+    ' This might be a mistake in interpretation.
+    ' Maybe they want "Press Down to Attack" AND "Press Down to Climb"?
+    ' Context: "Platformer". Usually Down is Crouch/Climb.
+    ' If I replace it, I break navigation.
+    ' "En vez de disparar bala" -> Maybe they had a gun they could shoot downwards?
+    ' The prompt says "shooting bullet" (generic).
+    ' I will ADD the sword logic. I will Return ONLY if sword just started?
+    ' No, if I return, I can't climb.
+    
+    ' Implementation: Trigger sword. If on ladder, maybe don't sword?
+    ' Or just do both.
+    ' "saco la espada" -> Visual effect.
+    ' I'll leave the movement logic below active, so they can still climb down.
+    ' BUT if they are just standing, they will look like they are attacking.
+    
     #ifdef OVERHEAD_VIEW
         If protaDirection <> 2 Then
             protaFrame = 6
@@ -775,7 +812,15 @@ End Sub
     End Sub
 #endif
 
+Sub updateSword()
+    If swordTimer > 0 Then
+        swordTimer = swordTimer - 1
+    End If
+End Sub
+
 Sub protaMovement()
+    updateSword()
+
     #ifdef LIVES_MODE_GRAVEYARD
         If invincible Then Return
     #endif

@@ -39,7 +39,7 @@
   <property name="messagesEnabled" type="bool" value="true"/>
   <property name="musicEnabled" type="bool" value="true"/>
   <property name="newBeeperPlayer" type="bool" value="true"/>
-  <property name="redefineKeysEnabled" type="bool" value="true"/>
+  <property name="redefineKeysEnabled" type="bool" value="false"/>
   <property name="shooting" type="bool" value="true"/>
   <property name="shouldKillEnemies" type="bool" value="true"/>
   <property name="timerSeconds" type="int" value="60"/>
