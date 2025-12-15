@@ -504,7 +504,7 @@ end sub
             #endif
             jumpCurrentKey = 0
         #ifdef DASH_ENABLED
-            Elseif landed = 0 And hasDashed = 0 Then
+            Elseif landed = 0 And hasDashed = 0 And dashActive Then
                 hasDashed = 1
                 dashTimer = DASH_DURATION
                 jumpCurrentKey = jumpStopValue

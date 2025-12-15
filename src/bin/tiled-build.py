@@ -191,6 +191,8 @@ mainCharacterInvincible = 0
 
 wallJumpEnabled = 0
 dashEnabled = 0
+dashAlwaysAvailable = 0
+swordEnabled = 0
 
 if 'properties' in data:
     for property in data['properties']:
@@ -338,6 +340,10 @@ if 'properties' in data:
             wallJumpEnabled = 1 if property['value'] else 0
         elif property['name'] == 'dashEnabled':
             dashEnabled = 1 if property['value'] else 0
+        elif property['name'] == 'dashAlwaysAvailable':
+            dashAlwaysAvailable = 1 if property['value'] else 0
+        elif property['name'] == 'swordEnabled':
+            swordEnabled = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -366,6 +372,10 @@ if wallJumpEnabled == 1:
 
 if dashEnabled == 1:
     configStr += "#DEFINE DASH_ENABLED\n"
+    configStr += "Dim dashActive as ubyte = " + str(dashAlwaysAvailable) + "\n"
+
+if swordEnabled == 1:
+    configStr += "#DEFINE SWORD_ENABLED\n"
 
 if currentStageEnabled == 1:
     configStr += "#DEFINE CURRENT_STAGE_ENABLED\n"

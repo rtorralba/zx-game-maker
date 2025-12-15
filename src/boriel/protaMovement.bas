@@ -381,7 +381,9 @@ End Function
 
 Sub leftKey()
     If protaDirection <> 0 Then
-        If swordTimer > 0 Then swordDirection = 0
+        #ifdef SWORD_ENABLED
+            If swordTimer > 0 Then swordDirection = 0
+        #endif
         #ifdef SIDE_VIEW
             protaFrame = 4
         #Else
@@ -419,7 +421,9 @@ End Sub
 
 Sub rightKey()
     If protaDirection <> 1 Then
-        If swordTimer > 0 Then swordDirection = 1
+        #ifdef SWORD_ENABLED
+            If swordTimer > 0 Then swordDirection = 1
+        #endif
         protaFrame = 0
         protaDirection = 1
         saveProta(protaY, protaX, getNextFrameRunning(), protaDirection)
@@ -489,11 +493,22 @@ End Sub
 
 Sub downKey()
     ' Sword Attack Logic
-    If swordTimer = 0 Then
-        swordTimer = SWORD_DURATION
-        swordDirection = protaDirection
-        BeepFX_Play(2)
-    End If
+    #ifdef SWORD_ENABLED
+        If swordTimer = 0 Then
+            swordTimer = SWORD_DURATION
+            swordDirection = protaDirection
+            #ifdef IDLE_ENABLED
+                protaLoopCounter = 0
+                
+                If protaDirection = 1 Then
+                    saveProta(protaY, protaX, 1, 1) ' 1 = FIRST_RUNNING_PROTA_SPRITE_RIGHT
+                Else
+                    saveProta(protaY, protaX, 5, 0) ' 5 = FIRST_RUNNING_PROTA_SPRITE_LEFT
+                End If
+            #endif
+            BeepFX_Play(2)
+        End If
+    #endif
 
     ' Allow movement if sword is not active? Or just block it?
     ' "instead of shooting bullet" implies it's an action.
@@ -720,6 +735,15 @@ Function checkTileObject(tile As Ubyte) As Ubyte
             BeepFX_Play(6)
             Return 1
         #endif
+        #ifdef DASH_ENABLED
+        Elseif tile = 188 Then
+            dashActive = 1
+            #ifdef MESSAGES_ENABLED
+                printMessage(DASH_ACTIVE_LINE1, DASH_ACTIVE_LINE2, DASH_ACTIVE_PAPER, DASH_ACTIVE_INK)
+            #endif
+            BeepFX_Play(6)
+            Return 1
+        #endif
     End If
     Return 0
 End Function
@@ -814,14 +838,18 @@ End Sub
     End Sub
 #endif
 
-Sub updateSword()
-    If swordTimer > 0 Then
-        swordTimer = swordTimer - 1
-    End If
-End Sub
+#ifdef SWORD_ENABLED
+    Sub updateSword()
+        If swordTimer > 0 Then
+            swordTimer = swordTimer - 1
+        End If
+    End Sub
+#endif
 
 Sub protaMovement()
-    updateSword()
+    #ifdef SWORD_ENABLED
+        updateSword()
+    #endif
 
     #ifdef LIVES_MODE_GRAVEYARD
         If invincible Then Return

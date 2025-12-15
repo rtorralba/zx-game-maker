@@ -60,3 +60,9 @@ line1 = "ALCANZA"
 line2 = "LA LLAVE"
 ink = "blue"
 paper = "black"
+
+[dash_active]
+line1 = "DASH"
+line2 = "ACTIVADO"
+paper = "black"
+ink = "green"

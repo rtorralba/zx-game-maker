@@ -59,3 +59,9 @@ line1 = "REACH"
 line2 = "THE KEY!"
 ink = "blue"
 paper = "black"
+
+[dash_active]
+line1 = "DASH"
+line2 = "ACTIVE"
+paper = "black"
+ink = "green"

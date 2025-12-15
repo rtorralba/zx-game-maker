@@ -25,6 +25,7 @@ class TranslationsRetriever:
         need_items = HudMessage("NEED", "ITEMS!", "red", "black")
         hurry_up = HudMessage("HURRY UP", "HURRY UP", "red", "black")
         arcade_goal = HudMessage("REACH", "THE KEY!", "blue", "black")
+        dash_active = HudMessage("DASH", "ACTIVE", "green", "black")
 
         if Path(messagesFile).exists():
             with open(messagesFile, mode="rb") as f:
@@ -69,6 +70,10 @@ class TranslationsRetriever:
                                     messages.get("arcade_goal", {}).get("line2", "THE KEY!"),
                                     messages.get("arcade_goal", {}).get("ink", "blue"),
                                     messages.get("arcade_goal", {}).get("paper", "black"))
+            dash_active = HudMessage(messages.get("dash_active", {}).get("line1", "DASH"),
+                                    messages.get("dash_active", {}).get("line2", "ACTIVE"),
+                                    messages.get("dash_active", {}).get("ink", "green"),
+                                    messages.get("dash_active", {}).get("paper", "black"))
 
         # Write message config into boriel config file as a constants
         with open(CONFIG_FILE, "a") as config_file:
@@ -113,3 +118,7 @@ class TranslationsRetriever:
             config_file.write(f"#define ARCADE_GOAL_LINE2 \"{arcade_goal.Line2}\"\n")
             config_file.write(f"#define ARCADE_GOAL_INK {arcade_goal.Ink}\n")
             config_file.write(f"#define ARCADE_GOAL_PAPER {arcade_goal.Paper}\n\n")
+            config_file.write(f"#define DASH_ACTIVE_LINE1 \"{dash_active.Line1}\"\n")
+            config_file.write(f"#define DASH_ACTIVE_LINE2 \"{dash_active.Line2}\"\n")
+            config_file.write(f"#define DASH_ACTIVE_INK {dash_active.Ink}\n")
+            config_file.write(f"#define DASH_ACTIVE_PAPER {dash_active.Paper}\n\n")

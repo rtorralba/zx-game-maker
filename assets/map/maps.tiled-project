@@ -347,6 +347,11 @@
                     "value": 10
                 },
                 {
+                    "name": "dashAlwaysAvailable",
+                    "type": "bool",
+                    "value": false
+                },
+                {
                     "name": "dashEnabled",
                     "type": "bool",
                     "value": false
@@ -542,6 +547,11 @@
                 },
                 {
                     "name": "spriteCollisionPixelPerfect",
+                    "type": "bool",
+                    "value": false
+                },
+                {
+                    "name": "swordEnabled",
                     "type": "bool",
                     "value": false
                 },
