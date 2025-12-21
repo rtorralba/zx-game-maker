@@ -553,7 +553,7 @@ Sub fireKey()
     #endif
 End Sub
 
-Sub keyboardListen()
+Function checkDashingOrWalljumping() As Ubyte
     #ifdef SIDE_VIEW
         #ifdef WALL_JUMP_ENABLED
             If wallJumpTimer > 0 Then
@@ -569,7 +569,7 @@ Sub keyboardListen()
                 Else
                     If MultiKeys(keyArray(FIRE))<>0 Then fireKey()
                 End If
-                Return
+                Return 1
             End If
         #endif
 
@@ -592,11 +592,14 @@ Sub keyboardListen()
                         If wallJumpTimer > 0 Then Exit For ' Break if wall hit (optional)
                     #endif
                 Next i
-                Return
+                Return 1
             End If
         #endif
     #endif
+    Return 0
+End Function 
 
+Sub keyboardListen()
     If kempston Then
         Dim n As Ubyte = In(31)
         If n bAND %10 Then leftKey()
@@ -850,7 +853,11 @@ Sub protaMovement()
             End If
         #endif
     #endif
-    keyboardListen()
+    
+    If Not checkDashingOrWalljumping() Then
+        keyboardListen()
+    End If
+
     checkObjectContact()
     
     #ifdef SIDE_VIEW
