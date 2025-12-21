@@ -74,6 +74,32 @@
     End Function
 #endif
 
+#ifdef SWORD_ENABLED
+    Function checkSwordEnemyCollision(enemyX0 As Ubyte, enemyY0 As Ubyte, enemyX1 As Ubyte, enemyY1 As Ubyte, enemyId As Ubyte) As Ubyte
+        If swordTimer = 0 Then Return 0
+        
+        Dim swordX As Ubyte
+        If swordDirection = 1 Then 
+            swordX = protaX + 3
+            If swordX >= 60 Then swordX = 60
+        Else 
+            If protaX >= 2 Then swordX = protaX - 2 Else swordX = 0
+        End If
+        Dim swordY As Ubyte = protaY + 1
+        
+        Dim swordX1 As Ubyte = swordX + 1 ' 1x1 sprite
+        Dim swordY1 As Ubyte = swordY + 1
+        
+        If swordX1 < enemyX0 Then Return 0
+        If swordX > enemyX1 Then Return 0
+        If swordY1 < enemyY0 Then Return 0
+        If swordY > enemyY1 Then Return 0
+        
+        damageEnemy(enemyId)
+        Return 1
+    End Function
+#endif
+
 Function checkProtaAndBulletCollision(enemyId As Ubyte) As Ubyte
     If invincible Then Return 0
     
@@ -89,6 +115,10 @@ Function checkProtaAndBulletCollision(enemyId As Ubyte) As Ubyte
     
     #ifdef SHOOTING_ENABLED
         If checkBulletProtaCollision(enemyX0, enemyY0, enemyX1, enemyY1, enemyId) Then Return 1
+    #endif
+
+    #ifdef SWORD_ENABLED
+        If checkSwordEnemyCollision(enemyX0, enemyY0, enemyX1, enemyY1, enemyId) Then Return 1
     #endif
 
     #ifdef SIDE_VIEW

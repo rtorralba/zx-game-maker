@@ -42,6 +42,12 @@ Const BULLET_SPRITE_LEFT_ID As Ubyte = 50
     Const BULLET_SPRITE_DOWN_ID As Ubyte = 52
 #endif
 
+#ifdef SWORD_ENABLED
+    Const SWORD_SPRITE_RIGHT_ID As Ubyte = 52
+    Const SWORD_SPRITE_LEFT_ID As Ubyte = 51
+#endif
+
+
 Dim protaLastFrame As Ubyte
 
 Const LEFT As Ubyte = 0
@@ -214,3 +220,24 @@ Dim lastFrameOnBreakableTiles As Ubyte = 0
 #ifdef PASSWORD_ENABLED
     Dim passwordOk As Ubyte = 0
 #endif
+
+#ifdef WALL_JUMP_ENABLED
+    Dim wallJumpTimer As Ubyte = 0
+#endif
+
+#ifdef DASH_ENABLED
+    Dim hasDashed As Ubyte = 0
+    Dim dashTimer As Ubyte = 0
+    Const DASH_DURATION As Ubyte = 8
+    Dim dashGhostX As Ubyte = 0
+    Dim dashGhostY As Ubyte = 0
+    Dim dashGhostTile As Ubyte = 0
+    Dim dashGhostActive As Ubyte = 0
+#endif
+
+#ifdef SWORD_ENABLED
+    Dim swordTimer As Ubyte = 0
+    Dim swordDirection As Ubyte = 0
+    Const SWORD_DURATION As Ubyte = 10
+#endif
+

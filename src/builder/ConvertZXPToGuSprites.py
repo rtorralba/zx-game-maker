@@ -35,6 +35,8 @@ class ConvertZXPToGuSprites:
         bulletCount = 2 if helper.getGameView() == "side" else 4
         sprites.extend(ZXPToSpritesConversor.convert(str(Path("../assets/map/bullet.zxp")), bulletCount, 8, 8))  # Use extend instead of append
 
+        sprites.extend(ZXPToSpritesConversor.convert(str(Path("../assets/map/sword.zxp")), 2, 8, 8))
+
         preshiftedSprites = ConvertZXPToGuSprites.preshiftSprites(sprites)
         unshiftedSprites = ConvertZXPToGuSprites.unshiftSprites(sprites)
 

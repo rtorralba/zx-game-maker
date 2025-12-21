@@ -208,6 +208,12 @@ End Function
         Else
             If landed = 0 And jumpCurrentKey = jumpStopValue Then
                 landed = 1
+                #ifdef WALL_JUMP_ENABLED
+                    wallJumpTimer = 0
+                #endif
+                #ifdef DASH_ENABLED
+                    hasDashed = 0
+                #endif
                 jumpCurrentKey = jumpStopValue
                 #ifdef JETPACK_FUEL
                     jumpEnergy = jumpStepsCount
@@ -227,6 +233,9 @@ End Function
     End Function
     
     Sub gravity()
+        #ifdef DASH_ENABLED
+            If dashTimer > 0 Then Return
+        #endif
         If jumpCurrentKey = jumpStopValue And isFalling() Then
             If protaY >= MAX_LINE Then
                 moveScreen = 2
@@ -372,6 +381,9 @@ End Function
 
 Sub leftKey()
     If protaDirection <> 0 Then
+        #ifdef SWORD_ENABLED
+            If swordTimer > 0 Then swordDirection = 0
+        #endif
         #ifdef SIDE_VIEW
             protaFrame = 4
         #Else
@@ -397,12 +409,21 @@ Sub leftKey()
                 End If
             #endif
         #endif
-        saveProta(protaY, protaX - 1, protaFrame + 1, 0)
+        Dim nextSprite as Ubyte = protaFrame + 1
+        #ifdef SIDE_VIEW
+            #ifdef DASH_ENABLED
+                If dashTimer > 0 Then nextSprite = getNextFrameJumpingFalling()
+            #endif
+        #endif
+        saveProta(protaY, protaX - 1, nextSprite, 0)
     End If
 End Sub
 
 Sub rightKey()
     If protaDirection <> 1 Then
+        #ifdef SWORD_ENABLED
+            If swordTimer > 0 Then swordDirection = 1
+        #endif
         protaFrame = 0
         protaDirection = 1
         saveProta(protaY, protaX, getNextFrameRunning(), protaDirection)
@@ -424,7 +445,13 @@ Sub rightKey()
                 End If
             #endif
         #endif
-        saveProta(protaY, protaX + 1, protaFrame + 1, 1)
+        Dim nextSprite as Ubyte = protaFrame + 1
+        #ifdef SIDE_VIEW
+            #ifdef DASH_ENABLED
+                If dashTimer > 0 Then nextSprite = getNextFrameJumpingFalling()
+            #endif
+        #endif
+        saveProta(protaY, protaX + 1, nextSprite, 1)
     End If
 End Sub
 
@@ -465,6 +492,24 @@ Sub upKey()
 End Sub
 
 Sub downKey()
+    ' Sword Attack Logic
+    #ifdef SWORD_ENABLED
+        If swordTimer = 0 Then
+            swordTimer = SWORD_DURATION
+            swordDirection = protaDirection
+            #ifdef IDLE_ENABLED
+                protaLoopCounter = 0
+                
+                If protaDirection = 1 Then
+                    saveProta(protaY, protaX, 1, 1) ' 1 = FIRST_RUNNING_PROTA_SPRITE_RIGHT
+                Else
+                    saveProta(protaY, protaX, 5, 0) ' 5 = FIRST_RUNNING_PROTA_SPRITE_LEFT
+                End If
+            #endif
+            BeepFX_Play(2)
+        End If
+    #endif
+    
     #ifdef OVERHEAD_VIEW
         If protaDirection <> 2 Then
             protaFrame = 6
@@ -507,6 +552,52 @@ Sub fireKey()
         shoot()
     #endif
 End Sub
+
+Function checkDashingOrWalljumping() As Ubyte
+    #ifdef SIDE_VIEW
+        #ifdef WALL_JUMP_ENABLED
+            If wallJumpTimer > 0 Then
+                wallJumpTimer = wallJumpTimer - 1
+                If protaDirection = 0 Then
+                    leftKey()
+                Else
+                    rightKey()
+                End If
+                
+                If kempston Then
+                    If In(31) bAND %10000 Then fireKey()
+                Else
+                    If MultiKeys(keyArray(FIRE))<>0 Then fireKey()
+                End If
+                Return 1
+            End If
+        #endif
+
+        #ifdef DASH_ENABLED
+            dashGhostActive = 0
+            If dashTimer > 0 Then
+                dashGhostX = protaX
+                dashGhostY = protaY
+                dashGhostTile = protaTile
+                dashGhostActive = 1
+                dashTimer = dashTimer - 1
+                Dim i As Ubyte
+                For i = 1 To 2
+                    If protaDirection = 0 Then
+                        leftKey()
+                    Else
+                        rightKey()
+                    End If
+                    #ifdef WALL_JUMP_ENABLED
+                        If wallJumpTimer > 0 Then Exit For ' Break if wall hit (optional)
+                    #endif
+                Next i
+                Return 1
+            End If
+        #endif
+    #endif
+    Return 0
+End Function 
 
 Sub keyboardListen()
     If kempston Then
@@ -617,6 +708,15 @@ Function checkTileObject(tile As Ubyte) As Ubyte
             BeepFX_Play(6)
             Return 1
         #endif
+        #ifdef DASH_ENABLED
+        Elseif tile = 188 Then
+            dashActive = 1
+            #ifdef MESSAGES_ENABLED
+                printMessage(DASH_ACTIVE_LINE1, DASH_ACTIVE_LINE2, DASH_ACTIVE_PAPER, DASH_ACTIVE_INK)
+            #endif
+            BeepFX_Play(6)
+            Return 1
+        #endif
     End If
     Return 0
 End Function
@@ -711,7 +811,19 @@ End Sub
     End Sub
 #endif
 
+#ifdef SWORD_ENABLED
+    Sub updateSword()
+        If swordTimer > 0 Then
+            swordTimer = swordTimer - 1
+        End If
+    End Sub
+#endif
+
 Sub protaMovement()
+    #ifdef SWORD_ENABLED
+        updateSword()
+    #endif
+
     #ifdef LIVES_MODE_GRAVEYARD
         If invincible Then Return
     #endif
@@ -741,7 +853,11 @@ Sub protaMovement()
             End If
         #endif
     #endif
-    keyboardListen()
+    
+    If Not checkDashingOrWalljumping() Then
+        keyboardListen()
+    End If
+
     checkObjectContact()
     
     #ifdef SIDE_VIEW
