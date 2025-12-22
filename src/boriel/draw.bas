@@ -336,6 +336,19 @@ Sub drawSprites()
                 End If
             End If
         #endif
+        #ifdef IDLE_ENABLED
+            #ifdef SHOW_IDLE_MESSAGE
+                If protaLoopCounter >= IDLE_TIME Then
+                    If protaY >= 4 Then
+                        If protaX >= 4 Then
+                            Draw2x2Sprite(15, protaX + 4, protaY - 4)
+                        Else
+                            Draw2x2Sprite(15, protaX - 4, protaY - 4)
+                        End If
+                    End If
+                End If
+            #endif
+        #endif
     End If
     
     #ifdef SWORD_ENABLED

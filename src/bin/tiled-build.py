@@ -194,6 +194,8 @@ dashEnabled = 0
 dashAlwaysAvailable = 0
 swordEnabled = 0
 
+showIdleMessage = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -344,6 +346,8 @@ if 'properties' in data:
             dashAlwaysAvailable = 1 if property['value'] else 0
         elif property['name'] == 'swordEnabled':
             swordEnabled = 1 if property['value'] else 0
+        elif property['name'] == 'showIdleMessage':
+            showIdleMessage = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -376,6 +380,9 @@ if dashEnabled == 1:
 
 if swordEnabled == 1:
     configStr += "#DEFINE SWORD_ENABLED\n"
+
+if showIdleMessage == 1:
+    configStr += "#DEFINE SHOW_IDLE_MESSAGE\n"
 
 if currentStageEnabled == 1:
     configStr += "#DEFINE CURRENT_STAGE_ENABLED\n"

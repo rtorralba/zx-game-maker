@@ -546,6 +546,11 @@
                     "value": false
                 },
                 {
+                    "name": "showIdleMessage",
+                    "type": "bool",
+                    "value": false
+                },
+                {
                     "name": "spriteCollisionPixelPerfect",
                     "type": "bool",
                     "value": false
