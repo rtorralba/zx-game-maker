@@ -196,7 +196,7 @@ dashAlwaysAvailable = 0
 showIdleMessage = 0
 
 swordEnabled = 0
-swordKillEnemy = 0
+swordKillEnemy = 1
 
 if 'properties' in data:
     for property in data['properties']:
