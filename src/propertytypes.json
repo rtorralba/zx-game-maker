@@ -550,6 +550,11 @@
                 "value": false
             },
             {
+                "name": "swordKillEnemy",
+                "type": "bool",
+                "value": true
+            },
+            {
                 "name": "timerSeconds",
                 "type": "int",
                 "value": 0

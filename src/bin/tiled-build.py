@@ -192,9 +192,11 @@ mainCharacterInvincible = 0
 wallJumpEnabled = 0
 dashEnabled = 0
 dashAlwaysAvailable = 0
-swordEnabled = 0
 
 showIdleMessage = 0
+
+swordEnabled = 0
+swordKillEnemy = 0
 
 if 'properties' in data:
     for property in data['properties']:
@@ -348,6 +350,8 @@ if 'properties' in data:
             swordEnabled = 1 if property['value'] else 0
         elif property['name'] == 'showIdleMessage':
             showIdleMessage = 1 if property['value'] else 0
+        elif property['name'] == 'swordKillEnemy':
+            swordKillEnemy = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -380,6 +384,8 @@ if dashEnabled == 1:
 
 if swordEnabled == 1:
     configStr += "#DEFINE SWORD_ENABLED\n"
+    if swordKillEnemy == 1:
+        configStr += "#DEFINE SWORD_KILL_ENEMY\n"
 
 if showIdleMessage == 1:
     configStr += "#DEFINE SHOW_IDLE_MESSAGE\n"

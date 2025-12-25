@@ -56,7 +56,7 @@
 #ifdef SHOOTING_ENABLED
     Function checkBulletProtaCollision(enemyX0 As Ubyte, enemyY0 As Ubyte, enemyX1 As Ubyte, enemyY1 As Ubyte, enemyId As Ubyte) As Ubyte
         If bulletPositionX = 0 Then Return 0
-
+        
         Dim bulletX0 As Ubyte = bulletPositionX
         Dim bulletX1 As Ubyte = bulletPositionX + 1
         Dim bulletY0 As Ubyte = bulletPositionY
@@ -69,7 +69,7 @@
         
         damageEnemy(enemyId)
         resetBullet()
-
+        
         Return 1
     End Function
 #endif
@@ -79,10 +79,10 @@
         If swordTimer = 0 Then Return 0
         
         Dim swordX As Ubyte
-        If swordDirection = 1 Then 
+        If swordDirection = 1 Then
             swordX = protaX + 3
             If swordX >= 60 Then swordX = 60
-        Else 
+        Else
             If protaX >= 2 Then swordX = protaX - 2 Else swordX = 0
         End If
         Dim swordY As Ubyte = protaY + 1
@@ -95,7 +95,11 @@
         If swordY1 < enemyY0 Then Return 0
         If swordY > enemyY1 Then Return 0
         
-        damageEnemy(enemyId)
+        #ifdef SWORD_KILL_ENEMY
+            killEnemy(enemyId)
+        #else
+            damageEnemy(enemyId)
+        #endif
         Return 1
     End Function
 #endif
@@ -110,17 +114,17 @@ Function checkProtaAndBulletCollision(enemyId As Ubyte) As Ubyte
     Dim enemyY0 As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
     Dim enemyX1 As Ubyte = enemyX0 + SPRITE_COLLISION_SIZE
     Dim enemyY1 As Ubyte = enemyY0 + SPRITE_COLLISION_SIZE
-
+    
     Dim damage As Ubyte = 0
     
     #ifdef SHOOTING_ENABLED
         If checkBulletProtaCollision(enemyX0, enemyY0, enemyX1, enemyY1, enemyId) Then Return 1
     #endif
-
+    
     #ifdef SWORD_ENABLED
         If checkSwordEnemyCollision(enemyX0, enemyY0, enemyX1, enemyY1, enemyId) Then Return 1
     #endif
-
+    
     #ifdef SIDE_VIEW
         #ifdef KILL_JUMPING_ON_TOP
             If checkHitOnTop(enemyId, protaX1, protaY1, enemyX0, enemyY0, enemyX1, enemyY1) Then Return 1
@@ -169,13 +173,13 @@ Sub moveEnemies()
     If enemiesPerScreen(currentScreen) = 0 Then Return
     For enemyId=0 To enemiesPerScreen(currentScreen) - 1
         Dim enemyAlive As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_ALIVE)
-
+        
         If enemyAlive <= 0 Then continue For
-
+        
         Dim tile As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_TILE)
-
+        
         If tile = 0 Then continue For
-
+        
         #ifdef ENEMIES_NOT_RESPAWN_ENABLED
             If tile > 15 Then
                 If enemyAlive < 99 Then
@@ -183,7 +187,7 @@ Sub moveEnemies()
                 End If
             End If
         #endif
-
+        
         Dim enemyCol As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL)
         Dim enemyLin As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
         Dim enemySpeed As Byte = decompressedEnemiesScreen(enemyId, ENEMY_SPEED)
@@ -194,7 +198,7 @@ Sub moveEnemies()
         Dim enemyBehaviour As Byte = decompressedEnemiesScreen(enemyId, ENEMY_MOVE)
         Dim enemyHorizontalDirection As Byte = decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION)
         Dim enemyVerticalDirection As Byte = decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION)
-
+        
         If enemyColIni = enemyColEnd Then enemyHorizontalDirection = 0
         If enemyLinIni = enemyLinEnd Then enemyVerticalDirection = 0
         
@@ -215,7 +219,7 @@ Sub moveEnemies()
                     End If
                 End If
             End If
-
+            
             If checkShouldSkipMoveBySpeed(enemySpeed) Then
                 If tile > 15 Then
                     If enemyHorizontalDirection = -1 Then
@@ -225,10 +229,10 @@ Sub moveEnemies()
                 checkAndDraw(enemyId, tile, enemyCol, enemyLin)
                 Continue For
             End If
-
+            
             enemyCol = enemyCol + enemyHorizontalDirection
             enemyLin = enemyLin + enemyVerticalDirection
-
+            
             #ifdef SIDE_VIEW
                 If tile < 16 Then
                     If checkPlatformHasProtaOnTop(enemyCol, enemyLin) Then
@@ -273,23 +277,23 @@ Sub moveEnemies()
             If enemFrame Then
                 tile = tile + 1
             End If
-
+            
             decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = enemyCol
             decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLin
-
+            
             saveAndDraw(enemyId, tile + 1, enemyHorizontalDirection, enemyVerticalDirection)
         Elseif enemyBehaviour = 1 Then
             If checkShouldSkipMoveBySpeed(enemySpeed) Then
                 checkAndDraw(enemyId, tile, enemyCol, enemyLin)
                 Continue For
             End If
-
+            
             enemyHorizontalDirection = Sgn(enemyColEnd - enemyColIni)
             enemyVerticalDirection = Sgn(enemyLinEnd - enemyLinIni)
             
             decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) =  enemyCol + enemyHorizontalDirection
             decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLin + enemyVerticalDirection
-
+            
             If enemyCol = enemyColIni And enemyLin = enemyLinIni Then
                 saveAndDraw(enemyId, tile + 17, enemyHorizontalDirection, enemyVerticalDirection)
                 continue For
@@ -299,7 +303,7 @@ Sub moveEnemies()
                 decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLinIni
                 continue For
             End If
-
+            
             If enemyCol = enemyColEnd Or enemyLin = enemyLinEnd Then
                 If enemyCol = enemyColEnd Then
                     decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = enemyColIni
@@ -308,17 +312,17 @@ Sub moveEnemies()
                     decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLinIni
                 End If
             End If
-
+            
             If enemFrame Then
                 tile = tile + 1
             End If
-
+            
             If checkProtaAndBulletCollision(enemyId) Then
                 If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <= 0 Then
                     continue For
                 End If
             End If
-
+            
             saveAndDraw(enemyId, tile + 1, enemyHorizontalDirection, enemyVerticalDirection)
         End If
     Next enemyId
