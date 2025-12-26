@@ -188,8 +188,8 @@ End Function
                 End If
                 jumpCurrentKey = jumpCurrentKey + 1
                 jumpEnergy = jumpEnergy - 1
-                PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; "  ";  
-	            PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; jumpEnergy;
+                PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; "  ";
+                PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; jumpEnergy;
                 Return
             End If
             
@@ -249,7 +249,7 @@ End Function
             landed = 0
         End If
     End Sub
-
+    
     #ifdef SHOOTING_ENABLED
         Sub shoot()
             If Not noKeyPressedForShoot Then Return
@@ -494,6 +494,9 @@ End Sub
 Sub downKey()
     ' Sword Attack Logic
     #ifdef SWORD_ENABLED
+        If Not noKeyPressedForSword Then Return
+        noKeyPressedForSword = 0
+        
         Dim skip = 0
         #ifdef SIDE_VIEW
             #ifdef LADDERS_ENABLED
@@ -582,7 +585,7 @@ Function checkDashingOrWalljumping() As Ubyte
                 Return 1
             End If
         #endif
-
+        
         #ifdef DASH_ENABLED
             dashGhostActive = 0
             If dashTimer > 0 Then
@@ -607,7 +610,7 @@ Function checkDashingOrWalljumping() As Ubyte
         #endif
     #endif
     Return 0
-End Function 
+End Function
 
 Sub keyboardListen()
     If kempston Then
@@ -661,7 +664,7 @@ Function checkTileObject(tile As Ubyte) As Ubyte
                 drawKey()
             End If
         #endif
-
+        
         If currentItems = ITEMS_TO_OPEN_DOORS Then
             removeTilesFromScreen(ITEMS_DOOR_TILE)
         End If
@@ -737,7 +740,7 @@ Sub checkObjectContact()
     
     Dim besideTile As Ubyte
     Dim attr As Ubyte
-
+    
     Dim tile As Ubyte = GetTile(col, lin)
     If checkTileObject(tile) Then
         #ifndef ARCADE_MODE
@@ -813,7 +816,7 @@ End Sub
                     If isFalling() Then Return
                 #endif
             #endif
-
+            
             If CheckCollision(protaX, protaY, 2) Then Return
             
             saveProta(protaY, protaX, getNextProtaIdleSprite(), protaDirection)
@@ -832,12 +835,22 @@ End Sub
 Sub protaMovement()
     #ifdef SWORD_ENABLED
         updateSword()
+        
+        If kempston = 1 Then
+            If In(31) bAND %100 = 0 Then
+                noKeyPressedForSword = 1
+            End If
+        Else
+            If MultiKeys(keyArray(DOWN)) = 0 Then
+                noKeyPressedForSword = 1
+            End If
+        End If
     #endif
-
+    
     #ifdef LIVES_MODE_GRAVEYARD
         If invincible Then Return
     #endif
-
+    
     #ifdef SHOOTING_ENABLED
         If kempston = 1 Then
             If In(31) bAND %10000 = 0 Then
@@ -849,7 +862,7 @@ Sub protaMovement()
             End If
         End If
     #endif
-
+    
     #ifdef SIDE_VIEW
         #ifdef DISABLE_CONTINUOUS_JUMP
             If kempston = 1 Then
@@ -867,7 +880,7 @@ Sub protaMovement()
     If Not checkDashingOrWalljumping() Then
         keyboardListen()
     End If
-
+    
     checkObjectContact()
     
     #ifdef SIDE_VIEW

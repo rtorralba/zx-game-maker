@@ -45,6 +45,7 @@ Const BULLET_SPRITE_LEFT_ID As Ubyte = 50
 #ifdef SWORD_ENABLED
     Const SWORD_SPRITE_RIGHT_ID As Ubyte = 52
     Const SWORD_SPRITE_LEFT_ID As Ubyte = 51
+    Dim noKeyPressedForSword As Ubyte = 1
 #endif
 
 
@@ -140,7 +141,7 @@ Dim spriteAddressIndex As Uinteger = 0
 
 #ifdef SHOOTING_ENABLED
     Dim bullet(7) As Ubyte
-
+    
     Dim bulletPositionX as Ubyte = 0
     Dim bulletPositionY as Ubyte = 0
     Dim bulletDirection as Ubyte = 0
