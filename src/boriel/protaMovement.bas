@@ -494,31 +494,32 @@ End Sub
 Sub downKey()
     ' Sword Attack Logic
     #ifdef SWORD_ENABLED
-        If Not noKeyPressedForSword Then Return
-        noKeyPressedForSword = 0
-        
-        Dim skip = 0
-        #ifdef SIDE_VIEW
-            #ifdef LADDERS_ENABLED
-                If CheckCollision(protaX, protaY, 2) Or CheckCollision(protaX, protaY + 1, 2) Then
-                    skip = 1
-                End If
-            #endif
-        #endif
-        If skip = 0 Then
-            If swordTimer = 0 Then
-                swordTimer = SWORD_DURATION
-                swordDirection = protaDirection
-                #ifdef IDLE_ENABLED
-                    protaLoopCounter = 0
-                    
-                    If protaDirection = 1 Then
-                        saveProta(protaY, protaX, 1, 1) ' 1 = FIRST_RUNNING_PROTA_SPRITE_RIGHT
-                    Else
-                        saveProta(protaY, protaX, 5, 0) ' 5 = FIRST_RUNNING_PROTA_SPRITE_LEFT
+        If noKeyPressedForSword Then
+            noKeyPressedForSword = 0
+            
+            Dim skip = 0
+            #ifdef SIDE_VIEW
+                #ifdef LADDERS_ENABLED
+                    If CheckCollision(protaX, protaY, 2) Or CheckCollision(protaX, protaY + 1, 2) Then
+                        skip = 1
                     End If
                 #endif
-                BeepFX_Play(2)
+            #endif
+            If skip = 0 Then
+                If swordTimer = 0 Then
+                    swordTimer = SWORD_DURATION
+                    swordDirection = protaDirection
+                    #ifdef IDLE_ENABLED
+                        protaLoopCounter = 0
+                        
+                        If protaDirection = 1 Then
+                            saveProta(protaY, protaX, 1, 1) ' 1 = FIRST_RUNNING_PROTA_SPRITE_RIGHT
+                        Else
+                            saveProta(protaY, protaX, 5, 0) ' 5 = FIRST_RUNNING_PROTA_SPRITE_LEFT
+                        End If
+                    #endif
+                    BeepFX_Play(2)
+                End If
             End If
         End If
     #endif
