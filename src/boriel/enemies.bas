@@ -96,7 +96,11 @@
         If swordY > enemyY1 Then Return 0
         
         #ifdef SWORD_KILL_ENEMY
-            killEnemy(enemyId)
+            If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) = 98 Then
+                killEnemy(enemyId)
+            Else
+                damageEnemy(enemyId)
+            End If
         #else
             damageEnemy(enemyId)
         #endif

@@ -128,8 +128,6 @@ dim maxXScreenLeft as ubyte = 2
     
     #ifdef SWORD_KILL_ENEMY
         Sub killEnemy(enemyToKill as Ubyte)
-            If decompressedEnemiesScreen(enemyToKill, ENEMY_ALIVE) = 99 Then Return
-            
             decompressedEnemiesScreen(enemyToKill, ENEMY_ALIVE) = 0
             removeEnemy(enemyToKill)
         End Sub
