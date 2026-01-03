@@ -72,13 +72,13 @@ End Sub
     
     Sub passwordScreen()
         If passwordOk Then Return
-
+        
         Cls
-
+        
         Dim failed As Ubyte = 0
-
+        
         doubleSizeTexto(96, 120, "PASS")
-
+        
         For i=0 To 4
             LeerTecla()
             Print AT 10,12 + i; "*"
@@ -86,11 +86,11 @@ End Sub
                 failed = 1
             End If
         Next i
-
+        
         If failed Then
             showMenu()
         End If
-
+        
         passwordOk = 1
         
         playGame()
@@ -107,7 +107,7 @@ End Sub
     #endif
     Sub redefineKeys()
         Ink 7: Paper 0: Border 0: BRIGHT 0: FLASH 0: Cls
-
+        
         #ifdef ENABLED_128k
             #ifdef MUSIC_ENABLED
                 #ifdef MUSIC_TITLE_ENABLED
@@ -129,7 +129,7 @@ End Sub
         
         Print AT 19,8;"DOWN"
         keyArray(DOWN) = LeerTecla()
-
+        
         #ifdef SHOOTING_ENABLED
             Print AT 21,8;"FIRE"
             keyArray(FIRE) = LeerTecla()
@@ -205,7 +205,7 @@ Sub playGame()
     #Else
         dzx0Standard(HUD_SCREEN_ADDRESS, $4000)
     #endif
-
+    
     #ifndef ARCADE_MODE
         #ifdef LIVES_MODE_ENABLED
             protaXRespawn = INITIAL_MAIN_CHARACTER_X
@@ -240,7 +240,7 @@ Sub playGame()
                     printMessage(ARCADE_GOAL_LINE1, ARCADE_GOAL_LINE2, ARCADE_GOAL_PAPER, ARCADE_GOAL_INK)
                 End If
             #endif
-
+            
             #ifdef ARCADE_MODE_RESET_ON_KILL
                 If arcadeModeResetObjects Then
                     arcadeModeResetObjects = 0
@@ -250,16 +250,16 @@ Sub playGame()
                     dzx0Standard(ENEMIES_DATA_ADDRESS + enemiesInScreenOffsets(currentScreen), arrayBasePtr(decompressedEnemiesScreen))
                 End If
             #endif
-
+            
             #ifdef ARCADE_MODE_SPRITE_ID
                 If showKeySprite Then
                     Draw2x2Sprite(ARCADE_MODE_SPRITE_ID, currentScreenKeyX * 2, (currentScreenKeyY * 2) - 2)
                 End If
             #endif
         #endif
-
+        
         calculateIfSkipMovementBySpeed()
-
+        
         #ifdef TIMER_ENABLED
             updateTimer()
         #endif
@@ -271,7 +271,7 @@ Sub playGame()
                 BeepFX_Play(0)
             End If
         End If
-
+        
         If resetBorder Then
             Border BORDER_VALUE
             resetBorder = 0
@@ -284,9 +284,9 @@ Sub playGame()
             moveBullet()
         #endif
         drawSprites()
-
+        
         RenderFrame()
-
+        
         makeAnimations()
         
         If moveScreen <> 0 Then
@@ -301,7 +301,7 @@ Sub playGame()
                 invincible = 0
                 invincibleFrame = 0
             End If
-
+            
             #ifdef LIVES_MODE_GRAVEYARD
                 if Not invincible Then saveProta(protaYRespawn, protaXRespawn, 1, protaDirection)
             #endif
@@ -313,11 +313,11 @@ Sub playGame()
                 Let lastFrameBeep = framec
             End If
         #endif
-
+        
         #ifndef ARCADE_MODE
             checkGameObjective()
         #endif
-
+        
         mainLoopCounter = mainLoopCounter + 1
     Loop
 End Sub
@@ -327,80 +327,80 @@ End Sub
         Sub showIntermediateScreen()
             VortexTracker_Stop()
             clearScreen()
-
+            
             Dim tinta As Ubyte = BACKGROUND_ATTRIBUTE bAND 7
             Dim papel As Ubyte = (BACKGROUND_ATTRIBUTE bAND 56) / 8
             Dim brillante As Ubyte = (BACKGROUND_ATTRIBUTE bAND 64) / 64
             Ink tinta: Paper papel: Bright brillante
-
+            
             Dim currentLives As Ubyte = currentLife
-
+            
             Print At 6, 8; "TIME LEFT:      ";
             Print At 6, 24 - LEN(STR$(timerSeconds)); timerSeconds
-
+            
             Print AT 8, 8; "LIVES LEFT:    ";
             Print AT 8, 24 - LEN(STR$(currentLives)); currentLives
-
+            
             Print AT 10, 8; "SCORE:          ";
             Print AT 10, 24 - LEN(STR$(score)); score
-
+            
             doubleSizeTexto(10, 160, "SCREEN CLEARED!")
             ' Print current score and remaining time and subtractr second and increase score
             #ifdef TIMER_ENABLED
                 protaX = 30
                 protaY = 26
                 protaTile = PROTA_IDLE_SPRITE_ID
-
+                
                 While timerSeconds > 0
                     timerSeconds = timerSeconds - 1
                     incrementScore(1)
-
+                    
                     Print At 6, 8; "TIME LEFT:      ";
                     Print At 6, 24 - LEN(STR$(timerSeconds)); timerSeconds
-
+                    
                     Print AT 10, 8; "SCORE:          ";
                     Print AT 10, 24 - LEN(STR$(score)); score
                     Beep .01, 12
-
+                    
                     protaTile = getNextProtaIdleSprite()
                     Draw2x2Sprite(protaTile, protaX, protaY)
                     RenderFrame()
                 Wend
-
+                
                 While currentLives > 0
                     currentLives = currentLives - 1
                     incrementScore(50)
-
+                    
                     Print AT 8, 8; "LIVES LEFT:    ";
                     Print AT 8, 24 - LEN(STR$(currentLives)); currentLives
-
+                    
                     Print AT 10, 8; "SCORE:          ";
                     Print AT 10, 24 - LEN(STR$(score)); score
                     Beep .01, 12
-
+                    
                     protaTile = getNextProtaIdleSprite()
                     Draw2x2Sprite(protaTile, protaX, protaY)
                     RenderFrame()
                 Wend
-
+                
                 Ink INK_VALUE: Paper PAPER_VALUE: Border BORDER_VALUE
                 printScore()
                 Ink tinta: Paper papel: Bright brillante
-
+                
                 Flash 1
                 Print AT 18, 4; "PRESS ENTER To Continue"
                 Flash 0
-
+                
                 If score > hiScore Then
                     hiScore = score
                 End If
             #endif
-
+            
             Do
                 animateProtaForIntermediateScreen()
             Loop Until skipScreenPressed()
-
-            #ifndef ARCADE_MODE     
+            
+            #ifndef ARCADE_MODE
                 If music2alreadyPlayed = 0 Then
                     VortexTracker_Play(MUSIC_ADDRESS)
                 Else If music2alreadyPlayed = 1 And music3alreadyPlayed = 0 Then
@@ -409,16 +409,16 @@ End Sub
                     VortexTracker_Play(MUSIC_3_ADDRESS)
                 End If
             #endif
-
+            
             Ink INK_VALUE: Paper PAPER_VALUE: Border BORDER_VALUE
-
+            
             If currentScreen <= SCREENS_COUNT Then
                 swapScreen()
             Else
                 ending()
             End If
         End Sub
-
+        
         Sub animateProtaForIntermediateScreen()
             If framec mod 50 = 0 Then
                 protaTile = getNextProtaIdleSprite()
@@ -434,13 +434,13 @@ End Sub
                 ending()
             End If
         #endif
-
+        
         #ifdef FINISH_GAME_OBJECTIVE_ENEMY
             If enemyToKillAlreadyKilled Then
                 ending()
             End If
         #endif
-
+        
         #ifdef FINISH_GAME_OBJECTIVE_ITEMS_AND_ENEMY
             If currentItems = GOAL_ITEMS Then
                 If enemyToKillAlreadyKilled Then
@@ -455,7 +455,7 @@ Sub calculateIfSkipMovementBySpeed()
     skipMove0 = 0
     skipMove1 = 0
     skipMove2 = 0
-
+    
     If mainLoopCounter bAnd 7 <> 0 Then skipMove0 = 1   ' 1 de cada 8 loops (slowest)
     If mainLoopCounter bAnd 3 <> 0 Then skipMove1 = 1   ' 1 de cada 4 loops
     If mainLoopCounter bAnd 1 <> 0 Then skipMove2 = 1   ' 1 de cada 2 loops
@@ -553,7 +553,7 @@ Sub resetValues()
     currentKeys = 2 Mod 2
     currentKeys = 0
     moveScreen = 0
-
+    
     #ifdef USE_BREAKABLE_TILE_INDIVIDUAL
         For i = 0 To BREAKABLE_TILES_COUNT
             brokenTiles(i, 0) = 0
@@ -561,14 +561,14 @@ Sub resetValues()
             brokenTiles(i, 2) = 0
         Next i
     #endif
-
-    For i = 0 To SCREEN_OBJECTS_COUNT
+    
+    For i = 0 To SCREEN_OBJECTS_COUNT - 1
         screenObjects(i, 1) = 0
         screenObjects(i, 2) = 0
         screenObjects(i, 3) = 0
         screenObjects(i, 4) = 0
     Next i
-
+    
     #ifdef ARCADE_MODE
         currentItems = 0
     #Else
@@ -578,12 +578,12 @@ Sub resetValues()
             currentItems = 0
         End If
     #endif
-
+    
     #ifdef LIVES_MODE_ENABLED
         protaXRespawn = INITIAL_MAIN_CHARACTER_X
         protaYRespawn = INITIAL_MAIN_CHARACTER_Y
     #endif
-
+    
     For i = 0 To SCREENS_COUNT
         screensWon(i) = 0
     Next i
@@ -600,14 +600,14 @@ Sub resetValues()
     
     brokenTilesCurrentIndex = 0
     screenObjectsCurrentIndex = 0
-
+    
     #ifdef MUSIC_2_ENABLED
         music2alreadyPlayed = 0
     #endif
     #ifdef MUSIC_3_ENABLED
         music3alreadyPlayed = 0
     #endif
-
+    
     #ifdef TIMER_ENABLED
         resetTimer()
     #endif
@@ -628,13 +628,13 @@ Sub swapScreen()
     #ifdef ARCADE_MODE
         countItemsOnTheScreen()
         saveProta(mainCharactersArray(currentScreen, 1), mainCharactersArray(currentScreen, 0), 1, 1)
-
+        
         #ifdef LIVES_MODE_ENABLED
             protaXRespawn = mainCharactersArray(currentScreen, 0)
             protaYRespawn = mainCharactersArray(currentScreen, 1)
         #endif
     #endif
-
+    
     #ifdef ENABLED_128k
         #ifdef MUSIC_ENABLED
             #ifdef ARCADE_MODE
@@ -666,7 +666,7 @@ Sub swapScreen()
             #endif
         #endif
     #endif
-
+    
     #ifdef TIMER_ENABLED
         resetTimer()
         updateTimerDisplay()

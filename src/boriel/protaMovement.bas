@@ -48,34 +48,21 @@ End Function
 Function getNextFrameRunning() As Ubyte
     #ifdef SIDE_VIEW
         #ifdef MAIN_CHARACTER_EXTRA_FRAME
+            Dim oldLast As Ubyte
             If protaDirection = 1 Then
-                If protaFrame = 0 Then
-                    protaLastFrame = protaFrame
-                    Return 1
-                Else If protaFrame = 1 And protaLastFrame = 0 Then
-                    protaLastFrame = protaFrame
-                    Return 2
-                Else If protaFrame = 2 Then
-                    protaLastFrame = protaFrame
-                    Return 1
-                Else If protaFrame = 1 And protaLastFrame = 2 Then
-                    protaLastFrame = protaFrame
-                    Return 0
-                End If
+                oldLast = protaLastFrame
+                protaLastFrame = protaFrame
+                
+                If protaFrame = 0 Or protaFrame = 2 Then Return 1
+                If oldLast = 0 Then Return 2
+                Return 0
             Else
-                If protaFrame = 4 Then
-                    protaLastFrame = protaFrame
-                    Return 5
-                Else If protaFrame = 5 And protaLastFrame = 4 Then
-                    protaLastFrame = protaFrame
-                    Return 6
-                Else If protaFrame = 6 Then
-                    protaLastFrame = protaFrame
-                    Return 5
-                Else If protaFrame = 5 And protaLastFrame = 6 Then
-                    protaLastFrame = protaFrame
-                    Return 4
-                End If
+                oldLast = protaLastFrame
+                protaLastFrame = protaFrame
+                
+                If protaFrame = 4 Or protaFrame = 6 Then Return 5
+                If oldLast = 4 Then Return 6
+                Return 4
             End If
         #Else
             If protaDirection = 1 Then
@@ -263,42 +250,31 @@ End Function
                 printHud()
             #endif
             
-            currentBulletSpriteId = BULLET_SPRITE_RIGHT_ID
-            If protaDirection Then
+            bulletPositionY = protaY + 1
+            bulletDirection = protaDirection
+            
+            If protaDirection Then ' Right
                 #ifdef IDLE_ENABLED
                     saveProta(protaY, protaX, 1, 1)
                 #endif
-                
                 currentBulletSpriteId = BULLET_SPRITE_RIGHT_ID
                 bulletPositionX = protaX + 2
-                If BULLET_DISTANCE <> 0 Then
-                    If protaX + BULLET_DISTANCE > maxXScreenRight Then
-                        bulletEndPositionX = maxXScreenRight
-                    Else
-                        bulletEndPositionX = protaX + BULLET_DISTANCE + 1
-                    End If
-                Else
-                    bulletEndPositionX = maxXScreenRight
+                bulletEndPositionX = maxXScreenRight
+                If BULLET_DISTANCE <> 0 And protaX + BULLET_DISTANCE <= maxXScreenRight Then
+                    bulletEndPositionX = protaX + BULLET_DISTANCE + 1
                 End If
-            Elseif protaDirection = 0
+            Else ' Left
                 #ifdef IDLE_ENABLED
                     saveProta(protaY, protaX, 5, 0)
                 #endif
                 currentBulletSpriteId = BULLET_SPRITE_LEFT_ID
                 bulletPositionX = protaX
-                If BULLET_DISTANCE <> 0 Then
-                    If BULLET_DISTANCE > protaX Then
-                        bulletEndPositionX = maxXScreenLeft
-                    Else
-                        bulletEndPositionX = protaX - BULLET_DISTANCE + 1
-                    End If
-                Else
-                    bulletEndPositionX = maxXScreenLeft
+                bulletEndPositionX = maxXScreenLeft
+                If BULLET_DISTANCE <> 0 And BULLET_DISTANCE <= protaX Then
+                    bulletEndPositionX = protaX - BULLET_DISTANCE + 1
                 End If
             End If
             
-            bulletPositionY = protaY + 1
-            bulletDirection = protaDirection
             BeepFX_Play(2)
         End Sub
     #endif
@@ -308,7 +284,6 @@ End Function
     #ifdef SHOOTING_ENABLED
         Sub shoot()
             If Not noKeyPressedForShoot Then Return
-            
             noKeyPressedForShoot = 0
             
             #ifdef AMMO_ENABLED
@@ -319,57 +294,37 @@ End Function
             
             If bulletPositionX <> 0 Then Return
             
-            If protaDirection = 1 Then
+            If protaDirection = 1 Then ' Right
                 currentBulletSpriteId = BULLET_SPRITE_RIGHT_ID
                 bulletPositionX = protaX + 2
                 bulletPositionY = protaY + 1
-                If BULLET_DISTANCE <> 0 Then
-                    If protaX + BULLET_DISTANCE > maxXScreenRight Then
-                        bulletEndPositionX = maxXScreenRight
-                    Else
-                        bulletEndPositionX = protaX + BULLET_DISTANCE + 1
-                    End If
-                Else
-                    bulletEndPositionX = maxXScreenRight
+                bulletEndPositionX = maxXScreenRight
+                If BULLET_DISTANCE <> 0 And protaX + BULLET_DISTANCE <= maxXScreenRight Then
+                    bulletEndPositionX = protaX + BULLET_DISTANCE + 1
                 End If
-            Elseif protaDirection = 0
+            Elseif protaDirection = 0 ' Left
                 currentBulletSpriteId = BULLET_SPRITE_LEFT_ID
                 bulletPositionX = protaX
                 bulletPositionY = protaY + 1
-                If BULLET_DISTANCE <> 0 Then
-                    If BULLET_DISTANCE > protaX Then
-                        bulletEndPositionX = maxXScreenLeft
-                    Else
-                        bulletEndPositionX = protaX - BULLET_DISTANCE + 1
-                    End If
-                Else
-                    bulletEndPositionX = maxXScreenLeft
+                bulletEndPositionX = maxXScreenLeft
+                If BULLET_DISTANCE <> 0 And BULLET_DISTANCE <= protaX Then
+                    bulletEndPositionX = protaX - BULLET_DISTANCE + 1
                 End If
-            Elseif protaDirection = 8
+            Elseif protaDirection = 8 ' Up
                 currentBulletSpriteId = BULLET_SPRITE_UP_ID
                 bulletPositionX = protaX + 1
                 bulletPositionY = protaY + 1
-                If BULLET_DISTANCE <> 0 Then
-                    If BULLET_DISTANCE > protaY Then
-                        bulletEndPositionY = maxYScreenTop
-                    Else
-                        bulletEndPositionY = protaY - BULLET_DISTANCE + 1
-                    End If
-                Else
-                    bulletEndPositionY = maxYScreenTop
+                bulletEndPositionY = maxYScreenTop
+                If BULLET_DISTANCE <> 0 And BULLET_DISTANCE <= protaY Then
+                    bulletEndPositionY = protaY - BULLET_DISTANCE + 1
                 End If
-            Else
+            Else ' Down
                 currentBulletSpriteId = BULLET_SPRITE_DOWN_ID
                 bulletPositionX = protaX + 1
                 bulletPositionY = protaY + 2
-                If BULLET_DISTANCE <> 0 Then
-                    If protaY + BULLET_DISTANCE > maxYScreenBottom Then
-                        bulletEndPositionY = maxYScreenBottom
-                    Else
-                        bulletEndPositionY = protaY + BULLET_DISTANCE + 1
-                    End If
-                Else
-                    bulletEndPositionY = maxYScreenBottom
+                bulletEndPositionY = maxYScreenBottom
+                If BULLET_DISTANCE <> 0 And protaY + BULLET_DISTANCE <= maxYScreenBottom Then
+                    bulletEndPositionY = protaY + BULLET_DISTANCE + 1
                 End If
             End If
             
@@ -735,68 +690,29 @@ Function checkTileObject(tile As Ubyte) As Ubyte
     Return 0
 End Function
 
+Sub processTileContact(tCol as Ubyte, tLin as Ubyte, bCol as Ubyte, bLin as Ubyte)
+    Dim tile As Ubyte = GetTile(tCol, tLin)
+    If checkTileObject(tile) Then
+        #ifndef ARCADE_MODE
+            addScreenObject(tile, tCol, tLin)
+        #endif
+        Dim besideTile As Ubyte = GetTile(bCol, bLin)
+        If besideTile = 0 Then
+            FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, tCol, tLin)
+        Else
+            FillWithTileChecked(0, 1, 1, attrSet(besideTile), tCol, tLin)
+        End If
+    End If
+End Sub
+
 Sub checkObjectContact()
     Dim col As Ubyte = protaX >> 1
     Dim lin As Ubyte = protaY >> 1
     
-    Dim besideTile As Ubyte
-    Dim attr As Ubyte
-    
-    Dim tile As Ubyte = GetTile(col, lin)
-    If checkTileObject(tile) Then
-        #ifndef ARCADE_MODE
-            addScreenObject(tile, col, lin)
-        #endif
-        besideTile = GetTile(col, lin - 1)
-        If besideTile = 0 Then
-            FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col, lin)
-        Else
-            FillWithTileChecked(0, 1, 1, attrSet(besideTile), col, lin)
-        End If
-        Return
-    End If
-    
-    tile = GetTile(col + 1, lin)
-    If checkTileObject(tile) Then
-        #ifndef ARCADE_MODE
-            addScreenObject(tile, col + 1, lin)
-        #endif
-        besideTile = GetTile(col, lin)
-        If besideTile = 0 Then
-            FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col + 1, lin)
-        Else
-            FillWithTileChecked(0, 1, 1, attrSet(besideTile), col + 1, lin)
-        End If
-        Return
-    End If
-    
-    tile = GetTile(col, lin + 1)
-    If checkTileObject(tile) Then
-        #ifndef ARCADE_MODE
-            addScreenObject(tile, col, lin + 1)
-        #endif
-        besideTile = GetTile(col, lin)
-        If besideTile = 0 Then
-            FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col, lin + 1)
-        Else
-            FillWithTileChecked(0, 1, 1, attrSet(besideTile), col, lin + 1)
-        End If
-        Return
-    End If
-    
-    tile = GetTile(col + 1, lin + 1)
-    If checkTileObject(tile) Then
-        #ifndef ARCADE_MODE
-            addScreenObject(tile, col + 1, lin + 1)
-        #endif
-        besideTile = GetTile(col, lin)
-        If besideTile = 0 Then
-            FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, col + 1, lin + 1)
-        Else
-            FillWithTileChecked(0, 1, 1, attrSet(besideTile), col + 1, lin + 1)
-        End If
-        Return
-    End If
+    processTileContact(col, lin, col, lin - 1)
+    processTileContact(col + 1, lin, col, lin)
+    processTileContact(col, lin + 1, col, lin)
+    processTileContact(col + 1, lin + 1, col, lin)
 End Sub
 
 Sub checkDamageByTile()
