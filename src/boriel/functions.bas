@@ -588,27 +588,22 @@ End Function
 Function getTextByTextId(textId As Ubyte) As String
     SetBank(TEXTS_BANK)
     
-    Dim textPtr As UInteger = TEXTS_ADDRESS
-    Dim currentChar As Ubyte
+    Dim textPtr As UInteger = $C000
     Dim textsSkipped As Ubyte = 0
     Dim result As String = ""
     
     ' Saltar los primeros textId textos contando separadores 0xFF
     While textsSkipped < textId
-        currentChar = PEEK(textPtr)
-        textPtr = textPtr + 1
-        
-        If currentChar = 255 Then  ' 0xFF
+        If PEEK(textPtr) = 255 Then
             textsSkipped = textsSkipped + 1
         End If
+        textPtr = textPtr + 1
     Wend
     
-    ' Ahora estamos al inicio del texto correcto, leer hasta el siguiente 0xFF
-    currentChar = PEEK(textPtr)
-    While currentChar <> 255  ' Mientras no sea 0xFF
-        result = result + CHR$(currentChar)
+    ' Leer el texto hasta encontrar 0xFF
+    While PEEK(textPtr) <> 255
+        result = result + CHR$(PEEK(textPtr))
         textPtr = textPtr + 1
-        currentChar = PEEK(textPtr)
     Wend
     
     SetBank(0)

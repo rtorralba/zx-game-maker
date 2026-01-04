@@ -83,7 +83,7 @@ if spriteTileOffset == 0:
 currentLanguage = os.getenv("ZXSGM_I18N_FOLDER", "es")
 
 if currentLanguage not in ['en', 'es', 'pt']:
-    currentLanguage = 'es'
+    currentLanguage = 'en'
 
 gameName = 'Game Name'
 initialLife = 40

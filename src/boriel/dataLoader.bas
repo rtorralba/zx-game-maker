@@ -57,7 +57,7 @@ Sub loadDataFromTape()
         #endif
         
         SetBank(TEXTS_BANK)
-        load "" CODE TEXTS_ADDRESS ' Load texts
+        load "" CODE $C000 ' Load texts
         SetBank(0)
     #endif
 End Sub

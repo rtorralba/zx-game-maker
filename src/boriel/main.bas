@@ -29,8 +29,8 @@ loadDataFromTape()
 #include "protaMovement.bas"
 #include "screensFlow.bas"
 
-Print getTextByTextId(0)
-stop
+Print getTextByTextId(1)
+pauseUntilPressKey()
 
 initGraphics()
 

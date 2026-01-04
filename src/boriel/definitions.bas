@@ -12,7 +12,6 @@
 #endif
 
 const TEXTS_BANK as ubyte = 7
-const TEXTS_ADDRESS as UInteger = $C000
 
 ' GuSprites
 #define PRECOMPUTED_SPRITES
