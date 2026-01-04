@@ -600,7 +600,7 @@ Sub keyboardListen()
 End Sub
 
 Function checkTileObject(tile As Ubyte) As Ubyte
-    If tile < 187 Then Return 0
+    If tile < 186 Then Return 0
     
     If tile = ITEM_TILE Then
         currentItems = currentItems + ITEMS_INCREMENT
@@ -685,6 +685,11 @@ Function checkTileObject(tile As Ubyte) As Ubyte
             #endif
             BeepFX_Play(6)
             Return 1
+        #endif
+        #ifdef TEXTS_ENABLED
+        Elseif tile = 186 Then
+            showTextInTheScreen(currentScreen, 0, 7)
+            Return 0
         #endif
     End If
     Return 0

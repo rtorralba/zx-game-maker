@@ -100,6 +100,11 @@ def getEnabled128K():
         maps_json = json.load(f)
     return any(prop["name"] == "128Kenabled" and prop["value"] for prop in maps_json["properties"])
 
+def getMessagesEnabled():
+    with open(OUTPUT_FOLDER / "maps.json", "r") as f:
+        maps_json = json.load(f)
+    return any(prop["name"] == "messagesEnabled" and prop["value"] for prop in maps_json["properties"])
+
 def getMusicEnabled():
     with open(OUTPUT_FOLDER / "maps.json", "r") as f:
         maps_json = json.load(f)

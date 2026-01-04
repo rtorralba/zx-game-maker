@@ -606,6 +606,11 @@
                     "value": true
                 },
                 {
+                    "name": "textsEnabled",
+                    "type": "bool",
+                    "value": false
+                },
+                {
                     "name": "timerSeconds",
                     "type": "int",
                     "value": 0

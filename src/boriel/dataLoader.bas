@@ -56,8 +56,10 @@ Sub loadDataFromTape()
             load "" CODE GAMEOVER_SCREEN_ADDRESS ' Load game over Screen
         #endif
         
-        SetBank(TEXTS_BANK)
-        load "" CODE $C000 ' Load texts
-        SetBank(0)
+        #ifdef TEXTS_ENABLED
+            SetBank(TEXTS_BANK)
+            load "" CODE $C000 ' Load texts
+            SetBank(0)
+        #endif
     #endif
 End Sub

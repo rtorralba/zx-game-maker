@@ -11,7 +11,9 @@
     End If
 #endif
 
-const TEXTS_BANK as ubyte = 7
+#ifdef TEXTS_ENABLED
+    const TEXTS_BANK as ubyte = 7
+#endif
 
 ' GuSprites
 #define PRECOMPUTED_SPRITES

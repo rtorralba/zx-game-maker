@@ -139,21 +139,6 @@ End Sub
     End Sub
 #endif
 
-Function skipScreenPressed() As Ubyte
-    If kempstonInterfaceAvailable Then
-        Dim n As Ubyte = In(31)
-        If n bAND %10000 Then
-            Return 1
-        End If
-    End If
-    
-    If MultiKeys(KEYENTER) Then
-        Return 1
-    End If
-    
-    Return 0
-End Function
-
 Sub playGame()
     inMenu = 0
     #ifdef PASSWORD_ENABLED

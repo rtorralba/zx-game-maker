@@ -585,30 +585,198 @@ Function getFirstCharBright() As Ubyte
     Return (attr bAnd 64) >> 6       ' Bit 6: BRIGHT (desplazar 6 bits)
 End Function
 
-Function getTextByTextId(textId As Ubyte) As String
-    SetBank(TEXTS_BANK)
-    
-    Dim textPtr As UInteger = $C000
-    Dim textsSkipped As Ubyte = 0
-    Dim result As String = ""
-    
-    ' Saltar los primeros textId textos contando separadores 0xFF
-    While textsSkipped < textId
-        If PEEK(textPtr) = 255 Then
-            textsSkipped = textsSkipped + 1
+Function skipScreenPressed() As Ubyte
+    If kempstonInterfaceAvailable Then
+        Dim n As Ubyte = In(31)
+        If n bAND %10000 Then
+            Return 1
         End If
-        textPtr = textPtr + 1
-    Wend
+    End If
     
-    ' Leer el texto hasta encontrar 0xFF
-    While PEEK(textPtr) <> 255
-        result = result + CHR$(PEEK(textPtr))
-        textPtr = textPtr + 1
-    Wend
+    If MultiKeys(KEYENTER) Then
+        Return 1
+    End If
     
-    SetBank(0)
-    Return result
+    Return 0
 End Function
+
+#ifdef TEXTS_ENABLED
+    Function getTextByTextId(textId As Ubyte) As String
+        SetBank(TEXTS_BANK)
+        
+        Dim textPtr As UInteger = $C000
+        Dim textsSkipped As Ubyte = 0
+        Dim result As String = ""
+        
+        ' Saltar los primeros textId textos contando separadores 0xFF
+        While textsSkipped < textId
+            If PEEK(textPtr) = 255 Then
+                textsSkipped = textsSkipped + 1
+            End If
+            textPtr = textPtr + 1
+        Wend
+        
+        ' Leer el texto hasta encontrar 0xFF
+        While PEEK(textPtr) <> 255
+            result = result + CHR$(PEEK(textPtr))
+            textPtr = textPtr + 1
+        Wend
+        
+        SetBank(0)
+        Return result
+    End Function
+    
+    Function showTextInTheScreen(screenId As Ubyte, inkColor As Ubyte, paperColor As Ubyte)
+        Dim textId As Ubyte = 0
+        
+        While textLocations(textId, 0) <> screenId
+            textId = textId + 1
+        Wend
+        
+        Dim text As String = getTextByTextId(textLocations(textId, 1))
+        
+        ' Window definition
+        Const WIN_X as Ubyte = 2
+        Const WIN_Y as Ubyte = 6
+        Const WIN_W as Ubyte = 28
+        Const WIN_H as Ubyte = 12 ' Text height (pixels will be 8 * 8)
+        
+        ' Buffer at the end of Bank 7 (approx top of memory)
+        ' Size needed:
+        ' Pixels: WIN_W * WIN_H * 8 = 28 * 8 * 8 = 1792 bytes
+        ' Attrs: WIN_W * WIN_H = 28 * 8 = 224 bytes
+        ' Total: 2016 bytes.
+        ' Address $F800 (63488) gives us > 2048 bytes until $FFFF.
+        ' Address $E000 (57344) is safer (avoid stack at top of RAM)
+        Const BUFFER_ADDR as UInteger = $E000
+        
+        Dim bufPtr As UInteger
+        Dim scrPtr As UInteger
+        Dim i as Ubyte
+        Dim j as Ubyte
+        Dim k as Ubyte
+        
+        ' --- SAVE BACKGROUND ---
+        SetBank(TEXTS_BANK)
+        bufPtr = BUFFER_ADDR
+        
+        ' Save Attributes (easier to access linearly per line)
+        For j = 0 To WIN_H - 1
+            scrPtr = 22528 + (Cast(UInteger, WIN_Y) + j) * 32 + WIN_X
+            For i = 0 To WIN_W - 1
+                Poke bufPtr, Peek(scrPtr + i)
+                bufPtr = bufPtr + 1
+            Next i
+        Next j
+        
+        ' Save Pixels (complex screen layout)
+        For j = 0 To WIN_H - 1 ' Character rows
+            ' Calculate base address for this char row
+            ' Form: 010 BB PPP LLL CCCCC
+            ' Y = (WIN_Y + j)
+            ' Line address = 16384 + ((Y & 24) << 8) + ((Y & 7) << 5) ... wait, standard formula:
+            Dim yChar as Ubyte = WIN_Y + j
+            Dim baseLineAddr as UInteger = 16384 + (Cast(UInteger, yChar) bAnd 24) * 256 + (Cast(UInteger, yChar) bAnd 7) * 32
+            
+            For k = 0 To 7 ' Pixel lines within char
+                scrPtr = baseLineAddr + (k * 256) + WIN_X
+                For i = 0 To WIN_W - 1
+                    Poke bufPtr, Peek(scrPtr + i)
+                    bufPtr = bufPtr + 1
+                Next i
+            Next k
+        Next j
+        
+        SetBank(0)
+        
+        ' --- DRAW WINDOW & TEXT ---
+        ' Clear area
+        Ink inkColor: Paper paperColor
+        For j = 0 To WIN_H - 1
+            For i = 0 To WIN_W - 1
+                Print At WIN_Y + j, WIN_X + i; " ";
+            Next i
+        Next j
+        
+        ' Print Text
+        ' Basic PRINT handles wrapping inside the defined window? No, we need to locate manually or rely on bounds.
+        ' Simple print at top-left of window:
+        ' Print Text with Word Wrapping
+        Dim currentX as Ubyte = WIN_X + 1
+        Dim currentY as Ubyte = WIN_Y + 1
+        Dim p as UInteger = 0 ' Pointer to string char index (manually)
+        Dim wordLen as Ubyte
+        Dim wordStart as UInteger
+        Dim charCode as Ubyte
+        
+        ' Manual loop over string is safer/easier in basic without Split()
+        Dim tLen as UInteger = Len(text)
+        Dim k_idx as UInteger
+        
+        Dim currentWord as String
+        currentWord = ""
+        
+        For k_idx = 0 To tLen ' Iterate up to length (inclusive to flush last word)
+            If k_idx < tLen Then
+                charCode = Code text(k_idx)
+            Else
+                charCode = 32 ' Force space at end to flush
+            End If
+            
+            If charCode = 32 Then ' Space found
+                If currentWord <> "" Then
+                    If currentX + Len(currentWord) > WIN_X + WIN_W - 1 Then
+                        currentX = WIN_X + 1
+                        currentY = currentY + 1
+                    End If
+                    
+                    If currentY < WIN_Y + WIN_H - 1 Then ' Check bounds
+                        Print At currentY, currentX; currentWord; " ";
+                        currentX = currentX + Len(currentWord) + 1
+                    End If
+                    currentWord = ""
+                End If
+            Else
+                currentWord = currentWord + Chr$(charCode)
+            End If
+        Next k_idx
+        
+        ' Wait
+        Do
+        Loop Until skipScreenPressed()
+        
+        Paper PAPER_VALUE: Ink INK_VALUE
+        
+        ' --- RESTORE BACKGROUND ---
+        SetBank(TEXTS_BANK)
+        bufPtr = BUFFER_ADDR
+        
+        ' Restore Attributes
+        For j = 0 To WIN_H - 1
+            scrPtr = 22528 + (Cast(UInteger, WIN_Y) + j) * 32 + WIN_X
+            For i = 0 To WIN_W - 1
+                Poke scrPtr + i, Peek(bufPtr)
+                bufPtr = bufPtr + 1
+            Next i
+        Next j
+        
+        ' Restore Pixels
+        For j = 0 To WIN_H - 1
+            yChar = WIN_Y + j
+            baseLineAddr = 16384 + (Cast(UInteger, yChar) bAnd 24) * 256 + (Cast(UInteger, yChar) bAnd 7) * 32
+            
+            For k = 0 To 7
+                scrPtr = baseLineAddr + (k * 256) + WIN_X
+                For i = 0 To WIN_W - 1
+                    Poke scrPtr + i, Peek(bufPtr)
+                    bufPtr = bufPtr + 1
+                Next i
+            Next k
+        Next j
+        SetBank(0)
+        
+    End Function
+#endif
 
 sub debugA(value as UBYTE)
     PRINT AT 0, 0; "----"

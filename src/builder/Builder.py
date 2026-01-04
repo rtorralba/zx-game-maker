@@ -13,6 +13,7 @@ class Builder:
     def execute(self):
         is128K = getEnabled128K()
         useBreakableTile = getUseBreakableTile()
+        messagesEnabled = getMessagesEnabled()
 
         ScreensCompressor().execute(is128K)
         TilesGenerator().execute()
@@ -22,6 +23,7 @@ class Builder:
         sizes = SizesGetter(OUTPUT_FOLDER, is128K, useBreakableTile).execute()
         ChartGenerator().execute(sizes, is128K)
         ConfigWriter(OUTPUT_FOLDER / "config.bas", INITIAL_ADDRESS, sizes).execute()
-        TranslationsRetriever().execute()
+        if messagesEnabled:
+            TranslationsRetriever().execute()
 
         return sizes
