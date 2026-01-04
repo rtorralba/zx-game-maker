@@ -204,6 +204,8 @@ showIdleMessage = 0
 swordEnabled = 0
 swordKillEnemy = 1
 
+controlledGameSpeed = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -358,6 +360,8 @@ if 'properties' in data:
             showIdleMessage = 1 if property['value'] else 0
         elif property['name'] == 'swordKillEnemy':
             swordKillEnemy = 1 if property['value'] else 0
+        elif property['name'] == 'controlledGameSpeed':
+            controlledGameSpeed = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -395,6 +399,9 @@ if swordEnabled == 1:
 
 if showIdleMessage == 1:
     configStr += "#DEFINE SHOW_IDLE_MESSAGE\n"
+
+if controlledGameSpeed == 1:
+    configStr += "#DEFINE CONTROLLED_GAME_SPEED\n"
 
 if currentStageEnabled == 1:
     configStr += "#DEFINE CURRENT_STAGE_ENABLED\n"
