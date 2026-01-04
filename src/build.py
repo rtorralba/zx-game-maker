@@ -103,6 +103,10 @@ def tapsBuild(outputFile):
         if os.path.isfile(OUTPUT_FOLDER / "gameover.scr.zx0"):
             runCommand("zxbin2tap " + str(OUTPUT_FOLDER / "gameover.scr.zx0") + " " + str(OUTPUT_FOLDER / "gameover.tap") + " 49152")
             input_files.append(OUTPUT_FOLDER / "gameover.tap")
+        
+        if os.path.isfile(OUTPUT_FOLDER / "texts.bin"):
+            runCommand("zxbin2tap " + str(OUTPUT_FOLDER / "texts.bin") + " " + str(OUTPUT_FOLDER / "texts.tap") + " 49152 --header texts")
+            input_files.append(OUTPUT_FOLDER / "texts.tap")
     else:
         input_files = [
             str(OUTPUT_FOLDER / "loader.tap"),

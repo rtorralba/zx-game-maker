@@ -233,6 +233,41 @@
     {
         "color": "#ffa0a0a4",
         "drawFill": true,
+        "id": 19,
+        "members": [
+            {
+                "name": "en",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "es",
+                "type": "string",
+                "value": ""
+            },
+            {
+                "name": "pt",
+                "type": "string",
+                "value": ""
+            }
+        ],
+        "name": "ZXSGMText",
+        "type": "class",
+        "useAs": [
+            "property",
+            "map",
+            "layer",
+            "object",
+            "tile",
+            "tileset",
+            "wangcolor",
+            "wangset",
+            "project"
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "drawFill": true,
         "id": 2,
         "members": [
             {

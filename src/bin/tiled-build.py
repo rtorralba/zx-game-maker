@@ -9,6 +9,7 @@ import platform
 from pprint import pprint
 import subprocess
 import sys
+import unicodedata
 
 def exitWithErrorMessage(message):
     print('\n\n=====================================================================================')
@@ -78,6 +79,11 @@ if spriteTileOffset == 0:
     exit
 
 # Global properties
+
+currentLanguage = os.getenv("ZXSGM_I18N_FOLDER", "es")
+
+if currentLanguage not in ['en', 'es', 'pt']:
+    currentLanguage = 'es'
 
 gameName = 'Game Name'
 initialLife = 40
@@ -704,6 +710,12 @@ if arcadeMode == 1:
 
 enemyIdCounter = 0
 
+texts = {
+    'en': {},
+    'es': {},
+    'pt': {}
+}
+
 for layer in data['layers']:
     if layer['type'] == 'objectgroup':
         for object in layer['objects']:
@@ -771,6 +783,10 @@ for layer in data['layers']:
                         elif property['name'] == 'move':
                             if property['value'] == 'noReturn':
                                 objects[str(object['id'])]['move'] = '1'
+            elif object['type'] == 'ZXSGMText':
+                texts['en'][screenId] = str(object['properties'][0]['value']) if 'properties' in object and len(object['properties']) > 0 else "Texto sin establecer"
+                texts['es'][screenId] = str(object['properties'][1]['value']) if 'properties' in object and len(object['properties']) > 1 else "Text not set"
+                texts['pt'][screenId] = str(object['properties'][2]['value']) if 'properties' in object and len(object['properties']) > 2 else "Texto indefinido"
             elif object['type'] == 'ZXSGMPointer':
                 # Pointers are processed in a second pass
                 pass
@@ -927,6 +943,51 @@ with open("output/enemiesPerScreen.bin", "wb") as f:
 with open("output/decompressedEnemiesScreen.bin", "wb") as f:
     for i in range(maxEnemiesPerScreen):
         f.write(bytearray([0] * 13))
+
+# Calculate and write texts binaries
+
+def normalize_text_to_ascii(text):
+    """Normalize text to ASCII, removing accents and special characters for ZX Spectrum compatibility"""
+    # Normalize to NFD form (decomposed)
+    nfd_form = unicodedata.normalize('NFD', text)
+    # Filter out non-spacing mark characters (accents) and encode to ASCII
+    ascii_text = "".join(c for c in nfd_form if unicodedata.category(c) != 'Mn')
+    # Encode to ASCII, replacing any remaining non-ASCII characters
+    return ascii_text.encode('ascii', 'ignore')
+
+textLocs = [] # List of tuples (screenId, index)
+
+# Sort screen IDs numerically (keys are already screenIds)
+sorted_screen_ids = sorted([k for k in texts[currentLanguage].keys()], 
+                           key=lambda x: int(x) if isinstance(x, int) or str(x).isdigit() else 99999)
+
+# Generate binary file for current language only
+binary_data = bytearray()
+
+for idx, screen_id in enumerate(sorted_screen_ids):
+    # Get text content for this screen
+    text_content = texts[currentLanguage].get(screen_id, "")
+    
+    # Capture the screen locations
+    textLocs.append((int(screen_id), idx))
+
+    # Normalize to ASCII and add to binary data
+    binary_data.extend(normalize_text_to_ascii(text_content))
+    binary_data.append(0xFF)  # Separator
+    
+with open(f"{outputDir}texts.bin", "wb") as f:
+    f.write(binary_data)
+        
+# Add textLocations array to configStr
+if len(textLocs) > 0:
+    configStr += f"dim textLocations({len(textLocs) - 1}, 1) as ubyte = {{ _\n"
+    for loc in textLocs:
+        configStr += f"\t{{ {loc[0]}, {loc[1]} }}, _\n"
+    configStr = configStr[:-4]  # Remove last comma and newline
+    configStr += " _\n}\n\n"
+    
+    # Also define a constant for text count
+    configStr += f"const TEXT_COUNT as ubyte = {len(textLocs)}\n"
 
 # get hud.json
 hudFile = open(outputDir + 'hud.json')

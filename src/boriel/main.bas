@@ -8,7 +8,7 @@
 #ifdef ENABLED_128k
     #include "128/vortexTracker.bas"
     #include <memorybank.bas>
-
+    
     #ifdef MUSIC_ENABLED
         VortexTracker_Init()
     #endif
@@ -28,6 +28,9 @@ loadDataFromTape()
 #include "draw.bas"
 #include "protaMovement.bas"
 #include "screensFlow.bas"
+
+Print getTextByTextId(0)
+stop
 
 initGraphics()
 
