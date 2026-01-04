@@ -228,6 +228,9 @@ Sub playGame()
     #endif
     
     Do
+        #ifdef CONTROLLED_GAME_SPEED
+            waitretrace
+        #endif
         #ifdef ARCADE_MODE
             #ifdef HURRY_UP_SECONDS
                 If timerSeconds > HURRY_UP_SECONDS Then

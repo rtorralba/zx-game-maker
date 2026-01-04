@@ -326,6 +326,11 @@
                 "value": 0
             },
             {
+                "name": "controlledGameSpeed",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "currentStageEnabled",
                 "type": "bool",
                 "value": false
