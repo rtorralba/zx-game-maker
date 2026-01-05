@@ -683,63 +683,48 @@ End Function
         Dim scrPtr As UInteger
         Dim i as Ubyte
         Dim j as Ubyte
-        Dim k as Ubyte
-        Dim yChar as Ubyte
-        Dim baseLineAddr as UInteger
+        Dim attrVal as Ubyte
         
-        ' --- SAVE BACKGROUND ---
-        bufPtr = BUFFER_ADDR
-        ' Save Attributes
-        For j = 0 To WIN_H - 1
-            scrPtr = 22528 + (Cast(UInteger, WIN_Y) + j) * 32 + WIN_X
-            For i = 0 To WIN_W - 1
-                Poke bufPtr, Peek(scrPtr + i)
-                bufPtr = bufPtr + 1
-            Next i
-        Next j
-        ' Save Pixels
-        For j = 0 To WIN_H - 1
-            yChar = WIN_Y + j
-            baseLineAddr = 16384 + (Cast(UInteger, yChar) bAnd 24) * 256 + (Cast(UInteger, yChar) bAnd 7) * 32
-            For k = 0 To 7
-                scrPtr = baseLineAddr + (k * 256) + WIN_X
-                For i = 0 To WIN_W - 1
-                    Poke bufPtr, Peek(scrPtr + i)
-                    bufPtr = bufPtr + 1
-                Next i
-            Next k
-        Next j
+        Dim currentX as Ubyte
+        Dim currentY as Ubyte
+        Dim charCode as Ubyte
+        Dim scanPtr as UInteger
+        Dim wordLen as Ubyte
+        
+        ' --- SAVE BACKGROUND (FULL SCREEN) ---
+        ' 16384 (Pixels) + 6144 (Size of Pixels) = 22528 (Start of Attributes)
+        ' 22528 + 768 (Size of Attributes) = 23296
+        ' Total size = 6912 bytes
+        ' We can copy everything in one go since they are contiguous
+        MemCopy(16384, BUFFER_ADDR, 6912)
         SetBank(0)
         
         ' --- DRAW WINDOW ---
         Ink inkColor: Paper paperColor
+        
+        ' Clear Window Area (Pixels)
+        ClearBox(WIN_X, WIN_Y, WIN_W, WIN_H)
+        
+        ' Set Attributes for Window Area
+        ' Calculate Attribute Byte: (PAPER * 8) + INK
+        attrVal = (paperColor << 3) + (inkColor bAnd 7)
         For j = 0 To WIN_H - 1
-            For i = 0 To WIN_W - 1
-                Print At WIN_Y + j, WIN_X + i; " ";
-            Next i
+            scrPtr = 22528 + (Cast(UInteger, WIN_Y) + j) * 32 + WIN_X
+            MemSet(scrPtr, attrVal, WIN_W)
         Next j
         
         ' --- STREAM PRINT TEXT ---
-        ' Ensure Bank 7 is active for reading text
-        ' Note: PRINT AT might use ROM, which switches banks?
-        ' No, standard ROM routines don't switch RAM banks usually.
-        ' However, be careful calling Print while Bank 7 is active IF Print uses stack/heap heavily (it doesn't).
-        
         SetBank(TEXTS_BANK)
         
-        Dim currentX as Ubyte = WIN_X + 1
-        Dim currentY as Ubyte = WIN_Y + 1
-        Dim charCode as Ubyte
-        Dim scanPtr as UInteger
-        Dim wordLen as Ubyte
+        currentX = WIN_X + 1
+        currentY = WIN_Y + 1
         
         ' Loop until End of Text (255)
         While PEEK(textPtr) <> 255
             charCode = PEEK(textPtr)
             
             If charCode = 32 Then
-                ' Space: Just print and advance, OR handle word wrap?
-                ' Simple space logic:
+                ' Space
                 If currentX <= WIN_X + WIN_W - 1 Then
                     Print At currentY, currentX; " ";
                     currentX = currentX + 1
@@ -764,7 +749,7 @@ End Function
                 ' Print Word
                 If currentY <= WIN_Y + WIN_H - 1 Then
                     While PEEK(textPtr) <> 32 AND PEEK(textPtr) <> 255
-                        Print At currentY, currentX; Chr$(PEEK(textPtr)); ' PEEK reads Bank 7
+                        Print At currentY, currentX; Chr$(PEEK(textPtr));
                         currentX = currentX + 1
                         textPtr = textPtr + 1
                     Wend
@@ -781,29 +766,9 @@ End Function
         
         Paper PAPER_VALUE: Ink INK_VALUE
         
-        ' --- RESTORE BACKGROUND ---
+        ' --- RESTORE BACKGROUND (FULL SCREEN) ---
         SetBank(TEXTS_BANK)
-        bufPtr = BUFFER_ADDR
-        ' Restore Attributes
-        For j = 0 To WIN_H - 1
-            scrPtr = 22528 + (Cast(UInteger, WIN_Y) + j) * 32 + WIN_X
-            For i = 0 To WIN_W - 1
-                Poke scrPtr + i, Peek(bufPtr)
-                bufPtr = bufPtr + 1
-            Next i
-        Next j
-        ' Restore Pixels
-        For j = 0 To WIN_H - 1
-            yChar = WIN_Y + j
-            baseLineAddr = 16384 + (Cast(UInteger, yChar) bAnd 24) * 256 + (Cast(UInteger, yChar) bAnd 7) * 32
-            For k = 0 To 7
-                scrPtr = baseLineAddr + (k * 256) + WIN_X
-                For i = 0 To WIN_W - 1
-                    Poke scrPtr + i, Peek(bufPtr)
-                    bufPtr = bufPtr + 1
-                Next i
-            Next k
-        Next j
+        MemCopy(BUFFER_ADDR, 16384, 6912)
         SetBank(0)
     End Function
 #endif

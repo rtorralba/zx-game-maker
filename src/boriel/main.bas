@@ -2,6 +2,12 @@
 #include <retrace.bas>
 #include <keys.bas>
 #include "definitions.bas"
+
+#ifdef TEXTS_ENABLED
+    #include <memcopy.bas>
+    #include <clearbox.bas>
+#endif
+
 #include "dataLoader.bas"
 #include "im2.bas"
 
