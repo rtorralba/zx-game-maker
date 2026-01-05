@@ -652,7 +652,9 @@ End Function
         Return result
     End Function
     
-    Function showTextInTheScreen(screenId As Ubyte, inkColor As Ubyte, paperColor As Ubyte)
+    Sub showTextInTheScreen(screenId As Ubyte, inkColor As Ubyte, paperColor As Ubyte)
+        If framec - lastMessageFrame < MESSAGE_COOLDOWN Then Return
+        
         ' Find text ID for this screen
         Dim textId As Ubyte = 0
         While textLocations(textId, 0) <> screenId
@@ -770,7 +772,9 @@ End Function
         SetBank(TEXTS_BANK)
         MemCopy(BUFFER_ADDR, 16384, 6912)
         SetBank(0)
-    End Function
+        
+        lastMessageFrame = framec
+    End Sub
 #endif
 
 sub debugA(value as UBYTE)
