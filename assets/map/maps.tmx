@@ -9,9 +9,9 @@
   <property name="animatePeriodMain" type="int" value="1"/>
   <property name="animatePeriodTile" type="int" value="10"/>
   <property name="backgroundAttribute" type="int" value="7"/>
-  <property name="borderColorItem" type="int" value="1"/>
-  <property name="borderColorKey" type="int" value="2"/>
-  <property name="borderColorLife" type="int" value="3"/>
+  <property name="borderColorItem" type="int" value="0"/>
+  <property name="borderColorKey" type="int" value="0"/>
+  <property name="borderColorLife" type="int" value="0"/>
   <property name="bulletDistance" type="int" value="0"/>
   <property name="damageAmount" type="int" value="10"/>
   <property name="dashEnabled" type="bool" value="true"/>
@@ -37,6 +37,7 @@
   <property name="maxAnimatedTilesPerScreen" type="int" value="10"/>
   <property name="maxEnemiesPerScreen" type="int" value="5"/>
   <property name="messagesEnabled" type="bool" value="false"/>
+  <property name="messagesFlashEnabled" type="bool" value="false"/>
   <property name="musicEnabled" type="bool" value="true"/>
   <property name="newBeeperPlayer" type="bool" value="true"/>
   <property name="redefineKeysEnabled" type="bool" value="false"/>
@@ -252,7 +253,9 @@
   <object id="71" type="mainCharacter" gid="193" x="152" y="320" width="16" height="16"/>
   <object id="78" type="ZXSGMText" x="45" y="213.667">
    <properties>
-    <property name="en" value="Hola Carlos! Como van los mi mi mis"/>
+    <property name="en">Hola Carlos! Como van los mi mi mis, parece ahora cabe mas, podemos contar mas historietas y hacer el zelda de Khan
+
+Paerece que cabe mucho, igual no hace falta permitir tanto texto, que pensais?</property>
     <property name="es" value="hola"/>
     <property name="pt" value="holi"/>
    </properties>

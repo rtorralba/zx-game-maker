@@ -616,38 +616,67 @@ End Function
             textPtr = textPtr + 1
         Wend
         
-        ' Leer el texto hasta encontrar 0xFF
+        ' 1. Length Calculation
+        Dim length As UInteger = 0
+        Dim startPtr As UInteger = textPtr
         While PEEK(textPtr) <> 255
-            result = result + CHR$(PEEK(textPtr))
+            length = length + 1
             textPtr = textPtr + 1
         Wend
+        
+        ' 2. Safe Allocation (Boriel Basic way to get a buffer)
+        result = ""
+        Dim i as UInteger
+        For i = 1 to length
+            result = result + " "
+        Next i
+        
+        ' 3. Fill String with ASM (Fast & Safe)
+        ' We need to copy from startPtr (Bank 7) to result memory.
+        ' Result memory address is in @result + 2
+        
+        Dim destPtr as UInteger = PEEK(UInteger, @result + 2)
+        
+        ' 3. Fill String (Memory Copy via POKE)
+        ' Local variables are on stack, so ASM access is hard. We use POKE.
+        Dim strDataPtr as UInteger = PEEK(UInteger, @result + 2)
+        Dim j as UInteger
+        textPtr = startPtr
+        
+        For j = 0 To length - 1
+            Poke strDataPtr + j, Peek(textPtr)
+            textPtr = textPtr + 1
+        Next j
         
         SetBank(0)
         Return result
     End Function
     
     Function showTextInTheScreen(screenId As Ubyte, inkColor As Ubyte, paperColor As Ubyte)
+        ' Find text ID for this screen
         Dim textId As Ubyte = 0
-        
         While textLocations(textId, 0) <> screenId
             textId = textId + 1
         Wend
+        Dim actualTextId As Ubyte = textLocations(textId, 1)
         
-        Dim text As String = getTextByTextId(textLocations(textId, 1))
+        SetBank(TEXTS_BANK)
+        Dim textPtr As UInteger = $C000
+        Dim textsSkipped As Ubyte = 0
+        
+        ' 1. Find Text Start
+        While textsSkipped < actualTextId
+            If PEEK(textPtr) = 255 Then
+                textsSkipped = textsSkipped + 1
+            End If
+            textPtr = textPtr + 1
+        Wend
         
         ' Window definition
         Const WIN_X as Ubyte = 2
         Const WIN_Y as Ubyte = 6
         Const WIN_W as Ubyte = 28
-        Const WIN_H as Ubyte = 12 ' Text height (pixels will be 8 * 8)
-        
-        ' Buffer at the end of Bank 7 (approx top of memory)
-        ' Size needed:
-        ' Pixels: WIN_W * WIN_H * 8 = 28 * 8 * 8 = 1792 bytes
-        ' Attrs: WIN_W * WIN_H = 28 * 8 = 224 bytes
-        ' Total: 2016 bytes.
-        ' Address $F800 (63488) gives us > 2048 bytes until $FFFF.
-        ' Address $E000 (57344) is safer (avoid stack at top of RAM)
+        Const WIN_H as Ubyte = 12
         Const BUFFER_ADDR as UInteger = $E000
         
         Dim bufPtr As UInteger
@@ -655,12 +684,12 @@ End Function
         Dim i as Ubyte
         Dim j as Ubyte
         Dim k as Ubyte
+        Dim yChar as Ubyte
+        Dim baseLineAddr as UInteger
         
         ' --- SAVE BACKGROUND ---
-        SetBank(TEXTS_BANK)
         bufPtr = BUFFER_ADDR
-        
-        ' Save Attributes (easier to access linearly per line)
+        ' Save Attributes
         For j = 0 To WIN_H - 1
             scrPtr = 22528 + (Cast(UInteger, WIN_Y) + j) * 32 + WIN_X
             For i = 0 To WIN_W - 1
@@ -668,17 +697,11 @@ End Function
                 bufPtr = bufPtr + 1
             Next i
         Next j
-        
-        ' Save Pixels (complex screen layout)
-        For j = 0 To WIN_H - 1 ' Character rows
-            ' Calculate base address for this char row
-            ' Form: 010 BB PPP LLL CCCCC
-            ' Y = (WIN_Y + j)
-            ' Line address = 16384 + ((Y & 24) << 8) + ((Y & 7) << 5) ... wait, standard formula:
-            Dim yChar as Ubyte = WIN_Y + j
-            Dim baseLineAddr as UInteger = 16384 + (Cast(UInteger, yChar) bAnd 24) * 256 + (Cast(UInteger, yChar) bAnd 7) * 32
-            
-            For k = 0 To 7 ' Pixel lines within char
+        ' Save Pixels
+        For j = 0 To WIN_H - 1
+            yChar = WIN_Y + j
+            baseLineAddr = 16384 + (Cast(UInteger, yChar) bAnd 24) * 256 + (Cast(UInteger, yChar) bAnd 7) * 32
+            For k = 0 To 7
                 scrPtr = baseLineAddr + (k * 256) + WIN_X
                 For i = 0 To WIN_W - 1
                     Poke bufPtr, Peek(scrPtr + i)
@@ -686,11 +709,9 @@ End Function
                 Next i
             Next k
         Next j
-        
         SetBank(0)
         
-        ' --- DRAW WINDOW & TEXT ---
-        ' Clear area
+        ' --- DRAW WINDOW ---
         Ink inkColor: Paper paperColor
         For j = 0 To WIN_H - 1
             For i = 0 To WIN_W - 1
@@ -698,48 +719,61 @@ End Function
             Next i
         Next j
         
-        ' Print Text
-        ' Basic PRINT handles wrapping inside the defined window? No, we need to locate manually or rely on bounds.
-        ' Simple print at top-left of window:
-        ' Print Text with Word Wrapping
+        ' --- STREAM PRINT TEXT ---
+        ' Ensure Bank 7 is active for reading text
+        ' Note: PRINT AT might use ROM, which switches banks?
+        ' No, standard ROM routines don't switch RAM banks usually.
+        ' However, be careful calling Print while Bank 7 is active IF Print uses stack/heap heavily (it doesn't).
+        
+        SetBank(TEXTS_BANK)
+        
         Dim currentX as Ubyte = WIN_X + 1
         Dim currentY as Ubyte = WIN_Y + 1
-        Dim p as UInteger = 0 ' Pointer to string char index (manually)
-        Dim wordLen as Ubyte
-        Dim wordStart as UInteger
         Dim charCode as Ubyte
+        Dim scanPtr as UInteger
+        Dim wordLen as Ubyte
         
-        ' Manual loop over string is safer/easier in basic without Split()
-        Dim tLen as UInteger = Len(text)
-        Dim k_idx as UInteger
-        
-        Dim currentWord as String
-        currentWord = ""
-        
-        For k_idx = 0 To tLen ' Iterate up to length (inclusive to flush last word)
-            If k_idx < tLen Then
-                charCode = Code text(k_idx)
-            Else
-                charCode = 32 ' Force space at end to flush
-            End If
+        ' Loop until End of Text (255)
+        While PEEK(textPtr) <> 255
+            charCode = PEEK(textPtr)
             
-            If charCode = 32 Then ' Space found
-                If currentWord <> "" Then
-                    If currentX + Len(currentWord) > WIN_X + WIN_W - 1 Then
-                        currentX = WIN_X + 1
-                        currentY = currentY + 1
-                    End If
-                    
-                    If currentY < WIN_Y + WIN_H - 1 Then ' Check bounds
-                        Print At currentY, currentX; currentWord; " ";
-                        currentX = currentX + Len(currentWord) + 1
-                    End If
-                    currentWord = ""
+            If charCode = 32 Then
+                ' Space: Just print and advance, OR handle word wrap?
+                ' Simple space logic:
+                If currentX <= WIN_X + WIN_W - 1 Then
+                    Print At currentY, currentX; " ";
+                    currentX = currentX + 1
                 End If
+                textPtr = textPtr + 1
+                
             Else
-                currentWord = currentWord + Chr$(charCode)
+                ' Word Start: Calc length of next word
+                scanPtr = textPtr
+                wordLen = 0
+                While PEEK(scanPtr) <> 32 AND PEEK(scanPtr) <> 255
+                    wordLen = wordLen + 1
+                    scanPtr = scanPtr + 1
+                Wend
+                
+                ' Wrap check
+                If currentX + wordLen > WIN_X + WIN_W - 1 Then
+                    currentX = WIN_X + 1
+                    currentY = currentY + 1
+                End If
+                
+                ' Print Word
+                If currentY <= WIN_Y + WIN_H - 1 Then
+                    While PEEK(textPtr) <> 32 AND PEEK(textPtr) <> 255
+                        Print At currentY, currentX; Chr$(PEEK(textPtr)); ' PEEK reads Bank 7
+                        currentX = currentX + 1
+                        textPtr = textPtr + 1
+                    Wend
+                Else
+                    ' Skip word (out of bounds)
+                    textPtr = textPtr + wordLen
+                End If
             End If
-        Next k_idx
+        Wend
         
         ' Wait
         Do
@@ -750,7 +784,6 @@ End Function
         ' --- RESTORE BACKGROUND ---
         SetBank(TEXTS_BANK)
         bufPtr = BUFFER_ADDR
-        
         ' Restore Attributes
         For j = 0 To WIN_H - 1
             scrPtr = 22528 + (Cast(UInteger, WIN_Y) + j) * 32 + WIN_X
@@ -759,12 +792,10 @@ End Function
                 bufPtr = bufPtr + 1
             Next i
         Next j
-        
         ' Restore Pixels
         For j = 0 To WIN_H - 1
             yChar = WIN_Y + j
             baseLineAddr = 16384 + (Cast(UInteger, yChar) bAnd 24) * 256 + (Cast(UInteger, yChar) bAnd 7) * 32
-            
             For k = 0 To 7
                 scrPtr = baseLineAddr + (k * 256) + WIN_X
                 For i = 0 To WIN_W - 1
@@ -774,7 +805,6 @@ End Function
             Next k
         Next j
         SetBank(0)
-        
     End Function
 #endif
 
