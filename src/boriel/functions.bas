@@ -675,10 +675,6 @@ End Function
         Wend
         
         ' Window definition
-        Const WIN_X as Ubyte = 2
-        Const WIN_Y as Ubyte = 6
-        Const WIN_W as Ubyte = 28
-        Const WIN_H as Ubyte = 12
         Const BUFFER_ADDR as UInteger = $E000
         
         Dim bufPtr As UInteger
@@ -705,21 +701,21 @@ End Function
         Ink inkColor: Paper paperColor
         
         ' Clear Window Area (Pixels)
-        ClearBox(WIN_X, WIN_Y, WIN_W, WIN_H)
+        ClearBox(TEXTS_WINDOW_X, TEXTS_WINDOW_Y, TEXTS_WINDOW_WIDTH, TEXTS_WINDOW_HEIGHT)
         
         ' Set Attributes for Window Area
         ' Calculate Attribute Byte: (PAPER * 8) + INK
         attrVal = (paperColor << 3) + (inkColor bAnd 7)
-        For j = 0 To WIN_H - 1
-            scrPtr = 22528 + (Cast(UInteger, WIN_Y) + j) * 32 + WIN_X
-            MemSet(scrPtr, attrVal, WIN_W)
+        For j = 0 To TEXTS_WINDOW_HEIGHT - 1
+            scrPtr = 22528 + (Cast(UInteger, TEXTS_WINDOW_Y) + j) * 32 + TEXTS_WINDOW_X
+            MemSet(scrPtr, attrVal, TEXTS_WINDOW_WIDTH)
         Next j
         
         ' --- STREAM PRINT TEXT ---
         SetBank(TEXTS_BANK)
         
-        currentX = WIN_X + 1
-        currentY = WIN_Y + 1
+        currentX = TEXTS_WINDOW_X + 1
+        currentY = TEXTS_WINDOW_Y + 1
         
         ' Loop until End of Text (255)
         While PEEK(textPtr) <> 255
@@ -727,7 +723,7 @@ End Function
             
             If charCode = 32 Then
                 ' Space
-                If currentX <= WIN_X + WIN_W - 1 Then
+                If currentX <= TEXTS_WINDOW_X + TEXTS_WINDOW_WIDTH - 1 Then
                     Print At currentY, currentX; " ";
                     currentX = currentX + 1
                 End If
@@ -743,13 +739,13 @@ End Function
                 Wend
                 
                 ' Wrap check
-                If currentX + wordLen > WIN_X + WIN_W - 1 Then
-                    currentX = WIN_X + 1
+                If currentX + wordLen > TEXTS_WINDOW_X + TEXTS_WINDOW_WIDTH - 1 Then
+                    currentX = TEXTS_WINDOW_X + 1
                     currentY = currentY + 1
                 End If
                 
                 ' Print Word
-                If currentY <= WIN_Y + WIN_H - 1 Then
+                If currentY <= TEXTS_WINDOW_Y + TEXTS_WINDOW_HEIGHT - 1 Then
                     While PEEK(textPtr) <> 32 AND PEEK(textPtr) <> 255
                         Print At currentY, currentX; Chr$(PEEK(textPtr));
                         currentX = currentX + 1

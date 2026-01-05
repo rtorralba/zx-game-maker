@@ -207,6 +207,10 @@ swordKillEnemy = 1
 controlledGameSpeed = 0
 
 textsEnabled = 0
+textsWindowX = 2
+textsWindowY = 4
+textsWindowWidth = 28
+textsWindowHeight = 12
 
 if 'properties' in data:
     for property in data['properties']:
@@ -366,6 +370,14 @@ if 'properties' in data:
             controlledGameSpeed = 1 if property['value'] else 0
         elif property['name'] == 'textsEnabled':
             textsEnabled = 1 if property['value'] else 0
+        elif property['name'] == 'textsWindowOriginX':
+            textsWindowOriginX = property['value']
+        elif property['name'] == 'textsWindowOriginY':
+            textsWindowOriginY = property['value']
+        elif property['name'] == 'textsWindowWidth':
+            textsWindowWidth = property['value']
+        elif property['name'] == 'textsWindowHeight':
+            textsWindowHeight = property['value']
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -409,6 +421,10 @@ if controlledGameSpeed == 1:
 
 if textsEnabled == 1:
     configStr += "#DEFINE TEXTS_ENABLED\n"
+    configStr += "const TEXTS_WINDOW_X as ubyte = " + str(textsWindowX) + "\n"
+    configStr += "const TEXTS_WINDOW_Y as ubyte = " + str(textsWindowY) + "\n"
+    configStr += "const TEXTS_WINDOW_WIDTH as ubyte = " + str(textsWindowWidth) + "\n"
+    configStr += "const TEXTS_WINDOW_HEIGHT as ubyte = " + str(textsWindowHeight) + "\n"
 
 if currentStageEnabled == 1:
     configStr += "#DEFINE CURRENT_STAGE_ENABLED\n"

@@ -611,6 +611,26 @@
                     "value": false
                 },
                 {
+                    "name": "textsWindowHeight",
+                    "type": "int",
+                    "value": 12
+                },
+                {
+                    "name": "textsWindowWidth",
+                    "type": "int",
+                    "value": 28
+                },
+                {
+                    "name": "textsWindowX",
+                    "type": "int",
+                    "value": 2
+                },
+                {
+                    "name": "textsWindowY",
+                    "type": "int",
+                    "value": 4
+                },
+                {
                     "name": "timerSeconds",
                     "type": "int",
                     "value": 0
