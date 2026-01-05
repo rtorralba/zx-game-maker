@@ -253,7 +253,7 @@
   <object id="71" type="mainCharacter" gid="193" x="152" y="320" width="16" height="16"/>
   <object id="78" type="ZXSGMText" x="45" y="213.667">
    <properties>
-    <property name="en">Hola Carlos! Como van los mi mi mis, parece ahora cabe mas, podemos contar mas historietas y hacer el zelda de Khan
+    <property name="default">Hola Carlos! Como van los mi mi mis, parece ahora cabe mas, podemos contar mas historietas y hacer el zelda de Khan
 
 Paerece que cabe mucho, igual no hace falta permitir tanto texto, que pensais?</property>
     <property name="es" value="hola"/>

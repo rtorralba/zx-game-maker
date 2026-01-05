@@ -247,7 +247,7 @@
             "id": 19,
             "members": [
                 {
-                    "name": "en",
+                    "name": "default",
                     "type": "string",
                     "value": ""
                 },

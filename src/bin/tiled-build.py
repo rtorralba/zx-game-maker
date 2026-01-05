@@ -80,10 +80,7 @@ if spriteTileOffset == 0:
 
 # Global properties
 
-currentLanguage = os.getenv("ZXSGM_I18N_FOLDER", "es")
-
-if currentLanguage not in ['en', 'es', 'pt']:
-    currentLanguage = 'en'
+currentLanguage = os.getenv("ZXSGM_I18N_FOLDER", "default")
 
 gameName = 'Game Name'
 initialLife = 40
@@ -741,7 +738,7 @@ if arcadeMode == 1:
 enemyIdCounter = 0
 
 texts = {
-    'en': {},
+    'default': {},
     'es': {},
     'pt': {}
 }
@@ -814,7 +811,7 @@ for layer in data['layers']:
                             if property['value'] == 'noReturn':
                                 objects[str(object['id'])]['move'] = '1'
             elif object['type'] == 'ZXSGMText':
-                texts['en'][screenId] = str(object['properties'][0]['value']) if 'properties' in object and len(object['properties']) > 0 else "Texto sin establecer"
+                texts['default'][screenId] = str(object['properties'][0]['value']) if 'properties' in object and len(object['properties']) > 0 else "Texto sin establecer"
                 texts['es'][screenId] = str(object['properties'][1]['value']) if 'properties' in object and len(object['properties']) > 1 else "Text not set"
                 texts['pt'][screenId] = str(object['properties'][2]['value']) if 'properties' in object and len(object['properties']) > 2 else "Texto indefinido"
             elif object['type'] == 'ZXSGMPointer':
