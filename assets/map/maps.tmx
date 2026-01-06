@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" class="ZXSpectrumGameMaker" orientation="orthogonal" renderorder="left-down" width="132" height="116" tilewidth="8" tileheight="8" infinite="1" nextlayerid="3" nextobjectid="80">
+<map version="1.10" tiledversion="1.11.2" class="ZXSpectrumGameMaker" orientation="orthogonal" renderorder="left-down" width="132" height="116" tilewidth="8" tileheight="8" infinite="1" nextlayerid="3" nextobjectid="79">
  <editorsettings>
   <chunksize width="32" height="22"/>
  </editorsettings>
@@ -9,9 +9,9 @@
   <property name="animatePeriodMain" type="int" value="1"/>
   <property name="animatePeriodTile" type="int" value="10"/>
   <property name="backgroundAttribute" type="int" value="7"/>
-  <property name="borderColorItem" type="int" value="0"/>
-  <property name="borderColorKey" type="int" value="0"/>
-  <property name="borderColorLife" type="int" value="0"/>
+  <property name="borderColorItem" type="int" value="1"/>
+  <property name="borderColorKey" type="int" value="2"/>
+  <property name="borderColorLife" type="int" value="3"/>
   <property name="bulletDistance" type="int" value="0"/>
   <property name="damageAmount" type="int" value="10"/>
   <property name="dashEnabled" type="bool" value="true"/>
@@ -29,7 +29,7 @@
   <property name="itemsToOpenDoors" type="int" value="0"/>
   <property name="jumpType" propertytype="jumpType" value="accelerated"/>
   <property name="keysEnabled" type="bool" value="true"/>
-  <property name="killJumpingOnTop" type="bool" value="false"/>
+  <property name="killJumpingOnTop" type="bool" value="true"/>
   <property name="laddersEnabled" type="bool" value="true"/>
   <property name="lifeAmount" type="int" value="5"/>
   <property name="mainCharacterExtraFrame" type="bool" value="true"/>
@@ -42,13 +42,13 @@
   <property name="newBeeperPlayer" type="bool" value="true"/>
   <property name="redefineKeysEnabled" type="bool" value="false"/>
   <property name="shooting" type="bool" value="true"/>
-  <property name="shouldKillEnemies" type="bool" value="false"/>
+  <property name="shouldKillEnemies" type="bool" value="true"/>
   <property name="swordEnabled" type="bool" value="true"/>
   <property name="textsEnabled" type="bool" value="true"/>
-  <property name="timerSeconds" type="int" value="0"/>
+  <property name="timerSeconds" type="int" value="60"/>
   <property name="useBreakableTile" propertytype="breakableTilesMode" value="individual"/>
   <property name="useBreakableTileByTouch" type="bool" value="true"/>
-  <property name="wallJumpEnabled" type="bool" value="false"/>
+  <property name="wallJumpEnabled" type="bool" value="true"/>
  </properties>
  <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="192" columns="32">
   <image source="../../src/tiles.png" width="256" height="48"/>
@@ -143,8 +143,8 @@
 3,3,1,1,1,3,3,3,3,1,1,1,1,1,1,1,1,190,1,1,1,1,1,1,1,3,1,1,1,1,1,3,
 3,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,3,3,1,1,1,1,1,77,3,1,1,1,1,1,3,
 3,3,1,1,61,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,109,110,1,1,1,1,1,3,
-3,3,1,1,61,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,141,142,1,1,1,1,1,63,
-3,3,1,1,61,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,190,1,187,173,174,1,188,1,188,1,63,
+3,3,1,1,61,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,187,1,141,142,1,1,1,1,1,63,
+3,3,1,1,61,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,190,165,1,173,174,1,188,1,188,1,63,
 4,4,4,4,4,4,129,129,129,129,129,129,129,129,167,167,167,167,167,4,4,4,4,4,4,4,4,4,4,4,4,4,
 36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36
 </chunk>
@@ -251,21 +251,17 @@
    <point/>
   </object>
   <object id="71" type="mainCharacter" gid="193" x="152" y="320" width="16" height="16"/>
-  <object id="78" type="ZXSGMText" x="45" y="213.667">
+  <object id="78" type="ZXSGMText" x="176" y="320">
    <properties>
-    <property name="default">Hola Carlos! Como van los mi mi mis, parece ahora cabe mas, podemos contar mas historietas y hacer el zelda de Khan
+    <property name="default">Hi Carlos! How are things going with the &quot;mi mi mis&quot;? It seems like there's more space now, we can tell more stories and make a Khan Zelda!
 
-Paerece que cabe mucho, igual no hace falta permitir tanto texto, que pensais?</property>
-    <property name="es" value="hola"/>
-    <property name="pt" value="holi"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="79" type="ZXSGMText" x="288" y="256">
-   <properties>
-    <property name="en" value="hello 2"/>
-    <property name="es" value="hola 2"/>
-    <property name="pt" value="holi 2"/>
+It seems like there's a lot of space, maybe we don't need to allow so much text, what do you think?</property>
+    <property name="es">Hola Carlos! Como van los mi mi mis, parece ahora cabe mas, podemos contar mas historietas y hacer el zelda de Khan
+
+Parece que cabe mucho, igual no hace falta permitir tanto texto, que pensais?</property>
+    <property name="pt">Olá Carlos! Como estão as coisas com os &quot;Mi Mi Mis&quot;? Parece que agora temos mais espaço, podemos contar mais histórias e fazer uma Zelda Khan!
+
+Parece que há espaço suficiente, talvez não precisemos de permitir tanto texto, o que acha?</property>
    </properties>
    <point/>
   </object>

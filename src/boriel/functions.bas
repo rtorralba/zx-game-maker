@@ -653,7 +653,7 @@ End Function
     End Function
     
     Sub showTextInTheScreen(screenId As Ubyte, inkColor As Ubyte, paperColor As Ubyte)
-        If framec - lastMessageFrame < MESSAGE_COOLDOWN Then Return
+        If (framec - lastMessageFrame) bAND 255 < MESSAGE_COOLDOWN Then Return
         
         ' Find text ID for this screen
         Dim textId As Ubyte = 0
