@@ -381,6 +381,10 @@ if 'properties' in data:
             textsInk = property['value']
         elif property['name'] == 'textsPaper':
             textsPaper = property['value']
+        elif property['name'] == 'textsWindowX':
+            textsWindowX = property['value']
+        elif property['name'] == 'textsWindowY':
+            textsWindowY = property['value']
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
