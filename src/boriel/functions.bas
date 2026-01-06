@@ -721,7 +721,13 @@ End Function
         While PEEK(textPtr) <> 255
             charCode = PEEK(textPtr)
             
-            If charCode = 32 Then
+            If charCode = 10 Then
+                ' Line Feed (Enter key) = Carriage Return
+                currentX = TEXTS_WINDOW_X + 1
+                currentY = currentY + 1
+                textPtr = textPtr + 1
+                
+            ElseIf charCode = 32 Then
                 ' Space
                 If currentX <= TEXTS_WINDOW_X + TEXTS_WINDOW_WIDTH - 1 Then
                     Print At currentY, currentX; " ";
@@ -733,7 +739,7 @@ End Function
                 ' Word Start: Calc length of next word
                 scanPtr = textPtr
                 wordLen = 0
-                While PEEK(scanPtr) <> 32 AND PEEK(scanPtr) <> 255
+                While PEEK(scanPtr) <> 32 AND PEEK(scanPtr) <> 10 AND PEEK(scanPtr) <> 255
                     wordLen = wordLen + 1
                     scanPtr = scanPtr + 1
                 Wend
@@ -746,7 +752,7 @@ End Function
                 
                 ' Print Word
                 If currentY <= TEXTS_WINDOW_Y + TEXTS_WINDOW_HEIGHT - 1 Then
-                    While PEEK(textPtr) <> 32 AND PEEK(textPtr) <> 255
+                    While PEEK(textPtr) <> 32 AND PEEK(textPtr) <> 10 AND PEEK(textPtr) <> 255
                         Print At currentY, currentX; Chr$(PEEK(textPtr));
                         currentX = currentX + 1
                         textPtr = textPtr + 1
