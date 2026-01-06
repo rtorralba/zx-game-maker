@@ -688,7 +688,7 @@ Function checkTileObject(tile As Ubyte) As Ubyte
         #endif
         #ifdef TEXTS_ENABLED
         Elseif tile = 186 Then
-            showTextInTheScreen(currentScreen, 0, 7)
+            showTextInTheScreen(currentScreen, TEXTS_INK, TEXTS_PAPER)
             Return 0
         #endif
     End If

@@ -208,6 +208,8 @@ textsWindowX = 2
 textsWindowY = 4
 textsWindowWidth = 28
 textsWindowHeight = 12
+textsInk = 0
+textsPaper = 7
 
 if 'properties' in data:
     for property in data['properties']:
@@ -375,6 +377,10 @@ if 'properties' in data:
             textsWindowWidth = property['value']
         elif property['name'] == 'textsWindowHeight':
             textsWindowHeight = property['value']
+        elif property['name'] == 'textsInk':
+            textsInk = property['value']
+        elif property['name'] == 'textsPaper':
+            textsPaper = property['value']
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -422,6 +428,8 @@ if textsEnabled == 1:
     configStr += "const TEXTS_WINDOW_Y as ubyte = " + str(textsWindowY) + "\n"
     configStr += "const TEXTS_WINDOW_WIDTH as ubyte = " + str(textsWindowWidth) + "\n"
     configStr += "const TEXTS_WINDOW_HEIGHT as ubyte = " + str(textsWindowHeight) + "\n"
+    configStr += "const TEXTS_INK as ubyte = " + str(textsInk) + "\n"
+    configStr += "const TEXTS_PAPER as ubyte = " + str(textsPaper) + "\n"
 
 if currentStageEnabled == 1:
     configStr += "#DEFINE CURRENT_STAGE_ENABLED\n"

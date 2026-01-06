@@ -611,6 +611,16 @@
                     "value": false
                 },
                 {
+                    "name": "textsInk",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "textsPaper",
+                    "type": "int",
+                    "value": 7
+                },
+                {
                     "name": "textsWindowHeight",
                     "type": "int",
                     "value": 12
