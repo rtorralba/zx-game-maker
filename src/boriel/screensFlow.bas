@@ -660,4 +660,8 @@ Sub swapScreen()
         updateTimerDisplay()
     #endif
     redrawScreen()
+    
+    if CheckCollision(protaX, protaY, 1) Then
+        protaX = protaX + 2
+    End If
 End Sub
