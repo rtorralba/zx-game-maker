@@ -211,13 +211,15 @@ Sub moveEnemies()
             If enemyLinEnd = -1 Then
                 enemyHorizontalDirection = Sgn(protaX - enemyCol)
                 enemyVerticalDirection = Sgn(protaY - enemyLin)
-                If protaDirection = 1 And enemyHorizontalDirection = -1 Then
-                    checkAndDraw(enemyId, tile + 16, enemyCol, enemyLin)
-                    Continue For
-                End If
-                If protaDirection = 0 And enemyHorizontalDirection = 1 Then
-                    checkAndDraw(enemyId, tile, enemyCol, enemyLin)
-                    Continue For
+                If enemyColEnd = -1 Then
+                    If protaDirection = 1 And enemyHorizontalDirection = -1 Then
+                        checkAndDraw(enemyId, tile + 16, enemyCol, enemyLin)
+                        Continue For
+                    End If
+                    If protaDirection = 0 And enemyHorizontalDirection = 1 Then
+                        checkAndDraw(enemyId, tile, enemyCol, enemyLin)
+                        Continue For
+                    End If
                 End If
             Else
                 If enemyHorizontalDirection Then
