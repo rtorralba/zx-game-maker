@@ -187,6 +187,11 @@
         "id": 9,
         "members": [
             {
+                "name": "freezeOnSight",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "life",
                 "type": "int",
                 "value": 1

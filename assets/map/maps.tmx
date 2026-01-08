@@ -202,8 +202,9 @@
   </object>
   <object id="34" type="ZXSGMEnemy" gid="219" x="80" y="240" width="16" height="16">
    <properties>
+    <property name="freezeOnSight" type="bool" value="true"/>
     <property name="life" type="int" value="4"/>
-    <property name="speed" type="int" propertytype="enemySpeed" value="0"/>
+    <property name="speed" type="int" propertytype="enemySpeed" value="2"/>
    </properties>
   </object>
   <object id="43" type="ZXSGMEnemy" gid="215" x="264" y="256" width="16" height="16">

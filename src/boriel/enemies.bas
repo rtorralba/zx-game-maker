@@ -207,9 +207,18 @@ Sub moveEnemies()
         If enemyLinIni = enemyLinEnd Then enemyVerticalDirection = 0
         
         If enemyBehaviour = 0 Then
+            ' Pursuing enemy
             If enemyLinEnd = -1 Then
                 enemyHorizontalDirection = Sgn(protaX - enemyCol)
                 enemyVerticalDirection = Sgn(protaY - enemyLin)
+                If protaDirection = 1 And enemyHorizontalDirection = -1 Then
+                    checkAndDraw(enemyId, tile + 16, enemyCol, enemyLin)
+                    Continue For
+                End If
+                If protaDirection = 0 And enemyHorizontalDirection = 1 Then
+                    checkAndDraw(enemyId, tile, enemyCol, enemyLin)
+                    Continue For
+                End If
             Else
                 If enemyHorizontalDirection Then
                     If enemyColIni = enemyCol Or enemyColEnd = enemyCol Then

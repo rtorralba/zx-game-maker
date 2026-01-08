@@ -822,6 +822,9 @@ for layer in data['layers']:
                         elif property['name'] == 'move':
                             if property['value'] == 'noReturn':
                                 objects[str(object['id'])]['move'] = '1'
+                        elif property['name'] == 'freezeOnSight' and property['value']:
+                            objects[str(object['id'])]['colEnd'] = '255'
+                            
             elif object['type'] == 'ZXSGMText':
                 texts['default'][screenId] = str(object['properties'][0]['value']) if 'properties' in object and len(object['properties']) > 0 else "Texto sin establecer"
                 texts['es'][screenId] = str(object['properties'][1]['value']) if 'properties' in object and len(object['properties']) > 1 else "Text not set"
