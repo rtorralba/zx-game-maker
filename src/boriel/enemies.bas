@@ -211,16 +211,18 @@ Sub moveEnemies()
             If enemyLinEnd = -1 Then
                 enemyHorizontalDirection = Sgn(protaX - enemyCol)
                 enemyVerticalDirection = Sgn(protaY - enemyLin)
-                If enemyColEnd = -1 Then
-                    If protaDirection = 1 And enemyHorizontalDirection = -1 Then
-                        checkAndDraw(enemyId, tile + 16, enemyCol, enemyLin)
-                        Continue For
+                #ifdef FREEZE_ON_SIGHT_ENABLED
+                    If enemyColEnd = -1 Then
+                        If protaDirection = 1 And enemyHorizontalDirection = -1 Then
+                            checkAndDraw(enemyId, tile + 16, enemyCol, enemyLin)
+                            Continue For
+                        End If
+                        If protaDirection = 0 And enemyHorizontalDirection = 1 Then
+                            checkAndDraw(enemyId, tile, enemyCol, enemyLin)
+                            Continue For
+                        End If
                     End If
-                    If protaDirection = 0 And enemyHorizontalDirection = 1 Then
-                        checkAndDraw(enemyId, tile, enemyCol, enemyLin)
-                        Continue For
-                    End If
-                End If
+                #endif
             Else
                 If enemyHorizontalDirection Then
                     If enemyColIni = enemyCol Or enemyColEnd = enemyCol Then

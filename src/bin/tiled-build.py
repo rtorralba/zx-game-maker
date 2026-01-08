@@ -755,6 +755,8 @@ texts = {
     'pt': {}
 }
 
+freezeOnSightEnabled = 0
+
 for layer in data['layers']:
     if layer['type'] == 'objectgroup':
         for object in layer['objects']:
@@ -824,7 +826,8 @@ for layer in data['layers']:
                                 objects[str(object['id'])]['move'] = '1'
                         elif property['name'] == 'freezeOnSight' and property['value']:
                             objects[str(object['id'])]['colEnd'] = '255'
-                            
+                            freezeOnSightEnabled = 1
+
             elif object['type'] == 'ZXSGMText':
                 texts['default'][screenId] = str(object['properties'][0]['value']) if 'properties' in object and len(object['properties']) > 0 else "Texto sin establecer"
                 texts['es'][screenId] = str(object['properties'][1]['value']) if 'properties' in object and len(object['properties']) > 1 else "Text not set"
@@ -835,6 +838,9 @@ for layer in data['layers']:
             else:
                 exitWithErrorMessage('Unknown object type ' + object['type'] + '.')
                 print(object)
+
+if freezeOnSightEnabled == 1:
+    configStr += "#DEFINE FREEZE_ON_SIGHT_ENABLED\n"
 
 # Find end of paths
 for layer in data['layers']:
