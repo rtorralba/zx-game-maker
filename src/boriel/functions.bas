@@ -653,7 +653,7 @@ End Function
     End Function
     
     Sub showTextInTheScreen(screenId As Ubyte, inkColor As Ubyte, paperColor As Ubyte)
-        If (framec - lastMessageFrame) bAND 255 < MESSAGE_COOLDOWN Then Return
+        If messageCoolDown > 0 Then Return
         
         ' Find text ID for this screen
         Dim textId As Ubyte = 0
@@ -775,7 +775,7 @@ End Function
         MemCopy(BUFFER_ADDR, 16384, 6912)
         SetBank(0)
         
-        lastMessageFrame = framec
+        messageCoolDown = MESSAGE_COOLDOWN_LOOPS
     End Sub
 #endif
 

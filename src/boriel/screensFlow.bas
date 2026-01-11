@@ -306,6 +306,12 @@ Sub playGame()
             checkGameObjective()
         #endif
         
+        #ifdef TEXTS_ENABLED
+            If messageCoolDown > 0 Then
+                messageCoolDown = messageCoolDown - 1
+            End If
+        #endif
+        
         mainLoopCounter = mainLoopCounter + 1
     Loop
 End Sub

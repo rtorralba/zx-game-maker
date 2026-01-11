@@ -13,8 +13,8 @@
 
 #ifdef TEXTS_ENABLED
     const TEXTS_BANK as ubyte = 7
-    Const MESSAGE_COOLDOWN as Ubyte = 100
-    Dim lastMessageFrame as Ubyte = 0
+    Dim messageCoolDown as Ubyte = 0
+    Const MESSAGE_COOLDOWN_LOOPS as Ubyte = 100
 #endif
 
 ' GuSprites
