@@ -22,6 +22,12 @@ Puedes aprender como usar el ZX Game Maker en la siguiente documentación
 
 Grupo de Telegram: [https://t.me/zx_spectrum_game_maker](https://t.me/zx_spectrum_game_maker)
 
+## Juegos hechos con ZX Spectrum Game Maker
+
+En el siguiente enlace puedes ver los juegos hechos con el ZX Spectrum Game Maker:
+
+[Juegos](https://github.com/rtorralba/zx-game-maker/GAME_LIST.md)
+
 ## Créditos
 
 ### ZX Spectrum Game Maker Team
