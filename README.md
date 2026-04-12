@@ -26,7 +26,7 @@ Grupo de Telegram: [https://t.me/zx_spectrum_game_maker](https://t.me/zx_spectru
 
 En el siguiente enlace puedes ver los juegos hechos con el ZX Spectrum Game Maker:
 
-[Juegos](https://github.com/rtorralba/zx-game-maker/GAME_LIST.md)
+[Juegos](https://github.com/rtorralba/zx-game-maker/blob/main/GAME_LIST.md)
 
 ## Créditos
 

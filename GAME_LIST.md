@@ -3,7 +3,9 @@
 The following games has been developed using ZX Spectrum Game Maker and are listed chronologically by release date.
 
 ## Cursed Castle - zx spectrum 48-128k
-Fransouls - arcade Monsters and goblins <img src="https://img.itch.zone/aW1nLzE0NDU2OTYzLmpwZw==/315x250%23c/66X5ae.jpg" alt="Cursed Castle - zx spectrum 48-128k"/>
+Fransouls - arcade Monsters and goblins
+
+<img src="https://img.itch.zone/aW1nLzE0NDU2OTYzLmpwZw==/315x250%23c/66X5ae.jpg" alt="Cursed Castle - zx spectrum 48-128k"/>
 
 https://fransouls.itch.io/cursed-castle
 
@@ -11,7 +13,9 @@ Release date: Thu, 14 Dec 2023 18:09:43 GMT
 Author: [Fransouls](https://fransouls.itch.io)
 
 ## Crazy Christmas - zx spectrum 48/128
-Plataformas - Arcade <img src="https://img.itch.zone/aW1nLzE0NDU2OTY0LmpwZw==/315x250%23c/mXERTx.jpg" alt="Crazy Christmas - zx spectrum 48/128"/>
+Plataformas - Arcade
+
+<img src="https://img.itch.zone/aW1nLzE0NDU2OTY0LmpwZw==/315x250%23c/mXERTx.jpg" alt="Crazy Christmas - zx spectrum 48/128"/>
 
 https://fransouls.itch.io/crazy-christmas
 
@@ -19,7 +23,9 @@ Release date: Wed, 20 Dec 2023 11:48:20 GMT
 Author: [Fransouls](https://fransouls.itch.io)
 
 ## Maze Castle
-Go in a maze they said, it would be fun they said. <img src="https://img.itch.zone/aW1nLzE0NTYzNDg1LnBuZw==/315x250%23c/LOTS8t.png" alt="Maze Castle"/>
+Go in a maze they said, it would be fun they said.
+
+<img src="https://img.itch.zone/aW1nLzE0NTYzNDg1LnBuZw==/315x250%23c/LOTS8t.png" alt="Maze Castle"/>
 
 https://jbizzel.itch.io/maze-castle
 
@@ -27,7 +33,9 @@ Release date: Thu, 04 Jan 2024 17:39:02 GMT
 Author: [Jbizzel](https://jbizzel.itch.io)
 
 ## Mochilo ZX
-A Spectrum ZX adventure made using ZX Game Maker <img src="https://img.itch.zone/aW1nLzE2MTk3MDM4LnBuZw==/315x250%23c/T%2BjBcE.png" alt="Mochilo ZX"/>
+A Spectrum ZX adventure made using ZX Game Maker
+
+<img src="https://img.itch.zone/aW1nLzE2MTk3MDM4LnBuZw==/315x250%23c/T%2BjBcE.png" alt="Mochilo ZX"/>
 
 https://rcougil.itch.io/mochilo-zx
 
