@@ -21,29 +21,29 @@ python_executable = str(Path(sys.executable)) + " "
 TILED_SCRIPT = BIN_FOLDER / "tiled-build.py"
 
 def tiledBuild():
-    runPythonScript(str(TILED_SCRIPT))
+    runPythonScriptFile(str(TILED_SCRIPT))
 
 def hudScrToPng():
-    runCommand("sna2img.py " + str(ASSETS_FOLDER / "screens/hud.scr") + " " + str(ASSETS_FOLDER / "screens/hud.png"))
+    runCommand("sna2img.py \"" + str(ASSETS_FOLDER / "screens/hud.scr") + "\" \"" + str(ASSETS_FOLDER / "screens/hud.png") + "\"")
 
 def buildingFilesAndConfig():
     return Builder().execute()
 
 def compilingGame():
-    runCommand("zxbc -W160 -W170 -W130 -W190 -W150 -W100 -H 128 --heap-address 23755 -S 24576 -O 4 " + str(Path("boriel/main.bas")) + " --mmap " + str(OUTPUT_FOLDER / "map.txt") + " -D HIDE_LOAD_MSG -o " + str(OUTPUT_FOLDER / "main.bin"))
+    runCommand("zxbc -W160 -W170 -W130 -W190 -W150 -W100 -H 128 --heap-address 23755 -S 24576 -O 4 \"" + str(Path("boriel/main.bas")) + "\" --mmap \"" + str(OUTPUT_FOLDER / "map.txt") + "\" -D HIDE_LOAD_MSG -o \"" + str(OUTPUT_FOLDER / "main.bin") + "\"")
 
 def checkMemory():
-    runPythonScript(str(BIN_FOLDER / "check-memory.py"))
+    runPythonScriptFile(str(BIN_FOLDER / "check-memory.py"))
 
 def tapsBuild(outputFile):    
-    runCommand("zxbin2tap " + str(BIN_FOLDER / "loader.bin") + " " + str(OUTPUT_FOLDER / "loader.tap") + " 10 --header \"" + getProjectName() + "\" --block_type 1")
-    runCommand("zxbin2tap " + str(OUTPUT_FOLDER / "loading.bin") + " " + str(OUTPUT_FOLDER / "loading.tap") + " 16384")
-    runCommand("zxbin2tap " + str(OUTPUT_FOLDER / "main.bin") + " " + str(OUTPUT_FOLDER / "main.tap") + " 24576")
+    runCommand("zxbin2tap \"" + str(BIN_FOLDER / "loader.bin") + "\" \"" + str(OUTPUT_FOLDER / "loader.tap") + "\" 10 --header \"" + getProjectName() + "\" --block_type 1")
+    runCommand("zxbin2tap \"" + str(OUTPUT_FOLDER / "loading.bin") + "\" \"" + str(OUTPUT_FOLDER / "loading.tap") + "\" 16384")
+    runCommand("zxbin2tap \"" + str(OUTPUT_FOLDER / "main.bin") + "\" \"" + str(OUTPUT_FOLDER / "main.tap") + "\" 24576")
 
     if getEnabled128K():
-        runCommand("zxbin2tap " + str(OUTPUT_FOLDER / "title.scr.zx0") + " " + str(OUTPUT_FOLDER / "title.tap") + " 49152")
-        runCommand("zxbin2tap " + str(OUTPUT_FOLDER / "ending.scr.zx0") + " " + str(OUTPUT_FOLDER / "ending.tap") + " 16384")
-        runCommand("zxbin2tap " + str(OUTPUT_FOLDER / "hud.scr.zx0") + " " + str(OUTPUT_FOLDER / "hud.tap") + " 24576")
+        runCommand("zxbin2tap \"" + str(OUTPUT_FOLDER / "title.scr.zx0") + "\" \"" + str(OUTPUT_FOLDER / "title.tap") + "\" 49152")
+        runCommand("zxbin2tap \"" + str(OUTPUT_FOLDER / "ending.scr.zx0") + "\" \"" + str(OUTPUT_FOLDER / "ending.tap") + "\" 16384")
+        runCommand("zxbin2tap \"" + str(OUTPUT_FOLDER / "hud.scr.zx0") + "\" \"" + str(OUTPUT_FOLDER / "hud.tap") + "\" 24576")
         input_files = [
             str(OUTPUT_FOLDER / "loader.tap"),
             str(OUTPUT_FOLDER / "loading.tap"),
@@ -97,15 +97,15 @@ def tapsBuild(outputFile):
                 input_files.remove(str(OUTPUT_FOLDER / "music-intro.tap"))
 
         if os.path.isfile(OUTPUT_FOLDER / "intro.scr.zx0"):
-            runCommand("zxbin2tap " + str(OUTPUT_FOLDER / "intro.scr.zx0") + " " + str(OUTPUT_FOLDER / "intro.tap") + " 49152")
+            runCommand("zxbin2tap \"" + str(OUTPUT_FOLDER / "intro.scr.zx0") + "\" \"" + str(OUTPUT_FOLDER / "intro.tap") + "\" 49152")
             input_files.append(OUTPUT_FOLDER / "intro.tap")
         
         if os.path.isfile(OUTPUT_FOLDER / "gameover.scr.zx0"):
-            runCommand("zxbin2tap " + str(OUTPUT_FOLDER / "gameover.scr.zx0") + " " + str(OUTPUT_FOLDER / "gameover.tap") + " 49152")
+            runCommand("zxbin2tap \"" + str(OUTPUT_FOLDER / "gameover.scr.zx0") + "\" \"" + str(OUTPUT_FOLDER / "gameover.tap") + "\" 49152")
             input_files.append(OUTPUT_FOLDER / "gameover.tap")
         
         if os.path.isfile(OUTPUT_FOLDER / "texts.bin"):
-            runCommand("zxbin2tap " + str(OUTPUT_FOLDER / "texts.bin") + " " + str(OUTPUT_FOLDER / "texts.tap") + " 49152 --header texts")
+            runCommand("zxbin2tap \"" + str(OUTPUT_FOLDER / "texts.bin") + "\" \"" + str(OUTPUT_FOLDER / "texts.tap") + "\" 49152 --header texts")
             input_files.append(OUTPUT_FOLDER / "texts.tap")
     else:
         input_files = [
@@ -119,7 +119,7 @@ def tapsBuild(outputFile):
     concatenateFiles(outputFile.with_suffix(".tap"), input_files)
 
 def snaBuild(outputFile):
-    runCommand("tap2sna.py --sim-load-config machine=128 " + str(outputFile.with_suffix(".tap")) + " " + str(outputFile.with_suffix(".z80")))
+    runCommand("tap2sna.py --sim-load-config machine=128 \"" + str(outputFile.with_suffix(".tap")) + "\" \"" + str(outputFile.with_suffix(".z80")) + "\"")
 
 def exeBuild(outputFile):
     concatenateFiles(outputFile.with_suffix(".exe"), [BIN_FOLDER / "spectral.exe", outputFile.with_suffix(".z80")])
@@ -145,8 +145,8 @@ def linuxBuild(outputFile):
     concatenateFiles(outputFile.with_name(getProjectFileName() + "-RF").with_suffix(".linux"), [BIN_FOLDER / "spectral-rf.linux", outputFile.with_suffix(".z80")])
     #check if os is not windows to run chmod
     if os.name != 'nt':
-        runCommand("chmod +x " + str(outputFile.with_name(getProjectFileName() + "-RF").with_suffix(".linux")))
-        runCommand("chmod +x " + str(outputFile.with_suffix(".linux")))
+        runCommand("chmod +x \"" + str(outputFile.with_name(getProjectFileName() + "-RF").with_suffix(".linux")) + "\"")
+        runCommand("chmod +x \"" + str(outputFile.with_suffix(".linux")) + "\"")
 
 def distBuild():
     outputFolder = DIST_FOLDER

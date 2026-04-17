@@ -41,4 +41,4 @@ class BinaryFilesToTapMerger:
 
         concatenateFiles(output_file, input_files)
 
-        runCommand("zxbin2tap " + str(output_file) + " " + str(OUTPUT_FOLDER / "files.tap") + " " + str(tapAddress))
+        runCommand("zxbin2tap \"" + str(output_file) + "\" \"" + str(OUTPUT_FOLDER / "files.tap") + "\" " + str(tapAddress))

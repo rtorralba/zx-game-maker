@@ -44,16 +44,19 @@ def runCommand(command):
         sys.exit(1)
 
 def getPythonExecutable():
-    return str(Path(sys.executable)) + " "
+    return '"' + str(Path(sys.executable)) + '" '
 
 def runPythonScript(script):
     runCommand(getPythonExecutable() + script)
 
+def runPythonScriptFile(script_path):
+    runCommand(getPythonExecutable() + '"' + script_path + '"')
+
 def getTiledExportCommand():
     if os.name == "nt":
         program_files = os.environ["ProgramFiles"]
-        return "\"" + program_files + "\\Tiled\\tiled.exe\" --export-map json " + str(MAPS_FILE) + \
-        " " + str(OUTPUT_FOLDER / "maps.json")
+        return "\"" + program_files + "\\Tiled\\tiled.exe\" --export-map json \"" + str(MAPS_FILE) + \
+        "\" \"" + str(OUTPUT_FOLDER / "maps.json") + "\""
     elif CURRENT_OS == "Darwin":  # macOS
         applications = "/Applications" # Ruta standard en MacOS
         tiled_path = os.path.join(applications, "Tiled.app/Contents/MacOS/Tiled")
@@ -64,7 +67,7 @@ def getTiledExportCommand():
             print("Error: Tiled no está instalado en /Applications/Tiled.app")
             exit(1)
     else:
-        return "tiled --export-map json " + str(MAPS_FILE) + " " + str(OUTPUT_FOLDER / "maps.json")
+        return "tiled --export-map json \"" + str(MAPS_FILE) + "\" \"" + str(OUTPUT_FOLDER / "maps.json") + "\""
 
 def tiledExport():
     runCommand(getTiledExportCommand())
@@ -72,8 +75,8 @@ def tiledExport():
 def hudTiledExport():
     if os.name == "nt":
         program_files = os.environ["ProgramFiles"]
-        runCommand("\"" + program_files + "\\Tiled\\tiled.exe\" --export-map json " + str(HUD_MAP_FILE) +
-                   " " + str(OUTPUT_FOLDER / "hud.json"))
+        runCommand("\"" + program_files + "\\Tiled\\tiled.exe\" --export-map json \"" + str(HUD_MAP_FILE) +
+                   "\" \"" + str(OUTPUT_FOLDER / "hud.json") + "\"")
     elif CURRENT_OS == "Darwin":  # macOS
         applications = "/Applications" # Ruta standard en MacOS
         tiled_path = os.path.join(applications, "Tiled.app/Contents/MacOS/Tiled")
@@ -84,7 +87,7 @@ def hudTiledExport():
             print("Error: Tiled no está instalado en /Applications/Tiled.app")
             exit(1)
     else:
-        runCommand("tiled --export-map json " + str(HUD_MAP_FILE) + " " + str(OUTPUT_FOLDER / "hud.json"))
+        runCommand("tiled --export-map json \"" + str(HUD_MAP_FILE) + "\" \"" + str(OUTPUT_FOLDER / "hud.json") + "\"")
 
 def getProjectName():
     with open(OUTPUT_FOLDER / "maps.json", "r") as f:
