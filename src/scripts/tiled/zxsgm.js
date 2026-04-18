@@ -52,7 +52,7 @@ function setClassByShape(obj) {
             return true;
         }
     }
-    else if (obj.shape === MapObject.tile && obj.className === "") {
+    else if (obj.shape === MapObject.Point && obj.className === "") {
         obj.className = "ZXSGMPointer";
         tiled.log("✓ Class 'ZXSGMPointer' assigned to pointer: " + (obj.name || "ID:" + obj.id));
         return true;
