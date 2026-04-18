@@ -546,6 +546,41 @@ open_game_button = tk.Button(
 )
 open_game_button.pack(anchor="w", pady=(0, 10))
 
+# Helper functions for quick-open tiles/sprites
+def open_tiles_zxp():
+    try:
+        path = MAP_FOLDER / "tiles.zxp"
+        if not path.exists():
+            messagebox.showerror("Error", f"No se encontró el fichero: {path}")
+            return
+        if CURRENT_OS == "Windows":
+            os.startfile(str(path))
+        elif CURRENT_OS == "Linux":
+            subprocess.Popen(["xdg-open", str(path)])
+        elif CURRENT_OS == "Darwin":
+            subprocess.Popen(["open", str(path)])
+        else:
+            messagebox.showerror("Error", "El sistema operativo no es compatible.")
+    except Exception as e:
+        messagebox.showerror("Error", f"No se pudo abrir tiles.zxp: {e}")
+
+def open_sprites_zxp():
+    try:
+        path = MAP_FOLDER / "sprites.zxp"
+        if not path.exists():
+            messagebox.showerror("Error", f"No se encontró el fichero: {path}")
+            return
+        if CURRENT_OS == "Windows":
+            os.startfile(str(path))
+        elif CURRENT_OS == "Linux":
+            subprocess.Popen(["xdg-open", str(path)])
+        elif CURRENT_OS == "Darwin":
+            subprocess.Popen(["open", str(path)])
+        else:
+            messagebox.showerror("Error", "El sistema operativo no es compatible.")
+    except Exception as e:
+        messagebox.showerror("Error", f"No se pudo abrir sprites.zxp: {e}")
+
 # Open Map
 open_map_button = tk.Button(
     left_buttons_frame,
@@ -557,6 +592,25 @@ open_map_button = tk.Button(
 )
 open_map_button.pack(anchor="w", pady=(0, 10))
 
+# Quick buttons under Open Map
+tk.Button(
+    left_buttons_frame,
+    width=18,
+    text="🧱 Open Tiles",
+    font=("Segoe UI Emoji", 10),
+    anchor="w",
+    command=lambda: open_tiles_zxp()
+).pack(anchor="w", pady=(0, 6))
+
+tk.Button(
+    left_buttons_frame,
+    width=18,
+    text="🏃‍♂️‍➡️ Open Sprites",
+    font=("Segoe UI Emoji", 10),
+    anchor="w",
+    command=lambda: open_sprites_zxp()
+).pack(anchor="w", pady=(0, 10))
+
 # Open HUD (abre el archivo assets/screens/hud.tmx)
 open_hud_button = tk.Button(
     left_buttons_frame,
@@ -567,17 +621,6 @@ open_hud_button = tk.Button(
 )
 open_hud_button.pack(anchor="w", pady=(0, 10))
 open_hud_button.bind("<Button-1>", show_hud_menu)
-
-# Open Doc
-open_doc_button = tk.Button(
-    left_buttons_frame,
-    width=18,
-    text="📄 Open Doc",
-    font=("Segoe UI Emoji", 10),
-    anchor="w",
-    command=lambda: webbrowser.open("https://gm.retrojuegos.org/")
-)
-open_doc_button.pack(anchor="w", pady=(0, 10))
 
 # Open Project (abre la carpeta raíz del proyecto) — usa el mismo icono que Open Doc
 open_project_button = tk.Button(
