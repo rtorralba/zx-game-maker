@@ -185,10 +185,6 @@ def build(verbose = False):
 
     print(f"Compiling for language: {os.getenv('ZXSGM_I18N_FOLDER', 'default')}\n")
 
-    print("============================================")
-    print("=          ZX SPECTRUM GAME MAKER          =")
-    print("============================================")
-
     executeFunction(removeTempFiles, "Removing temporary files")
     executeFunction(tiledExport, "Exporting game from Tiled")
     executeFunction(hudTiledExport, "Exporting HUD from Tiled")
