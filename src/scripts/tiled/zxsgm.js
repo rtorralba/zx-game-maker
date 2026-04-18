@@ -6,7 +6,8 @@ const forbiddenSprites = [1, 2, 3, 4, 5, 6, 7, 9, 11, 12, 13, 14, 15, 17, 19, 21
 
 function setClassByShape(obj) {
     // Sprites (shape === 0)
-    if (obj.shape === 0) {
+    // debugObject(obj)
+    if (obj.shape === MapObject.Rectangle) {
         if (obj.tile.tileset.name == "tiles") {
             tiled.alert("No puedes poner un tile en la capa de sprites (objects).");
             if (obj.layer && obj.layer.removeObject) {
@@ -51,8 +52,7 @@ function setClassByShape(obj) {
             return true;
         }
     }
-    // Pointers (shape === 5)
-    else if ((obj.shape === 5 || obj.shape === 6) && obj.className === "") {
+    else if (obj.shape === MapObject.tile && obj.className === "") {
         obj.className = "ZXSGMPointer";
         tiled.log("✓ Class 'ZXSGMPointer' assigned to pointer: " + (obj.name || "ID:" + obj.id));
         return true;
