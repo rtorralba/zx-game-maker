@@ -338,6 +338,51 @@ def open_map_with_tiled():
     
     subprocess.Popen(command, shell=True)
 
+def open_hud_tmx():
+    """Abre el fichero assets/screens/hud.tmx con la aplicación por defecto."""
+    try:
+        hud_path = ASSETS_FOLDER / "screens" / "hud.tmx"
+        if not hud_path.exists():
+            messagebox.showerror("Error", f"No se encontró el fichero: {hud_path}")
+            return
+
+        if CURRENT_OS == "Windows":
+            os.startfile(str(hud_path))
+        elif CURRENT_OS == "Linux":
+            subprocess.Popen(["xdg-open", str(hud_path)])
+        elif CURRENT_OS == "Darwin":
+            subprocess.Popen(["open", str(hud_path)])
+        else:
+            messagebox.showerror("Error", "El sistema operativo no es compatible.")
+    except Exception as e:
+        messagebox.showerror("Error", f"No se pudo abrir HUD: {e}")
+
+def open_hud_scr():
+    """Abre el fichero assets/screens/hud.scr con la aplicación por defecto."""
+    try:
+        hud_path = ASSETS_FOLDER / "screens" / "hud.scr"
+        if not hud_path.exists():
+            messagebox.showerror("Error", f"No se encontró el fichero: {hud_path}")
+            return
+
+        if CURRENT_OS == "Windows":
+            os.startfile(str(hud_path))
+        elif CURRENT_OS == "Linux":
+            subprocess.Popen(["xdg-open", str(hud_path)])
+        elif CURRENT_OS == "Darwin":
+            subprocess.Popen(["open", str(hud_path)])
+        else:
+            messagebox.showerror("Error", "El sistema operativo no es compatible.")
+    except Exception as e:
+        messagebox.showerror("Error", f"No se pudo abrir HUD: {e}")
+
+def show_hud_menu(event):
+    """Muestra un menú con opciones para abrir el HUD: Background (.scr) y Elements (.tmx)."""
+    hud_menu = tk.Menu(root, tearoff=0)
+    hud_menu.add_command(label="Background", command=open_hud_scr)
+    hud_menu.add_command(label="Elements", command=open_hud_tmx)
+    hud_menu.post(event.x_root, event.y_root)
+
 def open_project_folder():
     """Abre la carpeta raíz del proyecto en el explorador de archivos."""
     try:
@@ -511,6 +556,17 @@ open_map_button = tk.Button(
     command=open_map_with_tiled
 )
 open_map_button.pack(anchor="w", pady=(0, 10))
+
+# Open HUD (abre el archivo assets/screens/hud.tmx)
+open_hud_button = tk.Button(
+    left_buttons_frame,
+    width=18,
+    text="🖥 Open HUD",
+    font=("Segoe UI Emoji", 10),
+    anchor="w",
+)
+open_hud_button.pack(anchor="w", pady=(0, 10))
+open_hud_button.bind("<Button-1>", show_hud_menu)
 
 # Open Doc
 open_doc_button = tk.Button(

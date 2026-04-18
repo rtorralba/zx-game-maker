@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from configuration.folders import SRC_FOLDER, UI_FOLDER, OUTPUT_FOLDER
+from configuration.folders import ASSETS_FOLDER, SRC_FOLDER, UI_FOLDER, OUTPUT_FOLDER
 from watchdog.events import FileSystemEventHandler
 from builder.helper import blackoutForbiddenSprites
 
@@ -21,4 +21,18 @@ class ZXPHandler(FileSystemEventHandler):
                     # Limpiar sprites no permitidos
                     sprites_png = SRC_FOLDER / "sprites.png"
                     blackoutForbiddenSprites(sprites_png)
+                    
+            # Si cambia el HUD en formato .scr (en assets/screens), generar hud.png
+            if file_path.name == "hud.scr":
+                try:
+                    hud_scr = ASSETS_FOLDER / "screens" / "hud.scr"
+                    hud_png = ASSETS_FOLDER / "screens" / "hud.png"
+                    if hud_scr.exists():
+                        # Usar la misma herramienta que en build.py
+                        os.system(f"sna2img.py \"{hud_scr}\" \"{hud_png}\"")
+                        print(f"HUD convertido a PNG: {hud_png}")
+                    else:
+                        print(f"No se encontró {hud_scr} para convertir a PNG")
+                except Exception as e:
+                    print(f"Error al convertir HUD: {e}")
 
