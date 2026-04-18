@@ -338,6 +338,26 @@ def open_map_with_tiled():
     
     subprocess.Popen(command, shell=True)
 
+def open_project_folder():
+    """Abre la carpeta raíz del proyecto en el explorador de archivos."""
+    try:
+        # Al inicio del script hacemos chdir a la carpeta `src`, por eso el padre es la raíz del proyecto
+        project_dir = Path.cwd().parent
+        if not project_dir.exists():
+            messagebox.showerror("Error", f"No se encontró la carpeta del proyecto: {project_dir}")
+            return
+
+        if CURRENT_OS == "Windows":
+            os.startfile(str(project_dir))
+        elif CURRENT_OS == "Linux":
+            subprocess.Popen(["xdg-open", str(project_dir)])
+        elif CURRENT_OS == "Darwin":
+            subprocess.Popen(["open", str(project_dir)])
+        else:
+            messagebox.showerror("Error", "El sistema operativo no es compatible.")
+    except Exception as e:
+        messagebox.showerror("Error", f"No se pudo abrir la carpeta del proyecto: {e}")
+
 def showFolderSelectionModal():
     import tkinter as tk
 
@@ -473,41 +493,46 @@ left_buttons_frame.pack(side="left", anchor="n", padx=(0, 20))
 # Open Game
 open_game_button = tk.Button(
     left_buttons_frame,
-    text="Open Game",
-    width=100,
-    image=game_icon,
-    compound="left",
+    width=18,
+    text="🎮 Open Game",
+    font=("Segoe UI Emoji", 10),
     anchor="w",
     command=lambda: open_game_variant("normal")
 )
-open_game_button.image = game_icon
 open_game_button.pack(anchor="w", pady=(0, 10))
 
 # Open Map
 open_map_button = tk.Button(
     left_buttons_frame,
-    text="Open Map",
-    width=100,
-    image=open_map_icon,
-    compound="left",
+    width=18,
+    text="🗺 Open Map",
+    font=("Segoe UI Emoji", 10),
     anchor="w",
     command=open_map_with_tiled
 )
-open_map_button.image = open_map_icon
 open_map_button.pack(anchor="w", pady=(0, 10))
 
 # Open Doc
 open_doc_button = tk.Button(
     left_buttons_frame,
-    text="Open Doc",
-    width=100,
-    image=doc_icon,
-    compound="left",
+    width=18,
+    text="📄 Open Doc",
+    font=("Segoe UI Emoji", 10),
     anchor="w",
     command=lambda: webbrowser.open("https://gm.retrojuegos.org/")
 )
-open_doc_button.image = doc_icon
 open_doc_button.pack(anchor="w", pady=(0, 10))
+
+# Open Project (abre la carpeta raíz del proyecto) — usa el mismo icono que Open Doc
+open_project_button = tk.Button(
+    left_buttons_frame,
+    text="📁 Open Project",
+    width=18,
+    font=("Segoe UI Emoji", 10),
+    anchor="w",
+    command=open_project_folder
+)
+open_project_button.pack(anchor="w", pady=(0, 10))
 
 # Frame para la botonera derecha (un botón por idioma)
 right_buttons_frame = tk.Frame(button_frame)
@@ -519,10 +544,9 @@ def build_for_language(lang):
 
 tk.Button(
     right_buttons_frame,
-    text="Build default",
-    width=100,
-    image=settings_icon,
-    compound="left",
+    text="⚙ Build default",
+    width=18,
+    font=("Segoe UI Emoji", 10),
     anchor="w",
     command=lambda l="default": build_for_language(l)
 ).pack(anchor="w", pady=(0, 10))
@@ -530,10 +554,9 @@ tk.Button(
 for lang in idiomas:
     tk.Button(
         right_buttons_frame,
-        text=f"Build {lang.upper()}",
-        width=100,
-        image=settings_icon,
-        compound="left",
+        text=f"⚙ Build {lang.upper()}",
+        width=18,
+        font=("Segoe UI Emoji", 10),
         anchor="w",
         command=lambda l=lang: build_for_language(l)
     ).pack(anchor="w", pady=(0, 10))

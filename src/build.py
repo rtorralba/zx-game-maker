@@ -165,9 +165,17 @@ def distBuild():
 
 
 def removeTempFiles():
-    for file in os.listdir("output"):
+    # Evitar borrar sprites.png ya que ahora se genera en OUTPUT_FOLDER y se usa para previews
+    if not os.path.isdir(OUTPUT_FOLDER):
+        return
+    for file in os.listdir(OUTPUT_FOLDER):
+        if file == "sprites.png":
+            continue
         if file.endswith(".zx0") or file.endswith(".bin") or file.endswith(".tap") or file.endswith(".bas"):
-            os.remove(os.path.join("output", file))
+            try:
+                os.remove(os.path.join(OUTPUT_FOLDER, file))
+            except Exception:
+                pass
 
 def build(verbose = False):
     global totalExecutionTime

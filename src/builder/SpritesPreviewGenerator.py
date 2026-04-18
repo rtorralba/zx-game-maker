@@ -46,7 +46,7 @@ class SpritesPreviewGenerator:
     
     @staticmethod
     def generateGif(row, spriteFrom, spriteTo, gifPath):
-        spritesheet = Image.open(UI_FOLDER / 'sprites.png')
+        spritesheet = Image.open(OUTPUT_FOLDER / 'sprites.png')
         
         sprites = []
         
