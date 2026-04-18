@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from configuration.folders import ASSETS_FOLDER, SRC_FOLDER, UI_FOLDER, OUTPUT_FOLDER
+from configuration.folders import ASSETS_FOLDER, SRC_FOLDER, OUTPUT_FOLDER
 from watchdog.events import FileSystemEventHandler
 from builder.helper import blackoutForbiddenSprites
 
