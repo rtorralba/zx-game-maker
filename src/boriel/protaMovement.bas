@@ -568,6 +568,42 @@ Function checkDashingOrWalljumping() As Ubyte
     Return 0
 End Function
 
+Sub resetToFirstFrameOnStop()
+    #ifdef SIDE_VIEW
+        If jumpCurrentKey <> jumpStopValue Then Return
+        If canMoveDown() Then Return
+        #ifdef LADDERS_ENABLED
+            If CheckCollision(protaX, protaY, 2) Then Return
+        #endif
+        If protaDirection = 1 Then
+            If protaTile <> FIRST_RUNNING_PROTA_SPRITE_RIGHT Then
+                protaFrame = 0
+                saveProta(protaY, protaX, FIRST_RUNNING_PROTA_SPRITE_RIGHT, protaDirection)
+            End If
+        Else
+            If protaTile <> FIRST_RUNNING_PROTA_SPRITE_LEFT Then
+                protaFrame = 4
+                saveProta(protaY, protaX, FIRST_RUNNING_PROTA_SPRITE_LEFT, protaDirection)
+            End If
+        End If
+    #Else
+        Dim baseFrame As Ubyte
+        If protaDirection = 1 Then
+            baseFrame = 0
+        Elseif protaDirection = 0 Then
+            baseFrame = 2
+        Elseif protaDirection = 8 Then
+            baseFrame = 4
+        Else
+            baseFrame = 6
+        End If
+        If protaTile <> baseFrame + 1 Then
+            protaFrame = baseFrame
+            saveProta(protaY, protaX, baseFrame + 1, protaDirection)
+        End If
+    #endif
+End Sub
+
 Sub keyboardListen()
     If kempston Then
         Dim n As Ubyte = In(31)
@@ -583,6 +619,13 @@ Sub keyboardListen()
                 protaLoopCounter = 0
             End If
         #endif
+        If n bAND %1111 = 0 Then
+            #ifdef IDLE_ENABLED
+                If protaLoopCounter < IDLE_TIME Then resetToFirstFrameOnStop()
+            #Else
+                resetToFirstFrameOnStop()
+            #endif
+        End If
     Else
         If MultiKeys(keyArray(LEFT))<>0 Then leftKey()
         If MultiKeys(keyArray(RIGHT))<>0 Then rightKey()
@@ -596,6 +639,13 @@ Sub keyboardListen()
                 protaLoopCounter = 0
             End If
         #endif
+        If MultiKeys(keyArray(LEFT))=0 And MultiKeys(keyArray(RIGHT))=0 And MultiKeys(keyArray(UP))=0 And MultiKeys(keyArray(DOWN))=0 Then
+            #ifdef IDLE_ENABLED
+                If protaLoopCounter < IDLE_TIME Then resetToFirstFrameOnStop()
+            #Else
+                resetToFirstFrameOnStop()
+            #endif
+        End If
     End If
 End Sub
 
