@@ -211,6 +211,8 @@ textsWindowHeight = 12
 textsInk = 0
 textsPaper = 7
 
+enemyShootEnabled = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -385,6 +387,8 @@ if 'properties' in data:
             textsWindowX = property['value']
         elif property['name'] == 'textsWindowY':
             textsWindowY = property['value']
+        elif property['name'] == 'enemyShootEnabled':
+            enemyShootEnabled = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -824,6 +828,8 @@ for layer in data['layers']:
                         elif property['name'] == 'move':
                             if property['value'] == 'noReturn':
                                 objects[str(object['id'])]['move'] = '1'
+                            elif property['value'] == 'defaultWithShoot':
+                                objects[str(object['id'])]['move'] = '2'
                         elif property['name'] == 'freezeOnSight' and property['value']:
                             objects[str(object['id'])]['colEnd'] = '255'
                             freezeOnSightEnabled = 1
@@ -841,6 +847,11 @@ for layer in data['layers']:
 
 if freezeOnSightEnabled == 1:
     configStr += "#DEFINE FREEZE_ON_SIGHT_ENABLED\n"
+
+if enemyShootEnabled == 1:
+    configStr += "#DEFINE ENEMY_SHOOT_ENABLED\n"
+    configStr += "Const ENEMY_SHOOT_PERIOD As Ubyte = 100\n"
+    configStr += "Const ENEMY_STOP_FRAMES As Ubyte = 20\n"
 
 # Find end of paths
 for layer in data['layers']:

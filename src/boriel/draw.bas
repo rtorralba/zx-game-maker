@@ -370,6 +370,11 @@ Sub drawSprites()
             Draw1x1Sprite(currentBulletSpriteId, bulletPositionX, bulletPositionY)
         End If
     #endif
+    #ifdef ENEMY_SHOOT_ENABLED
+        If enemyBulletX <> 0 Then
+            Draw1x1Sprite(enemyBulletSpriteId, enemyBulletX, enemyBulletY)
+        End If
+    #endif
 End Sub
 
 Sub animateEnemies()

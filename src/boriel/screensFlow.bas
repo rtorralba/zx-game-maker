@@ -271,6 +271,9 @@ Sub playGame()
         #ifdef SHOOTING_ENABLED
             moveBullet()
         #endif
+        #ifdef ENEMY_SHOOT_ENABLED
+            moveEnemyBullet()
+        #endif
         drawSprites()
         
         RenderFrame()
@@ -534,6 +537,9 @@ End Sub
 Sub resetValues()
     #ifdef SHOOTING_ENABLED
         bulletPositionX = 0
+    #endif
+    #ifdef ENEMY_SHOOT_ENABLED
+        enemyBulletX = 0
     #endif
     #ifdef SIDE_VIEW
         jumpCurrentKey = jumpStopValue

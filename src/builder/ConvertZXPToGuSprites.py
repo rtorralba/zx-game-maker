@@ -37,6 +37,9 @@ class ConvertZXPToGuSprites:
 
         sprites.extend(ZXPToSpritesConversor.convert(str(Path("../assets/map/sword.zxp")), 2, 8, 8))
 
+        if helper.getEnemyShootEnabled():
+            sprites.extend(ZXPToSpritesConversor.convert(str(Path("../assets/map/enemy-bullet.zxp")), 1, 8, 8))
+
         preshiftedSprites = ConvertZXPToGuSprites.preshiftSprites(sprites)
         unshiftedSprites = ConvertZXPToGuSprites.unshiftSprites(sprites)
 

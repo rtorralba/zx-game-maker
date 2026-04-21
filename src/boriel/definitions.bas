@@ -26,13 +26,25 @@
 ' #define ENABLE_1x2_SPRITES
 #define ENABLE_2x2_SPRITES
 #ifdef SIDE_VIEW
-    #define TOTAL_1x1_SPRITES 2
+    #ifdef ENEMY_SHOOT_ENABLED
+        #define TOTAL_1x1_SPRITES 3
+    #else
+        #define TOTAL_1x1_SPRITES 2
+    #endif
 #else
-    #define TOTAL_1x1_SPRITES 4
+    #ifdef ENEMY_SHOOT_ENABLED
+        #define TOTAL_1x1_SPRITES 5
+    #else
+        #define TOTAL_1x1_SPRITES 4
+    #endif
 #endif
 ' #define TOTAL_1x2_SPRITES 0
 #define TOTAL_2x2_SPRITES 48
-#define ONSCREEN_1x1_SPRITES 1
+#ifdef ENEMY_SHOOT_ENABLED
+    #define ONSCREEN_1x1_SPRITES 2
+#else
+    #define ONSCREEN_1x1_SPRITES 1
+#endif
 ' #define ONSCREEN_1x2_SPRITES 0
 ' #define ONSCREEN_2x2_SPRITES 4 Defined dinamically from Tiled
 #define ENABLE_TILES
@@ -52,6 +64,10 @@ Const BULLET_SPRITE_LEFT_ID As Ubyte = 50
     Const SWORD_SPRITE_RIGHT_ID As Ubyte = 52
     Const SWORD_SPRITE_LEFT_ID As Ubyte = 51
     Dim noKeyPressedForSword As Ubyte = 1
+#endif
+
+#ifdef ENEMY_SHOOT_ENABLED
+    Const ENEMY_BULLET_SPRITE_ID As Ubyte = 53
 #endif
 
 
@@ -157,6 +173,14 @@ Dim spriteAddressIndex As Uinteger = 0
 
 Const FIRST_RUNNING_PROTA_SPRITE_RIGHT As Ubyte = 1
 Const FIRST_RUNNING_PROTA_SPRITE_LEFT As Ubyte = 5
+
+#ifdef ENEMY_SHOOT_ENABLED
+    Dim enemyBulletX As Ubyte = 0
+    Dim enemyBulletY As Ubyte = 0
+    Dim enemyBulletDirX As Byte = 0
+    Dim enemyBulletDirY As Byte = 0
+    Dim enemyBulletSpriteId As Ubyte = 0
+#endif
 
 Const ENEMY_TILE As Ubyte = 0
 Const ENEMY_LIN_INI As Ubyte = 1

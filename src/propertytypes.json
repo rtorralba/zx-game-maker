@@ -18,7 +18,8 @@
         "type": "enum",
         "values": [
             "default",
-            "noReturn"
+            "noReturn",
+            "defaultWithShoot"
         ],
         "valuesAsFlags": false
     },
@@ -399,6 +400,11 @@
                 "name": "enemiesRespawn",
                 "type": "bool",
                 "value": true
+            },
+            {
+                "name": "enemyShootEnabled",
+                "type": "bool",
+                "value": false
             },
             {
                 "name": "finishGameEnemy",

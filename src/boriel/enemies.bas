@@ -173,6 +173,48 @@ Function checkShouldSkipMoveBySpeed(enemySpeed As Ubyte) As Ubyte
     Return 0
 End Function
 
+#ifdef ENEMY_SHOOT_ENABLED
+    Sub shootEnemyBullet(enemyCol As Byte, enemyLin As Byte)
+        If enemyBulletX <> 0 Then Return
+        Dim dx As Integer = protaX - enemyCol
+        Dim dy As Integer = protaY - enemyLin
+        If dx = 0 And dy = 0 Then Return
+        enemyBulletDirX = Sgn(dx)
+        enemyBulletDirY = Sgn(dy)
+        enemyBulletX = enemyCol + 1
+        enemyBulletY = enemyLin + 1
+        enemyBulletSpriteId = ENEMY_BULLET_SPRITE_ID
+    End Sub
+
+    Sub moveEnemyBullet()
+        If enemyBulletX = 0 Then Return
+
+        Dim newX As Integer = enemyBulletX + enemyBulletDirX
+        Dim newY As Integer = enemyBulletY + enemyBulletDirY
+
+        If newX < 2 Or newX > 60 Or newY < 2 Or newY > 40 Then
+            enemyBulletX = 0
+            Return
+        End If
+
+        If isSolidTileByColLin(newX >> 1, newY >> 1) Then
+            enemyBulletX = 0
+            Return
+        End If
+
+        enemyBulletX = newX
+        enemyBulletY = newY
+
+        If invincible Then Return
+        Dim protaX1 As Ubyte = protaX + SPRITE_COLLISION_SIZE
+        Dim protaY1 As Ubyte = protaY + SPRITE_COLLISION_SIZE
+        If enemyBulletX >= protaX And enemyBulletX <= protaX1 And enemyBulletY >= protaY And enemyBulletY <= protaY1 Then
+            enemyBulletX = 0
+            decrementLife()
+        End If
+    End Sub
+#endif
+
 Sub moveEnemies()
     If enemiesPerScreen(currentScreen) = 0 Then Return
     For enemyId=0 To enemiesPerScreen(currentScreen) - 1
@@ -206,8 +248,8 @@ Sub moveEnemies()
         If enemyColIni = enemyColEnd Then enemyHorizontalDirection = 0
         If enemyLinIni = enemyLinEnd Then enemyVerticalDirection = 0
         
-        If enemyBehaviour = 0 Then
-            ' Pursuing enemy
+        If enemyBehaviour = 0 Or enemyBehaviour = 2 Then
+            ' Pursuing / defaultWithShoot enemy
             If enemyLinEnd = -1 Then
                 enemyHorizontalDirection = Sgn(protaX - enemyCol)
                 enemyVerticalDirection = Sgn(protaY - enemyLin)
@@ -237,6 +279,29 @@ Sub moveEnemies()
                 End If
             End If
             
+            #ifdef ENEMY_SHOOT_ENABLED
+                If enemyBehaviour = 2 Then
+                    If mainLoopCounter mod ENEMY_SHOOT_PERIOD = 0 Then
+                        shootEnemyBullet(enemyCol, enemyLin)
+                    End If
+                    If mainLoopCounter mod ENEMY_SHOOT_PERIOD < ENEMY_STOP_FRAMES Then
+                        If tile > 15 Then
+                            If checkProtaAndBulletCollision(enemyId) Then
+                                If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <= 0 Then
+                                    Continue For
+                                End If
+                            End If
+                            If enemyHorizontalDirection = -1 Then
+                                tile = tile + 16
+                            End If
+                        End If
+                        If enemFrame Then tile = tile + 1
+                        Draw2x2Sprite(tile + 1, enemyCol, enemyLin)
+                        Continue For
+                    End If
+                End If
+            #endif
+
             If checkShouldSkipMoveBySpeed(enemySpeed) Then
                 If tile > 15 Then
                     If enemyHorizontalDirection = -1 Then
