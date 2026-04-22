@@ -405,6 +405,73 @@ Sub moveEnemies()
             End If
             
             saveAndDraw(enemyId, tile + 1, enemyHorizontalDirection, enemyVerticalDirection)
+        Elseif enemyBehaviour = 3 Then
+            If checkShouldSkipMoveBySpeed(enemySpeed) Then
+                checkAndDraw(enemyId, tile, enemyCol, enemyLin)
+                Continue For
+            End If
+
+            ' Rectangular clockwise movement
+            ' Normalize rectangle corners to min/max
+            Dim rectMinCol As Byte
+            Dim rectMaxCol As Byte
+            Dim rectMinLin As Byte
+            Dim rectMaxLin As Byte
+            If enemyColIni < enemyColEnd Then
+                rectMinCol = enemyColIni
+                rectMaxCol = enemyColEnd
+            Else
+                rectMinCol = enemyColEnd
+                rectMaxCol = enemyColIni
+            End If
+            If enemyLinIni < enemyLinEnd Then
+                rectMinLin = enemyLinIni
+                rectMaxLin = enemyLinEnd
+            Else
+                rectMinLin = enemyLinEnd
+                rectMaxLin = enemyLinIni
+            End If
+            ' Clockwise: top→right, right→down, bottom→left, left→up
+            If enemyLin = rectMinLin And enemyCol < rectMaxCol Then
+                ' Top edge: move right
+                enemyHorizontalDirection = 1
+                enemyVerticalDirection = 0
+            Elseif enemyCol = rectMaxCol And enemyLin < rectMaxLin Then
+                ' Right edge: move down
+                enemyHorizontalDirection = 0
+                enemyVerticalDirection = 1
+            Elseif enemyLin = rectMaxLin And enemyCol > rectMinCol Then
+                ' Bottom edge: move left
+                enemyHorizontalDirection = -1
+                enemyVerticalDirection = 0
+            Else
+                ' Left edge: move up
+                enemyHorizontalDirection = 0
+                enemyVerticalDirection = -1
+            End If
+
+            enemyCol = enemyCol + enemyHorizontalDirection
+            enemyLin = enemyLin + enemyVerticalDirection
+
+            If tile > 15 Then
+                If checkProtaAndBulletCollision(enemyId) Then
+                    If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <= 0 Then
+                        Continue For
+                    End If
+                End If
+                If enemyHorizontalDirection = -1 Then
+                    tile = tile + 16
+                End If
+            End If
+
+            If enemFrame Then
+                tile = tile + 1
+            End If
+
+            decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = enemyCol
+            decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLin
+
+            saveAndDraw(enemyId, tile + 1, enemyHorizontalDirection, enemyVerticalDirection)
         End If
     Next enemyId
 End Sub

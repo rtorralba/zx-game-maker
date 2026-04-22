@@ -830,6 +830,8 @@ for layer in data['layers']:
                                 objects[str(object['id'])]['move'] = '1'
                             elif property['value'] == 'defaultWithShoot':
                                 objects[str(object['id'])]['move'] = '2'
+                            elif property['value'] == 'rectangular':
+                                objects[str(object['id'])]['move'] = '3'
                         elif property['name'] == 'freezeOnSight' and property['value']:
                             objects[str(object['id'])]['colEnd'] = '255'
                             freezeOnSightEnabled = 1

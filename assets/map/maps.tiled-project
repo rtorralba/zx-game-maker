@@ -30,7 +30,8 @@
             "values": [
                 "default",
                 "noReturn",
-                "defaultWithShoot"
+                "defaultWithShoot",
+                "rectangular"
             ],
             "valuesAsFlags": false
         },

@@ -220,13 +220,14 @@
    </properties>
    <point/>
   </object>
-  <object id="47" type="ZXSGMEnemy" gid="211" x="360" y="320" width="16" height="16">
+  <object id="47" type="ZXSGMEnemy" gid="213" x="344" y="320" width="16" height="16">
    <properties>
     <property name="life" type="int" value="3"/>
-    <property name="speed" type="int" propertytype="enemySpeed" value="0"/>
+    <property name="move" propertytype="enemyMovementTypes" value="rectangular"/>
+    <property name="speed" type="int" propertytype="enemySpeed" value="3"/>
    </properties>
   </object>
-  <object id="48" type="ZXSGMPointer" x="424" y="288">
+  <object id="48" type="ZXSGMPointer" x="440" y="280">
    <properties>
     <property name="sprite" type="object" value="47"/>
    </properties>
@@ -256,7 +257,7 @@
    </properties>
    <point/>
   </object>
-  <object id="71" type="mainCharacter" gid="193" x="152" y="320" width="16" height="16"/>
+  <object id="71" type="mainCharacter" gid="193" x="272" y="320" width="16" height="16"/>
   <object id="78" type="ZXSGMText" x="176" y="320">
    <properties>
     <property name="default">Hi Carlos! How are things going with the &quot;mi mi mis&quot;? It seems like there's more space now, we can tell more stories and make a Khan Zelda!
