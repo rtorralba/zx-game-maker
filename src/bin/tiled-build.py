@@ -212,6 +212,7 @@ textsInk = 0
 textsPaper = 7
 
 enemyShootEnabled = 0
+rectangularMoveEnabled = 0
 
 if 'properties' in data:
     for property in data['properties']:
@@ -832,6 +833,7 @@ for layer in data['layers']:
                                 objects[str(object['id'])]['move'] = '2'
                             elif property['value'] == 'rectangular':
                                 objects[str(object['id'])]['move'] = '3'
+                                rectangularMoveEnabled = 1
                         elif property['name'] == 'freezeOnSight' and property['value']:
                             objects[str(object['id'])]['colEnd'] = '255'
                             freezeOnSightEnabled = 1
@@ -854,6 +856,9 @@ if enemyShootEnabled == 1:
     configStr += "#DEFINE ENEMY_SHOOT_ENABLED\n"
     configStr += "Const ENEMY_SHOOT_PERIOD As Ubyte = 100\n"
     configStr += "Const ENEMY_STOP_FRAMES As Ubyte = 20\n"
+
+if rectangularMoveEnabled == 1:
+    configStr += "#DEFINE RECTANGULAR_MOVE_ENABLED\n"
 
 # Find end of paths
 for layer in data['layers']:

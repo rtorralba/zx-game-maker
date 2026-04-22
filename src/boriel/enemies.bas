@@ -405,6 +405,7 @@ Sub moveEnemies()
             End If
             
             saveAndDraw(enemyId, tile + 1, enemyHorizontalDirection, enemyVerticalDirection)
+        #ifdef RECTANGULAR_MOVE_ENABLED
         Elseif enemyBehaviour = 3 Then
             If checkShouldSkipMoveBySpeed(enemySpeed) Then
                 checkAndDraw(enemyId, tile, enemyCol, enemyLin)
@@ -472,6 +473,7 @@ Sub moveEnemies()
             decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLin
 
             saveAndDraw(enemyId, tile + 1, enemyHorizontalDirection, enemyVerticalDirection)
+        #endif
         End If
     Next enemyId
 End Sub
