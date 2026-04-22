@@ -295,7 +295,6 @@ Sub moveEnemies()
                                 tile = tile + 16
                             End If
                         End If
-                        If enemFrame Then tile = tile + 1
                         Draw2x2Sprite(tile + 1, enemyCol, enemyLin)
                         Continue For
                     End If
