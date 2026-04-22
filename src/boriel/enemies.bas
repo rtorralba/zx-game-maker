@@ -248,7 +248,7 @@ Sub moveEnemies()
         If enemyColIni = enemyColEnd Then enemyHorizontalDirection = 0
         If enemyLinIni = enemyLinEnd Then enemyVerticalDirection = 0
         
-        If enemyBehaviour = 0 Or enemyBehaviour = 2 Then
+        If enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT Or enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT_SHOOT Then
             ' Pursuing / defaultWithShoot enemy
             If enemyLinEnd = -1 Then
                 enemyHorizontalDirection = Sgn(protaX - enemyCol)
@@ -280,7 +280,7 @@ Sub moveEnemies()
             End If
             
             #ifdef ENEMY_SHOOT_ENABLED
-                If enemyBehaviour = 2 Then
+                If enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT_SHOOT Then
                     If mainLoopCounter mod ENEMY_SHOOT_PERIOD = 0 Then
                         shootEnemyBullet(enemyCol, enemyLin)
                     End If
@@ -363,7 +363,7 @@ Sub moveEnemies()
             decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLin
             
             saveAndDraw(enemyId, tile + 1, enemyHorizontalDirection, enemyVerticalDirection)
-        Elseif enemyBehaviour = 1 Then
+        Elseif enemyBehaviour = ENEMY_BEHAVIOUR_NO_RETURN Then
             If checkShouldSkipMoveBySpeed(enemySpeed) Then
                 checkAndDraw(enemyId, tile, enemyCol, enemyLin)
                 Continue For
@@ -406,7 +406,7 @@ Sub moveEnemies()
             
             saveAndDraw(enemyId, tile + 1, enemyHorizontalDirection, enemyVerticalDirection)
         #ifdef RECTANGULAR_MOVE_ENABLED
-        Elseif enemyBehaviour = 3 Then
+        Elseif enemyBehaviour = ENEMY_BEHAVIOUR_RECTANGULAR Then
             If checkShouldSkipMoveBySpeed(enemySpeed) Then
                 checkAndDraw(enemyId, tile, enemyCol, enemyLin)
                 Continue For
