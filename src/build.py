@@ -24,7 +24,8 @@ def tiledBuild():
     runPythonScriptFile(str(TILED_SCRIPT))
 
 def hudScrToPng():
-    runCommand("sna2img.py \"" + str(ASSETS_FOLDER / "screens/hud.scr") + "\" \"" + str(ASSETS_FOLDER / "screens/hud.png") + "\"")
+    from builder.helper import scrToPng
+    scrToPng(str(ASSETS_FOLDER / "screens/hud.scr"), str(ASSETS_FOLDER / "screens/hud.png"))
 
 def buildingFilesAndConfig():
     return Builder().execute()
@@ -119,7 +120,7 @@ def tapsBuild(outputFile):
     concatenateFiles(outputFile.with_suffix(".tap"), input_files)
 
 def snaBuild(outputFile):
-    runCommand("tap2sna.py --sim-load-config machine=128 \"" + str(outputFile.with_suffix(".tap")) + "\" \"" + str(outputFile.with_suffix(".z80")) + "\"")
+    runPythonScript("-m skoolkit.tap2sna --sim-load-config machine=128 \"" + str(outputFile.with_suffix(".tap")) + "\" \"" + str(outputFile.with_suffix(".z80")) + "\"")
 
 def exeBuild(outputFile):
     concatenateFiles(outputFile.with_suffix(".exe"), [BIN_FOLDER / "spectral.exe", outputFile.with_suffix(".z80")])

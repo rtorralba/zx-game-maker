@@ -128,6 +128,48 @@ def getUseBreakableTile():
         maps_json = json.load(f)
     return any(prop["name"] == "useBreakableTile" and prop["value"] for prop in maps_json["properties"])
 
+def scrToPng(scr_path, png_path):
+    """
+    Converts a ZX Spectrum .scr file to a PNG image using Pillow.
+    Replaces the sna2img.py (skoolkit) call which fails on some Windows setups.
+    """
+    from PIL import Image
+
+    ZX_COLORS = [
+        (0, 0, 0),       (0, 0, 215),     (215, 0, 0),     (215, 0, 215),
+        (0, 215, 0),     (0, 215, 215),   (215, 215, 0),   (215, 215, 215),
+        (0, 0, 0),       (0, 0, 255),     (255, 0, 0),     (255, 0, 255),
+        (0, 255, 0),     (0, 255, 255),   (255, 255, 0),   (255, 255, 255),
+    ]
+
+    with open(scr_path, "rb") as f:
+        data = f.read()
+
+    pixels = data[:6144]
+    attrs = data[6144:6912]
+
+    img = Image.new("RGB", (256, 192))
+    img_pixels = img.load()
+
+    for y in range(192):
+        band = y // 64
+        scanline = y % 8
+        char_row_in_band = (y // 8) % 8
+        char_row = y // 8
+        for char_col in range(32):
+            byte_idx = band * 2048 + scanline * 256 + char_row_in_band * 32 + char_col
+            byte = pixels[byte_idx]
+            attr = attrs[char_row * 32 + char_col]
+            bright = (attr >> 6) & 1
+            paper = ((attr >> 3) & 0x07) + (bright * 8)
+            ink = (attr & 0x07) + (bright * 8)
+            for bit in range(8):
+                x = char_col * 8 + bit
+                is_set = (byte >> (7 - bit)) & 1
+                img_pixels[x, y] = ZX_COLORS[ink] if is_set else ZX_COLORS[paper]
+
+    img.save(png_path)
+
 def concatenateFiles(output_file, input_files):
     with open(output_file, "wb") as out_file:
         for file in input_files:

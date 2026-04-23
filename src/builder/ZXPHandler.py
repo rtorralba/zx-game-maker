@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from configuration.folders import ASSETS_FOLDER, SRC_FOLDER, OUTPUT_FOLDER
 from watchdog.events import FileSystemEventHandler
-from builder.helper import blackoutForbiddenSprites
+from builder.helper import blackoutForbiddenSprites, scrToPng
 
 WATCH_FILES = ["tiles.zxp", "sprites.zxp"]
 
@@ -28,8 +28,7 @@ class ZXPHandler(FileSystemEventHandler):
                     hud_scr = ASSETS_FOLDER / "screens" / "hud.scr"
                     hud_png = ASSETS_FOLDER / "screens" / "hud.png"
                     if hud_scr.exists():
-                        # Usar la misma herramienta que en build.py
-                        os.system(f"sna2img.py \"{hud_scr}\" \"{hud_png}\"")
+                        scrToPng(str(hud_scr), str(hud_png))
                         print(f"HUD convertido a PNG: {hud_png}")
                     else:
                         print(f"No se encontró {hud_scr} para convertir a PNG")
