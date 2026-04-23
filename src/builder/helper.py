@@ -40,8 +40,7 @@ def runCommand(command):
     else:
         result = subprocess.call(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     if result != 0:
-        print("Error executing command: " + command)
-        sys.exit(1)
+        raise RuntimeError("Error executing command: " + command)
 
 def getPythonExecutable():
     return '"' + str(Path(sys.executable)) + '" '

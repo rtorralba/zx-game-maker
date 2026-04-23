@@ -57,6 +57,8 @@ def executeBuild(verbose=False, selected_folder=None):
         sys.stderr = redirector
         try:
             build.build(verbose=verbose)
+        except Exception as e:
+            print(f"\nBUILD ERROR: {e}")
         finally:
             sys.stdout = old_stdout
             sys.stderr = old_stderr

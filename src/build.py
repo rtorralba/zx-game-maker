@@ -160,6 +160,13 @@ def distBuild():
     outputFile = outputFolder / getProjectFileName()
     tapsBuild(outputFile)
     snaBuild(outputFile)
+    z80File = outputFile.with_suffix(".z80")
+    if not z80File.exists():
+        raise RuntimeError(
+            f"Z80 snapshot not created: {z80File}\n"
+            "Make sure 'skoolkit' is installed in the virtual environment "
+            "and the TAP file loaded correctly."
+        )
     exeBuild(outputFile)
     linuxBuild(outputFile)
     macBuild(outputFile)
