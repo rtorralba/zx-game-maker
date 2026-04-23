@@ -37,10 +37,16 @@ def runCommand(command):
     global verbose
     if verbose:
         result = subprocess.call(command, shell=True)
+        if result != 0:
+            raise RuntimeError("Error executing command: " + command)
     else:
-        result = subprocess.call(command, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    if result != 0:
-        raise RuntimeError("Error executing command: " + command)
+        proc = subprocess.run(command, shell=True, stdout=subprocess.DEVNULL,
+                              stderr=subprocess.PIPE, text=True, errors='replace')
+        if proc.returncode != 0:
+            msg = "Error executing command: " + command
+            if proc.stderr.strip():
+                msg += "\n" + proc.stderr.strip()
+            raise RuntimeError(msg)
 
 def getPythonExecutable():
     return '"' + str(Path(sys.executable)) + '" '

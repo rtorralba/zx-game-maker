@@ -120,7 +120,11 @@ def tapsBuild(outputFile):
     concatenateFiles(outputFile.with_suffix(".tap"), input_files)
 
 def snaBuild(outputFile):
-    runPythonScript("-m skoolkit.tap2sna --sim-load-config machine=128 \"" + str(outputFile.with_suffix(".tap")) + "\" \"" + str(outputFile.with_suffix(".z80")) + "\"")
+    # Find tap2sna.py next to the current Python executable so it always
+    # uses the venv interpreter, regardless of PATH configuration.
+    tap2sna_script = Path(sys.executable).parent / "tap2sna.py"
+    tap2sna_arg = f'"{tap2sna_script}"' if tap2sna_script.exists() else "-m skoolkit.tap2sna"
+    runPythonScript(f'{tap2sna_arg} --sim-load-config machine=128 "{outputFile.with_suffix(".tap")}" "{outputFile.with_suffix(".z80")}"')
 
 def exeBuild(outputFile):
     concatenateFiles(outputFile.with_suffix(".exe"), [BIN_FOLDER / "spectral.exe", outputFile.with_suffix(".z80")])
