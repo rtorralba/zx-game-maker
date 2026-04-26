@@ -239,6 +239,9 @@ Sub redrawScreen()
 End Sub
 
 Sub moveToScreen(direction As Ubyte)
+    #ifdef ENEMY_SHOOT_ENABLED
+        enemyBulletX = 0
+    #endif
     If direction = 6 Then
         currentScreen = currentScreen + 1
         protaX = 0
