@@ -197,10 +197,12 @@ End Function
             Return
         End If
 
-        If isSolidTileByColLin(newX >> 1, newY >> 1) Then
-            enemyBulletX = 0
-            Return
-        End If
+        #ifdef ENEMY_SHOOT_SOLID_COLLIDE
+            If isSolidTileByColLin(newX >> 1, newY >> 1) Then
+                enemyBulletX = 0
+                Return
+            End If
+        #endif
 
         enemyBulletX = newX
         enemyBulletY = newY
@@ -281,10 +283,11 @@ Sub moveEnemies()
             
             #ifdef ENEMY_SHOOT_ENABLED
                 If enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT_SHOOT Then
-                    If mainLoopCounter mod ENEMY_SHOOT_PERIOD = 0 Then
+                    Dim enemyShootingTrigger As Ubyte = enemyId * 100
+                    If mainLoopCounter = enemyShootingTrigger Then
                         shootEnemyBullet(enemyCol, enemyLin)
                     End If
-                    If mainLoopCounter mod ENEMY_SHOOT_PERIOD < ENEMY_STOP_FRAMES Then
+                    If mainLoopCounter - enemyShootingTrigger < ENEMY_STOP_FRAMES Then
                         If tile > 15 Then
                             If checkProtaAndBulletCollision(enemyId) Then
                                 If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <= 0 Then

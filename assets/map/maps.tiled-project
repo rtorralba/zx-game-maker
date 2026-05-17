@@ -419,6 +419,11 @@
                     "value": false
                 },
                 {
+                    "name": "enemyShootSolidCollide",
+                    "type": "bool",
+                    "value": false
+                },
+                {
                     "name": "finishGameEnemy",
                     "type": "object",
                     "value": 0

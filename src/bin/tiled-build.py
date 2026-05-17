@@ -212,6 +212,7 @@ textsInk = 0
 textsPaper = 7
 
 enemyShootEnabled = 0
+enemyShootSolidCollide = 0
 rectangularMoveEnabled = 0
 
 if 'properties' in data:
@@ -390,6 +391,8 @@ if 'properties' in data:
             textsWindowY = property['value']
         elif property['name'] == 'enemyShootEnabled':
             enemyShootEnabled = 1 if property['value'] else 0
+        elif property['name'] == 'enemyShootSolidCollide':
+            enemyShootSolidCollide = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -854,8 +857,10 @@ if freezeOnSightEnabled == 1:
 
 if enemyShootEnabled == 1:
     configStr += "#DEFINE ENEMY_SHOOT_ENABLED\n"
-    configStr += "Const ENEMY_SHOOT_PERIOD As Ubyte = 100\n"
     configStr += "Const ENEMY_STOP_FRAMES As Ubyte = 20\n"
+
+if enemyShootSolidCollide == 1:
+    configStr += "#DEFINE ENEMY_SHOOT_SOLID_COLLIDE\n"
 
 if rectangularMoveEnabled == 1:
     configStr += "#DEFINE RECTANGULAR_MOVE_ENABLED\n"
