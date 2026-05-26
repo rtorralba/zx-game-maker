@@ -10,7 +10,7 @@ class PlayerFxBuilder:
         
         try:
             result = subprocess.run(
-                ["zxbasm", "-t", "-o", str(TAP_PATH), 'player.asm'],
+                ["zxbasm", "-f", "tap", "-o", str(TAP_PATH), 'player.asm'],
                 cwd=str(BORIEL_PATH)
             )
             return result.returncode == 0
