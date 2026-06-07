@@ -761,13 +761,19 @@ Function checkTileObject(tile As Ubyte) As Ubyte
         Return 1
         #ifdef AMMO_ENABLED
         Elseif tile = AMMO_TILE Then
-            currentAmmo = currentAmmo + AMMO_INCREMENT
-            printHud()
-            #ifdef MESSAGES_ENABLED
-                printMessage(AMMO_FOUND_LINE1, AMMO_FOUND_LINE2, AMMO_FOUND_PAPER, AMMO_FOUND_INK)
-            #endif
-            BeepFX_Play(6)
-            Return 1
+            If currentAmmo < 250 Then
+                If currentAmmo + AMMO_INCREMENT > 250 Then
+                    currentAmmo = 250
+                Else
+                    currentAmmo = currentAmmo + AMMO_INCREMENT
+                End If
+                printHud()
+                #ifdef MESSAGES_ENABLED
+                    printMessage(AMMO_FOUND_LINE1, AMMO_FOUND_LINE2, AMMO_FOUND_PAPER, AMMO_FOUND_INK)
+                #endif
+                BeepFX_Play(6)
+                Return 1
+            End If
         #endif
         #ifdef DASH_ENABLED
         Elseif tile = 188 Then
