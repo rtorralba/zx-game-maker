@@ -229,42 +229,6 @@ function isSolidTileByColLin(col as ubyte, lin as ubyte) as ubyte
     if tile > 63 then return 0
     if tile < 1 then return 0
     
-    #ifdef MESSAGES_ENABLED
-        If tile = ENEMY_DOOR_TILE Then
-            printMessage(KILL_ALL_ENEMIES_LINE1, KILL_ALL_ENEMIES_LINE2, KILL_ALL_ENEMIES_PAPER, KILL_ALL_ENEMIES_INK)
-        End If
-    #endif
-    
-    #ifdef KEYS_ENABLED
-        If tile = KEY_DOOR_TILE Then
-            If currentKeys <> 0 Then
-                currentKeys = currentKeys - 1
-                printHud()
-                BeepFX_Play(4)
-                removeTilesFromScreen(KEY_DOOR_TILE)
-            Else
-                #ifdef MESSAGES_ENABLED
-                    printMessage(NO_KEYS_LINE1, NO_KEYS_LINE2, NO_KEYS_PAPER, NO_KEYS_INK)
-                #endif
-            End If
-        End If
-        if tile = ITEMS_DOOR_TILE then
-            #ifdef MESSAGES_ENABLED
-                printMessage(NEED_ITEMS_LINE1, NEED_ITEMS_LINE2, NEED_ITEMS_PAPER, NEED_ITEMS_INK)
-            #endif
-        end if
-    #endif
-    
-    #ifdef USE_BREAKABLE_TILE_BY_TOUCH
-        If tile = BREAKABLE_BY_TOUCH_TILE Then
-            If lastFrameOnBreakableTiles = 0 Then
-                lastFrameOnBreakableTiles = framec
-                tileToBreakByTouchX = col
-                tileToBreakByTouchY = lin
-            End If
-        End If
-    #endif
-    
     return tile
 end function
 
@@ -420,23 +384,23 @@ Function CheckCollision(x as Ubyte, y as Ubyte, type as Ubyte) as Ubyte
     Dim col as Ubyte = x >> 1
     Dim lin as Ubyte = y >> 1
     
-    if checkTypeOfTile(col, lin, type) then return 1
-    if checkTypeOfTile(col + 1, lin, type) then return 1
-    if checkTypeOfTile(col, lin + 1, type) then return 1
-    if checkTypeOfTile(col + 1, lin + 1, type) then return 1
+    if checkTypeOfTile(col, lin, type) then return GetTile(col, lin)
+    if checkTypeOfTile(col + 1, lin, type) then return GetTile(col + 1, lin)
+    if checkTypeOfTile(col, lin + 1, type) then return GetTile(col, lin + 1)
+    if checkTypeOfTile(col + 1, lin + 1, type) then return GetTile(col + 1, lin + 1)
     
     if not yIsEven then
-        if checkTypeOfTile(col, lin + 2, type) then return 1
-        if checkTypeOfTile(col + 1, lin + 2, type) then return 1
+        if checkTypeOfTile(col, lin + 2, type) then return GetTile(col, lin + 2)
+        if checkTypeOfTile(col + 1, lin + 2, type) then return GetTile(col + 1, lin + 2)
     end if
     
     if not xIsEven then
-        if checkTypeOfTile(col + 2, lin, type) then return 1
-        if checkTypeOfTile(col + 2, lin + 1, type) then return 1
+        if checkTypeOfTile(col + 2, lin, type) then return GetTile(col + 2, lin)
+        if checkTypeOfTile(col + 2, lin + 1, type) then return GetTile(col + 2, lin + 1)
     end if
     
     if not xIsEven and not yIsEven then
-        if checkTypeOfTile(col + 2, lin + 2, type) then return 1
+        if checkTypeOfTile(col + 2, lin + 2, type) then return GetTile(col + 2, lin + 2)
     end if
     
     return 0

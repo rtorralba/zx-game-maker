@@ -1,9 +1,51 @@
+Function checkProtaSolidCollision(x As Ubyte, y As Ubyte) As Ubyte
+    Dim tile = CheckCollision(x, y, 1)
+
+    #ifdef MESSAGES_ENABLED
+        If tile = ENEMY_DOOR_TILE Then
+            printMessage(KILL_ALL_ENEMIES_LINE1, KILL_ALL_ENEMIES_LINE2, KILL_ALL_ENEMIES_PAPER, KILL_ALL_ENEMIES_INK)
+        End If
+    #endif
+    
+    #ifdef KEYS_ENABLED
+        If tile = KEY_DOOR_TILE Then
+            If currentKeys <> 0 Then
+                currentKeys = currentKeys - 1
+                printHud()
+                BeepFX_Play(4)
+                removeTilesFromScreen(KEY_DOOR_TILE)
+            Else
+                #ifdef MESSAGES_ENABLED
+                    printMessage(NO_KEYS_LINE1, NO_KEYS_LINE2, NO_KEYS_PAPER, NO_KEYS_INK)
+                #endif
+            End If
+        End If
+        if tile = ITEMS_DOOR_TILE then
+            #ifdef MESSAGES_ENABLED
+                printMessage(NEED_ITEMS_LINE1, NEED_ITEMS_LINE2, NEED_ITEMS_PAPER, NEED_ITEMS_INK)
+            #endif
+        end if
+    #endif
+    
+    #ifdef USE_BREAKABLE_TILE_BY_TOUCH
+        If tile = BREAKABLE_BY_TOUCH_TILE Then
+            If lastFrameOnBreakableTiles = 0 Then
+                lastFrameOnBreakableTiles = framec
+                tileToBreakByTouchX = col
+                tileToBreakByTouchY = lin
+            End If
+        End If
+    #endif
+
+    Return tile
+End Function
+
 Function canMoveLeft() As Ubyte
-    Return Not CheckCollision(protaX - 1, protaY, 1)
+    Return Not checkProtaSolidCollision(protaX - 1, protaY)
 End Function
 
 Function canMoveRight() As Ubyte
-    Return Not CheckCollision(protaX + 1, protaY, 1)
+    Return Not checkProtaSolidCollision(protaX + 1, protaY)
 End Function
 
 Function canMoveUp() As Ubyte
@@ -13,7 +55,7 @@ Function canMoveUp() As Ubyte
             Return 1
         End If
     #endif
-    Return Not CheckCollision(protaX, protaY - 1, 1)
+    Return Not checkProtaSolidCollision(protaX, protaY - 1)
 End Function
 
 Function canMoveDown() As Ubyte
@@ -23,7 +65,7 @@ Function canMoveDown() As Ubyte
             Return 1
         End If
     #endif
-    If CheckCollision(protaX, protaY + 1, 1) Then Return 0
+    If checkProtaSolidCollision(protaX, protaY + 1) Then Return 0
     #ifdef SIDE_VIEW
         If checkPlatformByXY(protaX, protaY + 4) Then Return 0
         If checkTravesablePlatform(protaX, protaY + 4) Then Return 0
@@ -135,7 +177,7 @@ End Function
                 Return
             End If
             
-            If CheckCollision(protaX, protaY + jumpArray(jumpCurrentKey), 1) Or checkTravesablePlatformFromTop(protaX, protaY + jumpArray(jumpCurrentKey)) Then
+            If checkProtaSolidCollision(protaX, protaY + jumpArray(jumpCurrentKey)) Or checkTravesablePlatformFromTop(protaX, protaY + jumpArray(jumpCurrentKey)) Then
                 If jumpArray(jumpCurrentKey) > 0 Then
                     jumpCurrentKey = jumpStopValue
                 Else
@@ -168,7 +210,7 @@ End Function
             End If
             
             If pressingUp() And jumpEnergy > 0 Then
-                If Not CheckCollision(protaX, protaY - 1, 1) Then
+                If Not checkProtaSolidCollision(protaX, protaY - 1) Then
                     saveProta(protaY - 1, protaX, getNextFrameJumpingFalling(), protaDirection)
                 Else
                     saveProta(protaY, protaX, getNextFrameJumpingFalling(), protaDirection)
@@ -422,7 +464,7 @@ Sub upKey()
                     #endif
                     Return
                 End If
-                If Not CheckCollision(protaX, protaY - 1, 1) Then
+                If Not checkProtaSolidCollision(protaX, protaY - 1) Then
                     protaY = protaY - 1
                     protaTile = getNextFrameLadder()
                 End If
@@ -494,7 +536,7 @@ Sub downKey()
             End If
         End If
     #Else
-        If CheckCollision(protaX, protaY + 1, 1) Then Return
+        If checkProtaSolidCollision(protaX, protaY + 1) Then Return
         If checkTravesablePlatformFromTopAndAll(protaX, protaY + 4) Or checkTravesablePlatformFromTopAndAll(protaX + 1, protaY + 4) Or checkTravesablePlatformFromTopAndAll(protaX + 2, protaY + 4) Or checkTravesablePlatformFromTopAndAll(protaX, protaY + 2) Or checkTravesablePlatformFromTopAndAll(protaX + 1, protaY + 2) Or checkTravesablePlatformFromTopAndAll(protaX + 2, protaY + 2) Or checkTravesablePlatformFromTopAndAll(protaX, protaY) Or checkTravesablePlatformFromTopAndAll(protaX + 1, protaY) Or checkTravesablePlatformFromTopAndAll(protaX + 2, protaY) Then
             protaY = protaY + 2
             Return
