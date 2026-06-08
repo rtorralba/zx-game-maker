@@ -26,16 +26,6 @@ Function checkProtaSolidCollision(x As Ubyte, y As Ubyte) As Ubyte
             #endif
         end if
     #endif
-    
-    #ifdef USE_BREAKABLE_TILE_BY_TOUCH
-        If tile = BREAKABLE_BY_TOUCH_TILE Then
-            If lastFrameOnBreakableTiles = 0 Then
-                lastFrameOnBreakableTiles = framec
-                tileToBreakByTouchX = col
-                tileToBreakByTouchY = lin
-            End If
-        End If
-    #endif
 
     Return tile
 End Function

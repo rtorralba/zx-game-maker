@@ -118,6 +118,16 @@ def getMusicEnabled():
         maps_json = json.load(f)
     return any(prop["name"] == "musicEnabled" and prop["value"] for prop in maps_json["properties"])
 
+def getArcadeModeEnabled():
+    with open(OUTPUT_FOLDER / "maps.json", "r") as f:
+        maps_json = json.load(f)
+    return any(prop["name"] == "arcadeMode" and prop["value"] for prop in maps_json["properties"])
+
+def getDashEnabled():
+    with open(OUTPUT_FOLDER / "maps.json", "r") as f:
+        maps_json = json.load(f)
+    return any(prop["name"] == "dashEnabled" and prop["value"] for prop in maps_json["properties"])
+
 def getGameView():
     with open(OUTPUT_FOLDER / "maps.json", "r") as f:
         maps_json = json.load(f)

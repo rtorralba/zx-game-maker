@@ -228,6 +228,17 @@ function isSolidTileByColLin(col as ubyte, lin as ubyte) as ubyte
     
     if tile > 63 then return 0
     if tile < 1 then return 0
+
+    #ifdef USE_BREAKABLE_TILE_BY_TOUCH
+        If tile = BREAKABLE_BY_TOUCH_TILE Then
+            If lastFrameOnBreakableTiles = 0 Then
+                lastFrameOnBreakableTiles = framec
+                
+                tileToBreakByTouchX = col
+                tileToBreakByTouchY = lin
+            End If
+        End If
+    #endif
     
     return tile
 end function

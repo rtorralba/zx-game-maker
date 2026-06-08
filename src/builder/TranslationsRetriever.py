@@ -3,6 +3,7 @@ from pathlib import Path
 from builder.HudMessage import HudMessage
 import tomllib
 
+from builder.helper import getArcadeModeEnabled, getDashEnabled
 from configuration.folders import ASSETS_FOLDER, CONFIG_FILE, I18N_FOLDER
 
 class TranslationsRetriever:
@@ -62,18 +63,20 @@ class TranslationsRetriever:
                                     messages.get("need_items", {}).get("line2", "ITEMS!"),
                                     messages.get("need_items", {}).get("ink", "red"),
                                     messages.get("need_items", {}).get("paper", "black"))
-            hurry_up = HudMessage(messages.get("hurry_up", {}).get("line1", "HURRY UP"),
-                                    messages.get("hurry_up", {}).get("line2", "HURRY UP"),
-                                    messages.get("hurry_up", {}).get("ink", "red"),
-                                    messages.get("hurry_up", {}).get("paper", "black"))
-            arcade_goal = HudMessage(messages.get("arcade_goal", {}).get("line1", "REACH"),
-                                    messages.get("arcade_goal", {}).get("line2", "THE KEY!"),
-                                    messages.get("arcade_goal", {}).get("ink", "blue"),
-                                    messages.get("arcade_goal", {}).get("paper", "black"))
-            dash_active = HudMessage(messages.get("dash_active", {}).get("line1", "DASH"),
-                                    messages.get("dash_active", {}).get("line2", "ACTIVE"),
-                                    messages.get("dash_active", {}).get("ink", "green"),
-                                    messages.get("dash_active", {}).get("paper", "black"))
+            if getArcadeModeEnabled():
+                hurry_up = HudMessage(messages.get("hurry_up", {}).get("line1", "HURRY UP"),
+                                        messages.get("hurry_up", {}).get("line2", "HURRY UP"),
+                                        messages.get("hurry_up", {}).get("ink", "red"),
+                                        messages.get("hurry_up", {}).get("paper", "black"))
+                arcade_goal = HudMessage(messages.get("arcade_goal", {}).get("line1", "REACH"),
+                                        messages.get("arcade_goal", {}).get("line2", "THE KEY!"),
+                                        messages.get("arcade_goal", {}).get("ink", "blue"),
+                                        messages.get("arcade_goal", {}).get("paper", "black"))
+            if getDashEnabled():
+                dash_active = HudMessage(messages.get("dash_active", {}).get("line1", "DASH"),
+                                        messages.get("dash_active", {}).get("line2", "ACTIVE"),
+                                        messages.get("dash_active", {}).get("ink", "green"),
+                                        messages.get("dash_active", {}).get("paper", "black"))
 
         # Write message config into boriel config file as a constants
         with open(CONFIG_FILE, "a") as config_file:
