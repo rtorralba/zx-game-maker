@@ -305,7 +305,7 @@ Sub moveEnemies()
             
             #ifdef ENEMY_SHOOT_ENABLED
                 If enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT_SHOOT Then
-                    Dim enemyShootingTrigger As Ubyte = enemyId * 100
+                    Dim enemyShootingTrigger As Ubyte = enemyId * 50
                     If mainLoopCounter = enemyShootingTrigger Then
                         shootEnemyBullet(enemyCol, enemyLin)
                     End If
