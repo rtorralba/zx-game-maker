@@ -225,7 +225,7 @@
    <properties>
     <property name="life" type="int" value="3"/>
     <property name="move" propertytype="enemyMovementTypes" value="rectangular"/>
-    <property name="speed" type="int" propertytype="enemySpeed" value="3"/>
+    <property name="speed" type="int" propertytype="enemySpeed" value="1"/>
    </properties>
   </object>
   <object id="48" type="ZXSGMPointer" x="440" y="280">
@@ -243,6 +243,7 @@
   <object id="51" type="ZXSGMEnemy" gid="209" x="336" y="192" width="16" height="16">
    <properties>
     <property name="move" propertytype="enemyMovementTypes" value="defaultWithShoot"/>
+    <property name="speed" type="int" propertytype="enemySpeed" value="1"/>
    </properties>
   </object>
   <object id="52" type="ZXSGMPointer" x="400" y="192">
