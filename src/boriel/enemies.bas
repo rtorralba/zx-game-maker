@@ -241,6 +241,7 @@ End Function
 
 Sub moveEnemies()
     If enemiesPerScreen(currentScreen) = 0 Then Return
+    
     For enemyId=0 To enemiesPerScreen(currentScreen) - 1
         Dim enemyAlive As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_ALIVE)
         
@@ -272,12 +273,14 @@ Sub moveEnemies()
         If enemyColIni = enemyColEnd Then enemyHorizontalDirection = 0
         If enemyLinIni = enemyLinEnd Then enemyVerticalDirection = 0
         
+        ' default behaviour: follow the player, or move between two points, or rectangular movement
         If enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT Or enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT_SHOOT Then
-            ' Pursuing / defaultWithShoot enemy
+            ' Enemy without lin end: follow the player
             If enemyLinEnd = -1 Then
                 enemyHorizontalDirection = Sgn(protaX - enemyCol)
                 enemyVerticalDirection = Sgn(protaY - enemyLin)
                 #ifdef FREEZE_ON_SIGHT_ENABLED
+                    ' Enemy without col end: freeze if the player is seeing it
                     If enemyColEnd = -1 Then
                         If protaDirection = 1 And enemyHorizontalDirection = -1 Then
                             checkAndDraw(enemyId, tile + 16, enemyCol, enemyLin)
