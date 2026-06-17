@@ -410,6 +410,11 @@ Sub moveEnemies()
         #ifdef RECTANGULAR_MOVE_ENABLED
         Elseif enemyBehaviour = ENEMY_BEHAVIOUR_RECTANGULAR Then
             If checkShouldSkipMoveBySpeed(enemySpeed) Then
+                If tile > 15 Then
+                    If enemyHorizontalDirection = -1 Then
+                        tile = tile + 16
+                    End If
+                End If
                 checkAndDraw(enemyId, tile, enemyCol, enemyLin)
                 Continue For
             End If
