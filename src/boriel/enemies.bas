@@ -158,12 +158,7 @@ Function checkShouldSkipMoveBySpeed(enemySpeed As Ubyte) As Ubyte
     Return 0
 End Function
 
-Sub checkSaveAndDraw(enemyId as Ubyte, tile As Ubyte, horizontalDirection As Ubyte, verticalDirection As Ubyte, enemyCol As Byte, enemyLin As Byte, enemySpeed As Ubyte)
-    If tile > 15 Then
-        If checkProtaAndBulletCollision(enemyId) Then
-            If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <= 0 Then Return
-        End If
-    End If
+Sub saveAndDraw(enemyId as Ubyte, tile As Ubyte, horizontalDirection As Ubyte, verticalDirection As Ubyte, enemyCol As Byte, enemyLin As Byte, enemySpeed As Ubyte)
     If checkShouldSkipMoveBySpeed(enemySpeed) Then
         Draw2x2Sprite(tile, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
     Else
@@ -173,6 +168,14 @@ Sub checkSaveAndDraw(enemyId as Ubyte, tile As Ubyte, horizontalDirection As Uby
         decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = horizontalDirection
         decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = verticalDirection
     End If
+End Sub
+
+Sub checkCollisionSaveAndDraw(enemyId as Ubyte, tile As Ubyte, horizontalDirection As Ubyte, verticalDirection As Ubyte, enemyCol As Byte, enemyLin As Byte, enemySpeed As Ubyte)
+    If checkProtaAndBulletCollision(enemyId) Then
+        If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) <= 0 Then Return
+    End If
+
+    saveAndDraw(enemyId, tile, horizontalDirection, verticalDirection, enemyCol, enemyLin, enemySpeed)
 End Sub
 
 ' Updates enemy position, checks collision, flips tile for direction, animates frame, and draws.
@@ -304,13 +307,13 @@ Sub moveEnemies()
                         If Not CheckCollision(protaX + enemyHorizontalDirection, protaY, 1) Then
                             If Not checkShouldSkipMoveBySpeed(enemySpeed) Then
                                 protaX = protaX + enemyHorizontalDirection
-                            End if
+                            End If
                         End If
                     End If
                 End If
                 If enemFrame Then tile = tile + 1
 
-                checkSaveAndDraw(enemyId, tile + 1, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
+                saveAndDraw(enemyId, tile + 1, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
 
                 Continue For
             End If
@@ -329,7 +332,7 @@ Sub moveEnemies()
                 Else
                     tile = tile + 17
                 End If
-                checkSaveAndDraw(enemyId, tile, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
+                checkCollisionSaveAndDraw(enemyId, tile, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
                 Continue For
             End If
         #endif
@@ -419,6 +422,6 @@ Sub moveEnemies()
         #endif
         End If
         
-        checkSaveAndDraw(enemyId, tile + 1, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
+        checkCollisionSaveAndDraw(enemyId, tile + 1, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
     Next enemyId
 End Sub
