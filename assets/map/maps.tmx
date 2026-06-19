@@ -193,7 +193,7 @@
   </object>
   <object id="32" name="platform_1" type="platform" gid="201" x="280" y="296" width="16" height="16">
    <properties>
-    <property name="speed" type="int" propertytype="enemySpeed" value="2"/>
+    <property name="speed" type="int" propertytype="enemySpeed" value="1"/>
    </properties>
   </object>
   <object id="33" name="platform_1_end" type="ZXSGMPointer" x="344" y="296">
@@ -212,7 +212,7 @@
   <object id="43" type="ZXSGMEnemy" gid="215" x="264" y="256" width="16" height="16">
    <properties>
     <property name="move" propertytype="enemyMovementTypes" value="noReturn"/>
-    <property name="speed" type="int" propertytype="enemySpeed" value="2"/>
+    <property name="speed" type="int" propertytype="enemySpeed" value="1"/>
    </properties>
   </object>
   <object id="44" type="ZXSGMPointer" x="320" y="200">
