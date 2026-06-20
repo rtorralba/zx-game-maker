@@ -148,12 +148,8 @@ Function checkProtaAndBulletCollision(enemyId As Ubyte) As Ubyte
 End Function
 
 Function checkShouldSkipMoveBySpeed(enemySpeed As Ubyte) As Ubyte
-    If enemySpeed = 0 Then
-        If skipMove0 Then Return 1
-    Elseif enemySpeed = 1 Then
-        If skipMove1 Then Return 1
-    Elseif enemySpeed = 2 Then
-        If skipMove2 Then Return 1
+    If enemySpeed <= 2 Then
+        Return skipMove(enemySpeed)
     End If
     Return 0
 End Function

@@ -449,13 +449,13 @@ End Sub
 #endif
 
 Sub calculateIfSkipMovementBySpeed()
-    skipMove0 = 0
-    skipMove1 = 0
-    skipMove2 = 0
+    skipMove(0) = 0
+    skipMove(1) = 0
+    skipMove(2) = 0
     
-    If mainLoopCounter bAnd 7 <> 0 Then skipMove0 = 1   ' 1 de cada 8 loops (slowest)
-    If mainLoopCounter bAnd 3 <> 0 Then skipMove1 = 1   ' 1 de cada 4 loops
-    If mainLoopCounter bAnd 1 <> 0 Then skipMove2 = 1   ' 1 de cada 2 loops
+    If mainLoopCounter bAnd 7 <> 0 Then skipMove(0) = 1   ' 1 de cada 8 loops (slowest)
+    If mainLoopCounter bAnd 3 <> 0 Then skipMove(1) = 1   ' 1 de cada 4 loops
+    If mainLoopCounter bAnd 1 <> 0 Then skipMove(2) = 1   ' 1 de cada 2 loops
 End Sub
 
 Sub makeAnimations()
