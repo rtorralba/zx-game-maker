@@ -59,20 +59,13 @@ Dim resetReturnMovement As Ubyte = 0
     Function checkBulletProtaCollision(enemyX0 As Ubyte, enemyY0 As Ubyte, enemyX1 As Ubyte, enemyY1 As Ubyte, enemyId As Ubyte) As Ubyte
         If bulletPositionX = 0 Then Return 0
         
-        Dim bulletX0 As Ubyte = bulletPositionX
-        Dim bulletX1 As Ubyte = bulletPositionX + 1
-        Dim bulletY0 As Ubyte = bulletPositionY
-        Dim bulletY1 As Ubyte = bulletPositionY + 1
+        If checkAABB(bulletPositionX, bulletPositionY, bulletPositionX + 1, bulletPositionY + 1, enemyX0, enemyY0, enemyX1, enemyY1) Then
+            damageEnemy(enemyId)
+            resetBullet()
+            Return 1
+        End If
         
-        If bulletX1 < enemyX0 Then Return 0
-        If bulletX0 > enemyX1 Then Return 0
-        If bulletY1 < enemyY0 Then Return 0
-        If bulletY0 > enemyY1 Then Return 0
-        
-        damageEnemy(enemyId)
-        resetBullet()
-        
-        Return 1
+        Return 0
     End Function
 #endif
 
@@ -91,11 +84,8 @@ Dim resetReturnMovement As Ubyte = 0
         
         Dim swordX1 As Ubyte = swordX + 1 ' 1x1 sprite
         Dim swordY1 As Ubyte = swordY + 1
-        
-        If swordX1 < enemyX0 Then Return 0
-        If swordX > enemyX1 Then Return 0
-        If swordY1 < enemyY0 Then Return 0
-        If swordY > enemyY1 Then Return 0
+
+        If checkAABB(swordX, swordY, swordX1, swordY1, enemyX0, enemyY0, enemyX1, enemyY1) = 0 Then Return 0
         
         #ifdef SWORD_KILL_ENEMY
             If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) = 98 Then
@@ -136,11 +126,8 @@ Function checkProtaAndBulletCollision(enemyId As Ubyte) As Ubyte
             If checkHitOnTop(enemyId, protaX1, protaY1, enemyX0, enemyY0, enemyX1, enemyY1) Then Return 1
         #endif
     #endif
-    
-    If protaX1 < enemyX0 Then Return 0
-    If protaX > enemyX1 Then Return 0
-    If protaY1 < enemyY0 Then Return 0
-    If protaY > enemyY1 Then Return 0
+
+    If checkAABB(protaX, protaY, protaX1, protaY1, enemyX0, enemyY0, enemyX1, enemyY1) = 0 Then Return 0
     
     decrementLife()
     
@@ -238,7 +225,7 @@ End Sub
         If invincible Then Return
         Dim protaX1 As Ubyte = protaX + SPRITE_COLLISION_SIZE
         Dim protaY1 As Ubyte = protaY + SPRITE_COLLISION_SIZE
-        If enemyBulletX >= protaX And enemyBulletX <= protaX1 And enemyBulletY >= protaY And enemyBulletY <= protaY1 Then
+        If checkAABB(enemyBulletX, enemyBulletY, enemyBulletX + 1, enemyBulletY + 1, protaX, protaY, protaX1, protaY1) Then
             enemyBulletX = 0
             decrementLife()
         End If

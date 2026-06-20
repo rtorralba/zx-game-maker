@@ -754,6 +754,14 @@ End Function
     End Sub
 #endif
 
+Function checkAABB(x0a As Ubyte, y0a As Ubyte, x1a As Ubyte, y1a As Ubyte, x0b As Ubyte, y0b As Ubyte, x1b As Ubyte, y1b As Ubyte) As Ubyte
+    If x1a < x0b Then Return 0
+    If x0a > x1b Then Return 0
+    If y1a < y0b Then Return 0
+    If y0a > y1b Then Return 0
+    Return 1
+End Function
+
 sub debugA(value as UBYTE)
     PRINT AT 0, 0; "----"
     PRINT AT 0, 0; value
