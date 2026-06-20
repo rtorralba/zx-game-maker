@@ -566,6 +566,7 @@ Sub resetValues()
 
     For i = 0 To MAX_ENEMIES_PER_SCREEN
         currentEnemyFrame(i) = 0
+        resetReturnMovement(i) = 0
     Next i
     
     #ifdef ARCADE_MODE

@@ -1,5 +1,3 @@
-Dim resetReturnMovement As Ubyte = 0
-
 #ifdef SIDE_VIEW
     Function checkPlatformHasProtaOnTop(x As Ubyte, y As Ubyte) As Ubyte
         If jumpCurrentKey <> jumpStopValue Then Return 0
@@ -138,7 +136,7 @@ Sub updateEnemyFrame(enemyId As Ubyte)
 End Sub
 
 Sub drawEnemy(enemyId As Ubyte, tile As Ubyte, enemyCol As Byte, enemyLin As Byte)
-    If resetReturnMovement = 1 Then
+    If resetReturnMovement(enemyId) = 1 Then
         currentEnemyFrame(enemyId) = 0
     End If
     Draw2x2Sprite(tile + currentEnemyFrame(enemyId), enemyCol, enemyLin)
@@ -360,17 +358,17 @@ Sub moveEnemies()
                 objectiveAxisY = 0
             End If
             
-            If resetReturnMovement Then
+            If resetReturnMovement(enemyId) Then
                 enemyCol = enemyColIni
                 enemyLin = enemyLinIni
                 ' Forze save because maybe speed skip it
                 decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = enemyCol
                 decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLin
                 tile = tile + 16
-                resetReturnMovement = 0
+                resetReturnMovement(enemyId) = 0
             Elseif objectiveAxisY = 1 And enemyLin = enemyLinEnd Or objectiveAxisY = 0 And enemyCol = enemyColEnd Then
                 tile = tile + 17
-                resetReturnMovement = 1
+                resetReturnMovement(enemyId) = 1
             End If
         #ifdef RECTANGULAR_MOVE_ENABLED
         Elseif enemyBehaviour = ENEMY_BEHAVIOUR_RECTANGULAR Then

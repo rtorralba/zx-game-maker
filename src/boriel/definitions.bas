@@ -277,3 +277,4 @@ Dim lastFrameOnBreakableTiles As Ubyte = 0
     Const SWORD_DURATION As Ubyte = 10
 #endif
 
+Dim resetReturnMovement(MAX_ENEMIES_PER_SCREEN) As Ubyte
