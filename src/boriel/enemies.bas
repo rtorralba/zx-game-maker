@@ -158,15 +158,24 @@ Function checkShouldSkipMoveBySpeed(enemySpeed As Ubyte) As Ubyte
     Return 0
 End Function
 
+Sub updateEnemyFrame(enemyId As Ubyte)
+    If currentEnemyFrame(enemyId) = 0 Then
+        currentEnemyFrame(enemyId) = 1
+    Else
+        currentEnemyFrame(enemyId) = 0
+    End If
+End Sub
+
 Sub saveAndDraw(enemyId as Ubyte, tile As Ubyte, horizontalDirection As Ubyte, verticalDirection As Ubyte, enemyCol As Byte, enemyLin As Byte, enemySpeed As Ubyte)
+    If tile < 16 Then
+        updateEnemyFrame(enemyId)
+    End If
     If checkShouldSkipMoveBySpeed(enemySpeed) Then
         Draw2x2Sprite(tile + currentEnemyFrame(enemyId), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
     Else
-        If decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) <> enemyCol Or decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) <> enemyLin Then
-            If currentEnemyFrame(enemyId) = 0 Then
-                currentEnemyFrame(enemyId) = 1
-            Else
-                currentEnemyFrame(enemyId) = 0
+        If tile > 15 Then
+            If decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) <> enemyCol Or decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) <> enemyLin Then
+                updateEnemyFrame(enemyId)
             End If
         End If
         Draw2x2Sprite(tile + currentEnemyFrame(enemyId), enemyCol, enemyLin)
