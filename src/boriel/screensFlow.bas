@@ -464,11 +464,6 @@ Sub makeAnimations()
         Let lastFrameProta = framec
     End If
     
-    If framec - lastFrameEnemies >= ANIMATE_PERIOD_ENEMY Then
-        animateEnemies()
-        Let lastFrameEnemies = framec
-    End If
-    
     If framec - lastFrameTiles >= ANIMATE_PERIOD_TILE Then
         animateAnimatedTiles()
         #ifdef IDLE_ENABLED
@@ -567,6 +562,10 @@ Sub resetValues()
         screenObjects(i, 2) = 0
         screenObjects(i, 3) = 0
         screenObjects(i, 4) = 0
+    Next i
+
+    For i = 0 To MAX_ENEMIES_PER_SCREEN
+        currentEnemyFrame(i) = 0
     Next i
     
     #ifdef ARCADE_MODE

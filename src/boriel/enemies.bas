@@ -160,9 +160,16 @@ End Function
 
 Sub saveAndDraw(enemyId as Ubyte, tile As Ubyte, horizontalDirection As Ubyte, verticalDirection As Ubyte, enemyCol As Byte, enemyLin As Byte, enemySpeed As Ubyte)
     If checkShouldSkipMoveBySpeed(enemySpeed) Then
-        Draw2x2Sprite(tile, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
+        Draw2x2Sprite(tile + currentEnemyFrame(enemyId), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
     Else
-        Draw2x2Sprite(tile, enemyCol, enemyLin)
+        If decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) <> enemyCol Or decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) <> enemyLin Then
+            If currentEnemyFrame(enemyId) = 0 Then
+                currentEnemyFrame(enemyId) = 1
+            Else
+                currentEnemyFrame(enemyId) = 0
+            End If
+        End If
+        Draw2x2Sprite(tile + currentEnemyFrame(enemyId), enemyCol, enemyLin)
         decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = enemyCol
         decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLin
         decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = horizontalDirection
@@ -180,7 +187,7 @@ End Sub
 
 ' Updates enemy position, checks collision, flips tile for direction, animates frame, and draws.
 ' Returns 1 if the enemy was killed (caller should Continue For), 0 otherwise.
-Sub calculatePositionAndTile(Byref tile As Ubyte, Byref enemyCol As Byte, Byref enemyLin As Byte, enemyHorizontalDirection As Byte, enemyVerticalDirection As Byte, enemframe As Ubyte)
+Sub calculatePositionAndTile(Byref tile As Ubyte, Byref enemyCol As Byte, Byref enemyLin As Byte, enemyHorizontalDirection As Byte, enemyVerticalDirection As Byte)
     enemyCol = enemyCol + enemyHorizontalDirection
     enemyLin = enemyLin + enemyVerticalDirection
 
@@ -188,10 +195,6 @@ Sub calculatePositionAndTile(Byref tile As Ubyte, Byref enemyCol As Byte, Byref 
         If enemyHorizontalDirection = -1 Then
             tile = tile + 16
         End If
-    End If
-
-    If enemFrame Then
-        tile = tile + 1
     End If
 End Sub
 
@@ -261,7 +264,7 @@ Sub moveEnemies()
         
         If enemyAlive <= 0 Then continue For
         
-        Dim tile As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_TILE)
+        Dim tile As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_TILE) + 1
         
         If tile = 0 Then continue For
         
@@ -311,9 +314,8 @@ Sub moveEnemies()
                         End If
                     End If
                 End If
-                If enemFrame Then tile = tile + 1
 
-                saveAndDraw(enemyId, tile + 1, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
+                saveAndDraw(enemyId, tile, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
 
                 Continue For
             End If
@@ -328,9 +330,9 @@ Sub moveEnemies()
                     
             If enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT_SHOOT And mainLoopCounter - enemyShootingTrigger < ENEMY_STOP_FRAMES Then
                 If enemyHorizontalDirection = 1 Then
-                    tile = tile + 1
+                    tile = tile
                 Else
-                    tile = tile + 17
+                    tile = tile + 16
                 End If
                 checkCollisionSaveAndDraw(enemyId, tile, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
                 Continue For
@@ -344,19 +346,19 @@ Sub moveEnemies()
                 ' Enemy without col end: freeze if the player is seeing it
                 If enemyColEnd = -1 Then
                     If (protaDirection = 1 And enemyHorizontalDirection = -1) Or (protaDirection = 0 And enemyHorizontalDirection = 1) Then
-                        If protaDirection = 1 And enemyHorizontalDirection = -1 Then
+                        If enemyHorizontalDirection = -1 Then
                             tile = tile + 16
                         End If
                     Else
-                        calculatePositionAndTile(tile, enemyCol, enemyLin, enemyHorizontalDirection, enemyVerticalDirection, enemFrame)
+                        calculatePositionAndTile(tile, enemyCol, enemyLin, enemyHorizontalDirection, enemyVerticalDirection)
                     End If
                 End If
             #else
-                calculatePositionAndTile(tile, enemyCol, enemyLin, enemyHorizontalDirection, enemyVerticalDirection, enemFrame)
+                calculatePositionAndTile(tile, enemyCol, enemyLin, enemyHorizontalDirection, enemyVerticalDirection)
             #endif
         Elseif enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT Or enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT_SHOOT Then
             setEnemyDirectionForDefaulMovement(enemyCol, enemyLin, enemyColIni, enemyLinIni, enemyColEnd, enemyLinEnd, enemyHorizontalDirection, enemyVerticalDirection)
-            calculatePositionAndTile(tile, enemyCol, enemyLin, enemyHorizontalDirection, enemyVerticalDirection, enemFrame)
+            calculatePositionAndTile(tile, enemyCol, enemyLin, enemyHorizontalDirection, enemyVerticalDirection)
         Elseif enemyBehaviour = ENEMY_BEHAVIOUR_NO_RETURN Then
             enemyHorizontalDirection = Sgn(enemyColEnd - enemyColIni)
             enemyVerticalDirection = Sgn(enemyLinEnd - enemyLinIni)
@@ -375,8 +377,6 @@ Sub moveEnemies()
             Elseif enemyCol = enemyColEnd Or enemyLin = enemyLinEnd Then
                 tile = tile + 17
                 resetReturnMovement = 1
-            Elseif enemFrame Then
-                tile = tile + 1
             End If
         #ifdef RECTANGULAR_MOVE_ENABLED
         Elseif enemyBehaviour = ENEMY_BEHAVIOUR_RECTANGULAR Then
@@ -418,10 +418,10 @@ Sub moveEnemies()
                 enemyHorizontalDirection = 0
                 enemyVerticalDirection = -1
             End If
-            calculatePositionAndTile(tile, enemyCol, enemyLin, enemyHorizontalDirection, enemyVerticalDirection, enemFrame)
+            calculatePositionAndTile(tile, enemyCol, enemyLin, enemyHorizontalDirection, enemyVerticalDirection)
         #endif
         End If
         
-        checkCollisionSaveAndDraw(enemyId, tile + 1, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
+        checkCollisionSaveAndDraw(enemyId, tile, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
     Next enemyId
 End Sub

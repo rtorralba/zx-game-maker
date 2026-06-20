@@ -380,10 +380,6 @@ Sub drawSprites()
     #endif
 End Sub
 
-Sub animateEnemies()
-    enemFrame = Not enemFrame
-End Sub
-
 Sub animateAnimatedTiles()
     For i=0 To MAX_ANIMATED_TILES_PER_SCREEN:
         If animatedTilesInScreen(i, 0) <> 0 Then

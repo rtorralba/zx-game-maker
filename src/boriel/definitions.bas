@@ -86,7 +86,6 @@ Dim currentScreen As Ubyte = 0
 Dim currentBulletSpriteId As Ubyte
 
 Dim protaFrame As Ubyte = 0
-Dim enemFrame As Ubyte = 0
 
 Dim kempston As Ubyte
 Dim keyOption As String
@@ -100,7 +99,6 @@ Dim framec As Ubyte AT 23672
 #endif
 
 Dim lastFrameProta As Ubyte = 0
-Dim lastFrameEnemies As Ubyte = 0
 Dim lastFrameTiles As Ubyte = 0
 
 Const INVINCIBLE_FRAMES As Ubyte = 25
@@ -148,6 +146,8 @@ Dim screenObjects(SCREEN_OBJECTS_COUNT - 1, 3) As Ubyte at SCREEN_OBJECTS_DATA_A
 Dim screenObjectsCurrentIndex As Ubyte = 0
 Dim screensWon(SCREENS_COUNT) As Ubyte at SCREENS_WON_DATA_ADDRESS
 Dim decompressedEnemiesScreen(MAX_ENEMIES_PER_SCREEN, 12) As Ubyte at DECOMPRESSED_ENEMIES_SCREEN_DATA_ADDRESS
+
+Dim currentEnemyFrame(MAX_ENEMIES_PER_SCREEN) As Ubyte
 
 #ifdef USE_BREAKABLE_TILE_ALL
     Dim brokenTiles(SCREENS_COUNT) As Ubyte at BROKEN_TILES_DATA_ADDRESS
