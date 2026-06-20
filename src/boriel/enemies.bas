@@ -354,7 +354,7 @@ Sub moveEnemies()
 
             Dim objectiveAxisY As Ubyte = 1
 
-            If Abs(enemyColEnd - enemyColIni) > Abs(enemyLinEnd - enemyLinIni) Then
+            If Abs(enemyColEnd - enemyColIni) < Abs(enemyLinEnd - enemyLinIni) Then
                 objectiveAxisY = 0
             End If
             
