@@ -353,6 +353,12 @@ Sub moveEnemies()
             
             enemyCol = enemyCol + enemyHorizontalDirection
             enemyLin = enemyLin + enemyVerticalDirection
+
+            Dim objectiveAxisY As Ubyte = 1
+
+            If Abs(enemyColEnd - enemyColIni) > Abs(enemyLinEnd - enemyLinIni) Then
+                objectiveAxisY = 0
+            End If
             
             If resetReturnMovement Then
                 enemyCol = enemyColIni
@@ -362,7 +368,7 @@ Sub moveEnemies()
                 decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLin
                 tile = tile + 16
                 resetReturnMovement = 0
-            Elseif enemyCol = enemyColEnd Or enemyLin = enemyLinEnd Then
+            Elseif objectiveAxisY = 1 And enemyLin = enemyLinEnd Or objectiveAxisY = 0 And enemyCol = enemyColEnd Then
                 tile = tile + 17
                 resetReturnMovement = 1
             End If
