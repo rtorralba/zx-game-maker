@@ -4,13 +4,7 @@ Dim resetReturnMovement As Ubyte = 0
     Function checkPlatformHasProtaOnTop(x As Ubyte, y As Ubyte) As Ubyte
         If jumpCurrentKey <> jumpStopValue Then Return 0
         
-        Dim protaX1 As Ubyte = protaX + 2
-        Dim protaY1 As Ubyte = protaY + 4
-        
-        If protaX > x + 2 Then Return 0
-        If protaX1 < x Then Return 0
-        If protaY > y + 2 Then Return 0
-        If protaY1 < y - 2 Then Return 0
+        If checkAABB(protaX, protaY, protaX + 2, protaY + 4, x, y - 2, x + 4, y) = 0 Then Return 0
         
         Return 1
     End Function
@@ -42,7 +36,7 @@ Dim resetReturnMovement As Ubyte = 0
             If enemyY0 > protaY1 + 2 Then Return 0
             If enemyY0 < protaY1 Then Return 0
             
-            If protaX >= enemyX0 And protaX <= enemyX1 Or protaX1 <= enemyX1 And protaX1 >= enemyX0 Then
+            If checkAABB(protaX, protaY, protaX1, protaY1, enemyX0, enemyY0, enemyX1, enemyY1) Then
                 damageEnemy(enemyId)
                 landed = 1
                 jumpCurrentKey = jumpStopValue
@@ -80,12 +74,8 @@ Dim resetReturnMovement As Ubyte = 0
         Else
             If protaX >= 2 Then swordX = protaX - 2 Else swordX = 0
         End If
-        Dim swordY As Ubyte = protaY + 1
-        
-        Dim swordX1 As Ubyte = swordX + 1 ' 1x1 sprite
-        Dim swordY1 As Ubyte = swordY + 1
 
-        If checkAABB(swordX, swordY, swordX1, swordY1, enemyX0, enemyY0, enemyX1, enemyY1) = 0 Then Return 0
+        If checkAABB(swordX, protaY + 1, swordX + 1, protaY + 2, enemyX0, enemyY0, enemyX1, enemyY1) = 0 Then Return 0
         
         #ifdef SWORD_KILL_ENEMY
             If decompressedEnemiesScreen(enemyId, ENEMY_ALIVE) = 98 Then
@@ -223,9 +213,8 @@ End Sub
         enemyBulletY = newY
 
         If invincible Then Return
-        Dim protaX1 As Ubyte = protaX + SPRITE_COLLISION_SIZE
-        Dim protaY1 As Ubyte = protaY + SPRITE_COLLISION_SIZE
-        If checkAABB(enemyBulletX, enemyBulletY, enemyBulletX + 1, enemyBulletY + 1, protaX, protaY, protaX1, protaY1) Then
+
+        If checkAABB(enemyBulletX, enemyBulletY, enemyBulletX + 1, enemyBulletY + 1, protaX, protaY, protaX + SPRITE_COLLISION_SIZE, protaY + SPRITE_COLLISION_SIZE) Then
             enemyBulletX = 0
             decrementLife()
         End If
