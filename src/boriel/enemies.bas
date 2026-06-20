@@ -137,19 +137,28 @@ Sub updateEnemyFrame(enemyId As Ubyte)
     End If
 End Sub
 
+Sub drawEnemy(enemyId As Ubyte, tile As Ubyte, enemyCol As Byte, enemyLin As Byte)
+    If resetReturnMovement = 1 Then
+        currentEnemyFrame(enemyId) = 0
+    End If
+    Draw2x2Sprite(tile + currentEnemyFrame(enemyId), enemyCol, enemyLin)
+End Sub
+
 Sub saveAndDraw(enemyId as Ubyte, tile As Ubyte, horizontalDirection As Ubyte, verticalDirection As Ubyte, enemyCol As Byte, enemyLin As Byte, enemySpeed As Ubyte)
+    ' If platform, update frame every time, otherwise only when moving
     If tile < 16 Then
         updateEnemyFrame(enemyId)
     End If
+
     If checkShouldSkipMoveBySpeed(enemySpeed) Then
-        Draw2x2Sprite(tile + currentEnemyFrame(enemyId), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
+        drawEnemy(enemyId, tile, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
     Else
         If tile > 15 Then
             If decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) <> enemyCol Or decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) <> enemyLin Then
                 updateEnemyFrame(enemyId)
             End If
         End If
-        Draw2x2Sprite(tile + currentEnemyFrame(enemyId), enemyCol, enemyLin)
+        drawEnemy(enemyId, tile, enemyCol, enemyLin)
         decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = enemyCol
         decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLin
         decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = horizontalDirection
@@ -353,7 +362,7 @@ Sub moveEnemies()
                 decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLin
                 tile = tile + 16
                 resetReturnMovement = 0
-            Elseif enemyCol = enemyColEnd Or enemyLin = enemyLinEnd Then
+            Elseif enemyCol = enemyColEnd And enemyLin = enemyLinEnd Then
                 tile = tile + 17
                 resetReturnMovement = 1
             End If
