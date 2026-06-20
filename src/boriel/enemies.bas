@@ -362,7 +362,7 @@ Sub moveEnemies()
                 decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLin
                 tile = tile + 16
                 resetReturnMovement = 0
-            Elseif enemyCol = enemyColEnd And enemyLin = enemyLinEnd Then
+            Elseif enemyCol = enemyColEnd Or enemyLin = enemyLinEnd Then
                 tile = tile + 17
                 resetReturnMovement = 1
             End If
