@@ -128,21 +128,21 @@ dim maxXScreenLeft as ubyte = 2
     
     #ifdef SWORD_KILL_ENEMY
         Sub killEnemy(enemyToKill as Ubyte)
-            decompressedEnemiesScreen(enemyToKill, ENEMY_ALIVE) = 0
+            decompressedEnemiesScreen(enemyToKill, ENEMY_LIFE) = 0
             removeEnemy(enemyToKill)
         End Sub
     #endif
     
     sub damageEnemy(enemyToKill as Ubyte)
-        if decompressedEnemiesScreen(enemyToKill, ENEMY_ALIVE) = 99 then return 'invincible enemies
+        if decompressedEnemiesScreen(enemyToKill, ENEMY_LIFE) = 99 then return 'invincible enemies
         
-        decompressedEnemiesScreen(enemyToKill, ENEMY_ALIVE) = decompressedEnemiesScreen(enemyToKill, ENEMY_ALIVE) - 1
+        decompressedEnemiesScreen(enemyToKill, ENEMY_LIFE) = decompressedEnemiesScreen(enemyToKill, ENEMY_LIFE) - 1
         #ifdef HISCORE_ENABLED
             incrementScore(5)
             printHud()
         #endif
         
-        if decompressedEnemiesScreen(enemyToKill, ENEMY_ALIVE) = 0 then
+        if decompressedEnemiesScreen(enemyToKill, ENEMY_LIFE) = 0 then
             dim attr, tile, x, y, col, lin, tmpX, tmpY as ubyte
             
             #ifdef FINISH_GAME_OBJECTIVE_ENEMY

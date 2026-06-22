@@ -190,9 +190,11 @@ Const ENEMY_COL_END As Ubyte = 4
 Const ENEMY_HORIZONTAL_DIRECTION As Ubyte = 5
 Const ENEMY_CURRENT_LIN As Ubyte = 6
 Const ENEMY_CURRENT_COL As Ubyte = 7
-Const ENEMY_ALIVE As Ubyte = 8
+Const ENEMY_LIFE As Ubyte = 8
 Const ENEMY_MOVE As Ubyte = 9
 Const ENEMY_VERTICAL_DIRECTION As Ubyte = 10
+Const ENEMY_SPEED As Ubyte = 11
+Const ENEMY_ID As Ubyte = 12
 
 Const ENEMY_BEHAVIOUR_DEFAULT As Ubyte = 0
 Const ENEMY_BEHAVIOUR_NO_RETURN As Ubyte = 1
@@ -200,8 +202,7 @@ Const ENEMY_BEHAVIOUR_DEFAULT_SHOOT As Ubyte = 2
 #ifdef RECTANGULAR_MOVE_ENABLED
     Const ENEMY_BEHAVIOUR_RECTANGULAR As Ubyte = 3
 #endif
-Const ENEMY_SPEED As Ubyte = 11
-Const ENEMY_ID As Ubyte = 12
+Const ENEMY_BEHAVIOUR_STALKER As Ubyte = 4
 
 #ifdef ARCADE_MODE
     Dim currentScreenKeyX As Ubyte

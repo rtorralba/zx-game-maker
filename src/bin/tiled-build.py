@@ -935,6 +935,9 @@ for layer in data['layers']:
                         else:
                             verticalDirection = '255'
 
+                        if enemy['linEnd'] == '255':
+                            enemy['move'] = '4'
+
                         enemiesPerScreen[idx] = enemiesPerScreen[idx] + 1
                         arrayBuffer.append(int(enemy['tile']))
                         arrayBuffer.append(int(enemy['linIni']))
