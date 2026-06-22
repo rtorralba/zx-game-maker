@@ -1,15 +1,15 @@
-#define isPlatform(tile) tile < 16
-#define isEnemy(tile) tile > 15
+#define isPlatform(tile) ((tile) < 16)
+#define isEnemy(tile) ((tile) > 15)
 #define checkLeftDirection(enemyHorizontalDirection, tile) If enemyHorizontalDirection = -1 Then tile = tile + 16
 #define moveEnemyPosition(enemyCol, enemyLin, horizontalDirection, verticalDirection) enemyCol = enemyCol + enemyHorizontalDirection : enemyLin = enemyLin + enemyVerticalDirection
-#define isEnemyDeath(enemyLife) enemyLife <= 0
-#define isEnemyVulnerable(enemyLife) enemyLife < 99
-#define isStalkerEnemy(enemyLinEnd) enemyLinEnd = -1
-#define freezeOnSight(enemyColEnd) enemyColEnd = -1
-#define areLookingAtEachOther(enemyHorizontalDirection) (protaDirection = 1 And enemyHorizontalDirection = -1) Or (protaDirection = 0 And enemyHorizontalDirection = 1)
-#define isDefaultBehaviour(enemyBehaviour) enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT Or enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT_SHOOT
-#define isNoReturnBehaviour(enemyBehaviour) enemyBehaviour = ENEMY_BEHAVIOUR_NO_RETURN
-#define isStalkerBehaviour(enemyBehaviour) enemyBehaviour = ENEMY_BEHAVIOUR_STALKER
+#define isEnemyDeath(enemyLife) ((enemyLife) <= 0)
+#define isEnemyVulnerable(enemyLife) ((enemyLife) < 99)
+#define isStalkerEnemy(enemyLinEnd) ((enemyLinEnd) = -1)
+#define freezeOnSight(enemyColEnd) ((enemyColEnd) = -1)
+#define areLookingAtEachOther(enemyHorizontalDirection) (protaDirection = 1 And (enemyHorizontalDirection) = -1) Or (protaDirection = 0 And (enemyHorizontalDirection) = 1)
+#define isDefaultBehaviour(enemyBehaviour) (enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT Or enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT_SHOOT)
+#define isNoReturnBehaviour(enemyBehaviour) (enemyBehaviour = ENEMY_BEHAVIOUR_NO_RETURN)
+#define isStalkerBehaviour(enemyBehaviour) (enemyBehaviour = ENEMY_BEHAVIOUR_STALKER)
 
 #ifdef SIDE_VIEW
     Function checkPlatformHasProtaOnTop(x As Ubyte, y As Ubyte) As Ubyte
