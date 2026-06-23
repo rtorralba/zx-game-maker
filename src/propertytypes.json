@@ -18,9 +18,12 @@
         "type": "enum",
         "values": [
             "default",
-            "noReturn",
-            "defaultWithShoot",
-            "rectangular"
+            "defaultWithShot",
+            "rectangular",
+            "rectangularWithShot",
+            "stalker",
+            "stalkerWithShot",
+            "noReturn"
         ],
         "valuesAsFlags": false
     },

@@ -7,9 +7,12 @@
 #define isStalkerEnemy(enemyLinEnd) ((enemyLinEnd) = -1)
 #define freezeOnSight(enemyColEnd) ((enemyColEnd) = -1)
 #define areLookingAtEachOther(enemyHorizontalDirection) (protaDirection = 1 And (enemyHorizontalDirection) = -1) Or (protaDirection = 0 And (enemyHorizontalDirection) = 1)
-#define isDefaultBehaviour(enemyBehaviour) (enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT Or enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT_SHOOT)
-#define isNoReturnBehaviour(enemyBehaviour) (enemyBehaviour = ENEMY_BEHAVIOUR_NO_RETURN)
-#define isStalkerBehaviour(enemyBehaviour) (enemyBehaviour = ENEMY_BEHAVIOUR_STALKER)
+#define hasDefaultBehaviour(enemyBehaviour) (enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT Or enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT_SHOOT)
+#define hasRectangularBehaviour(enemyBehaviour) (enemyBehaviour = ENEMY_BEHAVIOUR_RECTANGULAR Or enemyBehaviour = ENEMY_BEHAVIOUR_RECTANGULAR_SHOOT)
+#define hasStalkerBehaviour(enemyBehaviour) (enemyBehaviour = ENEMY_BEHAVIOUR_STALKER Or enemyBehaviour = ENEMY_BEHAVIOUR_STALKER_SHOOT)
+#define hasNoReturnBehaviour(enemyBehaviour) (enemyBehaviour = ENEMY_BEHAVIOUR_NO_RETURN)
+#define enemyShouldShoot(enemyBehaviour) (enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT_SHOOT Or enemyBehaviour = ENEMY_BEHAVIOUR_STALKER_SHOOT Or enemyBehaviour = ENEMY_BEHAVIOUR_RECTANGULAR_SHOOT)
+#define isEnemyStopped(enemyColEnd, enemyBehaviour) ((enemyColEnd = -1) And (enemyBehaviour <> ENEMY_BEHAVIOUR_STALKER) And (enemyBehaviour <> ENEMY_BEHAVIOUR_STALKER_SHOOT))
 
 #ifdef SIDE_VIEW
     Function checkPlatformHasProtaOnTop(x As Ubyte, y As Ubyte) As Ubyte

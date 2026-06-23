@@ -47,7 +47,7 @@
   <property name="shouldKillEnemies" type="bool" value="true"/>
   <property name="swordEnabled" type="bool" value="false"/>
   <property name="textsEnabled" type="bool" value="false"/>
-  <property name="timerSeconds" type="int" value="60"/>
+  <property name="timerSeconds" type="int" value="0"/>
   <property name="useBreakableTile" propertytype="breakableTilesMode" value="individual"/>
   <property name="useBreakableTileByTouch" type="bool" value="true"/>
   <property name="wallJumpEnabled" type="bool" value="true"/>
@@ -206,6 +206,7 @@
    <properties>
     <property name="freezeOnSight" type="bool" value="true"/>
     <property name="life" type="int" value="4"/>
+    <property name="move" propertytype="enemyMovementTypes" value="stalkerWithShot"/>
     <property name="speed" type="int" propertytype="enemySpeed" value="2"/>
    </properties>
   </object>
@@ -224,7 +225,7 @@
   <object id="47" type="ZXSGMEnemy" gid="213" x="344" y="320" width="16" height="16">
    <properties>
     <property name="life" type="int" value="3"/>
-    <property name="move" propertytype="enemyMovementTypes" value="rectangular"/>
+    <property name="move" propertytype="enemyMovementTypes" value="rectangularWithShot"/>
     <property name="speed" type="int" propertytype="enemySpeed" value="1"/>
    </properties>
   </object>
@@ -242,7 +243,7 @@
   </object>
   <object id="51" type="ZXSGMEnemy" gid="209" x="336" y="192" width="16" height="16">
    <properties>
-    <property name="move" propertytype="enemyMovementTypes" value="defaultWithShoot"/>
+    <property name="move" propertytype="enemyMovementTypes" value="defaultWithShot"/>
     <property name="speed" type="int" propertytype="enemySpeed" value="1"/>
    </properties>
   </object>
@@ -254,7 +255,7 @@
   </object>
   <object id="53" type="ZXSGMEnemy" gid="213" x="336" y="216" width="16" height="16">
    <properties>
-    <property name="move" propertytype="enemyMovementTypes" value="defaultWithShoot"/>
+    <property name="move" propertytype="enemyMovementTypes" value="defaultWithShot"/>
    </properties>
   </object>
   <object id="54" type="ZXSGMPointer" x="400" y="216">

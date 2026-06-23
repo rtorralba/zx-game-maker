@@ -830,13 +830,22 @@ for layer in data['layers']:
                             if property['value'] in [0, 1, 2, 3]:
                                 objects[str(object['id'])]['speed'] = str(property['value'])
                         elif property['name'] == 'move':
-                            if property['value'] == 'noReturn':
+                            if property['value'] == 'default':
+                                objects[str(object['id'])]['move'] = '0'
+                            elif property['value'] == 'defaultWithShot':
                                 objects[str(object['id'])]['move'] = '1'
-                            elif property['value'] == 'defaultWithShoot':
-                                objects[str(object['id'])]['move'] = '2'
                             elif property['value'] == 'rectangular':
+                                objects[str(object['id'])]['move'] = '2'
+                                rectangularMoveEnabled = 1
+                            elif property['value'] == 'rectangularWithShot':
                                 objects[str(object['id'])]['move'] = '3'
                                 rectangularMoveEnabled = 1
+                            elif property['value'] == 'stalker':
+                                objects[str(object['id'])]['move'] = '4'
+                            elif property['value'] == 'stalkerWithShot':
+                                objects[str(object['id'])]['move'] = '5'
+                            elif property['value'] == 'noReturn':
+                                objects[str(object['id'])]['move'] = '6'       
                         elif property['name'] == 'freezeOnSight' and property['value']:
                             objects[str(object['id'])]['colEnd'] = '255'
                             freezeOnSightEnabled = 1
@@ -934,9 +943,6 @@ for layer in data['layers']:
                             verticalDirection = '1'
                         else:
                             verticalDirection = '255'
-
-                        if enemy['linEnd'] == '255':
-                            enemy['move'] = '4'
 
                         enemiesPerScreen[idx] = enemiesPerScreen[idx] + 1
                         arrayBuffer.append(int(enemy['tile']))

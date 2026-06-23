@@ -4,14 +4,6 @@ Sub moveEnemies()
     If enemiesPerScreen(currentScreen) = 0 Then Return
     
     For enemyId=0 To enemiesPerScreen(currentScreen) - 1
-        Dim enemyLife As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_LIFE)
-        
-        If isEnemyDeath(enemyLife) Then continue For
-        
-        Dim tile As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_TILE) + 1
-        
-        If tile = 0 Then continue For
-
         Dim enemyCol As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL)
         Dim enemyLin As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
         Dim enemySpeed As Byte = decompressedEnemiesScreen(enemyId, ENEMY_SPEED)
@@ -22,6 +14,11 @@ Sub moveEnemies()
         Dim enemyBehaviour As Byte = decompressedEnemiesScreen(enemyId, ENEMY_MOVE)
         Dim enemyHorizontalDirection As Byte = decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION)
         Dim enemyVerticalDirection As Byte = decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION)
+        Dim enemyLife As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_LIFE)
+        Dim tile As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_TILE) + 1
+
+        If isEnemyDeath(enemyLife) Then continue For
+        If tile = 0 Then continue For
         
         If enemyColIni = enemyColEnd Then enemyHorizontalDirection = 0
         If enemyLinIni = enemyLinEnd Then enemyVerticalDirection = 0
@@ -63,18 +60,21 @@ Sub moveEnemies()
         #ifdef ENEMY_SHOOT_ENABLED
             Dim enemyShootingTrigger As Ubyte = enemyId * 50
 
-            If enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT_SHOOT And mainLoopCounter = enemyShootingTrigger Then
+            If enemyShouldShoot(enemyBehaviour) And mainLoopCounter = enemyShootingTrigger Then
                 shootEnemyBullet(enemyCol, enemyLin)
             End If
                     
-            If enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT_SHOOT And mainLoopCounter - enemyShootingTrigger < ENEMY_STOP_FRAMES Then
+            If enemyShouldShoot(enemyBehaviour) And mainLoopCounter - enemyShootingTrigger < ENEMY_STOP_FRAMES Then
                 checkLeftDirection(enemyHorizontalDirection, tile)
                 checkCollisionSaveAndDraw(enemyId, tile, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
                 Continue For
             End If
         #endif
 
-        If isStalkerBehaviour(enemyBehaviour) Then
+        If isEnemyStopped(enemyColEnd, enemyBehaviour) Then
+            checkCollisionSaveAndDraw(enemyId, tile, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
+            Continue For
+        ElseIf hasStalkerBehaviour(enemyBehaviour) Then
             enemyHorizontalDirection = Sgn(protaX - enemyCol)
             enemyVerticalDirection = Sgn(protaY - enemyLin)
             #ifdef FREEZE_ON_SIGHT_ENABLED
@@ -88,10 +88,10 @@ Sub moveEnemies()
             #else
                 calculatePositionAndTile(tile, enemyCol, enemyLin, enemyHorizontalDirection, enemyVerticalDirection)
             #endif
-        Elseif isDefaultBehaviour(enemyBehaviour) Then
+        Elseif hasDefaultBehaviour(enemyBehaviour) Then
             setEnemyDirectionForDefaulMovement(enemyCol, enemyLin, enemyColIni, enemyLinIni, enemyColEnd, enemyLinEnd, enemyHorizontalDirection, enemyVerticalDirection)
             calculatePositionAndTile(tile, enemyCol, enemyLin, enemyHorizontalDirection, enemyVerticalDirection)
-        Elseif isNoReturnBehaviour(enemyBehaviour) Then
+        Elseif hasNoReturnBehaviour(enemyBehaviour) Then
             setEnemyDirectionForDefaulMovement(enemyCol, enemyLin, enemyColIni, enemyLinIni, enemyColEnd, enemyLinEnd, enemyHorizontalDirection, enemyVerticalDirection)
             
             moveEnemyPosition(enemyCol, enemyLin, enemyHorizontalDirection, enemyVerticalDirection)
@@ -128,7 +128,7 @@ Sub moveEnemies()
                 resetReturnMovement(enemyId) = 1
             End If
         #ifdef RECTANGULAR_MOVE_ENABLED
-        Elseif enemyBehaviour = ENEMY_BEHAVIOUR_RECTANGULAR Then
+        Elseif hasRectangularBehaviour(enemyBehaviour) Then
             ' Rectangular clockwise movement
             ' Normalize rectangle corners to min/max
             Dim rectMinCol As Byte
