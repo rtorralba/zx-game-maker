@@ -71,7 +71,7 @@ Sub moveEnemies()
             End If
         #endif
 
-        If isEnemyStopped(enemyColEnd, enemyBehaviour) Then
+        If isEnemyStopped(enemyLinEnd, enemyBehaviour) Then
             checkCollisionSaveAndDraw(enemyId, tile, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
             Continue For
         ElseIf hasStalkerBehaviour(enemyBehaviour) Then
@@ -84,6 +84,8 @@ Sub moveEnemies()
                     Else
                         calculatePositionAndTile(tile, enemyCol, enemyLin, enemyHorizontalDirection, enemyVerticalDirection)
                     End If
+                Else
+                    calculatePositionAndTile(tile, enemyCol, enemyLin, enemyHorizontalDirection, enemyVerticalDirection)
                 End If
             #else
                 calculatePositionAndTile(tile, enemyCol, enemyLin, enemyHorizontalDirection, enemyVerticalDirection)
