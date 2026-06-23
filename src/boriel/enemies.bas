@@ -77,18 +77,15 @@ Sub moveEnemies()
         ElseIf hasStalkerBehaviour(enemyBehaviour) Then
             enemyHorizontalDirection = Sgn(protaX - enemyCol)
             enemyVerticalDirection = Sgn(protaY - enemyLin)
-            #ifdef FREEZE_ON_SIGHT_ENABLED
-                If freezeOnSight(enemyColEnd) Then
-                    If areLookingAtEachOther(enemyHorizontalDirection) Then
-                        checkLeftDirection(enemyHorizontalDirection, tile)
-                    Else
-                        calculatePositionAndTile(tile, enemyCol, enemyLin, enemyHorizontalDirection, enemyVerticalDirection)
-                    End If
-                Else
-                    calculatePositionAndTile(tile, enemyCol, enemyLin, enemyHorizontalDirection, enemyVerticalDirection)
-                End If
-            #else
+
+            #ifndef FREEZE_ON_SIGHT_ENABLED
                 calculatePositionAndTile(tile, enemyCol, enemyLin, enemyHorizontalDirection, enemyVerticalDirection)
+            #else
+                If freezeOnSight(enemyColEnd) <> 1 Or areLookingAtEachOther(enemyHorizontalDirection) <> 1 Then
+                    calculatePositionAndTile(tile, enemyCol, enemyLin, enemyHorizontalDirection, enemyVerticalDirection)
+                Else
+                    checkLeftDirection(enemyHorizontalDirection, tile)
+                End If
             #endif
         Elseif hasDefaultBehaviour(enemyBehaviour) Then
             setEnemyDirectionForDefaulMovement(enemyCol, enemyLin, enemyColIni, enemyLinIni, enemyColEnd, enemyLinEnd, enemyHorizontalDirection, enemyVerticalDirection)
