@@ -635,6 +635,11 @@ Sub swapScreen()
             protaXRespawn = mainCharactersArray(currentScreen, 0)
             protaYRespawn = mainCharactersArray(currentScreen, 1)
         #endif
+        #ifdef AMMO_ENABLED
+            #ifdef ARCADE_RESET_AMMO_ON_SCREEN_CLEAR
+                currentAmmo = INITIAL_AMMO
+            #endif
+        #endif
     #endif
     
     #ifdef ENABLED_128k

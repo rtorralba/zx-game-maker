@@ -336,6 +336,11 @@
                 "value": 0
             },
             {
+                "name": "arcadeResetAmmoOnScreenClear",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "arcadeShowIntermediateScreen",
                 "type": "bool",
                 "value": true
