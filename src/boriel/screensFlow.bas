@@ -77,7 +77,7 @@ End Sub
         
         Dim failed As Ubyte = 0
         
-        doubleSizeTexto(96, 120, "PASS")
+        Print AT 9,12; "PASS"
         
         For i=0 To 4
             LeerTecla()
@@ -116,18 +116,18 @@ End Sub
             #endif
         #endif
         
-        doubleSizeTexto(96, 120, "KEYS")
+        Print AT 9,8;"KEYS"
         
-        Print AT 13,8;"LEFT"
+        Print AT 13,8;"<"
         keyArray(LEFT) = LeerTecla()
         
-        Print AT 15,8;"RIGHT"
+        Print AT 15,8;">"
         keyArray(RIGHT) = LeerTecla()
         
-        Print AT 17,8;"UP"
+        Print AT 17,8;"^"
         keyArray(UP) = LeerTecla()
         
-        Print AT 19,8;"DOWN"
+        Print AT 19,8;"v"
         keyArray(DOWN) = LeerTecla()
         
         #ifdef SHOOTING_ENABLED

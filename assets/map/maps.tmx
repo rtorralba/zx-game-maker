@@ -42,7 +42,7 @@
   <property name="messagesFlashEnabled" type="bool" value="false"/>
   <property name="musicEnabled" type="bool" value="true"/>
   <property name="newBeeperPlayer" type="bool" value="true"/>
-  <property name="redefineKeysEnabled" type="bool" value="false"/>
+  <property name="redefineKeysEnabled" type="bool" value="true"/>
   <property name="shooting" type="bool" value="true"/>
   <property name="shouldKillEnemies" type="bool" value="true"/>
   <property name="swordEnabled" type="bool" value="false"/>
