@@ -215,6 +215,8 @@ enemyShootEnabled = 0
 enemyShootSolidCollide = 0
 rectangularMoveEnabled = 0
 
+enemyStoppedShouldLookAtPlayer = 0
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -393,6 +395,8 @@ if 'properties' in data:
             enemyShootEnabled = 1 if property['value'] else 0
         elif property['name'] == 'enemyShootSolidCollide':
             enemyShootSolidCollide = 1 if property['value'] else 0
+        elif property['name'] == 'enemyStoppedShouldLookAtPlayer':
+            enemyStoppedShouldLookAtPlayer = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -873,6 +877,9 @@ if enemyShootSolidCollide == 1:
 
 if rectangularMoveEnabled == 1:
     configStr += "#DEFINE RECTANGULAR_MOVE_ENABLED\n"
+
+if enemyStoppedShouldLookAtPlayer == 1:
+    configStr += "#DEFINE ENEMY_STOPPED_SHOULD_LOOK_AT_PLAYER\n"
 
 # Find end of paths
 for layer in data['layers']:

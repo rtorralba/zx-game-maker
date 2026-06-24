@@ -427,6 +427,11 @@
                     "value": false
                 },
                 {
+                    "name": "enemyStoppedShouldLookAtPlayer",
+                    "type": "bool",
+                    "value": false
+                },
+                {
                     "name": "finishGameEnemy",
                     "type": "object",
                     "value": 0
