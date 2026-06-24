@@ -168,8 +168,7 @@ End Sub
     sub checkMessageForDelete()
         If messageLoopCounter = MESSAGE_LOOPS_VISIBLE Then
             clearMessage()
-        End If
-        If messageLoopCounter < MESSAGE_LOOPS_VISIBLE Then
+        ElseIf messageLoopCounter < MESSAGE_LOOPS_VISIBLE Then
             messageLoopCounter = messageLoopCounter + 1
         End If
     end sub
@@ -287,13 +286,8 @@ Sub doubleSize8x8(x AS Ubyte, y As Ubyte, dir AS Uinteger)
             ' Desplazamos el byte a la derecha
             b = b >> 1
             ' Si el bit 0 es 0
-            IF a = 0 THEN
-                ' Modo borrar = 1
-                INVERSE 1
-            ELSE
-                ' Modo borrar = 0
-                INVERSE 0
-            END IF
+            ' Modo borrar = inverso del bit
+            INVERSE 1 - a
             ' Dibujamos 4 puntos (2x2)
             PLOT xx,yy
             PLOT xx+1,yy
@@ -510,22 +504,8 @@ end sub
 #endif
 
 Function getAttrFromTileAndApplyToOther(tile As Ubyte, besideTile As Ubyte) As Ubyte
-    Dim attr As Ubyte
-    Dim tinta As Ubyte
-    Dim papel As Ubyte
-    Dim brillo As Ubyte
-    Dim parpadeo As Ubyte
-    
-    attr = attrSet(tile)
-    tinta = attr bAnd 7
-    parpadeo = (attr bAnd 128) / 128
-    
-    attr = attrSet(besideTile)
-    papel = (attr bAnd 56) / 8
-    brillo = (attr bAnd 64) / 64
-    
-    ' Montar el atributo: papel, tinta, brillo, parpadeo
-    Return (papel * 8) + tinta + (brillo * 64) + (parpadeo * 128)
+    Dim attr As Ubyte = attrSet(tile) bAnd 135    ' ink (bits 0-2) + flash (bit 7)
+    Return attr + (attrSet(besideTile) bAnd 120)  ' + paper (bits 3-5) + bright (bit 6)
 End Function
 
 Sub replaceTileWithBackground(col As Ubyte, lin As Ubyte)
