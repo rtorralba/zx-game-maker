@@ -65,6 +65,11 @@ Sub moveEnemies()
             End If
             
             If enemyShouldShoot(enemyBehaviour) And mainLoopCounter - enemyShootingTrigger < ENEMY_STOP_FRAMES Then
+                #ifdef ENEMY_STOPPED_SHOULD_LOOK_AT_PLAYER
+                    If isEnemyStopped(enemyLinEnd, enemyBehaviour) Then
+                        enemyHorizontalDirection = Sgn(protaX - enemyCol)
+                    End If
+                #endif
                 checkLeftDirection(enemyHorizontalDirection, tile)
                 checkCollisionSaveAndDraw(enemyId, tile, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
                 Continue For
