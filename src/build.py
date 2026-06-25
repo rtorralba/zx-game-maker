@@ -20,6 +20,10 @@ python_executable = str(Path(sys.executable)) + " "
 
 TILED_SCRIPT = BIN_FOLDER / "tiled-build.py"
 
+alternativeCompiler = r"C:\Users\rault\Downloads\zxbasic-v1.19-beta11-win32\zxbasic\zxbc.exe"
+# alternativeCompiler = r"C:\Users\rault\Downloads\zxbasic-v1.19.0-beta10-win32\zxbasic\zxbc.exe"
+useAlternativeCompiler = False
+
 def tiledBuild():
     runPythonScriptFile(str(TILED_SCRIPT))
 
@@ -31,7 +35,12 @@ def buildingFilesAndConfig():
     return Builder().execute()
 
 def compilingGame():
-    runCommand("zxbc -W160 -W170 -W130 -W190 -W150 -W100 -H 128 --heap-address 23755 -S 24576 -O 4 \"" + str(Path("boriel/main.bas")) + "\" --mmap \"" + str(OUTPUT_FOLDER / "map.txt") + "\" -D HIDE_LOAD_MSG -o \"" + str(OUTPUT_FOLDER / "main.bin") + "\"")
+    if useAlternativeCompiler:
+        runCommand(alternativeCompiler + " --version")
+        runCommand(alternativeCompiler + " -W160 -W170 -W130 -W190 -W150 -W100 -H 128 --heap-address 23755 -S 24576 -O 4 \"" + str(Path("boriel/main.bas")) + "\" --mmap \"" + str(OUTPUT_FOLDER / "map.txt") + "\" -D HIDE_LOAD_MSG -o \"" + str(OUTPUT_FOLDER / "main.bin") + "\"")
+    else:
+        runCommand("zxbc --version")
+        runCommand("zxbc -W160 -W170 -W130 -W190 -W150 -W100 -H 128 --heap-address 23755 -S 24576 -O 4 \"" + str(Path("boriel/main.bas")) + "\" --mmap \"" + str(OUTPUT_FOLDER / "map.txt") + "\" -D HIDE_LOAD_MSG -o \"" + str(OUTPUT_FOLDER / "main.bin") + "\"")
 
 def checkMemory():
     runPythonScriptFile(str(BIN_FOLDER / "check-memory.py"))
