@@ -1,5 +1,5 @@
 Function checkProtaSolidCollision(x As Ubyte, y As Ubyte) As Ubyte
-    Dim tile = CheckCollision(x, y, 1)
+    Dim tile As Ubyte = CheckCollision(x, y, 1)
 
     #ifdef MESSAGES_ENABLED
         If tile = ENEMY_DOOR_TILE Then
@@ -484,7 +484,7 @@ Sub downKey()
         If noKeyPressedForSword Then
             noKeyPressedForSword = 0
             
-            Dim skip = 0
+            Dim skip As Ubyte = 0
             #ifdef SIDE_VIEW
                 #ifdef LADDERS_ENABLED
                     If CheckCollision(protaX, protaY, 2) Or CheckCollision(protaX, protaY + 1, 2) Then
