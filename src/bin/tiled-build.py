@@ -218,6 +218,7 @@ rectangularMoveEnabled = 0
 enemyStoppedShouldLookAtPlayer = 0
 
 arcadeResetAmmoOnScreenClear = 0
+arcadeShowBigIntermediateTitle = 0
 
 if 'properties' in data:
     for property in data['properties']:
@@ -401,6 +402,8 @@ if 'properties' in data:
             enemyStoppedShouldLookAtPlayer = 1 if property['value'] else 0
         elif property['name'] == 'arcadeResetAmmoOnScreenClear':
             arcadeResetAmmoOnScreenClear = 1 if property['value'] else 0
+        elif property['name'] == 'arcadeShowBigIntermediateTitle':
+            arcadeShowBigIntermediateTitle = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append('0')
@@ -887,6 +890,9 @@ if enemyStoppedShouldLookAtPlayer == 1:
 
 if arcadeResetAmmoOnScreenClear == 1:
     configStr += "#DEFINE ARCADE_RESET_AMMO_ON_SCREEN_CLEAR\n"
+
+if arcadeShowBigIntermediateTitle == 1:
+    configStr += "#DEFINE ARCADE_SHOW_BIG_INTERMEDIATE_TITLE\n"
 
 # Find end of paths
 for layer in data['layers']:

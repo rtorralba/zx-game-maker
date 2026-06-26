@@ -341,6 +341,11 @@
                 "value": false
             },
             {
+                "name": "arcadeShowBigIntermediateTitle",
+                "type": "bool",
+                "value": false
+            },
+            {
                 "name": "arcadeShowIntermediateScreen",
                 "type": "bool",
                 "value": true

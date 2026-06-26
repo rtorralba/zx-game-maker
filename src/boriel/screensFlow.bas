@@ -343,7 +343,12 @@ End Sub
             Print AT 10, 8; "SCORE:          ";
             Print AT 10, 24 - LEN(STR$(score)); score
             
-            doubleSizeTexto(10, 160, "SCREEN CLEARED!")
+            #ifdef ARCADE_SHOW_BIG_INTERMEDIATE_TITLE
+                doubleSizeTexto(10, 160, "SCREEN CLEARED!")
+            #else
+                Print AT 2, 10; "SCREEN CLEARED!"
+            #endif
+            
             ' Print current score and remaining time and subtractr second and increase score
             #ifdef TIMER_ENABLED
                 protaX = 30

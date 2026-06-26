@@ -269,63 +269,65 @@ end function
 
 #ifdef ARCADE_MODE
     #ifdef HISCORE_ENABLED
-        Sub doubleSize8x8(x AS Ubyte, y As Ubyte, dir AS Uinteger)
-            ' Variables locales
-            DIM xx, yy, nx, ny, b, a AS UByte
-            ' En pixels 0,0 está abajo a la izquierda, así que
-            ' invertimos el valor de y
-            yy = y + 14
-            ' 8 filas (8 bytes)
-            FOR ny = 0 TO 7
-                ' Invertimos x
-                xx = x + 14
-                ' Leemos el valor del byte
-                b = PEEK(dir)
-                ' Procesamos el carácter (1 byte)
-                FOR nx = 0 TO 7
-                    ' Tomamos el bit 0
-                    a = b bAND %1
-                    ' Desplazamos el byte a la derecha
-                    b = b >> 1
-                    ' Si el bit 0 es 0
-                    ' Modo borrar = inverso del bit
-                    INVERSE 1 - a
-                    ' Dibujamos 4 puntos (2x2)
-                    PLOT xx,yy
-                    PLOT xx+1,yy
-                    PLOT xx,yy+1
-                    PLOT xx+1,yy+1
-                    ' Desplazamos "x" 2 pixels
-                    xx = xx - 2
-                NEXT nx
-                ' Siguiente byte
-                dir = dir + 1
-                ' Desplazamos "y" 2 pixels
-                yy = yy - 2
-            NEXT ny
-            ' Reseteamos el inverse
-            INVERSE 0
-        End Sub
+        #ifdef ARCADE_SHOW_BIG_INTERMEDIATE_TITLE
+            Sub doubleSize8x8(x AS Ubyte, y As Ubyte, dir AS Uinteger)
+                ' Variables locales
+                DIM xx, yy, nx, ny, b, a AS UByte
+                ' En pixels 0,0 está abajo a la izquierda, así que
+                ' invertimos el valor de y
+                yy = y + 14
+                ' 8 filas (8 bytes)
+                FOR ny = 0 TO 7
+                    ' Invertimos x
+                    xx = x + 14
+                    ' Leemos el valor del byte
+                    b = PEEK(dir)
+                    ' Procesamos el carácter (1 byte)
+                    FOR nx = 0 TO 7
+                        ' Tomamos el bit 0
+                        a = b bAND %1
+                        ' Desplazamos el byte a la derecha
+                        b = b >> 1
+                        ' Si el bit 0 es 0
+                        ' Modo borrar = inverso del bit
+                        INVERSE 1 - a
+                        ' Dibujamos 4 puntos (2x2)
+                        PLOT xx,yy
+                        PLOT xx+1,yy
+                        PLOT xx,yy+1
+                        PLOT xx+1,yy+1
+                        ' Desplazamos "x" 2 pixels
+                        xx = xx - 2
+                    NEXT nx
+                    ' Siguiente byte
+                    dir = dir + 1
+                    ' Desplazamos "y" 2 pixels
+                    yy = yy - 2
+                NEXT ny
+                ' Reseteamos el inverse
+                INVERSE 0
+            End Sub
 
-        Sub doubleSizeTexto(x As Ubyte, y As Ubyte, texto As String)
-            DIM dir AS UInteger
-            DIM n, c, xx AS UByte
-            ' Sacamos una copia de x
-            xx = x
-            ' Recorremos la cadena letra a letra
-            FOR n = 0 TO LEN(texto)-1
-                ' Dirección del carácter
-                dir = PEEK(UInteger, 23606)
-                ' Código ASCII del carácter
-                c = CODE texto(n)
-                ' Calculamos la dirección del carácter en memoria
-                dir = dir + (CAST(UInteger,c) * 8)
-                ' Imprimimos el carácter a doble tamaño
-                doubleSize8x8(xx,y,dir)
-                ' Incrementamos c en 16 pixels
-                xx = xx + 16
-            NEXT n
-        End Sub
+            Sub doubleSizeTexto(x As Ubyte, y As Ubyte, texto As String)
+                DIM dir AS UInteger
+                DIM n, c, xx AS UByte
+                ' Sacamos una copia de x
+                xx = x
+                ' Recorremos la cadena letra a letra
+                FOR n = 0 TO LEN(texto)-1
+                    ' Dirección del carácter
+                    dir = PEEK(UInteger, 23606)
+                    ' Código ASCII del carácter
+                    c = CODE texto(n)
+                    ' Calculamos la dirección del carácter en memoria
+                    dir = dir + (CAST(UInteger,c) * 8)
+                    ' Imprimimos el carácter a doble tamaño
+                    doubleSize8x8(xx,y,dir)
+                    ' Incrementamos c en 16 pixels
+                    xx = xx + 16
+                NEXT n
+            End Sub
+        #endif
     #endif
 #endif
 
