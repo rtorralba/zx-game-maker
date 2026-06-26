@@ -88,7 +88,6 @@ Dim currentBulletSpriteId As Ubyte
 Dim protaFrame As Ubyte = 0
 
 Dim kempston As Ubyte
-Dim keyOption As String
 Dim keyArray(4) As Uinteger
 
 Dim framec As Ubyte AT 23672
@@ -157,9 +156,6 @@ Dim currentEnemyFrame(MAX_ENEMIES_PER_SCREEN) As Ubyte
     Dim brokenTiles(BREAKABLE_TILES_COUNT, 2) As Ubyte at BROKEN_TILES_DATA_ADDRESS
     Dim brokenTilesCurrentIndex As Ubyte = 0
 #endif
-
-Dim spritesSet(51) As Ubyte
-Dim spriteAddressIndex As Uinteger = 0
 
 #ifdef SHOOTING_ENABLED
     Dim bullet(7) As Ubyte

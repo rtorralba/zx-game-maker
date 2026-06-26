@@ -559,58 +559,7 @@ Function skipScreenPressed() As Ubyte
     Return 0
 End Function
 
-#ifdef TEXTS_ENABLED
-    Function getTextByTextId(textId As Ubyte) As String
-        SetBank(TEXTS_BANK)
-        
-        Dim textPtr As UInteger = $C000
-        Dim textsSkipped As Ubyte = 0
-        Dim result As String = ""
-        
-        ' Saltar los primeros textId textos contando separadores 0xFF
-        While textsSkipped < textId
-            If PEEK(textPtr) = 255 Then
-                textsSkipped = textsSkipped + 1
-            End If
-            textPtr = textPtr + 1
-        Wend
-        
-        ' 1. Length Calculation
-        Dim length As UInteger = 0
-        Dim startPtr As UInteger = textPtr
-        While PEEK(textPtr) <> 255
-            length = length + 1
-            textPtr = textPtr + 1
-        Wend
-        
-        ' 2. Safe Allocation (Boriel Basic way to get a buffer)
-        result = ""
-        Dim i as UInteger
-        For i = 1 to length
-            result = result + " "
-        Next i
-        
-        ' 3. Fill String with ASM (Fast & Safe)
-        ' We need to copy from startPtr (Bank 7) to result memory.
-        ' Result memory address is in @result + 2
-        
-        Dim destPtr as UInteger = PEEK(UInteger, @result + 2)
-        
-        ' 3. Fill String (Memory Copy via POKE)
-        ' Local variables are on stack, so ASM access is hard. We use POKE.
-        Dim strDataPtr as UInteger = PEEK(UInteger, @result + 2)
-        Dim j as UInteger
-        textPtr = startPtr
-        
-        For j = 0 To length - 1
-            Poke strDataPtr + j, Peek(textPtr)
-            textPtr = textPtr + 1
-        Next j
-        
-        SetBank(0)
-        Return result
-    End Function
-    
+#ifdef TEXTS_ENABLED    
     Sub showTextInTheScreen(screenId As Ubyte, inkColor As Ubyte, paperColor As Ubyte)
         If messageCoolDown > 0 Then Return
         
