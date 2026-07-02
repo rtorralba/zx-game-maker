@@ -4,6 +4,68 @@ import platform
 import subprocess
 import build
 import sys
+import json
+import locale
+
+# i18n setup
+I18N_FOLDER = Path.cwd() / "i18n"
+CONFIG_FILE = Path.cwd() / "config.json"
+DEFAULT_LANG = "en"
+
+def get_saved_language():
+    try:
+        if CONFIG_FILE.exists():
+            with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+                config = json.load(f)
+                return config.get("language")
+    except Exception:
+        pass
+    return None
+
+def set_saved_language(lang_code):
+    try:
+        config = {}
+        if CONFIG_FILE.exists():
+            with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+                config = json.load(f)
+        config["language"] = lang_code
+        with open(CONFIG_FILE, "w", encoding="utf-8") as f:
+            json.dump(config, f, indent=4)
+        messagebox.showinfo(_("success"), _("language_changed_restart"))
+    except Exception as e:
+        print(f"Error saving language: {e}")
+
+def load_translations():
+    try:
+        lang_code = get_saved_language()
+        if not lang_code:
+            system_locale, _ = locale.getdefaultlocale()
+            lang_code = DEFAULT_LANG
+            if system_locale:
+                lang_prefix = system_locale.split('_')[0].lower()
+                if lang_prefix in ["es", "en", "pt"]:
+                    lang_code = lang_prefix
+        
+        lang_file = I18N_FOLDER / f"{lang_code}.json"
+        if not lang_file.exists():
+            lang_file = I18N_FOLDER / f"{DEFAULT_LANG}.json"
+            
+        with open(lang_file, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Error loading language: {e}")
+        return {}
+
+translations = load_translations()
+
+def _(key, *args):
+    text = translations.get(key, key)
+    if args:
+        try:
+            return text.format(*args)
+        except Exception:
+            pass
+    return text
 
 class TextRedirector:
     def __init__(self, text_widget):
@@ -102,11 +164,11 @@ def open_game_variant(variant):
 def show_modal_with_animation(gif_path):
     try:
         if not gif_path.exists():
-            messagebox.showerror("Error", f"No se encontró el archivo: {gif_path}")
+            messagebox.showerror(_("error"), _("file_not_found", gif_path))
             return
 
         win = tk.Toplevel(root)
-        win.title("Preview")
+        win.title(_("preview"))
         win.transient(root)  # Ventana hija
         win.grab_set()       # Modal
         win.attributes('-topmost', True)  # Siempre encima
@@ -128,7 +190,7 @@ def show_modal_with_animation(gif_path):
         except EOFError:
             pass
         if not frames:
-            messagebox.showerror("Error", "El GIF no tiene frames.")
+            messagebox.showerror(_("error"), _("gif_no_frames"))
             win.destroy()
             return
 
@@ -138,7 +200,7 @@ def show_modal_with_animation(gif_path):
 
         update()
     except Exception as e:
-        messagebox.showerror("Error", f"No se pudo abrir el GIF: {e}")
+        messagebox.showerror(_("error"), _("could_not_open_gif", e))
 
 def open_main_character_running_preview():
     """Ejecuta la función y muestra el resultado en un modal."""
@@ -313,8 +375,8 @@ def open_hud_scr():
 def show_hud_menu(event):
     """Muestra un menú con opciones para abrir el HUD: Background (.scr) y Elements (.tmx)."""
     hud_menu = tk.Menu(root, tearoff=0)
-    hud_menu.add_command(label="Background", command=open_hud_scr)
-    hud_menu.add_command(label="Elements", command=open_hud_tmx)
+    hud_menu.add_command(label=_("menu_background"), command=open_hud_scr)
+    hud_menu.add_command(label=_("menu_elements"), command=open_hud_tmx)
     hud_menu.post(event.x_root, event.y_root)
 
 def open_project_folder():
@@ -375,11 +437,11 @@ def showFolderSelectionModal():
     win_width = 400
     win_height = 60 + len(folders) * 30  # 60 para el label y botón, 30 por opción
     win.geometry(f"{win_width}x{win_height}")
-    win.title("Select Language Folder")
-    tk.Label(win, text="Select a language folder:").pack(anchor="w", padx=10, pady=5)
+    win.title(_("select_language_folder_title"))
+    tk.Label(win, text=_("select_language_folder")).pack(anchor="w", padx=10, pady=5)
     for folder in folders:
         tk.Radiobutton(win, text=folder, variable=selection, value=folder).pack(anchor="w", padx=20)
-    tk.Button(win, text="OK", command=on_ok).pack(pady=10)
+    tk.Button(win, text=_("btn_ok"), command=on_ok).pack(pady=10)
     win.grab_set()
     win.protocol("WM_DELETE_WINDOW", on_ok)
     root.wait_window(win)
@@ -399,7 +461,7 @@ def fxBuild():
 
 # Crear la ventana principal
 root = tk.Tk()
-root.title("ZX Spectrum Game Maker")
+root.title(_("app_title"))
 root.geometry("600x750")
 root.resizable(False, False)
 
@@ -442,7 +504,7 @@ if logo_path.exists():
     logo_label = tk.Label(top_frame, image=logo)
     logo_label.grid(row=0, column=0, rowspan=2, sticky="w", padx=10)
 else:
-    logo_label = tk.Label(top_frame, text="ZX Spectrum Game Maker", font=("Arial", 16))
+    logo_label = tk.Label(top_frame, text=_("app_title"), font=("Arial", 16))
     logo_label.grid(row=0, column=0, rowspan=2, sticky="w", padx=10)
 
 # Detectar idiomas disponibles
@@ -473,7 +535,7 @@ left_buttons_frame.pack(side="left", anchor="n", padx=(0, 20))
 open_game_button = tk.Button(
     left_buttons_frame,
     width=18,
-    text="🎮 Open Game",
+    text=_("btn_open_game"),
     font=("Segoe UI Emoji", 10),
     anchor="w",
     command=lambda: open_game_variant("normal")
@@ -519,7 +581,7 @@ def open_sprites_zxp():
 open_map_button = tk.Button(
     left_buttons_frame,
     width=18,
-    text="🗺 Open Map",
+    text=_("btn_open_map"),
     font=("Segoe UI Emoji", 10),
     anchor="w",
     command=open_map_with_tiled
@@ -530,7 +592,7 @@ open_map_button.pack(anchor="w", pady=(0, 10))
 tk.Button(
     left_buttons_frame,
     width=18,
-    text="🧱 Open Tiles",
+    text=_("btn_open_tiles"),
     font=("Segoe UI Emoji", 10),
     anchor="w",
     command=lambda: open_tiles_zxp()
@@ -539,7 +601,7 @@ tk.Button(
 tk.Button(
     left_buttons_frame,
     width=18,
-    text="🏃‍♂️‍➡️ Open Sprites",
+    text=_("btn_open_sprites"),
     font=("Segoe UI Emoji", 10),
     anchor="w",
     command=lambda: open_sprites_zxp()
@@ -549,7 +611,7 @@ tk.Button(
 open_hud_button = tk.Button(
     left_buttons_frame,
     width=18,
-    text="🖥 Open HUD",
+    text=_("btn_open_hud"),
     font=("Segoe UI Emoji", 10),
     anchor="w",
 )
@@ -559,7 +621,7 @@ open_hud_button.bind("<Button-1>", show_hud_menu)
 # Open Project (abre la carpeta raíz del proyecto) — usa el mismo icono que Open Doc
 open_project_button = tk.Button(
     left_buttons_frame,
-    text="📁 Open Project",
+    text=_("btn_open_project"),
     width=18,
     font=("Segoe UI Emoji", 10),
     anchor="w",
@@ -577,7 +639,7 @@ def build_for_language(lang):
 
 tk.Button(
     right_buttons_frame,
-    text="⚙ Build default",
+    text=_("btn_build_default"),
     width=18,
     font=("Segoe UI Emoji", 10),
     anchor="w",
@@ -587,7 +649,7 @@ tk.Button(
 for lang in idiomas:
     tk.Button(
         right_buttons_frame,
-        text=f"⚙ Build {lang.upper()}",
+        text=_("btn_build_lang", lang.upper()),
         width=18,
         font=("Segoe UI Emoji", 10),
         anchor="w",
@@ -599,62 +661,69 @@ menu_bar = tk.Menu(root)
 
 # Menú "Build"
 build_menu = tk.Menu(menu_bar, tearoff=0)
-build_menu.add_command(label="Game", command=lambda: executeBuild())
-build_menu.add_command(label="Game (verbose)", command=lambda: executeBuild(verbose=True))
-build_menu.add_command(label="FX", command=lambda: fxBuild())
+build_menu.add_command(label=_("menu_game"), command=lambda: executeBuild())
+build_menu.add_command(label=_("menu_game_verbose"), command=lambda: executeBuild(verbose=True))
+build_menu.add_command(label=_("menu_fx"), command=lambda: fxBuild())
 build_menu.add_separator()
-build_menu.add_command(label="Exit", command=root.quit)
-menu_bar.add_cascade(label="Build", menu=build_menu)
+build_menu.add_command(label=_("menu_exit"), command=root.quit)
+menu_bar.add_cascade(label=_("menu_build"), menu=build_menu)
 
 # Menú "Map"
 map_menu = tk.Menu(menu_bar, tearoff=0)
-map_menu.add_command(label="Open Map", command=open_map_with_tiled)
-menu_bar.add_cascade(label="Map", menu=map_menu)
+map_menu.add_command(label=_("menu_open_map"), command=open_map_with_tiled)
+menu_bar.add_cascade(label=_("menu_map"), menu=map_menu)
 
 # Menú "Sprites"
 sprites_menu = tk.Menu(menu_bar, tearoff=0)
 
 # Submenú para "Main Character"
 main_character_menu = tk.Menu(sprites_menu, tearoff=0)
-main_character_menu.add_command(label="Running", command=open_main_character_running_preview)
-main_character_menu.add_command(label="Idle", command=open_main_character_idle_preview)
-sprites_menu.add_cascade(label="Main Character", menu=main_character_menu)
+main_character_menu.add_command(label=_("menu_running"), command=open_main_character_running_preview)
+main_character_menu.add_command(label=_("menu_idle"), command=open_main_character_idle_preview)
+sprites_menu.add_cascade(label=_("menu_main_character"), menu=main_character_menu)
 
 # Submenú para "Platforms"
 platforms_menu = tk.Menu(sprites_menu, tearoff=0)
-platforms_menu.add_command(label="Platform 1", command=open_first_platform_preview)
-platforms_menu.add_command(label="Platform 2", command=open_second_platform_preview)
-sprites_menu.add_cascade(label="Platforms", menu=platforms_menu)
+platforms_menu.add_command(label=_("menu_platform_1"), command=open_first_platform_preview)
+platforms_menu.add_command(label=_("menu_platform_2"), command=open_second_platform_preview)
+sprites_menu.add_cascade(label=_("menu_platforms"), menu=platforms_menu)
 
 # Submenú para "Enemies"
 enemies_menu = tk.Menu(sprites_menu, tearoff=0)
 for i in range(1, 9):  # Generar dinámicamente las opciones de enemigos del 1 al 8
-    enemies_menu.add_command(label=f"Enemy {i}", command=lambda i=i: open_enemy_preview(i))
-sprites_menu.add_cascade(label="Enemies", menu=enemies_menu)
+    enemies_menu.add_command(label=_("menu_enemy_num", i), command=lambda i=i: open_enemy_preview(i))
+sprites_menu.add_cascade(label=_("menu_enemies"), menu=enemies_menu)
 
-menu_bar.add_cascade(label="Sprites Preview", menu=sprites_menu)
+menu_bar.add_cascade(label=_("menu_sprites_preview"), menu=sprites_menu)
 
 # Menú "Game"
 game_menu = tk.Menu(menu_bar, tearoff=0)
-game_menu.add_command(label="Normal", command=lambda: open_game_variant("normal"))
-game_menu.add_command(label="RF", command=lambda: open_game_variant("rf"))
-menu_bar.add_cascade(label="Game", menu=game_menu)
+game_menu.add_command(label=_("menu_normal"), command=lambda: open_game_variant("normal"))
+game_menu.add_command(label=_("menu_rf"), command=lambda: open_game_variant("rf"))
+menu_bar.add_cascade(label=_("menu_game"), menu=game_menu)
 
 # Menú "Memory Usage"
 memory_menu = tk.Menu(menu_bar, tearoff=0)
-memory_menu.add_command(label="Bank 0 48k", command=lambda: open_memory_bank_image("memory-bank-0-48K.png"))
-memory_menu.add_command(label="Bank 0 128k", command=lambda: open_memory_bank_image("memory-bank-0-128K.png"))
-memory_menu.add_command(label="Bank 3", command=lambda: open_memory_bank_image("memory-bank-3.png"))
-memory_menu.add_command(label="Bank 4", command=lambda: open_memory_bank_image("memory-bank-4.png"))
-memory_menu.add_command(label="Bank 6", command=lambda: open_memory_bank_image("memory-bank-6.png"))
-menu_bar.add_cascade(label="Memory Usage", menu=memory_menu)
+memory_menu.add_command(label=_("menu_bank_0_48k"), command=lambda: open_memory_bank_image("memory-bank-0-48K.png"))
+memory_menu.add_command(label=_("menu_bank_0_128k"), command=lambda: open_memory_bank_image("memory-bank-0-128K.png"))
+memory_menu.add_command(label=_("menu_bank_3"), command=lambda: open_memory_bank_image("memory-bank-3.png"))
+memory_menu.add_command(label=_("menu_bank_4"), command=lambda: open_memory_bank_image("memory-bank-4.png"))
+memory_menu.add_command(label=_("menu_bank_6"), command=lambda: open_memory_bank_image("memory-bank-6.png"))
+menu_bar.add_cascade(label=_("menu_memory_usage"), menu=memory_menu)
 
 # Menú "Help"
 help_menu = tk.Menu(menu_bar, tearoff=0)
-help_menu.add_command(label="Documentation", command=lambda: webbrowser.open("https://gm.retrojuegos.org/"))
-help_menu.add_command(label="Telegram", command=lambda: webbrowser.open("https://t.me/zx_spectrum_game_maker"))
-help_menu.add_command(label="GitHub", command=lambda: webbrowser.open("https://github.com/rtorralba/zx-game-maker"))
-menu_bar.add_cascade(label="Help", menu=help_menu)
+help_menu.add_command(label=_("menu_documentation"), command=lambda: webbrowser.open("https://gm.retrojuegos.org/"))
+help_menu.add_command(label=_("menu_telegram"), command=lambda: webbrowser.open("https://t.me/zx_spectrum_game_maker"))
+help_menu.add_command(label=_("menu_github"), command=lambda: webbrowser.open("https://github.com/rtorralba/zx-game-maker"))
+menu_bar.add_cascade(label=_("menu_help"), menu=help_menu)
+
+# Menú "Language"
+lang_menu = tk.Menu(menu_bar, tearoff=0)
+lang_menu.add_command(label="English", command=lambda: set_saved_language("en"))
+lang_menu.add_command(label="Español", command=lambda: set_saved_language("es"))
+lang_menu.add_command(label="Português", command=lambda: set_saved_language("pt"))
+menu_bar.add_cascade(label=_("menu_language"), menu=lang_menu)
 
 # Configurar el menú en la ventana principal
 root.config(menu=menu_bar)
