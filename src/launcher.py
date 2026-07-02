@@ -6,6 +6,9 @@ import build
 import sys
 import json
 import locale
+import xml.etree.ElementTree as ET
+import urllib.request
+from html.parser import HTMLParser
 
 # i18n setup
 I18N_FOLDER = Path.cwd() / "i18n"
@@ -455,9 +458,228 @@ def showFolderSelectionModal():
 
 def fxBuild():
     if PlayerFxBuilder.build():
-        messagebox.showinfo("Éxito", "Los FX se han construido correctamente.")
+        messagebox.showinfo(_("success"), _("fx_built_success"))
     else:
-        messagebox.showerror("Error", "Hubo un error al construir los FX.")
+        messagebox.showerror(_("error"), _("error_building_fx"))
+
+TOOLTIPS = {
+    "128Kenabled": "Activa o desactiva las características exclusivas de 128K.",
+    "ammo": "Munición inicial del jugador.",
+    "animatePeriodMain": "Período de animación para el personaje principal.",
+    "animatePeriodTile": "Período de animación para los tiles del mapa.",
+    "backgroundAttribute": "Atributo de color del fondo de la pantalla (0-255).",
+    "borderColorItem": "Color del borde de la pantalla al recoger un objeto (0-7).",
+    "borderColorKey": "Color del borde al recoger una llave (0-7).",
+    "borderColorLife": "Color del borde al perder/ganar vida (0-7).",
+    "bulletDistance": "Distancia máxima que recorre una bala.",
+    "damageAmount": "Cantidad de daño que recibe el jugador.",
+    "dashEnabled": "Habilita la habilidad de hacer 'dash'.",
+    "disableContinuousJump": "El jugador debe soltar el botón de salto antes de volver a saltar.",
+    "enemiesRespawn": "Los enemigos vuelven a aparecer al reentrar en la pantalla.",
+    "enemyShootEnabled": "Permite a los enemigos disparar proyectiles.",
+    "enemyShootSolidCollide": "Los disparos de los enemigos chocan contra las paredes.",
+    "finishGameEnemy": "ID del enemigo que, al ser derrotado, finaliza el juego.",
+    "finishGameObjective": "Tipo de objetivo para terminar el juego (ej. itemsAndKillEnemy).",
+    "gameName": "El nombre del juego.",
+    "goalItems": "Número de objetos (items) requeridos.",
+    "hiScore": "Activa la puntuación máxima (hi-score).",
+    "idleTime": "Tiempo de inactividad antes de la animación 'idle'.",
+    "initialLife": "Cantidad de vida inicial del jugador.",
+    "itemsCountdown": "Los items funcionan como un contador decreciente.",
+    "itemsEnabled": "Activa la recolección de objetos.",
+    "itemsToOpenDoors": "Número de objetos necesarios para abrir puertas.",
+    "jumpType": "Tipo de salto (ej. constant, accelerated).",
+    "keysEnabled": "Activa el uso de llaves para abrir puertas.",
+    "killJumpingOnTop": "Permite matar enemigos saltando sobre ellos.",
+    "laddersEnabled": "Activa las escaleras.",
+    "lifeAmount": "Número de vidas extra disponibles.",
+    "mainCharacterExtraFrame": "Añade un frame extra de animación al personaje principal.",
+    "mainCharacterInvincible": "El personaje principal es invencible.",
+    "maxAnimatedTilesPerScreen": "Máximo de tiles animados simultáneamente en pantalla.",
+    "maxEnemiesPerScreen": "Máximo de enemigos activos simultáneamente en pantalla.",
+    "messagesEnabled": "Activa los mensajes en pantalla.",
+    "messagesFlashEnabled": "Los mensajes parpadean.",
+    "musicEnabled": "Activa la música.",
+    "newBeeperPlayer": "Usa el nuevo reproductor de beeper.",
+    "redefineKeysEnabled": "Permite al jugador redefinir las teclas.",
+    "shooting": "Activa el disparo del personaje.",
+    "shouldKillEnemies": "El jugador debe matar todos los enemigos.",
+    "swordEnabled": "Activa la espada.",
+    "textsEnabled": "Activa el sistema de textos en pantalla.",
+    "timerSeconds": "Tiempo límite en segundos (0 = sin límite).",
+    "useBreakableTile": "Modo de tiles rompibles.",
+    "useBreakableTileByTouch": "Los tiles rompibles se rompen al tocarse.",
+    "wallJumpEnabled": "Activa el salto en pared."
+}
+
+def open_configuration_editor():
+    if not MAPS_FILE.exists():
+        messagebox.showerror(_("error"), _("file_not_found", MAPS_FILE))
+        return
+
+    # Load enum values from tiled-project
+    from configuration.folders import MAPS_PROJECT as TILED_PROJECT
+    enum_values = {}
+    try:
+        with open(TILED_PROJECT, "r", encoding="utf-8-sig") as f:
+            project_data = json.load(f)
+        for pt in project_data.get("propertyTypes", []):
+            if pt.get("type") == "enum":
+                enum_values[pt["name"]] = pt.get("values", [])
+    except Exception as e:
+        print(f"Warning: could not load tiled-project enum types: {e}")
+
+    try:
+        with open(MAPS_FILE, "r", encoding="utf-8-sig") as f:
+            xml_content = f.read()
+        xml_root = ET.fromstring(xml_content)
+        properties_node = xml_root.find('properties')
+        if properties_node is None:
+            messagebox.showerror(_("error"), "No properties found in maps.tmx")
+            return
+    except Exception as e:
+        messagebox.showerror(_("error"), f"Error parsing XML: {e}")
+        return
+
+    win = tk.Toplevel(root)
+    win.title(_("config_editor_title"))
+    win.geometry("1050x700")
+    win.transient(root)
+    win.grab_set()
+
+    from tkinter import ttk
+
+    # ── Search bar ───────────────────────────────────────────────────────────
+    search_frame = tk.Frame(win)
+    search_frame.pack(side="top", fill="x", padx=10, pady=(8, 4))
+    tk.Label(search_frame, text="🔍", font=("Segoe UI Emoji", 11)).pack(side="left")
+    search_var = tk.StringVar()
+    search_entry = tk.Entry(search_frame, textvariable=search_var, font=("Segoe UI", 10), width=40)
+    search_entry.pack(side="left", padx=6, ipady=3)
+    search_entry.focus_set()
+
+    # ── Separator ────────────────────────────────────────────────────────────
+    ttk.Separator(win, orient="horizontal").pack(fill="x", padx=10, pady=(0, 4))
+
+    # ── Scrollable area ──────────────────────────────────────────────────────
+    scroll_container = tk.Frame(win)
+    scroll_container.pack(side="top", fill="both", expand=True)
+
+    canvas = tk.Canvas(scroll_container)
+    scrollbar = tk.Scrollbar(scroll_container, orient="vertical", command=canvas.yview)
+    scrollable_frame = tk.Frame(canvas)
+
+    scrollable_frame.bind(
+        "<Configure>",
+        lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+    )
+
+    canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+    canvas.configure(yscrollcommand=scrollbar.set)
+
+    canvas.pack(side="left", fill="both", expand=True)
+    scrollbar.pack(side="right", fill="y")
+
+    # Mouse wheel scroll
+    def _on_mousewheel(event):
+        canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+    canvas.bind_all("<MouseWheel>", _on_mousewheel)
+    win.bind("<Destroy>", lambda e: canvas.unbind_all("<MouseWheel>"))
+
+    ROW_FONT = ("Segoe UI", 11)
+    HELP_FONT = ("Segoe UI", 10)
+    STRIPE_ODD  = "#f0f4f8"
+    STRIPE_EVEN = "#ffffff"
+
+    controls = {}
+    # rows stores (prop_name, label_lower, row_frame)
+    rows = []
+
+    all_props = properties_node.findall('property')
+    for i, prop in enumerate(all_props):
+        prop_name = prop.get('name')
+        prop_type = prop.get('type', 'string')
+        prop_propertytype = prop.get('propertytype', None)
+        prop_value = prop.get('value', '')
+        bg = STRIPE_ODD if i % 2 == 0 else STRIPE_EVEN
+
+        prop_label_text = _(f"prop_{prop_name}") if f"prop_{prop_name}" in translations else prop_name
+
+        # Row frame — spans full width, gives uniform stripe background
+        row_frame = tk.Frame(scrollable_frame, bg=bg)
+        row_frame.pack(fill="x", side="top")
+        # Fixed column widths so every row aligns perfectly
+        row_frame.columnconfigure(0, minsize=220)
+        row_frame.columnconfigure(1, minsize=160)
+        row_frame.columnconfigure(2, weight=1)
+
+        tk.Label(row_frame, text=prop_label_text, width=30, anchor="w",
+                 bg=bg, font=ROW_FONT).grid(row=0, column=0, padx=(8, 4), pady=4, sticky="w")
+
+        if prop_type == 'bool':
+            var = tk.BooleanVar(value=(prop_value.lower() == 'true'))
+            ctrl = tk.Checkbutton(row_frame, variable=var, bg=bg)
+            ctrl.grid(row=0, column=1, sticky="w", padx=4)
+            controls[prop] = ('bool', var)
+        elif prop_propertytype and prop_propertytype in enum_values:
+            values = enum_values[prop_propertytype]
+            var = tk.StringVar(value=prop_value)
+            ctrl = ttk.Combobox(row_frame, textvariable=var, values=values,
+                                state="readonly", width=16, font=ROW_FONT)
+            ctrl.grid(row=0, column=1, sticky="w", padx=4)
+            controls[prop] = ('text', var)
+        else:
+            var = tk.StringVar(value=prop_value)
+            ctrl = tk.Entry(row_frame, textvariable=var, width=16, font=ROW_FONT)
+            ctrl.grid(row=0, column=1, sticky="w", padx=4)
+            controls[prop] = ('text', var)
+
+        help_text = TOOLTIPS.get(prop_name, "")
+        tk.Label(row_frame, text=help_text, anchor="w", justify="left",
+                 fg="#555e6b", wraplength=520, bg=bg,
+                 font=HELP_FONT).grid(row=0, column=2, sticky="w", padx=(14, 8))
+
+        rows.append((prop_name, prop_label_text.lower(), row_frame))
+
+    # ── Live filter ──────────────────────────────────────────────────────────
+    def on_search(*_):
+        query = search_var.get().lower().strip()
+        for prop_name, label_lower, row_frame in rows:
+            match = (not query) or (query in label_lower) or (query in prop_name.lower())
+            if match:
+                row_frame.pack(fill="x", side="top")
+            else:
+                row_frame.pack_forget()
+
+    search_var.trace_add("write", on_search)
+
+
+    # ── Save button ──────────────────────────────────────────────────────────
+    def save_config():
+        import re
+        try:
+            with open(MAPS_FILE, "r", encoding="utf-8-sig") as f:
+                content = f.read()
+
+            for prop, (ctype, var) in controls.items():
+                prop_name = prop.get('name')
+                if ctype == 'bool':
+                    new_value = 'true' if var.get() else 'false'
+                else:
+                    new_value = var.get()
+
+                pattern = r'(<property\s+name="' + re.escape(prop_name) + r'"[^>]*?\bvalue=")[^"]*(")'
+                content = re.sub(pattern, r'\g<1>' + str(new_value) + r'\2', content)
+
+            with open(MAPS_FILE, "w", encoding="utf-8") as f:
+                f.write(content)
+
+            messagebox.showinfo(_("success"), _("config_saved"), parent=win)
+            win.destroy()
+        except Exception as e:
+            messagebox.showerror(_("error"), f"Error saving XML: {e}", parent=win)
+
+    tk.Button(win, text=_("btn_save"), command=save_config).pack(side="bottom", pady=10)
 
 # Crear la ventana principal
 root = tk.Tk()
@@ -667,6 +889,11 @@ build_menu.add_command(label=_("menu_fx"), command=lambda: fxBuild())
 build_menu.add_separator()
 build_menu.add_command(label=_("menu_exit"), command=root.quit)
 menu_bar.add_cascade(label=_("menu_build"), menu=build_menu)
+
+# Menú "Configuration"
+config_menu = tk.Menu(menu_bar, tearoff=0)
+config_menu.add_command(label=_("menu_edit"), command=open_configuration_editor)
+menu_bar.add_cascade(label=_("menu_configuration"), menu=config_menu)
 
 # Menú "Map"
 map_menu = tk.Menu(menu_bar, tearoff=0)
