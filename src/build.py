@@ -236,6 +236,41 @@ def build(verbose = False):
 
     print("Game compiled for " + mode + " successfully at dist/" + getProjectFileName() + ".tap!.\n")
 
+def buildFromStudio(verbose = False):
+    global totalExecutionTime
+    totalExecutionTime = 0
+
+    setVerbose(verbose)
+
+    print(f"Compiling for language: {os.getenv('ZXSGM_I18N_FOLDER', 'default')}\n")
+
+    executeFunction(hudScrToPng, "Converting HUD screen to PNG")
+    executeFunction(tiledBuild, "Building Tiled maps")
+    sizes = executeFunction(buildingFilesAndConfig, "Building files and config")
+    executeFunction(compilingGame, "Compiling game")
+    if getEnabled128K():
+        executeFunction(checkMemory, "Checking memory")
+    executeFunction(distBuild, "Building TAP, Z80 and EXE files")
+    if not verbose:
+        executeFunction(removeTempFiles, "Removing temporary files")
+
+    print("\nTotal execution time: " + f"{totalExecutionTime:.2f}s")
+
+    print("============================================\n")
+
+    print("MEMORY USAGE:\n")
+
+    if getEnabled128K():
+        sizes.printAllSizesByMemoryBankFor128()
+        mode = "128K"
+    else:
+        sizes.printAllSizesByMemoryBankFor48()
+        mode = "48K"
+    
+    print("\nFor more detailed information about memory check bank charts (png) in dist folder.\n")
+
+    print("Game compiled for " + mode + " successfully at dist/" + getProjectFileName() + ".tap!.\n")
+
 def executeFunction(function, message):
     global totalExecutionTime
 
