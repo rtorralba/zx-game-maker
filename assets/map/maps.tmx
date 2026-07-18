@@ -54,15 +54,6 @@
  </properties>
  <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="192" columns="32">
   <image source="../../src/tiles.png" width="256" height="48"/>
-  <tile id="2" type="solid"/>
-  <tile id="3" type="solid"/>
-  <tile id="12" type="solid"/>
-  <tile id="13" type="solid"/>
-  <tile id="34" type="solid"/>
-  <tile id="35" type="solid"/>
-  <tile id="44" type="solid"/>
-  <tile id="45" type="solid"/>
-  <tile id="61" type="door"/>
   <tile id="96" type="animated"/>
   <tile id="98" type="animated"/>
   <tile id="128" type="animated-damage"/>
