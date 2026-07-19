@@ -5,7 +5,7 @@
 #define isEnemyDeath(enemyLife) ((enemyLife) <= 0)
 #define isEnemyVulnerable(enemyLife) ((enemyLife) < 99)
 #define freezeOnSight(enemyColEnd) ((enemyColEnd) = -1)
-#define areLookingAtEachOther(enemyHorizontalDirection) (protaDirection = 1 And (enemyHorizontalDirection) = -1) Or (protaDirection = 0 And (enemyHorizontalDirection) = 1)
+#define areLookingAtEachOther(enemyHorizontalDirection) ((protaDirection = 1 And (enemyHorizontalDirection) = -1) Or (protaDirection = 0 And (enemyHorizontalDirection) = 1))
 #define hasDefaultBehaviour(enemyBehaviour) (enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT Or enemyBehaviour = ENEMY_BEHAVIOUR_DEFAULT_SHOOT)
 #define hasRectangularBehaviour(enemyBehaviour) (enemyBehaviour = ENEMY_BEHAVIOUR_RECTANGULAR Or enemyBehaviour = ENEMY_BEHAVIOUR_RECTANGULAR_SHOOT)
 #define hasStalkerBehaviour(enemyBehaviour) (enemyBehaviour = ENEMY_BEHAVIOUR_STALKER Or enemyBehaviour = ENEMY_BEHAVIOUR_STALKER_SHOOT)
