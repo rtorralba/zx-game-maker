@@ -33,14 +33,18 @@ Sub moveEnemies()
                 ' Platform enemy: move the player if standing on top
                 If checkPlatformHasProtaOnTop(enemyCol, enemyLin) Then
                     jumpCurrentKey = jumpStopValue
+                    Dim snapLin As Byte = enemyLin
+                    If checkShouldSkipMoveBySpeed(enemySpeed) Then
+                        snapLin = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
+                    End If
                     If enemyVerticalDirection Then
-                        If Not CheckCollision(protaX, enemyLin - 4, 1) Then
-                            protaY = enemyLin - 4
+                        If Not CheckCollision(protaX, snapLin - 4, 1) Then
+                            protaY = snapLin - 4
                         End If
                     End If
                     If enemyHorizontalDirection Then
-                        If Not CheckCollision(protaX + enemyHorizontalDirection, protaY, 1) Then
-                            If Not checkShouldSkipMoveBySpeed(enemySpeed) Then
+                        If Not checkShouldSkipMoveBySpeed(enemySpeed) Then
+                            If Not CheckCollision(protaX + enemyHorizontalDirection, protaY, 1) Then
                                 protaX = protaX + enemyHorizontalDirection
                             End If
                         End If
