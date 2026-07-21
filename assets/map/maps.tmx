@@ -240,7 +240,7 @@
   </object>
   <object id="52" type="ZXSGMPointer" x="400" y="192">
    <properties>
-    <property name="enemy" type="object" value="51"/>
+    <property name="sprite" type="object" value="51"/>
    </properties>
    <point/>
   </object>
