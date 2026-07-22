@@ -1,0 +1,67 @@
+# Available colors black, blue, red, magenta, green, cyan, yellow, white
+
+[item_found]
+line1 = "ITEM"
+line2 = "ACHADO!"
+ink = "green"
+paper = "black"
+
+[key_found]
+line1 = "CHAVE"
+line2 = "ACHADA!"
+ink = "green"
+paper = "black"
+
+[ammo_found]
+line1 = "MUNIÇÃO"
+line2 = "ACHADA!"
+ink = "black"
+paper = "cyan"
+
+[life_found]
+line1 = "VIDA"
+line2 = "ACHADA!"
+ink = "green"
+paper = "black"
+
+[no_keys]
+line1 = "SEM"
+line2 = "CHAVES"
+ink = "red"
+paper = "black"
+
+[no_ammo]
+line1 = "SEM"
+line2 = "MUNIÇÃO"
+ink = "red"
+paper = "black"
+
+[should_kill_all_enemies]
+line1 = "MATE"
+line2 = "INIMIGOS"
+ink = "red"
+paper = "black"
+
+[need_items]
+line1 = "FALTAM"
+line2 = "ITENS!"
+ink = "red"
+paper = "black"
+
+[hurry_up]
+line1 = "RÁPIDO!"
+line2 = "RÁPIDO!"
+ink = "red"
+paper = "black"
+
+[arcade_goal]
+line1 = "ALCANCE"
+line2 = "A CHAVE!"
+ink = "blue"
+paper = "black"
+
+[dash_active]
+line1 = "DASH"
+line2 = "ATIVO"
+paper = "black"
+ink = "green"
