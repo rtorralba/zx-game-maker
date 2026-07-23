@@ -204,7 +204,11 @@ def build(verbose = False):
 
     setVerbose(verbose)
 
-    print(f"Compiling for language: {os.getenv('ZXSGM_I18N_FOLDER', 'default')}\n")
+    language = os.getenv("ZXSGM_I18N_FOLDER", "default")
+    if language == "default":
+        language = "EN"
+
+    print(f"Compiling for language: {language}\n")
 
     executeFunction(removeTempFiles, "Removing temporary files")
     executeFunction(tiledExport, "Exporting game from Tiled")
