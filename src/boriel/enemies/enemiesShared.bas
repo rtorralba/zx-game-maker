@@ -78,6 +78,8 @@
 
 #ifdef SWORD_ENABLED
     Function checkSwordEnemyCollision(enemyX0 As Ubyte, enemyY0 As Ubyte, enemyX1 As Ubyte, enemyY1 As Ubyte, enemyId As Ubyte) As Ubyte
+        If Not isEnemyVulnerable(decompressedEnemiesScreen(enemyId, ENEMY_LIFE)) Then Return 0
+        
         If swordTimer = 0 Then Return 0
         
         Dim swordX As Ubyte
@@ -91,11 +93,7 @@
         If checkAABB(swordX, protaY + 1, swordX + 1, protaY + 2, enemyX0, enemyY0, enemyX1, enemyY1) = 0 Then Return 0
         
         #ifdef SWORD_KILL_ENEMY
-            If decompressedEnemiesScreen(enemyId, ENEMY_LIFE) = 98 Then
-                killEnemy(enemyId)
-            Else
-                damageEnemy(enemyId)
-            End If
+            killEnemy(enemyId)
         #else
             damageEnemy(enemyId)
         #endif
@@ -137,32 +135,13 @@ Function checkProtaAndBulletCollision(enemyId As Ubyte) As Ubyte
     Return 0
 End Function
 
-Function checkShouldSkipMoveBySpeed(enemySpeed As Ubyte) As Ubyte
-    If enemySpeed > 2 Then Return 0
-    Return skipMove(enemySpeed)
-End Function
+#define checkShouldSkipMoveBySpeed(enemySpeed) ((enemySpeed) <= 2 And skipMove(enemySpeed))
 
-Sub updateEnemyFrame(enemyId As Ubyte)
-    If currentEnemyFrame(enemyId) = 0 Then
-        currentEnemyFrame(enemyId) = 1
-    Else
-        currentEnemyFrame(enemyId) = 0
-    End If
-End Sub
+#define updateEnemyFrame(enemyId) currentEnemyFrame(enemyId) = currentEnemyFrame(enemyId) Xor 1
 
-Sub drawEnemy(enemyId As Ubyte, tile As Ubyte, enemyCol As Byte, enemyLin As Byte)
-    If resetReturnMovement(enemyId) = 1 Then
-        currentEnemyFrame(enemyId) = 0
-    End If
-    Draw2x2Sprite(tile + currentEnemyFrame(enemyId), enemyCol, enemyLin)
-End Sub
+#define drawEnemy(enemyId, tile, enemyCol, enemyLin) currentEnemyFrame(enemyId) = currentEnemyFrame(enemyId) And (resetReturnMovement(enemyId) Xor 1) : Draw2x2Sprite(tile + currentEnemyFrame(enemyId), enemyCol, enemyLin)
 
-Sub saveData(enemyId As Ubyte, horizontalDirection As Ubyte, verticalDirection As Ubyte, enemyCol As Byte, enemyLin As Byte)
-    decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = enemyCol
-    decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLin
-    decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = horizontalDirection
-    decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = verticalDirection
-End Sub
+#define saveData(enemyId, horizontalDirection, verticalDirection, enemyCol, enemyLin) decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = enemyCol : decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLin : decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = horizontalDirection : decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = verticalDirection
 
 Sub saveAndDraw(enemyId as Ubyte, tile As Ubyte, horizontalDirection As Ubyte, verticalDirection As Ubyte, enemyCol As Byte, enemyLin As Byte, enemySpeed As Ubyte)
     ' If platform, update frame every time, otherwise only when moving
@@ -191,13 +170,8 @@ Sub checkCollisionSaveAndDraw(enemyId as Ubyte, tile As Ubyte, horizontalDirecti
     saveAndDraw(enemyId, tile, horizontalDirection, verticalDirection, enemyCol, enemyLin, enemySpeed)
 End Sub
 
-' Updates enemy position, checks collision, flips tile for direction, animates frame, and draws.
-' Returns 1 if the enemy was killed (caller should Continue For), 0 otherwise.
-Sub calculatePositionAndTile(Byref tile As Ubyte, Byref enemyCol As Byte, Byref enemyLin As Byte, enemyHorizontalDirection As Byte, enemyVerticalDirection As Byte)
-    moveEnemyPosition(enemyCol, enemyLin, enemyHorizontalDirection, enemyVerticalDirection)
-
-    If isEnemy(tile) Then checkLeftDirection(enemyHorizontalDirection, tile)
-End Sub
+' Updates enemy position and flips tile for direction. Expands inline (no call overhead).
+#define calculatePositionAndTile(tile, enemyCol, enemyLin, enemyHorizontalDirection, enemyVerticalDirection) moveEnemyPosition(enemyCol, enemyLin, enemyHorizontalDirection, enemyVerticalDirection) : If isEnemy(tile) Then checkLeftDirection(enemyHorizontalDirection, tile)
 
 #ifdef ENEMY_SHOOT_ENABLED
     Sub shootEnemyBullet(enemyCol As Byte, enemyLin As Byte)

@@ -121,7 +121,7 @@ dim maxXScreenLeft as ubyte = 2
     #endif
     
     sub damageEnemy(enemyToKill as Ubyte)
-        if decompressedEnemiesScreen(enemyToKill, ENEMY_LIFE) = 99 then return 'invincible enemies
+        if decompressedEnemiesScreen(enemyToKill, ENEMY_LIFE) > 97 then return 'invincible enemies
         
         decompressedEnemiesScreen(enemyToKill, ENEMY_LIFE) = decompressedEnemiesScreen(enemyToKill, ENEMY_LIFE) - 1
         #ifdef HISCORE_ENABLED

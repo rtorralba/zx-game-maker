@@ -3,7 +3,9 @@ Function checkProtaSolidCollision(x As Ubyte, y As Ubyte) As Ubyte
 
     #ifdef MESSAGES_ENABLED
         If tile = ENEMY_DOOR_TILE Then
-            printMessage(KILL_ALL_ENEMIES_LINE1, KILL_ALL_ENEMIES_LINE2, KILL_ALL_ENEMIES_PAPER, KILL_ALL_ENEMIES_INK)
+            #ifdef KILL_ALL_ENEMIES_LINE1
+                printMessage(KILL_ALL_ENEMIES_LINE1, KILL_ALL_ENEMIES_LINE2, KILL_ALL_ENEMIES_PAPER, KILL_ALL_ENEMIES_INK)
+            #endif
         End If
     #endif
     
@@ -16,13 +18,17 @@ Function checkProtaSolidCollision(x As Ubyte, y As Ubyte) As Ubyte
                 removeTilesFromScreen(KEY_DOOR_TILE)
             Else
                 #ifdef MESSAGES_ENABLED
-                    printMessage(NO_KEYS_LINE1, NO_KEYS_LINE2, NO_KEYS_PAPER, NO_KEYS_INK)
+                    #ifdef NO_KEYS_LINE1
+                        printMessage(NO_KEYS_LINE1, NO_KEYS_LINE2, NO_KEYS_PAPER, NO_KEYS_INK)
+                    #endif
                 #endif
             End If
         End If
         if tile = ITEMS_DOOR_TILE then
             #ifdef MESSAGES_ENABLED
-                printMessage(NEED_ITEMS_LINE1, NEED_ITEMS_LINE2, NEED_ITEMS_PAPER, NEED_ITEMS_INK)
+                #ifdef NEED_ITEMS_LINE1
+                    printMessage(NEED_ITEMS_LINE1, NEED_ITEMS_LINE2, NEED_ITEMS_PAPER, NEED_ITEMS_INK)
+                #endif
             #endif
         end if
     #endif
@@ -64,11 +70,8 @@ End Function
 #ifdef SIDE_VIEW
     #ifdef LADDERS_ENABLED
         Function getNextFrameLadder() As Ubyte
-            If protaTile = 11 Then
-                Return 12
-            Else
-                Return 11
-            End If
+            If protaTile = 11 Then Return 12
+            Return 11
         End Function
     #endif
 #endif
@@ -137,13 +140,7 @@ Function getNextFrameRunning() As Ubyte
 End Function
 
 #ifdef SIDE_VIEW
-    Function getNextFrameJumpingFalling() As Ubyte
-        If (protaDirection) Then
-            Return 4
-        Else
-            Return 8
-        End If
-    End Function
+    #define getNextFrameJumpingFalling() (8 >> protaDirection)
     
     #ifndef JETPACK_FUEL
         Sub checkIsJumping()
@@ -392,6 +389,7 @@ Sub leftKey()
                 End If
             #endif
         #endif
+        protaFrame = getNextFrameRunning()
         Dim nextSprite as Ubyte = protaFrame + 1
         #ifdef SIDE_VIEW
             #ifdef DASH_ENABLED
@@ -428,6 +426,7 @@ Sub rightKey()
                 End If
             #endif
         #endif
+        protaFrame = getNextFrameRunning()
         Dim nextSprite as Ubyte = protaFrame + 1
         #ifdef SIDE_VIEW
             #ifdef DASH_ENABLED
@@ -466,6 +465,7 @@ Sub upKey()
             protaDirection = 8
         End If
         If canMoveUp() Then
+            protaFrame = getNextFrameRunning()
             saveProta(protaY - 1, protaX, protaFrame + 1, 8)
             If protaY < 2 Then
                 moveScreen = 8
@@ -518,6 +518,7 @@ Sub downKey()
                     moveScreen = 2
                 #endif
             Else
+                protaFrame = getNextFrameRunning()
                 saveProta(protaY + 1, protaX, protaFrame + 1, 2)
             End If
         End If
@@ -691,7 +692,9 @@ Function checkTileObject(tile As Ubyte) As Ubyte
         #endif
         printHud()
         #ifdef MESSAGES_ENABLED
-            printMessage(ITEM_FOUND_LINE1, ITEM_FOUND_LINE2, ITEM_FOUND_PAPER, ITEM_FOUND_INK)
+            #ifdef ITEM_FOUND_LINE1
+                printMessage(ITEM_FOUND_LINE1, ITEM_FOUND_LINE2, ITEM_FOUND_PAPER, ITEM_FOUND_INK)
+            #endif
         #endif
         #ifdef ARCADE_MODE
             If currentItems = itemsToFind Then
@@ -729,7 +732,9 @@ Function checkTileObject(tile As Ubyte) As Ubyte
         #endif
         printHud()
         #ifdef MESSAGES_ENABLED
-            printMessage(KEY_FOUND_LINE1, KEY_FOUND_LINE2, KEY_FOUND_PAPER, KEY_FOUND_INK)
+            #ifdef KEY_FOUND_LINE1
+                printMessage(KEY_FOUND_LINE1, KEY_FOUND_LINE2, KEY_FOUND_PAPER, KEY_FOUND_INK)
+            #endif
         #endif
         BeepFX_Play(3)
         Return 1
@@ -741,7 +746,9 @@ Function checkTileObject(tile As Ubyte) As Ubyte
         #endif
         printHud()
         #ifdef MESSAGES_ENABLED
-            printMessage(LIFE_FOUND_LINE1, LIFE_FOUND_LINE2, LIFE_FOUND_PAPER, LIFE_FOUND_INK)
+            #ifdef LIFE_FOUND_LINE1
+                printMessage(LIFE_FOUND_LINE1, LIFE_FOUND_LINE2, LIFE_FOUND_PAPER, LIFE_FOUND_INK)
+            #endif
         #endif
         BeepFX_Play(6)
         Return 1
@@ -755,7 +762,9 @@ Function checkTileObject(tile As Ubyte) As Ubyte
                 End If
                 printHud()
                 #ifdef MESSAGES_ENABLED
-                    printMessage(AMMO_FOUND_LINE1, AMMO_FOUND_LINE2, AMMO_FOUND_PAPER, AMMO_FOUND_INK)
+                    #ifdef AMMO_FOUND_LINE1
+                        printMessage(AMMO_FOUND_LINE1, AMMO_FOUND_LINE2, AMMO_FOUND_PAPER, AMMO_FOUND_INK)
+                    #endif
                 #endif
                 BeepFX_Play(6)
                 Return 1
@@ -765,7 +774,9 @@ Function checkTileObject(tile As Ubyte) As Ubyte
         Elseif tile = 188 Then
             dashActive = 1
             #ifdef MESSAGES_ENABLED
-                printMessage(DASH_ACTIVE_LINE1, DASH_ACTIVE_LINE2, DASH_ACTIVE_PAPER, DASH_ACTIVE_INK)
+                #ifdef DASH_ACTIVE_LINE1
+                    printMessage(DASH_ACTIVE_LINE1, DASH_ACTIVE_LINE2, DASH_ACTIVE_PAPER, DASH_ACTIVE_INK)
+                #endif
             #endif
             BeepFX_Play(6)
             Return 1

@@ -97,7 +97,6 @@ Dim framec As Ubyte AT 23672
     Dim lastFrameBeep As Ubyte = 0
 #endif
 
-Dim lastFrameProta As Ubyte = 0
 Dim lastFrameTiles As Ubyte = 0
 
 Const INVINCIBLE_FRAMES As Ubyte = 25

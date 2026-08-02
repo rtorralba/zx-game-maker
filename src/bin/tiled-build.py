@@ -415,7 +415,6 @@ configStr = "const MAX_ENEMIES_PER_SCREEN as ubyte = " + str(maxEnemiesPerScreen
 configStr += "#define MAX_ANIMATED_TILES_PER_SCREEN " + str(maxAnimatedTilesPerScreen - 1) + "\n"
 configStr += "const ANIMATED_TILES_COUNT as ubyte = " + str(animatedTilesIdsCount) + "\n"
 configStr += "const screenWidth as uinteger = " + str(screenWidth) + "\n"
-configStr += "const screenHeight as ubyte = " + str(screenHeight) + "\n"
 configStr += "const INITIAL_LIFE as ubyte = " + str(initialLife) + "\n"
 configStr += "const MAX_LINE as ubyte = " + str(screenHeight * 2 - 4) + "\n"
 
@@ -476,7 +475,7 @@ configStr += "const KEY_TILE as ubyte = " + keyTile + "\n"
 configStr += "const ITEM_TILE as ubyte = " + itemTile + "\n"
 # configStr += "const DOOR_TILE as ubyte = " + doorTile + "\n"
 configStr += "const LIFE_TILE as ubyte = " + lifeTile + "\n"
-configStr += "const ANIMATE_PERIOD_MAIN as ubyte = " + str(animatePeriodMain) + "\n"
+# configStr += "const ANIMATE_PERIOD_MAIN as ubyte = " + str(animatePeriodMain) + "\n"
 # configStr += "const ANIMATE_PERIOD_ENEMY as ubyte = " + str(animatePeriodEnemy) + "\n"
 configStr += "const ANIMATE_PERIOD_TILE as ubyte = " + str(animatePeriodTile) + "\n\n"
 
@@ -683,11 +682,6 @@ for layer in data['layers']:
         print('Total screen objects: ' + str(screenObjectsCount))
 
 configStr += "const MAP_SCREENS_WIDTH_COUNT as ubyte = " + str(mapCols) + "\n"
-configStr += "const SCREEN_OBJECT_ITEM_INDEX as ubyte = 0 \n"
-configStr += "const SCREEN_OBJECT_KEY_INDEX as ubyte = 1 \n"
-configStr += "const SCREEN_OBJECT_DOOR_INDEX as ubyte = 2 \n"
-configStr += "const SCREEN_OBJECT_LIFE_INDEX as ubyte = 3 \n"
-configStr += "const SCREEN_OBJECT_AMMO_INDEX as ubyte = 4 \n"
 configStr += "const SCREENS_COUNT as ubyte = " + str(screensCount - 1) + "\n\n"
 
 configStr += "#ifdef SIDE_VIEW\n"
@@ -1085,9 +1079,6 @@ if len(textLocs) > 0:
         configStr += f"\t{{ {loc[0]}, {loc[1]} }}, _\n"
     configStr = configStr[:-4]  # Remove last comma and newline
     configStr += " _\n}\n\n"
-    
-    # Also define a constant for text count
-    configStr += f"const TEXT_COUNT as ubyte = {len(textLocs)}\n"
 
 # get hud.json
 hudFile = open(outputDir + 'hud.json')

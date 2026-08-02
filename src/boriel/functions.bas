@@ -1,7 +1,10 @@
-sub pauseUntilPressKey()
-    while INKEY$<>"":wend
-    while INKEY$="":wend
-end sub
+#define pauseUntilPressKey() while INKEY$<>"":wend : while INKEY$="":wend
+
+#ifdef LIVES_MODE_ENABLED
+    #define printLife() PRINT AT HUD_LIFE_Y, HUD_LIFE_X; "  "; : PRINT AT HUD_LIFE_Y, HUD_LIFE_X; currentLife;
+#else
+    #define printLife() PRINT AT HUD_LIFE_Y, HUD_LIFE_X; "   "; : PRINT AT HUD_LIFE_Y, HUD_LIFE_X; currentLife;
+#endif
 
 #ifdef TIMER_ENABLED
     Sub resetTimer()
@@ -99,14 +102,7 @@ sub printHud()
     #endif
 end sub
 
-Sub printLife()
-    #ifdef LIVES_MODE_ENABLED
-        PRINT AT HUD_LIFE_Y, HUD_LIFE_X; "  ";
-    #else
-        PRINT AT HUD_LIFE_Y, HUD_LIFE_X; "   ";
-    #endif
-    PRINT AT HUD_LIFE_Y, HUD_LIFE_X; currentLife;
-End Sub
+
 
 #ifdef HISCORE_ENABLED
     Sub printScore()
@@ -146,7 +142,9 @@ End Sub
                 #ifdef HURRY_UP_SECONDS
                     If timerSeconds < 31 Then
                         vortexTracker2x = 1
-                        printMessage(HURRY_UP_LINE1, HURRY_UP_LINE2, HURRY_UP_PAPER, HURRY_UP_INK)
+                        #ifdef HURRY_UP_LINE1
+                            printMessage(HURRY_UP_LINE1, HURRY_UP_LINE2, HURRY_UP_PAPER, HURRY_UP_INK)
+                        #endif
                     End If
                 #endif
             End If
@@ -158,6 +156,8 @@ End Sub
 
 #ifdef MESSAGES_ENABLED
     sub printMessage(line1 as string, line2 as string, p as ubyte, i as ubyte)
+        If line1 = "" AND line2 = "" Then Return
+        
         Paper p: Ink i: Flash MESSAGES_FLASH_ENABLED
         PRINT AT HUD_MESSAGE_Y, HUD_MESSAGE_X; line1
         PRINT AT HUD_MESSAGE_Y_2, HUD_MESSAGE_X; line2
@@ -192,13 +192,12 @@ End Sub
 
 Function isDamageTileByColLin(col as Ubyte, lin as Ubyte) As Ubyte
     Dim tile as Ubyte = GetTile(col, lin)
-    DIM basePtr as UInteger
-    
-    basePtr = arrayBasePtr(damageTiles)
+    DIM basePtr as UInteger = arrayBasePtr(damageTiles)
+    Dim i as Ubyte
     
     For i = 0 to DAMAGE_TILES_COUNT
         If peek(basePtr + i) = tile Then
-            Return 1
+            Return tile
         End If
     Next i
     
@@ -208,14 +207,15 @@ End Function
 function allEnemiesKilled() as ubyte
     if enemiesPerScreen(currentScreen) = 0 then return 1
     
-    for enemyId=0 TO enemiesPerScreen(currentScreen) - 1
-        if decompressedEnemiesScreen(enemyId, 0) < 16 then
+    Dim enemyId As Ubyte
+    Dim life As Ubyte
+    for enemyId = 0 TO enemiesPerScreen(currentScreen) - 1
+        if decompressedEnemiesScreen(enemyId, ENEMY_TILE) < 16 then
             continue for
         end if
-        if decompressedEnemiesScreen(enemyId, 8) <> 99 then  'is not invincible'
-            if decompressedEnemiesScreen(enemyId, 8) > 0 then 'In the screen and still live
-                return 0
-            end if
+        life = decompressedEnemiesScreen(enemyId, ENEMY_LIFE)
+        if life > 0 and life <> 99 then
+            return 0
         end if
     next enemyId
     
@@ -332,42 +332,18 @@ end function
 #endif
 
 #ifdef SIDE_VIEW
-    Function checkTravesablePlatformFromTop(x as uByte, y as uByte) as uByte
+    Function checkTravesablePlatformType(x as uByte, y as uByte, maxTile as Ubyte) as uByte
         Dim tile as Ubyte = GetTile(x >> 1, y >> 1)
         
         If tile < 64 Then Return 0
-        If tile > 65 Then Return 0
+        If tile > maxTile Then Return 0
         
         Return 1
     End Function
     
-    function checkTravesablePlatform(x as uByte, y as uByte) as uByte
-        Dim tile as Ubyte = GetTile(x >> 1, y >> 1)
-        
-        If tile < 64 Then Return 0
-        If tile > 69 Then Return 0
-        
-        Return 1
-    end function
-    
-    Function checkTravesablePlatformFromTopAndAll(x as uByte, y as uByte) as uByte
-        Dim tile as Ubyte = GetTile(x >> 1, y >> 1)
-        
-        If tile < 64 Then Return 0
-        If tile > 67 Then Return 0
-        
-        Return 1
-    End Function
-    #ifdef LADDERS_ENABLED
-        Function isLadder(col as uByte, lin as uByte) as uByte
-            Dim tile as Ubyte = GetTile(col, lin)
-            
-            If tile < 70 Then Return 0
-            If tile > 73 Then Return 0
-            
-            Return 1
-        End Function
-    #endif
+    #define checkTravesablePlatformFromTop(x, y) checkTravesablePlatformType(x, y, 65)
+    #define checkTravesablePlatform(x, y) checkTravesablePlatformType(x, y, 69)
+    #define checkTravesablePlatformFromTopAndAll(x, y) checkTravesablePlatformType(x, y, 67)
 #endif
 
 'type 0 Damage, 1 Solid, 2 Ladder
@@ -381,7 +357,8 @@ Function checkTypeOfTile(col as uByte, lin as uByte, type as Ubyte) as uByte
     #ifdef SIDE_VIEW
         #ifdef LADDERS_ENABLED
             If type = 2 Then
-                Return isLadder(col, lin)
+                Dim tile as Ubyte = GetTile(col, lin)
+                If tile >= 70 And tile <= 73 Then Return tile
             End If
         #endif
     #endif
@@ -394,24 +371,25 @@ Function CheckCollision(x as Ubyte, y as Ubyte, type as Ubyte) as Ubyte
     Dim yIsEven as Ubyte = (y bAnd 1) = 0
     Dim col as Ubyte = x >> 1
     Dim lin as Ubyte = y >> 1
+    Dim t as Ubyte
     
-    if checkTypeOfTile(col, lin, type) then return GetTile(col, lin)
-    if checkTypeOfTile(col + 1, lin, type) then return GetTile(col + 1, lin)
-    if checkTypeOfTile(col, lin + 1, type) then return GetTile(col, lin + 1)
-    if checkTypeOfTile(col + 1, lin + 1, type) then return GetTile(col + 1, lin + 1)
+    t = checkTypeOfTile(col, lin, type) : if t then return t
+    t = checkTypeOfTile(col + 1, lin, type) : if t then return t
+    t = checkTypeOfTile(col, lin + 1, type) : if t then return t
+    t = checkTypeOfTile(col + 1, lin + 1, type) : if t then return t
     
     if not yIsEven then
-        if checkTypeOfTile(col, lin + 2, type) then return GetTile(col, lin + 2)
-        if checkTypeOfTile(col + 1, lin + 2, type) then return GetTile(col + 1, lin + 2)
+        t = checkTypeOfTile(col, lin + 2, type) : if t then return t
+        t = checkTypeOfTile(col + 1, lin + 2, type) : if t then return t
     end if
     
     if not xIsEven then
-        if checkTypeOfTile(col + 2, lin, type) then return GetTile(col + 2, lin)
-        if checkTypeOfTile(col + 2, lin + 1, type) then return GetTile(col + 2, lin + 1)
+        t = checkTypeOfTile(col + 2, lin, type) : if t then return t
+        t = checkTypeOfTile(col + 2, lin + 1, type) : if t then return t
     end if
     
     if not xIsEven and not yIsEven then
-        if checkTypeOfTile(col + 2, lin + 2, type) then return GetTile(col + 2, lin + 2)
+        t = checkTypeOfTile(col + 2, lin + 2, type) : if t then return t
     end if
     
     return 0
@@ -489,12 +467,7 @@ end sub
     end sub
 #endif
 
-sub saveProta(lin as ubyte, col as ubyte, tile as ubyte, directionRight as ubyte)
-    protaX = col
-    protaY = lin
-    protaTile = tile
-    protaDirection = directionRight
-end sub
+#define saveProta(lin, col, tile, directionRight) protaX = col : protaY = lin : protaTile = tile : protaDirection = directionRight
 
 #ifndef ARCADE_MODE
     Sub addScreenObject(tile As Ubyte, col As Ubyte, lin As Ubyte)
@@ -510,16 +483,10 @@ end sub
 #endif
 
 Function getAttrFromTileAndApplyToOther(tile As Ubyte, besideTile As Ubyte) As Ubyte
-    Dim attr As Ubyte = attrSet(tile) bAnd 135    ' ink (bits 0-2) + flash (bit 7)
-    Return attr + (attrSet(besideTile) bAnd 120)  ' + paper (bits 3-5) + bright (bit 6)
+    Return (attrSet(tile) bAnd 135) + (attrSet(besideTile) bAnd 120)  ' ink+flash + paper+bright
 End Function
 
-Sub replaceTileWithBackground(col As Ubyte, lin As Ubyte)
-    Dim tile As Ubyte = GetTile(col, lin)
-    Dim besideTile As Ubyte = GetTile(col, lin + 1)
-    
-    SetTile(besideTile, attrSet(besideTile), col, lin)
-End Sub
+#define replaceTileWithBackground(col, lin) SetTile(GetTile(col, (lin) + 1), attrSet(GetTile(col, (lin) + 1)), col, lin)
 
 #ifdef IDLE_ENABLED
     Function getNextProtaIdleSprite() As Ubyte
@@ -531,20 +498,9 @@ End Sub
     End Function
 #endif
 
-Function getFirstCharInk() As Ubyte
-    Dim attr As Ubyte = Peek(22528)  ' Primer carácter (0,0)
-    Return attr bAnd 7               ' Bits 0-2: INK
-End Function
-
-Function getFirstCharPaper() As Ubyte
-    Dim attr As Ubyte = Peek(22528)  ' Primer carácter (0,0)
-    Return (attr bAnd 56) >> 3       ' Bits 3-5: PAPER (desplazar 3 bits)
-End Function
-
-Function getFirstCharBright() As Ubyte
-    Dim attr As Ubyte = Peek(22528)  ' Primer carácter (0,0)
-    Return (attr bAnd 64) >> 6       ' Bit 6: BRIGHT (desplazar 6 bits)
-End Function
+#define getFirstCharInk() (Peek(22528) bAnd 7)
+#define getFirstCharPaper() ((Peek(22528) bAnd 56) >> 3)
+#define getFirstCharBright() ((Peek(22528) bAnd 64) >> 6)
 
 Function skipScreenPressed() As Ubyte
     If kempstonInterfaceAvailable Then

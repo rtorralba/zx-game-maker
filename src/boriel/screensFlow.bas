@@ -221,12 +221,16 @@ Sub playGame()
                 #ifdef HURRY_UP_SECONDS
                     If timerSeconds > HURRY_UP_SECONDS Then
                         If currentItems = itemsToFind Then
-                            printMessage(ARCADE_GOAL_LINE1, ARCADE_GOAL_LINE2, ARCADE_GOAL_PAPER, ARCADE_GOAL_INK)
+                            #ifdef ARCADE_GOAL_LINE1
+                                printMessage(ARCADE_GOAL_LINE1, ARCADE_GOAL_LINE2, ARCADE_GOAL_PAPER, ARCADE_GOAL_INK)
+                            #endif
                         End If
                     End If
                 #else
                     If currentItems = itemsToFind Then
-                        printMessage(ARCADE_GOAL_LINE1, ARCADE_GOAL_LINE2, ARCADE_GOAL_PAPER, ARCADE_GOAL_INK)
+                        #ifdef ARCADE_GOAL_LINE1
+                            printMessage(ARCADE_GOAL_LINE1, ARCADE_GOAL_LINE2, ARCADE_GOAL_PAPER, ARCADE_GOAL_INK)
+                        #endif
                     End If
                 #endif
             #endif
@@ -466,11 +470,6 @@ Sub calculateIfSkipMovementBySpeed()
 End Sub
 
 Sub makeAnimations()
-    If framec - lastFrameProta >= ANIMATE_PERIOD_MAIN Then
-        protaFrame = getNextFrameRunning()
-        Let lastFrameProta = framec
-    End If
-    
     If framec - lastFrameTiles >= ANIMATE_PERIOD_TILE Then
         animateAnimatedTiles()
         #ifdef IDLE_ENABLED
@@ -552,7 +551,6 @@ Sub resetValues()
     invincibleFrame = 0
     
     currentLife = INITIAL_LIFE
-    currentKeys = 2 Mod 2
     currentKeys = 0
     moveScreen = 0
     
@@ -579,11 +577,11 @@ Sub resetValues()
     #ifdef ARCADE_MODE
         currentItems = 0
     #Else
-        If ITEMS_COUNTDOWN Then
+        #if ITEMS_COUNTDOWN <> 0
             currentItems = itemsToFind
-        Else
+        #Else
             currentItems = 0
-        End If
+        #endif
     #endif
     
     #ifdef LIVES_MODE_ENABLED
