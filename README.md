@@ -35,7 +35,7 @@ En el siguiente enlace puedes ver los juegos hechos con el ZX Spectrum Game Make
 * [Raül Torralba](https://github.com/rtorralba) (Autor)
 * [Juan Antonio](https://x.com/JuanAntonio1072) bin2tap example and loader.bin and Improved Beeper player
 * [Conrado Badenas](https://conradobadenas.wordpress.com/) Contributor
-* [Juan GM](https://github.com/jgajete) Contributor
+* [Juan GM](https://jgajete.itch.io/) Contributor
 * [programadorhedonista](https://github.com/programadorhedonista) Contributor
 * [Isaías](https://isaiasdiaz.itch.io/) make-game.bat
 * [Khan_Noonien_Singh](https://t.me/zx_spectrum_game_maker) Telegram group moderator
@@ -68,7 +68,7 @@ Libraries and other software that are included in this project or that it was in
 * [Juan Antonio](https://x.com/JuanAntonio1072)
 * [Conrado Badenas](https://conradobadenas.wordpress.com/)
 * [programadorhedonista](https://github.com/programadorhedonista)
-* [Juan GM](https://github.com/jgajete)
+* [Juan GM](https://jgajete.itch.io/)
 
 Y a todo el grupo de ZX Basic de Boriel de Telegram
 
