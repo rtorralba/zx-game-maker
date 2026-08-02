@@ -563,10 +563,10 @@ Sub resetValues()
     #endif
     
     For i = 0 To SCREEN_OBJECTS_COUNT - 1
+        screenObjects(i, 0) = 0
         screenObjects(i, 1) = 0
         screenObjects(i, 2) = 0
         screenObjects(i, 3) = 0
-        screenObjects(i, 4) = 0
     Next i
 
     For i = 0 To MAX_ENEMIES_PER_SCREEN
