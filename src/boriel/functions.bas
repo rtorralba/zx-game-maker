@@ -158,10 +158,13 @@ end sub
     sub printMessage(line1 as string, line2 as string, p as ubyte, i as ubyte)
         If line1 = "" AND line2 = "" Then Return
         
-        Paper p: Ink i: Flash MESSAGES_FLASH_ENABLED
-        PrintString(line1, 7, HUD_MESSAGE_X, HUD_MESSAGE_Y)
-        PrintString(line2, 7, HUD_MESSAGE_X, HUD_MESSAGE_Y_2)
-        Paper PAPER_VALUE: Ink INK_VALUE: Flash 0
+        #ifdef MESSAGES_FLASH_ENABLED
+            Dim attr as uByte = (p * 8) + i + (128 * MESSAGES_FLASH_ENABLED)
+        #else
+            Dim attr as uByte = (p * 8) + i
+        #endif
+        PrintString(line1, attr, HUD_MESSAGE_X, HUD_MESSAGE_Y)
+        PrintString(line2, attr, HUD_MESSAGE_X, HUD_MESSAGE_Y_2)
         messageLoopCounter = 0
     end sub
     
@@ -174,10 +177,9 @@ end sub
     end sub
     
     Sub clearMessage()
-        Paper MESSAGE_DEFAULT_PAPER: Ink MESSAGE_DEFAULT_INK: Flash 0
-        PrintString("        ", 7, HUD_MESSAGE_X, HUD_MESSAGE_Y)
-        PrintString("        ", 7, HUD_MESSAGE_X, HUD_MESSAGE_Y_2)
-        Paper PAPER_VALUE: Ink INK_VALUE: Flash 0
+        Dim defaultAttr as uByte = (MESSAGE_DEFAULT_PAPER * 8) + MESSAGE_DEFAULT_INK
+        PrintString("        ", defaultAttr, HUD_MESSAGE_X, HUD_MESSAGE_Y)
+        PrintString("        ", defaultAttr, HUD_MESSAGE_X, HUD_MESSAGE_Y_2)
     End Sub
 #endif
 
@@ -564,7 +566,6 @@ End Function
         SetBank(0)
         
         ' --- DRAW WINDOW ---
-        Ink inkColor: Paper paperColor
         
         ' Clear Window Area (Pixels)
         ClearBox(TEXTS_WINDOW_X, TEXTS_WINDOW_Y, TEXTS_WINDOW_WIDTH, TEXTS_WINDOW_HEIGHT)
@@ -596,7 +597,7 @@ End Function
             ElseIf charCode = 32 Then
                 ' Space
                 If currentX <= TEXTS_WINDOW_X + TEXTS_WINDOW_WIDTH - 1 Then
-                    PrintString(" ", 7, currentX, currentY)
+                    PrintString(" ", attrVal, currentX, currentY)
                     currentX = currentX + 1
                 End If
                 textPtr = textPtr + 1
@@ -619,7 +620,7 @@ End Function
                 ' Print Word
                 If currentY <= TEXTS_WINDOW_Y + TEXTS_WINDOW_HEIGHT - 1 Then
                     While PEEK(textPtr) <> 32 AND PEEK(textPtr) <> 10 AND PEEK(textPtr) <> 255
-                        PrintString(Chr$(PEEK(textPtr)), 7, currentX, currentY)
+                        PrintString(Chr$(PEEK(textPtr)), attrVal, currentX, currentY)
                         currentX = currentX + 1
                         textPtr = textPtr + 1
                     Wend
@@ -633,8 +634,6 @@ End Function
         ' Wait
         Do
         Loop Until skipScreenPressed()
-        
-        Paper PAPER_VALUE: Ink INK_VALUE
         
         ' --- RESTORE BACKGROUND (FULL SCREEN) ---
         SetBank(TEXTS_BANK)
