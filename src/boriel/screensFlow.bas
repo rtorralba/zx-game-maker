@@ -21,9 +21,9 @@ Sub showMenu()
     
     #ifdef HISCORE_ENABLED
         Ink getFirstCharInk(): Paper getFirstCharPaper(): Bright getFirstCharBright()
-        Print AT 23, 6; "HI:"
-        Print AT 23, 9; "00000"
-        Print AT 23, 14 - LEN(STR$(hiScore)); hiScore
+        PrintString("HI:", 7, 6, 23)
+        PrintString("00000", 7, 9, 23)
+        PrintString(STR$(hiScore), 7, 14 - LEN(STR$(hiScore)), 23)
     #endif
     
     Do
@@ -77,11 +77,11 @@ End Sub
         
         Dim failed As Ubyte = 0
         
-        Print AT 9,12; "PASS"
+        PrintString("PASS", 7, 12, 9)
         
         For i=0 To 4
             LeerTecla()
-            Print AT 10,12 + i; "*"
+            PrintString("*", 7, 12 + i, 10)
             If Inkey$ <> password(i) Then
                 failed = 1
             End If
@@ -106,7 +106,7 @@ End Sub
         End Function
     #endif
     Sub redefineKeys()
-        Ink 7: Paper 0: Border 0: BRIGHT 0: FLASH 0: Cls
+        Cls
         
         #ifdef ENABLED_128k
             #ifdef MUSIC_ENABLED
@@ -116,22 +116,20 @@ End Sub
             #endif
         #endif
         
-        Print AT 9,8;"KEYS"
-        
-        Print AT 13,8;"<"
+        PrintString("<", 7, 16, 8)    
         keyArray(LEFT) = LeerTecla()
         
-        Print AT 15,8;">"
+        PrintString(">", 7, 16, 8)
         keyArray(RIGHT) = LeerTecla()
         
-        Print AT 17,8;"^"
+        PrintString("^", 7, 16, 8)
         keyArray(UP) = LeerTecla()
         
-        Print AT 19,8;"v"
+        PrintString("v", 7, 16, 8)
         keyArray(DOWN) = LeerTecla()
         
         #ifdef SHOOTING_ENABLED
-            Print AT 21,8;"FIRE"
+            PrintString("GUN", 7, 16, 8)
             keyArray(FIRE) = LeerTecla()
         #endif
         
@@ -207,9 +205,9 @@ Sub playGame()
     #endif
     
     #ifdef HISCORE_ENABLED
-        Print AT HUD_HISCORE_Y, HUD_HISCORE_X; "00000"
-        Print AT HUD_HISCORE_Y, HUD_HISCORE_X + 5 - LEN(STR$(hiScore)); hiScore
-        Print AT HUD_HISCORE_Y + 1, HUD_HISCORE_X; "00000"
+        PrintString("00000", 7, HUD_HISCORE_X, HUD_HISCORE_Y)
+        PrintString(STR$(hiScore), 7, HUD_HISCORE_X + 5 - LEN(STR$(hiScore)), HUD_HISCORE_Y)
+        PrintString("00000", 7, HUD_HISCORE_X, HUD_HISCORE_Y + 1)
     #endif
     
     Do
@@ -338,19 +336,19 @@ End Sub
             
             Dim currentLives As Ubyte = currentLife
             
-            Print At 6, 8; "TIME LEFT:      ";
-            Print At 6, 24 - LEN(STR$(timerSeconds)); timerSeconds
+            PrintString("TIME LEFT:      ", 7, 8, 6)
+            PrintString(STR$(timerSeconds), 7, 24 - LEN(STR$(timerSeconds)), 6)
             
-            Print AT 8, 8; "LIVES LEFT:    ";
-            Print AT 8, 24 - LEN(STR$(currentLives)); currentLives
+            PrintString("LIVES LEFT:    ", 7, 8, 8)
+            PrintString(STR$(currentLives), 7, 24 - LEN(STR$(currentLives)), 8)
             
-            Print AT 10, 8; "SCORE:          ";
-            Print AT 10, 24 - LEN(STR$(score)); score
+            PrintString("SCORE:          ", 7, 8, 10)
+            PrintString(STR$(score), 7, 24 - LEN(STR$(score)), 10)
             
             #ifdef ARCADE_SHOW_BIG_INTERMEDIATE_TITLE
                 doubleSizeTexto(10, 160, "SCREEN CLEARED!")
             #else
-                Print AT 2, 10; "SCREEN CLEARED!"
+                PrintString("SCREEN CLEARED!", 7, 10, 2)
             #endif
             
             ' Print current score and remaining time and subtractr second and increase score
@@ -363,11 +361,11 @@ End Sub
                     timerSeconds = timerSeconds - 1
                     incrementScore(1)
                     
-                    Print At 6, 8; "TIME LEFT:      ";
-                    Print At 6, 24 - LEN(STR$(timerSeconds)); timerSeconds
+                    PrintString("TIME LEFT:      ", 7, 8, 6)
+                    PrintString(STR$(timerSeconds), 7, 24 - LEN(STR$(timerSeconds)), 6)
                     
-                    Print AT 10, 8; "SCORE:          ";
-                    Print AT 10, 24 - LEN(STR$(score)); score
+                    PrintString("SCORE:          ", 7, 8, 10)
+                    PrintString(STR$(score), 7, 24 - LEN(STR$(score)), 10)
                     Beep .01, 12
                     
                     protaTile = getNextProtaIdleSprite()
@@ -379,11 +377,11 @@ End Sub
                     currentLives = currentLives - 1
                     incrementScore(50)
                     
-                    Print AT 8, 8; "LIVES LEFT:    ";
-                    Print AT 8, 24 - LEN(STR$(currentLives)); currentLives
+                    PrintString("LIVES LEFT:    ", 7, 8, 8)
+                    PrintString(STR$(currentLives), 7, 24 - LEN(STR$(currentLives)), 8)
                     
-                    Print AT 10, 8; "SCORE:          ";
-                    Print AT 10, 24 - LEN(STR$(score)); score
+                    PrintString("SCORE:          ", 7, 8, 10)
+                    PrintString(STR$(score), 7, 24 - LEN(STR$(score)), 10)
                     Beep .01, 12
                     
                     protaTile = getNextProtaIdleSprite()
@@ -396,7 +394,7 @@ End Sub
                 Ink tinta: Paper papel: Bright brillante
                 
                 Flash 1
-                Print AT 18, 4; "PRESS ENTER To Continue"
+                PrintString("PRESS ENTER To Continue", 7, 4, 18)
                 Flash 0
                 
                 If score > hiScore Then
@@ -523,11 +521,11 @@ Sub gameOver()
             SetBank(0)
         #Else
             saveProta(protaY, protaX, 15, 0)
-            Print AT 7, 12; "GAME OVER"
+            PrintString("GAME OVER", 7, 12, 7)
         #endif
     #Else
         saveProta(protaY, protaX, 15, 0)
-        Print at 7, 12; "GAME OVER"
+        PrintString("GAME OVER", 7, 12, 7)
     #endif
     
     Do

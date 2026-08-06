@@ -46,7 +46,7 @@
 '#define MERGE_WITH_XOR
 
 'Enabling this define activates the fast print routines
-'#define ENABLE_PRINT
+#define ENABLE_PRINT
 
 'The value of this parameter should be 256 bytes less than actual address
 'for ROM character set (see https://skoolkid.github.io/rom/asm/3D00.html).
@@ -2982,7 +2982,7 @@ sub PrintString(text as string, Color as uInteger, X as uInteger, Y as uInteger)
     #pragma string_base = 0
 
     for buc = 0 to tmpVal - 1
-        PrintChar(code(text(buc to buc)), Color, X + buc - 1, Y)
+        PrintChar(code(text(buc to buc)), Color, X + buc, Y)
     next buc
 
     #pragma pop(string_base)
