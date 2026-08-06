@@ -129,7 +129,7 @@ End Sub
         keyArray(DOWN) = LeerTecla()
         
         #ifdef SHOOTING_ENABLED
-            PrintString("GUN", 7, 16, 8)
+            PrintString("FIRE", 7, 16, 8)
             keyArray(FIRE) = LeerTecla()
         #endif
         
