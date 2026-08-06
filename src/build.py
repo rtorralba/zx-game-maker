@@ -1,3 +1,4 @@
+from configuration.folders import BIN_FOLDER
 import os
 import sys
 from pathlib import Path
@@ -37,25 +38,25 @@ def buildingFilesAndConfig():
 def compilingGame():
     if useAlternativeCompiler:
         runCommand(alternativeCompiler + " --version")
-        runCommand(alternativeCompiler + " -W160 -W170 -W130 -W190 -W150 -W100 -H 128 --heap-address 23755 -S 24576 -O 4 \"" + str(Path("boriel/main.bas")) + "\" --mmap \"" + str(OUTPUT_FOLDER / "map.txt") + "\" -D HIDE_LOAD_MSG -o \"" + str(OUTPUT_FOLDER / "main.bin") + "\"")
+        runCommand(alternativeCompiler + " -W160 -W170 -W130 -W190 -W150 -W100 -H 128 --heap-address 23755 -S 24120 -O 4 \"" + str(Path("boriel/main.bas")) + "\" --mmap \"" + str(OUTPUT_FOLDER / "map.txt") + "\" -D HIDE_LOAD_MSG -o \"" + str(OUTPUT_FOLDER / "main.bin") + "\"")
     else:
         runCommand("zxbc --version")
-        runCommand("zxbc -W160 -W170 -W130 -W190 -W150 -W100 -H 128 --heap-address 23755 -S 24576 -O 4 \"" + str(Path("boriel/main.bas")) + "\" --mmap \"" + str(OUTPUT_FOLDER / "map.txt") + "\" -D HIDE_LOAD_MSG -o \"" + str(OUTPUT_FOLDER / "main.bin") + "\"")
+        runCommand("zxbc -W160 -W170 -W130 -W190 -W150 -W100 -H 128 --heap-address 23755 -S 24120 -O 4 \"" + str(Path("boriel/main.bas")) + "\" --mmap \"" + str(OUTPUT_FOLDER / "map.txt") + "\" -D HIDE_LOAD_MSG -o \"" + str(OUTPUT_FOLDER / "main.bin") + "\"")
 
 def checkMemory():
     runPythonScriptFile(str(BIN_FOLDER / "check-memory.py"))
 
 def tapsBuild(outputFile):    
-    runCommand("zxbin2tap \"" + str(BIN_FOLDER / "loader.bin") + "\" \"" + str(OUTPUT_FOLDER / "loader.tap") + "\" 10 --header \"" + getProjectName() + "\" --block_type 1")
+    # runCommand("zxbin2tap \"" + str(BIN_FOLDER / "loader.bin") + "\" \"" + str(OUTPUT_FOLDER / "loader.tap") + "\" 10 --header \"" + getProjectName() + "\" --block_type 1")
     runCommand("zxbin2tap \"" + str(OUTPUT_FOLDER / "loading.bin") + "\" \"" + str(OUTPUT_FOLDER / "loading.tap") + "\" 16384")
-    runCommand("zxbin2tap \"" + str(OUTPUT_FOLDER / "main.bin") + "\" \"" + str(OUTPUT_FOLDER / "main.tap") + "\" 24576")
+    runCommand("zxbin2tap \"" + str(OUTPUT_FOLDER / "main.bin") + "\" \"" + str(OUTPUT_FOLDER / "main.tap") + "\" 24120")
 
     if getEnabled128K():
         runCommand("zxbin2tap \"" + str(OUTPUT_FOLDER / "title.scr.zx0") + "\" \"" + str(OUTPUT_FOLDER / "title.tap") + "\" 49152")
         runCommand("zxbin2tap \"" + str(OUTPUT_FOLDER / "ending.scr.zx0") + "\" \"" + str(OUTPUT_FOLDER / "ending.tap") + "\" 16384")
-        runCommand("zxbin2tap \"" + str(OUTPUT_FOLDER / "hud.scr.zx0") + "\" \"" + str(OUTPUT_FOLDER / "hud.tap") + "\" 24576")
+        runCommand("zxbin2tap \"" + str(OUTPUT_FOLDER / "hud.scr.zx0") + "\" \"" + str(OUTPUT_FOLDER / "hud.tap") + "\" 24120")
         input_files = [
-            str(OUTPUT_FOLDER / "loader.tap"),
+            str(BIN_FOLDER / "loader.tap"),
             str(OUTPUT_FOLDER / "loading.tap"),
             str(OUTPUT_FOLDER / "main.tap"),
             str(ASSETS_FOLDER / "fx/fx.tap"),
