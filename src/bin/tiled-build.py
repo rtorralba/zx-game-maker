@@ -56,19 +56,20 @@ enemyDoorTile = "63"
 for tileset in data['tilesets']:
     if tileset['name'] == 'tiles':
         for tile in tileset['tiles']:
-            if tile['type'] == 'ammo':
+            tile_type = tile.get('type') or tile.get('class')
+            if tile_type == 'ammo':
                 ammoTile = str(tile['id'])
-            if tile['type'] == 'key':
+            if tile_type == 'key':
                 keyTile = str(tile['id'])
-            if tile['type'] == 'item':
+            if tile_type == 'item':
                 itemTile = str(tile['id'])
-            if tile['type'] == 'life':
+            if tile_type == 'life':
                 lifeTile = str(tile['id'])
-            if tile['type'] == 'animated':
+            if tile_type == 'animated':
                 animatedTilesIds.append(tile['id'])
-            if tile['type'] == 'damage':
+            if tile_type == 'damage':
                 damageTiles.append(tile['id'])
-            if tile['type'] == 'animated-damage':
+            if tile_type == 'animated-damage':
                 animatedTilesIds.append(tile['id'])
                 damageTiles.append(tile['id'])
     elif tileset['name'] == 'sprites':
