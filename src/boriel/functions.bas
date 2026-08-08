@@ -455,12 +455,12 @@ end sub
         if (jumpCurrentKey = jumpStopValue and landed) or wallJump then
             landed = 0
             #ifdef DASH_ENABLED
-                hasDashed = 0
+                isDashing = 0
             #endif
             jumpCurrentKey = 0
             #ifdef DASH_ENABLED
-            Elseif landed = 0 And hasDashed = 0 And dashActive Then
-                hasDashed = 1
+            Elseif landed = 0 And isDashing = 0 And dashActive Then
+                isDashing = 1
                 dashTimer = DASH_DURATION
                 jumpCurrentKey = jumpStopValue
                 BeepFX_Play(2)

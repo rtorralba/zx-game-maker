@@ -260,7 +260,7 @@ Dim lastFrameOnBreakableTiles As Ubyte = 0
 #endif
 
 #ifdef DASH_ENABLED
-    Dim hasDashed As Ubyte = 0
+    Dim isDashing As Ubyte = 0
     Dim dashTimer As Ubyte = 0
     Const DASH_DURATION As Ubyte = 8
     Dim dashGhostX As Ubyte = 0

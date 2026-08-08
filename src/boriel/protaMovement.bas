@@ -224,7 +224,7 @@ End Function
                     wallJumpTimer = 0
                 #endif
                 #ifdef DASH_ENABLED
-                    hasDashed = 0
+                    isDashing = 0
                 #endif
                 jumpCurrentKey = jumpStopValue
                 #ifdef JETPACK_FUEL

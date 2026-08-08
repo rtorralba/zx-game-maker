@@ -620,6 +620,10 @@ Sub resetValues()
     #ifdef FINISH_GAME_OBJECTIVE_ITEMS_AND_ENEMY
         enemyToKillAlreadyKilled = 0
     #endif
+    #ifdef DASH_ENABLED
+        dashActive = 0
+        isDashing = 0
+    #endif
 End Sub
 
 Sub swapScreen()
