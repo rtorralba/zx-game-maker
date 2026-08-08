@@ -35,7 +35,7 @@ NextNote:
   or   a                ; Comprueba si es 0
   ret  z                ; Si es 0 sale, nada que reproducir
 
-  di                    ; Desactiva las interrupciuones
+  ; di                    ; Desactiva las interrupciuones
   push ix
   push iy               ; Preserva los registros índice
   push hl
@@ -66,7 +66,7 @@ readData:
 endData:
   pop  iy
   pop  ix               ; Recupera los registros índice
-  ei                    ; Reactiva las interrupciones
+  ; ei                    ; Reactiva las interrupciones
   ret                   ; Sale de la rutina
    
 nextData:
