@@ -44,9 +44,11 @@ initGraphics()
     End If
 #endif
 
+' Check if Kempston joystick is connected  ===========================
 waitretrace
 Dim p As Ubyte = In 31
 
 If (p bAND %11111) < 31 Then kempstonInterfaceAvailable = 1
+' Check if Kempston joystick is connected  ==========================
 
 showMenu()

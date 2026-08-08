@@ -1,9 +1,9 @@
 #define pauseUntilPressKey() while INKEY$<>"":wend : while INKEY$="":wend
 
 #ifdef LIVES_MODE_ENABLED
-    #define printLife() PRINT AT HUD_LIFE_Y, HUD_LIFE_X; "  "; : PRINT AT HUD_LIFE_Y, HUD_LIFE_X; currentLife;
+    #define printLife() PrintString("  ", 7, HUD_LIFE_X, HUD_LIFE_Y) : PrintString(STR$(currentLife), 7, HUD_LIFE_X, HUD_LIFE_Y)
 #else
-    #define printLife() PRINT AT HUD_LIFE_Y, HUD_LIFE_X; "   "; : PRINT AT HUD_LIFE_Y, HUD_LIFE_X; currentLife;
+    #define printLife() PrintString("   ", 7, HUD_LIFE_X, HUD_LIFE_Y) : PrintString(STR$(currentLife), 7, HUD_LIFE_X, HUD_LIFE_Y)
 #endif
 
 #ifdef TIMER_ENABLED
@@ -75,16 +75,16 @@ sub printHud()
     printLife()
     
     #ifdef JETPACK_FUEL
-        PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; "  ";
-        PRINT AT HUD_JETPACK_FUEL_Y, HUD_JETPACK_FUEL_X; jumpEnergy;
+        PrintString("  ", 7, HUD_JETPACK_FUEL_X, HUD_JETPACK_FUEL_Y)
+        PrintString(STR$(jumpEnergy), 7, HUD_JETPACK_FUEL_X, HUD_JETPACK_FUEL_Y)
     #endif
     #ifdef AMMO_ENABLED
-        PRINT AT HUD_AMMO_Y, HUD_AMMO_X; "   ";
-        PRINT AT HUD_AMMO_Y, HUD_AMMO_X; currentAmmo;
+        PrintString("   ", 7, HUD_AMMO_X, HUD_AMMO_Y)
+        PrintString(STR$(currentAmmo), 7, HUD_AMMO_X, HUD_AMMO_Y)
     #endif
     #ifndef ARCADE_MODE
         #ifdef KEYS_ENABLED
-            PRINT AT HUD_KEYS_Y, HUD_KEYS_X; currentKeys;
+            PrintString(STR$(currentKeys), 7, HUD_KEYS_X, HUD_KEYS_Y)
         #endif
     #endif
     #ifdef HISCORE_ENABLED
@@ -92,13 +92,13 @@ sub printHud()
     #endif
     #ifndef ARCADE_MODE
         #ifdef ITEMS_ENABLED
-            PRINT AT HUD_ITEMS_Y, HUD_ITEMS_X; "  ";
-            PRINT AT HUD_ITEMS_Y, HUD_ITEMS_X; currentItems;
+            PrintString("  ", 7, HUD_ITEMS_X, HUD_ITEMS_Y)
+            PrintString(STR$(currentItems), 7, HUD_ITEMS_X, HUD_ITEMS_Y)
         #endif
     #endif
     #ifdef CURRENT_STAGE_ENABLED
-        PRINT AT HUD_STAGE_Y, HUD_STAGE_X; "  ";
-        PRINT AT HUD_STAGE_Y, HUD_STAGE_X; currentScreen + 1;
+        PrintString("  ", 7, HUD_STAGE_X, HUD_STAGE_Y)
+        PrintString(STR$(currentScreen + 1), 7, HUD_STAGE_X, HUD_STAGE_Y)
     #endif
 end sub
 
@@ -106,25 +106,25 @@ end sub
 
 #ifdef HISCORE_ENABLED
     Sub printScore()
-        PRINT AT HUD_HISCORE_Y, HUD_HISCORE_X; "00000"
-        PRINT AT HUD_HISCORE_Y, HUD_HISCORE_X + 5 - LEN(STR$(hiScore)); hiScore
-        PRINT AT HUD_HISCORE_Y_2, HUD_HISCORE_X; "00000"
-        PRINT AT HUD_HISCORE_Y_2, HUD_HISCORE_X + 5 - LEN(STR$(score)); score
+        PrintString("00000", 7, HUD_HISCORE_X, HUD_HISCORE_Y)
+        PrintString(STR$(hiScore), 7, HUD_HISCORE_X + 5 - LEN(STR$(hiScore)), HUD_HISCORE_Y)
+        PrintString("00000", 7, HUD_HISCORE_X, HUD_HISCORE_Y_2)
+        PrintString(STR$(score), 7, HUD_HISCORE_X + 5 - LEN(STR$(score)), HUD_HISCORE_Y_2)
     End Sub
 #endif
 
 #ifdef TIMER_ENABLED
     Sub updateTimerDisplay()
-        PRINT AT HUD_TIMER_Y, HUD_TIMER_X; " :"
-        PRINT AT HUD_TIMER_Y, HUD_TIMER_X; timerSeconds / 60;
+        PrintString(" :", 7, HUD_TIMER_X, HUD_TIMER_Y)
+        PrintString(STR$(timerSeconds / 60), 7, HUD_TIMER_X, HUD_TIMER_Y)
         
         Dim timerSecondsRemaining as Ubyte = timerSeconds MOD 60
         
         If timerSecondsRemaining < 10 Then
-            PRINT AT HUD_TIMER_Y, HUD_TIMER_X + 2; "0";
-            PRINT AT HUD_TIMER_Y, HUD_TIMER_X + 3; timerSecondsRemaining;
+            PrintString("0", 7, HUD_TIMER_X + 2, HUD_TIMER_Y)
+            PrintString(STR$(timerSecondsRemaining), 7, HUD_TIMER_X + 3, HUD_TIMER_Y)
         Else
-            PRINT AT HUD_TIMER_Y, HUD_TIMER_X + 2; timerSecondsRemaining;
+            PrintString(STR$(timerSecondsRemaining), 7, HUD_TIMER_X + 2, HUD_TIMER_Y)
         End If
     End Sub
     Sub updateTimer()
@@ -158,10 +158,13 @@ end sub
     sub printMessage(line1 as string, line2 as string, p as ubyte, i as ubyte)
         If line1 = "" AND line2 = "" Then Return
         
-        Paper p: Ink i: Flash MESSAGES_FLASH_ENABLED
-        PRINT AT HUD_MESSAGE_Y, HUD_MESSAGE_X; line1
-        PRINT AT HUD_MESSAGE_Y_2, HUD_MESSAGE_X; line2
-        Paper PAPER_VALUE: Ink INK_VALUE: Flash 0
+        #ifdef MESSAGES_FLASH_ENABLED
+            Dim attr as uByte = (p * 8) + i + (128 * MESSAGES_FLASH_ENABLED)
+        #else
+            Dim attr as uByte = (p * 8) + i
+        #endif
+        PrintString(line1, attr, HUD_MESSAGE_X, HUD_MESSAGE_Y)
+        PrintString(line2, attr, HUD_MESSAGE_X, HUD_MESSAGE_Y_2)
         messageLoopCounter = 0
     end sub
     
@@ -174,10 +177,9 @@ end sub
     end sub
     
     Sub clearMessage()
-        Paper MESSAGE_DEFAULT_PAPER: Ink MESSAGE_DEFAULT_INK: Flash 0
-        PRINT AT HUD_MESSAGE_Y, HUD_MESSAGE_X; "        "
-        PRINT AT HUD_MESSAGE_Y_2, HUD_MESSAGE_X; "        "
-        Paper PAPER_VALUE: Ink INK_VALUE: Flash 0
+        Dim defaultAttr as uByte = (MESSAGE_DEFAULT_PAPER * 8) + MESSAGE_DEFAULT_INK
+        PrintString("        ", defaultAttr, HUD_MESSAGE_X, HUD_MESSAGE_Y)
+        PrintString("        ", defaultAttr, HUD_MESSAGE_X, HUD_MESSAGE_Y_2)
     End Sub
 #endif
 
@@ -453,12 +455,12 @@ end sub
         if (jumpCurrentKey = jumpStopValue and landed) or wallJump then
             landed = 0
             #ifdef DASH_ENABLED
-                hasDashed = 0
+                isDashing = 0
             #endif
             jumpCurrentKey = 0
             #ifdef DASH_ENABLED
-            Elseif landed = 0 And hasDashed = 0 And dashActive Then
-                hasDashed = 1
+            Elseif landed = 0 And isDashing = 0 And dashActive Then
+                isDashing = 1
                 dashTimer = DASH_DURATION
                 jumpCurrentKey = jumpStopValue
                 BeepFX_Play(2)
@@ -564,7 +566,6 @@ End Function
         SetBank(0)
         
         ' --- DRAW WINDOW ---
-        Ink inkColor: Paper paperColor
         
         ' Clear Window Area (Pixels)
         ClearBox(TEXTS_WINDOW_X, TEXTS_WINDOW_Y, TEXTS_WINDOW_WIDTH, TEXTS_WINDOW_HEIGHT)
@@ -596,7 +597,7 @@ End Function
             ElseIf charCode = 32 Then
                 ' Space
                 If currentX <= TEXTS_WINDOW_X + TEXTS_WINDOW_WIDTH - 1 Then
-                    Print At currentY, currentX; " ";
+                    PrintString(" ", attrVal, currentX, currentY)
                     currentX = currentX + 1
                 End If
                 textPtr = textPtr + 1
@@ -619,7 +620,7 @@ End Function
                 ' Print Word
                 If currentY <= TEXTS_WINDOW_Y + TEXTS_WINDOW_HEIGHT - 1 Then
                     While PEEK(textPtr) <> 32 AND PEEK(textPtr) <> 10 AND PEEK(textPtr) <> 255
-                        Print At currentY, currentX; Chr$(PEEK(textPtr));
+                        PrintString(Chr$(PEEK(textPtr)), attrVal, currentX, currentY)
                         currentX = currentX + 1
                         textPtr = textPtr + 1
                     Wend
@@ -633,8 +634,6 @@ End Function
         ' Wait
         Do
         Loop Until skipScreenPressed()
-        
-        Paper PAPER_VALUE: Ink INK_VALUE
         
         ' --- RESTORE BACKGROUND (FULL SCREEN) ---
         SetBank(TEXTS_BANK)
@@ -654,21 +653,21 @@ Function checkAABB(x0a As Ubyte, y0a As Ubyte, x1a As Ubyte, y1a As Ubyte, x0b A
 End Function
 
 sub debugA(value as UBYTE)
-    PRINT AT 0, 0; "----"
-    PRINT AT 0, 0; value
+    PrintString("----", 7, 0, 0)
+    PrintString(STR$(value), 7, 0, 0)
 end sub
 
 sub debugB(value as UBYTE)
-    PRINT AT 0, 5; "  "
-    PRINT AT 0, 5; value
+    PrintString("  ", 7, 5, 0)
+    PrintString(STR$(value), 7, 5, 0)
 end sub
 
 sub debugC(value as UBYTE)
-    PRINT AT 0, 10; "  "
-    PRINT AT 0, 10; value
+    PrintString("  ", 7, 10, 0)
+    PrintString(STR$(value), 7, 10, 0)
 end sub
 
 sub debugD(value as UBYTE)
-    PRINT AT 0, 15; "  "
-    PRINT AT 0, 15; value
+    PrintString("  ", 7, 15, 0)
+    PrintString(STR$(value), 7, 15, 0)
 end sub
