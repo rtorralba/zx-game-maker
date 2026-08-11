@@ -179,8 +179,8 @@ End Sub
         Dim dx As Integer = protaX - enemyCol
         Dim dy As Integer = protaY - enemyLin
         If dx = 0 And dy = 0 Then Return
-        enemyBulletDirX = Sgn(dx)
-        enemyBulletDirY = Sgn(dy)
+        enemyBulletDirX = sgn8(dx)
+        enemyBulletDirY = sgn8(dy)
         enemyBulletX = enemyCol + 1
         enemyBulletY = enemyLin + 1
         enemyBulletSpriteId = ENEMY_BULLET_SPRITE_ID

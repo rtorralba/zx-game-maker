@@ -330,8 +330,8 @@ End Sub
             clearScreen()
             
             Dim tinta As Ubyte = BACKGROUND_ATTRIBUTE bAND 7
-            Dim papel As Ubyte = (BACKGROUND_ATTRIBUTE bAND 56) / 8
-            Dim brillante As Ubyte = (BACKGROUND_ATTRIBUTE bAND 64) / 64
+            Dim papel As Ubyte = (BACKGROUND_ATTRIBUTE bAND 56) >> 3
+            Dim brillante As Ubyte = (BACKGROUND_ATTRIBUTE bAND 64) >> 6
             Ink tinta: Paper papel: Bright brillante
             
             Dim currentLives As Ubyte = currentLife

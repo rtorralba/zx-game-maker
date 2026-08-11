@@ -1,5 +1,11 @@
 #define pauseUntilPressKey() while INKEY$<>"":wend : while INKEY$="":wend
 
+Function sgn8(v As Byte) As Byte
+    If v > 0 Then Return 1
+    If v < 0 Then Return -1
+    Return 0
+End Function
+
 #ifdef LIVES_MODE_ENABLED
     #define printLife() PrintString("  ", 7, HUD_LIFE_X, HUD_LIFE_Y) : PrintString(STR$(currentLife), 7, HUD_LIFE_X, HUD_LIFE_Y)
 #else
