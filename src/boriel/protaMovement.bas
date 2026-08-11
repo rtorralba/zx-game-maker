@@ -156,7 +156,7 @@ End Function
                 #Else
                     moveScreen = 8 ' stop jumping
                 #endif
-                jumpCurrentKey = jumpCurrentKey + 1
+                incrementJumpKey()
                 Return
             End If
             
@@ -164,13 +164,13 @@ End Function
                 If jumpArray(jumpCurrentKey) > 0 Then
                     stopJump()
                 Else
-                    jumpCurrentKey = jumpCurrentKey + 1
+                    incrementJumpKey()
                 End If
                 Return
             End If
             
             saveProta(protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
-            jumpCurrentKey = jumpCurrentKey + 1
+            incrementJumpKey()
         End Sub
     #endif
     
@@ -198,7 +198,7 @@ End Function
                 Else
                     saveProta(protaY, protaX, getNextFrameJumpingFalling(), protaDirection)
                 End If
-                jumpCurrentKey = jumpCurrentKey + 1
+                incrementJumpKey()
                 jumpEnergy = jumpEnergy - 1
                 PrintString("  ", 7, HUD_JETPACK_FUEL_X, HUD_JETPACK_FUEL_Y)
                 PrintString(STR$(jumpEnergy), 7, HUD_JETPACK_FUEL_X, HUD_JETPACK_FUEL_Y)

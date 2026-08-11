@@ -3,6 +3,7 @@
 #define stopJump() jumpCurrentKey = jumpStopValue
 #define isJumpStopped() (jumpCurrentKey >= jumpStopValue)
 #define isJumping() (jumpCurrentKey < jumpStopValue)
+#define incrementJumpKey() jumpCurrentKey = jumpCurrentKey + 1
 
 Function sgn8(v As Byte) As Byte
     If v > 0 Then Return 1
