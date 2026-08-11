@@ -144,9 +144,9 @@ End Function
     
     #ifndef JETPACK_FUEL
         Sub checkIsJumping()
-            If jumpCurrentKey >= jumpStopValue Then Return
+            If isJumpStopped() Then Return
             If jumpCurrentKey >= jumpStepsCount - 1 Then
-                jumpCurrentKey = jumpStopValue
+                stopJump()
                 Return
             End If
             
@@ -162,7 +162,7 @@ End Function
             
             If checkProtaSolidCollision(protaX, protaY + jumpArray(jumpCurrentKey)) Or checkTravesablePlatformFromTop(protaX, protaY + jumpArray(jumpCurrentKey)) Then
                 If jumpArray(jumpCurrentKey) > 0 Then
-                    jumpCurrentKey = jumpStopValue
+                    stopJump()
                 Else
                     jumpCurrentKey = jumpCurrentKey + 1
                 End If
@@ -180,7 +180,7 @@ End Function
         End Function
         
         Sub checkIsFlying()
-            If jumpCurrentKey = jumpStopValue Then Return
+            If isJumpStopped() Then Return
             
             If protaY < 2 Then
                 If jumpEnergy > 0 Then
@@ -205,7 +205,7 @@ End Function
                 Return
             End If
             
-            jumpCurrentKey = jumpStopValue ' stop flight
+            stopJump() ' stop flight
         End Sub
     #endif
     
@@ -218,7 +218,7 @@ End Function
             #endif
             Return 1
         Else
-            If landed = 0 And jumpCurrentKey = jumpStopValue Then
+            If landed = 0 And isJumpStopped() Then
                 landed = 1
                 #ifdef WALL_JUMP_ENABLED
                     wallJumpTimer = 0
@@ -226,7 +226,7 @@ End Function
                 #ifdef DASH_ENABLED
                     isDashing = 0
                 #endif
-                jumpCurrentKey = jumpStopValue
+                stopJump()
                 #ifdef JETPACK_FUEL
                     jumpEnergy = jumpStepsCount
                     printHud()
@@ -248,7 +248,7 @@ End Function
         #ifdef DASH_ENABLED
             If dashTimer > 0 Then Return
         #endif
-        If jumpCurrentKey = jumpStopValue And isFalling() Then
+        If isJumpStopped() And isFalling() Then
             If protaY >= MAX_LINE Then
                 moveScreen = 2
             Else
@@ -599,7 +599,7 @@ End Function
 
 Sub resetToFirstFrameOnStop()
     #ifdef SIDE_VIEW
-        If jumpCurrentKey <> jumpStopValue Then Return
+        If isJumping() Then Return
         If canMoveDown() Then Return
         #ifdef LADDERS_ENABLED
             If CheckCollision(protaX, protaY, 2) Then Return
@@ -826,7 +826,7 @@ End Sub
 #ifdef IDLE_ENABLED
     Sub animateIdle()
         If protaLoopCounter >= IDLE_TIME Then
-            If jumpCurrentKey <> jumpStopValue Then Return
+            If isJumping() Then Return
             
             #ifdef SIDE_VIEW
                 #ifdef JETPACK_FUEL

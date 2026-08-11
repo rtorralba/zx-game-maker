@@ -1,5 +1,9 @@
 #define pauseUntilPressKey() while INKEY$<>"":wend : while INKEY$="":wend
 
+#define stopJump() jumpCurrentKey = jumpStopValue
+#define isJumpStopped() (jumpCurrentKey >= jumpStopValue)
+#define isJumping() (jumpCurrentKey < jumpStopValue)
+
 Function sgn8(v As Byte) As Byte
     If v > 0 Then Return 1
     If v < 0 Then Return -1
@@ -458,7 +462,7 @@ end sub
             End If
         #endif
         
-        if (jumpCurrentKey = jumpStopValue and landed) or wallJump then
+        if (isJumpStopped() and landed) or wallJump then
             landed = 0
             #ifdef DASH_ENABLED
                 isDashing = 0
@@ -468,7 +472,7 @@ end sub
             Elseif landed = 0 And isDashing = 0 And dashActive Then
                 isDashing = 1
                 dashTimer = DASH_DURATION
-                jumpCurrentKey = jumpStopValue
+                stopJump()
                 BeepFX_Play(2)
             #endif
         end if

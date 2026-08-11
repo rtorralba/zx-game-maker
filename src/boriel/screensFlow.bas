@@ -541,7 +541,7 @@ Sub resetValues()
         enemyBulletX = 0
     #endif
     #ifdef SIDE_VIEW
-        jumpCurrentKey = jumpStopValue
+        stopJump()
     #endif
     
     invincible = 0

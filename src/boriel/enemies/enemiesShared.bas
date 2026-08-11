@@ -15,7 +15,7 @@
 
 #ifdef SIDE_VIEW
     Function checkPlatformHasProtaOnTop(x As Ubyte, y As Ubyte) As Ubyte
-        If jumpCurrentKey <> jumpStopValue Then Return 0
+        If isJumping() Then Return 0
         
         If checkAABB(protaX, protaY, protaX + 2, protaY + 4, x, y - 2, x + 4, y) = 0 Then Return 0
         
@@ -43,7 +43,7 @@
     
     #ifdef KILL_JUMPING_ON_TOP
         Function checkHitOnTop(enemyId As Ubyte, protaX1 As Ubyte, protaY1 As Ubyte, enemyX0 As Ubyte, enemyY0 As Ubyte, enemyX1 As Ubyte, enemyY1 As Ubyte) As Ubyte
-            If jumpCurrentKey <> jumpStopValue Then Return 0
+            If isJumping() Then Return 0
             If landed Then Return 0
             
             If enemyY0 > protaY1 + 2 Then Return 0
@@ -52,7 +52,7 @@
             If checkAABB(protaX, protaY, protaX1, protaY1, enemyX0, enemyY0, enemyX1, enemyY1) Then
                 damageEnemy(enemyId)
                 landed = 1
-                jumpCurrentKey = jumpStopValue
+                stopJump()
                 jump()
                 Return 1
             End If
