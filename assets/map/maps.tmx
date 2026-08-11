@@ -162,7 +162,7 @@
 3,1,1,1,1,1,1,1,1,1,1,71,72,1,1,1,1,1,1,1,1,1,1,71,72,1,1,1,73,74,3,3,
 1,1,1,1,1,1,1,1,1,1,1,71,72,1,1,1,1,1,1,1,1,1,1,71,72,1,1,1,73,74,3,3,
 1,1,1,1,1,1,1,1,1,1,1,71,72,1,1,1,1,1,1,1,1,1,1,71,72,1,1,1,73,74,3,3,
-4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,129,129,4,4,4,4,
 36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36,36
 </chunk>
   </data>
@@ -255,7 +255,7 @@
    </properties>
    <point/>
   </object>
-  <object id="71" type="mainCharacter" gid="193" x="264" y="320" width="16" height="16"/>
+  <object id="71" type="mainCharacter" gid="193" x="152" y="320" width="16" height="16"/>
   <object id="78" type="ZXSGMText" x="176" y="320">
    <properties>
     <property name="default">Hi Carlos! How are things going with the &quot;mi mi mis&quot;? It seems like there's more space now, we can tell more stories and make a Khan Zelda!
