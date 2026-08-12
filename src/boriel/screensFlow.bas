@@ -270,6 +270,13 @@ Sub playGame()
         End If
         
         protaMovement()
+        
+        If moveScreen <> 0 Then
+            moveToScreen(moveScreen)
+            moveScreen = 0
+            Continue Do
+        End If
+        
         checkDamageByTile()
         moveEnemies()
         #ifdef SHOOTING_ENABLED
@@ -283,11 +290,6 @@ Sub playGame()
         RenderFrame()
         
         makeAnimations()
-        
-        If moveScreen <> 0 Then
-            moveToScreen(moveScreen)
-            moveScreen = 0
-        End If
         
         If currentLife = 0 Then gameOver()
         
