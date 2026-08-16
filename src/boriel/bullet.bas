@@ -126,7 +126,7 @@ dim maxXScreenLeft as ubyte = 2
         decompressedEnemiesScreen(enemyToKill, ENEMY_LIFE) = decompressedEnemiesScreen(enemyToKill, ENEMY_LIFE) - 1
         #ifdef HISCORE_ENABLED
             incrementScore(5)
-            printHud()
+            shouldPrintHud = 1
         #endif
         
         if decompressedEnemiesScreen(enemyToKill, ENEMY_LIFE) = 0 then            

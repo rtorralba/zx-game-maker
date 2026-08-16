@@ -13,7 +13,7 @@ Function checkProtaSolidCollision(x As Ubyte, y As Ubyte) As Ubyte
         If tile = KEY_DOOR_TILE Then
             If currentKeys <> 0 Then
                 currentKeys = currentKeys - 1
-                printHud()
+                shouldPrintHud = 1
                 BeepFX_Play(4)
                 removeTilesFromScreen(KEY_DOOR_TILE)
             Else
@@ -144,9 +144,9 @@ End Function
     
     #ifndef JETPACK_FUEL
         Sub checkIsJumping()
-            If jumpCurrentKey >= jumpStopValue Then Return
+            If isJumpStopped() Then Return
             If jumpCurrentKey >= jumpStepsCount - 1 Then
-                jumpCurrentKey = jumpStopValue
+                stopJump()
                 Return
             End If
             
@@ -156,21 +156,21 @@ End Function
                 #Else
                     moveScreen = 8 ' stop jumping
                 #endif
-                jumpCurrentKey = jumpCurrentKey + 1
+                incrementJumpKey()
                 Return
             End If
             
             If checkProtaSolidCollision(protaX, protaY + jumpArray(jumpCurrentKey)) Or checkTravesablePlatformFromTop(protaX, protaY + jumpArray(jumpCurrentKey)) Then
                 If jumpArray(jumpCurrentKey) > 0 Then
-                    jumpCurrentKey = jumpStopValue
+                    stopJump()
                 Else
-                    jumpCurrentKey = jumpCurrentKey + 1
+                    incrementJumpKey()
                 End If
                 Return
             End If
             
             saveProta(protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
-            jumpCurrentKey = jumpCurrentKey + 1
+            incrementJumpKey()
         End Sub
     #endif
     
@@ -180,7 +180,7 @@ End Function
         End Function
         
         Sub checkIsFlying()
-            If jumpCurrentKey = jumpStopValue Then Return
+            If isJumpStopped() Then Return
             
             If protaY < 2 Then
                 If jumpEnergy > 0 Then
@@ -198,14 +198,14 @@ End Function
                 Else
                     saveProta(protaY, protaX, getNextFrameJumpingFalling(), protaDirection)
                 End If
-                jumpCurrentKey = jumpCurrentKey + 1
+                incrementJumpKey()
                 jumpEnergy = jumpEnergy - 1
                 PrintString("  ", 7, HUD_JETPACK_FUEL_X, HUD_JETPACK_FUEL_Y)
                 PrintString(STR$(jumpEnergy), 7, HUD_JETPACK_FUEL_X, HUD_JETPACK_FUEL_Y)
                 Return
             End If
             
-            jumpCurrentKey = jumpStopValue ' stop flight
+            stopJump() ' stop flight
         End Sub
     #endif
     
@@ -218,7 +218,7 @@ End Function
             #endif
             Return 1
         Else
-            If landed = 0 And jumpCurrentKey = jumpStopValue Then
+            If landed = 0 And isJumpStopped() Then
                 landed = 1
                 #ifdef WALL_JUMP_ENABLED
                     wallJumpTimer = 0
@@ -226,10 +226,10 @@ End Function
                 #ifdef DASH_ENABLED
                     isDashing = 0
                 #endif
-                jumpCurrentKey = jumpStopValue
+                stopJump()
                 #ifdef JETPACK_FUEL
                     jumpEnergy = jumpStepsCount
-                    printHud()
+                    shouldPrintHud = 1
                 #endif
                 If protaY bAND 1 <> 0 Then
                     protaY = protaY - 1
@@ -248,7 +248,7 @@ End Function
         #ifdef DASH_ENABLED
             If dashTimer > 0 Then Return
         #endif
-        If jumpCurrentKey = jumpStopValue And isFalling() Then
+        If isJumpStopped() And isFalling() Then
             If protaY >= MAX_LINE Then
                 moveScreen = 2
             Else
@@ -272,7 +272,7 @@ End Function
             #ifdef AMMO_ENABLED
                 If currentAmmo = 0 Then Return
                 currentAmmo = currentAmmo - 1
-                printHud()
+                shouldPrintHud = 1
             #endif
             
             bulletPositionY = protaY + 1
@@ -314,7 +314,7 @@ End Function
             #ifdef AMMO_ENABLED
                 If currentAmmo = 0 Then Return
                 currentAmmo = currentAmmo - 1
-                printHud()
+                shouldPrintHud = 1
             #endif
             
             If bulletPositionX <> 0 Then Return
@@ -599,7 +599,7 @@ End Function
 
 Sub resetToFirstFrameOnStop()
     #ifdef SIDE_VIEW
-        If jumpCurrentKey <> jumpStopValue Then Return
+        If isJumping() Then Return
         If canMoveDown() Then Return
         #ifdef LADDERS_ENABLED
             If CheckCollision(protaX, protaY, 2) Then Return
@@ -690,7 +690,7 @@ Function checkTileObject(tile As Ubyte) As Ubyte
             Border BORDER_COLOR_ITEM
             resetBorder = 1
         #endif
-        printHud()
+        shouldPrintHud = 1
         #ifdef MESSAGES_ENABLED
             #ifdef ITEM_FOUND_LINE1
                 printMessage(ITEM_FOUND_LINE1, ITEM_FOUND_LINE2, ITEM_FOUND_PAPER, ITEM_FOUND_INK)
@@ -716,7 +716,7 @@ Function checkTileObject(tile As Ubyte) As Ubyte
                 #ifdef HISCORE_ENABLED
                     incrementScore(timerSeconds)
                 #endif
-                printHud()
+                shouldPrintHud = 1
                 If currentScreen = SCREENS_COUNT Then
                     ending()
                 Else
@@ -730,7 +730,7 @@ Function checkTileObject(tile As Ubyte) As Ubyte
             Border BORDER_COLOR_KEY
             resetBorder = 1
         #endif
-        printHud()
+        shouldPrintHud = 1
         #ifdef MESSAGES_ENABLED
             #ifdef KEY_FOUND_LINE1
                 printMessage(KEY_FOUND_LINE1, KEY_FOUND_LINE2, KEY_FOUND_PAPER, KEY_FOUND_INK)
@@ -744,7 +744,7 @@ Function checkTileObject(tile As Ubyte) As Ubyte
             Border BORDER_COLOR_LIFE
             resetBorder = 1
         #endif
-        printHud()
+        shouldPrintHud = 1
         #ifdef MESSAGES_ENABLED
             #ifdef LIFE_FOUND_LINE1
                 printMessage(LIFE_FOUND_LINE1, LIFE_FOUND_LINE2, LIFE_FOUND_PAPER, LIFE_FOUND_INK)
@@ -760,7 +760,7 @@ Function checkTileObject(tile As Ubyte) As Ubyte
                 Else
                     currentAmmo = currentAmmo + AMMO_INCREMENT
                 End If
-                printHud()
+                shouldPrintHud = 1
                 #ifdef MESSAGES_ENABLED
                     #ifdef AMMO_FOUND_LINE1
                         printMessage(AMMO_FOUND_LINE1, AMMO_FOUND_LINE2, AMMO_FOUND_PAPER, AMMO_FOUND_INK)
@@ -826,7 +826,7 @@ End Sub
 #ifdef IDLE_ENABLED
     Sub animateIdle()
         If protaLoopCounter >= IDLE_TIME Then
-            If jumpCurrentKey <> jumpStopValue Then Return
+            If isJumping() Then Return
             
             #ifdef SIDE_VIEW
                 #ifdef JETPACK_FUEL

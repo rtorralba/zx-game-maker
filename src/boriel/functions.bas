@@ -1,9 +1,36 @@
 #define pauseUntilPressKey() while INKEY$<>"":wend : while INKEY$="":wend
 
+#define stopJump() jumpCurrentKey = jumpStopValue
+#define isJumpStopped() (jumpCurrentKey >= jumpStopValue)
+#define isJumping() (jumpCurrentKey < jumpStopValue)
+#define incrementJumpKey() jumpCurrentKey = jumpCurrentKey + 1
+
+Function sgn8(v As Byte) As Byte
+    If v > 0 Then Return 1
+    If v < 0 Then Return -1
+    Return 0
+End Function
+
+Sub PrintPadded(value As Ulong, padLength As Ubyte, Color As uInteger, X As uInteger, Y As uInteger)
+    Dim s As String = STR$(value)
+    While LEN(s) < padLength
+        s = s + " "
+    End While
+    PrintString(s, Color, X, Y)
+End Sub
+
+Sub PrintZeroPadded(value As Ulong, padLength As Ubyte, Color As uInteger, X As uInteger, Y As uInteger)
+    Dim s As String = STR$(value)
+    While LEN(s) < padLength
+        s = "0" + s
+    End While
+    PrintString(s, Color, X, Y)
+End Sub
+
 #ifdef LIVES_MODE_ENABLED
-    #define printLife() PrintString("  ", 7, HUD_LIFE_X, HUD_LIFE_Y) : PrintString(STR$(currentLife), 7, HUD_LIFE_X, HUD_LIFE_Y)
+    #define printLife() PrintPadded(currentLife, 2, 7, HUD_LIFE_X, HUD_LIFE_Y)
 #else
-    #define printLife() PrintString("   ", 7, HUD_LIFE_X, HUD_LIFE_Y) : PrintString(STR$(currentLife), 7, HUD_LIFE_X, HUD_LIFE_Y)
+    #define printLife() PrintPadded(currentLife, 3, 7, HUD_LIFE_X, HUD_LIFE_Y)
 #endif
 
 #ifdef TIMER_ENABLED
@@ -67,7 +94,6 @@ sub decrementLife()
             currentLife = 0
         end if
     #endif
-    printLife()
     BeepFX_Play(1)
 end sub
 
@@ -75,16 +101,14 @@ sub printHud()
     printLife()
     
     #ifdef JETPACK_FUEL
-        PrintString("  ", 7, HUD_JETPACK_FUEL_X, HUD_JETPACK_FUEL_Y)
-        PrintString(STR$(jumpEnergy), 7, HUD_JETPACK_FUEL_X, HUD_JETPACK_FUEL_Y)
+        PrintPadded(jumpEnergy, 2, 7, HUD_JETPACK_FUEL_X, HUD_JETPACK_FUEL_Y)
     #endif
     #ifdef AMMO_ENABLED
-        PrintString("   ", 7, HUD_AMMO_X, HUD_AMMO_Y)
-        PrintString(STR$(currentAmmo), 7, HUD_AMMO_X, HUD_AMMO_Y)
+        PrintPadded(currentAmmo, 3, 7, HUD_AMMO_X, HUD_AMMO_Y)
     #endif
     #ifndef ARCADE_MODE
         #ifdef KEYS_ENABLED
-            PrintString(STR$(currentKeys), 7, HUD_KEYS_X, HUD_KEYS_Y)
+            PrintPadded(currentKeys, 2, 7, HUD_KEYS_X, HUD_KEYS_Y)
         #endif
     #endif
     #ifdef HISCORE_ENABLED
@@ -92,13 +116,11 @@ sub printHud()
     #endif
     #ifndef ARCADE_MODE
         #ifdef ITEMS_ENABLED
-            PrintString("  ", 7, HUD_ITEMS_X, HUD_ITEMS_Y)
-            PrintString(STR$(currentItems), 7, HUD_ITEMS_X, HUD_ITEMS_Y)
+            PrintPadded(currentItems, 2, 7, HUD_ITEMS_X, HUD_ITEMS_Y)
         #endif
     #endif
     #ifdef CURRENT_STAGE_ENABLED
-        PrintString("  ", 7, HUD_STAGE_X, HUD_STAGE_Y)
-        PrintString(STR$(currentScreen + 1), 7, HUD_STAGE_X, HUD_STAGE_Y)
+        PrintPadded(currentScreen + 1, 2, 7, HUD_STAGE_X, HUD_STAGE_Y)
     #endif
 end sub
 
@@ -106,26 +128,26 @@ end sub
 
 #ifdef HISCORE_ENABLED
     Sub printScore()
-        PrintString("00000", 7, HUD_HISCORE_X, HUD_HISCORE_Y)
-        PrintString(STR$(hiScore), 7, HUD_HISCORE_X + 5 - LEN(STR$(hiScore)), HUD_HISCORE_Y)
-        PrintString("00000", 7, HUD_HISCORE_X, HUD_HISCORE_Y_2)
-        PrintString(STR$(score), 7, HUD_HISCORE_X + 5 - LEN(STR$(score)), HUD_HISCORE_Y_2)
+        PrintZeroPadded(hiScore, 5, 7, HUD_HISCORE_X, HUD_HISCORE_Y)
+        PrintZeroPadded(score, 5, 7, HUD_HISCORE_X, HUD_HISCORE_Y_2)
     End Sub
 #endif
 
 #ifdef TIMER_ENABLED
     Sub updateTimerDisplay()
-        PrintString(" :", 7, HUD_TIMER_X, HUD_TIMER_Y)
-        PrintString(STR$(timerSeconds / 60), 7, HUD_TIMER_X, HUD_TIMER_Y)
-        
         Dim timerSecondsRemaining as Ubyte = timerSeconds MOD 60
-        
+        Dim minStr As String = STR$(timerSeconds / 60)
+        Dim secStr As String = STR$(timerSecondsRemaining)
         If timerSecondsRemaining < 10 Then
-            PrintString("0", 7, HUD_TIMER_X + 2, HUD_TIMER_Y)
-            PrintString(STR$(timerSecondsRemaining), 7, HUD_TIMER_X + 3, HUD_TIMER_Y)
-        Else
-            PrintString(STR$(timerSecondsRemaining), 7, HUD_TIMER_X + 2, HUD_TIMER_Y)
+            secStr = "0" + secStr
         End If
+        
+        ' 1 char for minutes + ":" + 2 chars for seconds = 4 chars total
+        Dim timerStr As String = minStr + ":" + secStr
+        While LEN(timerStr) < 4
+            timerStr = timerStr + " "
+        End While
+        PrintString(timerStr, 7, HUD_TIMER_X, HUD_TIMER_Y)
     End Sub
     Sub updateTimer()
         If framec - lastFrameTimer > 50 Then
@@ -452,7 +474,7 @@ end sub
             End If
         #endif
         
-        if (jumpCurrentKey = jumpStopValue and landed) or wallJump then
+        if (isJumpStopped() and landed) or wallJump then
             landed = 0
             #ifdef DASH_ENABLED
                 isDashing = 0
@@ -462,7 +484,7 @@ end sub
             Elseif landed = 0 And isDashing = 0 And dashActive Then
                 isDashing = 1
                 dashTimer = DASH_DURATION
-                jumpCurrentKey = jumpStopValue
+                stopJump()
                 BeepFX_Play(2)
             #endif
         end if

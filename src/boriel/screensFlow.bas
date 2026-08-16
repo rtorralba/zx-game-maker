@@ -22,8 +22,7 @@ Sub showMenu()
     #ifdef HISCORE_ENABLED
         Ink getFirstCharInk(): Paper getFirstCharPaper(): Bright getFirstCharBright()
         PrintString("HI:", 7, 6, 23)
-        PrintString("00000", 7, 9, 23)
-        PrintString(STR$(hiScore), 7, 14 - LEN(STR$(hiScore)), 23)
+        PrintZeroPadded(hiScore, 5, 7, 9, 23)
     #endif
     
     Do
@@ -205,9 +204,8 @@ Sub playGame()
     #endif
     
     #ifdef HISCORE_ENABLED
-        PrintString("00000", 7, HUD_HISCORE_X, HUD_HISCORE_Y)
-        PrintString(STR$(hiScore), 7, HUD_HISCORE_X + 5 - LEN(STR$(hiScore)), HUD_HISCORE_Y)
-        PrintString("00000", 7, HUD_HISCORE_X, HUD_HISCORE_Y + 1)
+        PrintZeroPadded(hiScore, 5, 7, HUD_HISCORE_X, HUD_HISCORE_Y)
+        PrintZeroPadded(0, 5, 7, HUD_HISCORE_X, HUD_HISCORE_Y + 1)
     #endif
     
     Do
@@ -270,6 +268,13 @@ Sub playGame()
         End If
         
         protaMovement()
+        
+        If moveScreen <> 0 Then
+            moveToScreen(moveScreen)
+            moveScreen = 0
+            Continue Do
+        End If
+        
         checkDamageByTile()
         moveEnemies()
         #ifdef SHOOTING_ENABLED
@@ -281,13 +286,13 @@ Sub playGame()
         drawSprites()
         
         RenderFrame()
+
+        If shouldPrintHud Then
+            shouldPrintHud = 0
+            printHud()
+        End If
         
         makeAnimations()
-        
-        If moveScreen <> 0 Then
-            moveToScreen(moveScreen)
-            moveScreen = 0
-        End If
         
         If currentLife = 0 Then gameOver()
         
@@ -330,8 +335,8 @@ End Sub
             clearScreen()
             
             Dim tinta As Ubyte = BACKGROUND_ATTRIBUTE bAND 7
-            Dim papel As Ubyte = (BACKGROUND_ATTRIBUTE bAND 56) / 8
-            Dim brillante As Ubyte = (BACKGROUND_ATTRIBUTE bAND 64) / 64
+            Dim papel As Ubyte = (BACKGROUND_ATTRIBUTE bAND 56) >> 3
+            Dim brillante As Ubyte = (BACKGROUND_ATTRIBUTE bAND 64) >> 6
             Ink tinta: Paper papel: Bright brillante
             
             Dim currentLives As Ubyte = currentLife
@@ -541,7 +546,7 @@ Sub resetValues()
         enemyBulletX = 0
     #endif
     #ifdef SIDE_VIEW
-        jumpCurrentKey = jumpStopValue
+        stopJump()
     #endif
     
     invincible = 0

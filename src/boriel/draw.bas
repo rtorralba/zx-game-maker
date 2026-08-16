@@ -235,7 +235,7 @@ End Sub
 Sub redrawScreen()
     clearScreen()
     mapDraw()
-    printHud()
+    shouldPrintHud = 1
 End Sub
 
 Sub moveToScreen(direction As Ubyte)

@@ -32,7 +32,7 @@ Sub moveEnemies()
                 
                 ' Platform enemy: move the player if standing on top
                 If checkPlatformHasProtaOnTop(enemyCol, enemyLin) Then
-                    jumpCurrentKey = jumpStopValue
+                    stopJump()
                     Dim snapLin As Byte = enemyLin
                     If checkShouldSkipMoveBySpeed(enemySpeed) Then
                         snapLin = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
@@ -82,14 +82,14 @@ Sub moveEnemies()
         
         If isEnemyStopped(enemyLinEnd, enemyBehaviour) Then
             #ifdef ENEMY_STOPPED_SHOULD_LOOK_AT_PLAYER
-                enemyHorizontalDirection = Sgn(protaX - enemyCol)
+                enemyHorizontalDirection = sgn8(protaX - enemyCol)
                 checkLeftDirection(enemyHorizontalDirection, tile)
             #endif
             checkCollisionSaveAndDraw(enemyId, tile, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
             Continue For
         ElseIf hasStalkerBehaviour(enemyBehaviour) Then
-            enemyHorizontalDirection = Sgn(protaX - enemyCol)
-            enemyVerticalDirection = Sgn(protaY - enemyLin)
+            enemyHorizontalDirection = sgn8(protaX - enemyCol)
+            enemyVerticalDirection = sgn8(protaY - enemyLin)
             
             #ifndef FREEZE_ON_SIGHT_ENABLED
                 calculatePositionAndTile(tile, enemyCol, enemyLin, enemyHorizontalDirection, enemyVerticalDirection)

@@ -276,3 +276,5 @@ Dim lastFrameOnBreakableTiles As Ubyte = 0
 #endif
 
 Dim resetReturnMovement(MAX_ENEMIES_PER_SCREEN) As Ubyte
+
+Dim shouldPrintHud As Ubyte = 0
