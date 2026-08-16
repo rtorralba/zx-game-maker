@@ -13,7 +13,7 @@ Function checkProtaSolidCollision(x As Ubyte, y As Ubyte) As Ubyte
         If tile = KEY_DOOR_TILE Then
             If currentKeys <> 0 Then
                 currentKeys = currentKeys - 1
-                printHud()
+                shouldPrintHud = 1
                 BeepFX_Play(4)
                 removeTilesFromScreen(KEY_DOOR_TILE)
             Else
@@ -229,7 +229,7 @@ End Function
                 stopJump()
                 #ifdef JETPACK_FUEL
                     jumpEnergy = jumpStepsCount
-                    printHud()
+                    shouldPrintHud = 1
                 #endif
                 If protaY bAND 1 <> 0 Then
                     protaY = protaY - 1
@@ -272,7 +272,7 @@ End Function
             #ifdef AMMO_ENABLED
                 If currentAmmo = 0 Then Return
                 currentAmmo = currentAmmo - 1
-                printHud()
+                shouldPrintHud = 1
             #endif
             
             bulletPositionY = protaY + 1
@@ -314,7 +314,7 @@ End Function
             #ifdef AMMO_ENABLED
                 If currentAmmo = 0 Then Return
                 currentAmmo = currentAmmo - 1
-                printHud()
+                shouldPrintHud = 1
             #endif
             
             If bulletPositionX <> 0 Then Return
@@ -690,7 +690,7 @@ Function checkTileObject(tile As Ubyte) As Ubyte
             Border BORDER_COLOR_ITEM
             resetBorder = 1
         #endif
-        printHud()
+        shouldPrintHud = 1
         #ifdef MESSAGES_ENABLED
             #ifdef ITEM_FOUND_LINE1
                 printMessage(ITEM_FOUND_LINE1, ITEM_FOUND_LINE2, ITEM_FOUND_PAPER, ITEM_FOUND_INK)
@@ -716,7 +716,7 @@ Function checkTileObject(tile As Ubyte) As Ubyte
                 #ifdef HISCORE_ENABLED
                     incrementScore(timerSeconds)
                 #endif
-                printHud()
+                shouldPrintHud = 1
                 If currentScreen = SCREENS_COUNT Then
                     ending()
                 Else
@@ -730,7 +730,7 @@ Function checkTileObject(tile As Ubyte) As Ubyte
             Border BORDER_COLOR_KEY
             resetBorder = 1
         #endif
-        printHud()
+        shouldPrintHud = 1
         #ifdef MESSAGES_ENABLED
             #ifdef KEY_FOUND_LINE1
                 printMessage(KEY_FOUND_LINE1, KEY_FOUND_LINE2, KEY_FOUND_PAPER, KEY_FOUND_INK)
@@ -744,7 +744,7 @@ Function checkTileObject(tile As Ubyte) As Ubyte
             Border BORDER_COLOR_LIFE
             resetBorder = 1
         #endif
-        printHud()
+        shouldPrintHud = 1
         #ifdef MESSAGES_ENABLED
             #ifdef LIFE_FOUND_LINE1
                 printMessage(LIFE_FOUND_LINE1, LIFE_FOUND_LINE2, LIFE_FOUND_PAPER, LIFE_FOUND_INK)
@@ -760,7 +760,7 @@ Function checkTileObject(tile As Ubyte) As Ubyte
                 Else
                     currentAmmo = currentAmmo + AMMO_INCREMENT
                 End If
-                printHud()
+                shouldPrintHud = 1
                 #ifdef MESSAGES_ENABLED
                     #ifdef AMMO_FOUND_LINE1
                         printMessage(AMMO_FOUND_LINE1, AMMO_FOUND_LINE2, AMMO_FOUND_PAPER, AMMO_FOUND_INK)

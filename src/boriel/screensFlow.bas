@@ -22,8 +22,7 @@ Sub showMenu()
     #ifdef HISCORE_ENABLED
         Ink getFirstCharInk(): Paper getFirstCharPaper(): Bright getFirstCharBright()
         PrintString("HI:", 7, 6, 23)
-        PrintString("00000", 7, 9, 23)
-        PrintString(STR$(hiScore), 7, 14 - LEN(STR$(hiScore)), 23)
+        PrintZeroPadded(hiScore, 5, 7, 9, 23)
     #endif
     
     Do
@@ -205,9 +204,8 @@ Sub playGame()
     #endif
     
     #ifdef HISCORE_ENABLED
-        PrintString("00000", 7, HUD_HISCORE_X, HUD_HISCORE_Y)
-        PrintString(STR$(hiScore), 7, HUD_HISCORE_X + 5 - LEN(STR$(hiScore)), HUD_HISCORE_Y)
-        PrintString("00000", 7, HUD_HISCORE_X, HUD_HISCORE_Y + 1)
+        PrintZeroPadded(hiScore, 5, 7, HUD_HISCORE_X, HUD_HISCORE_Y)
+        PrintZeroPadded(0, 5, 7, HUD_HISCORE_X, HUD_HISCORE_Y + 1)
     #endif
     
     Do
@@ -288,6 +286,11 @@ Sub playGame()
         drawSprites()
         
         RenderFrame()
+
+        If shouldPrintHud Then
+            shouldPrintHud = 0
+            printHud()
+        End If
         
         makeAnimations()
         
