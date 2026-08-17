@@ -246,16 +246,12 @@ function allEnemiesKilled() as ubyte
     return 1
 end function
 
-function isSolidTileByTile(tile as ubyte, col as ubyte, lin as ubyte) as ubyte
+function isSolidTileByColLin(col as ubyte, lin as ubyte) as ubyte
+    dim tile as ubyte = GetTile(col, lin)
+    
     if tile > 63 then return 0
     if tile < 1 then return 0
 
-    if tile > 31 then return tile '32 to 63
-    
-    #ifdef USE_BREAKABLE_TILE_ALL
-        if tile = BREAKABLE_BY_BULLET_TILE then return tile
-    #endif
-    
     #ifdef USE_BREAKABLE_TILE_BY_TOUCH
         If tile = BREAKABLE_BY_TOUCH_TILE Then
             If lastFrameOnBreakableTiles = 0 Then
@@ -268,10 +264,6 @@ function isSolidTileByTile(tile as ubyte, col as ubyte, lin as ubyte) as ubyte
     #endif
     
     return tile
-end function
-
-function isSolidTileByColLin(col as ubyte, lin as ubyte) as ubyte
-    return isSolidTileByTile(GetTile(col, lin), col, lin)
 end function
 
 #ifdef ARCADE_MODE
@@ -379,9 +371,9 @@ end function
 #endif
 
 'type 0 Damage, 1 Solid, 2 Ladder
-Function checkTypeOfTileByTile(tile as Ubyte, col as Ubyte, lin as Ubyte, type as Ubyte) as Ubyte
+Function checkTypeOfTile(col as uByte, lin as uByte, type as Ubyte) as uByte
     If type = 1 Then
-        Return isSolidTileByTile(tile, col, lin)
+        Return isSolidTileByColLin(col, lin)
     End If
     If type = 0 Then
         Return isDamageTileByColLin(col, lin)
@@ -389,15 +381,12 @@ Function checkTypeOfTileByTile(tile as Ubyte, col as Ubyte, lin as Ubyte, type a
     #ifdef SIDE_VIEW
         #ifdef LADDERS_ENABLED
             If type = 2 Then
+                Dim tile as Ubyte = GetTile(col, lin)
                 If tile >= 70 And tile <= 73 Then Return tile
             End If
         #endif
     #endif
     Return 0
-End Function
-
-Function checkTypeOfTile(col as uByte, lin as uByte, type as Ubyte) as uByte
-    Return checkTypeOfTileByTile(GetTile(col, lin), col, lin, type)
 End Function
 
 'type 0 Damage, 1 Solid, 2 Ladder
@@ -407,69 +396,27 @@ Function CheckCollision(x as Ubyte, y as Ubyte, type as Ubyte) as Ubyte
     Dim col as Ubyte = x >> 1
     Dim lin as Ubyte = y >> 1
     Dim t as Ubyte
-    Dim tile as Ubyte
     
-    tile = GetTile(col, lin)
-    If tile > 0 Then
-        t = checkTypeOfTileByTile(tile, col, lin, type)
-        If t Then Return t
-    End If
+    t = checkTypeOfTile(col, lin, type) : if t then return t
+    t = checkTypeOfTile(col + 1, lin, type) : if t then return t
+    t = checkTypeOfTile(col, lin + 1, type) : if t then return t
+    t = checkTypeOfTile(col + 1, lin + 1, type) : if t then return t
     
-    tile = GetTile(col + 1, lin)
-    If tile > 0 Then
-        t = checkTypeOfTileByTile(tile, col + 1, lin, type)
-        If t Then Return t
-    End If
+    if not yIsEven then
+        t = checkTypeOfTile(col, lin + 2, type) : if t then return t
+        t = checkTypeOfTile(col + 1, lin + 2, type) : if t then return t
+    end if
     
-    tile = GetTile(col, lin + 1)
-    If tile > 0 Then
-        t = checkTypeOfTileByTile(tile, col, lin + 1, type)
-        If t Then Return t
-    End If
+    if not xIsEven then
+        t = checkTypeOfTile(col + 2, lin, type) : if t then return t
+        t = checkTypeOfTile(col + 2, lin + 1, type) : if t then return t
+    end if
     
-    tile = GetTile(col + 1, lin + 1)
-    If tile > 0 Then
-        t = checkTypeOfTileByTile(tile, col + 1, lin + 1, type)
-        If t Then Return t
-    End If
+    if not xIsEven and not yIsEven then
+        t = checkTypeOfTile(col + 2, lin + 2, type) : if t then return t
+    end if
     
-    If Not yIsEven Then
-        tile = GetTile(col, lin + 2)
-        If tile > 0 Then
-            t = checkTypeOfTileByTile(tile, col, lin + 2, type)
-            If t Then Return t
-        End If
-        
-        tile = GetTile(col + 1, lin + 2)
-        If tile > 0 Then
-            t = checkTypeOfTileByTile(tile, col + 1, lin + 2, type)
-            If t Then Return t
-        End If
-    End If
-    
-    If Not xIsEven Then
-        tile = GetTile(col + 2, lin)
-        If tile > 0 Then
-            t = checkTypeOfTileByTile(tile, col + 2, lin, type)
-            If t Then Return t
-        End If
-        
-        tile = GetTile(col + 2, lin + 1)
-        If tile > 0 Then
-            t = checkTypeOfTileByTile(tile, col + 2, lin + 1, type)
-            If t Then Return t
-        End If
-    End If
-    
-    If Not xIsEven And Not yIsEven Then
-        tile = GetTile(col + 2, lin + 2)
-        If tile > 0 Then
-            t = checkTypeOfTileByTile(tile, col + 2, lin + 2, type)
-            If t Then Return t
-        End If
-    End If
-    
-    Return 0
+    return 0
 End Function
 
 sub removeTilesFromScreen(tile as ubyte)
