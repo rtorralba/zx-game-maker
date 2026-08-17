@@ -3,22 +3,26 @@
 Sub moveEnemies()
     If enemiesPerScreen(currentScreen) = 0 Then Return
     
+    Dim enemyPtr As Uinteger = @decompressedEnemiesScreen(0, 0)
     For enemyId=0 To enemiesPerScreen(currentScreen) - 1
-        Dim enemyCol As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL)
-        Dim enemyLin As Byte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
-        Dim enemySpeed As Byte = decompressedEnemiesScreen(enemyId, ENEMY_SPEED)
-        Dim enemyColIni As Byte = decompressedEnemiesScreen(enemyId, ENEMY_COL_INI)
-        Dim enemyLinIni As Byte = decompressedEnemiesScreen(enemyId, ENEMY_LIN_INI)
-        Dim enemyColEnd As Byte = decompressedEnemiesScreen(enemyId, ENEMY_COL_END)
-        Dim enemyLinEnd As Byte = decompressedEnemiesScreen(enemyId, ENEMY_LIN_END)
-        Dim enemyBehaviour As Byte = decompressedEnemiesScreen(enemyId, ENEMY_MOVE)
-        Dim enemyHorizontalDirection As Byte = decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION)
-        Dim enemyVerticalDirection As Byte = decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION)
-        Dim enemyLife As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_LIFE)
-        Dim tile As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_TILE) + 1
+        Dim enemyLife As Ubyte = Peek(enemyPtr + ENEMY_LIFE)
         
-        If isEnemyDeath(enemyLife) Then continue For
-        If tile = 0 Then continue For
+        If isEnemyDeath(enemyLife) Then Goto next_enemy
+        
+        Dim tile As Ubyte = Peek(enemyPtr + ENEMY_TILE) + 1
+        
+        If tile = 0 Then Goto next_enemy
+        
+        Dim enemyCol As Byte = Peek(enemyPtr + ENEMY_CURRENT_COL)
+        Dim enemyLin As Byte = Peek(enemyPtr + ENEMY_CURRENT_LIN)
+        Dim enemySpeed As Byte = Peek(enemyPtr + ENEMY_SPEED)
+        Dim enemyColIni As Byte = Peek(enemyPtr + ENEMY_COL_INI)
+        Dim enemyLinIni As Byte = Peek(enemyPtr + ENEMY_LIN_INI)
+        Dim enemyColEnd As Byte = Peek(enemyPtr + ENEMY_COL_END)
+        Dim enemyLinEnd As Byte = Peek(enemyPtr + ENEMY_LIN_END)
+        Dim enemyBehaviour As Byte = Peek(enemyPtr + ENEMY_MOVE)
+        Dim enemyHorizontalDirection As Byte = Peek(enemyPtr + ENEMY_HORIZONTAL_DIRECTION)
+        Dim enemyVerticalDirection As Byte = Peek(enemyPtr + ENEMY_VERTICAL_DIRECTION)
         
         If enemyColIni = enemyColEnd Then enemyHorizontalDirection = 0
         If enemyLinIni = enemyLinEnd Then enemyVerticalDirection = 0
@@ -35,7 +39,7 @@ Sub moveEnemies()
                     stopJump()
                     Dim snapLin As Byte = enemyLin
                     If checkShouldSkipMoveBySpeed(enemySpeed) Then
-                        snapLin = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
+                        snapLin = Peek(enemyPtr + ENEMY_CURRENT_LIN)
                     End If
                     If enemyVerticalDirection Then
                         If Not CheckCollision(protaX, snapLin - 4, 1) Then
@@ -51,14 +55,14 @@ Sub moveEnemies()
                     End If
                 End If
                 
-                saveAndDraw(enemyId, tile, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
+                saveAndDraw(enemyId, enemyPtr, tile, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
                 
-                Continue For
+                Goto next_enemy
             End If
         #endif
         
         #ifdef ENEMIES_NOT_RESPAWN_ENABLED
-            If isEnemyVulnerable(enemyLife) Then If screensWon(currentScreen) Then continue For
+            If isEnemyVulnerable(enemyLife) And screensWon(currentScreen) Then Goto next_enemy
         #endif
         
         #ifdef ENEMY_SHOOT_ENABLED
@@ -75,8 +79,8 @@ Sub moveEnemies()
                     End If
                 #endif
                 checkLeftDirection(enemyHorizontalDirection, tile)
-                checkCollisionSaveAndDraw(enemyId, tile, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
-                Continue For
+                checkCollisionSaveAndDraw(enemyId, enemyPtr, tile, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
+                Goto next_enemy
             End If
         #endif
         
@@ -85,8 +89,8 @@ Sub moveEnemies()
                 enemyHorizontalDirection = sgn8(protaX - enemyCol)
                 checkLeftDirection(enemyHorizontalDirection, tile)
             #endif
-            checkCollisionSaveAndDraw(enemyId, tile, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
-            Continue For
+            checkCollisionSaveAndDraw(enemyId, enemyPtr, tile, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
+            Goto next_enemy
         ElseIf hasStalkerBehaviour(enemyBehaviour) Then
             enemyHorizontalDirection = sgn8(protaX - enemyCol)
             enemyVerticalDirection = sgn8(protaY - enemyLin)
@@ -131,7 +135,7 @@ Sub moveEnemies()
                 End If
                 
                 ' Forze save because maybe speed skip it
-                saveData(enemyId, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin)
+                saveData(enemyPtr, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin)
                 
                 tile = tile + 16
                 resetReturnMovement(enemyId) = 0
@@ -183,6 +187,8 @@ Sub moveEnemies()
             #endif
         End If
         
-        checkCollisionSaveAndDraw(enemyId, tile, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
+        checkCollisionSaveAndDraw(enemyId, enemyPtr, tile, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
+next_enemy:
+        enemyPtr = enemyPtr + 13
     Next enemyId
 End Sub

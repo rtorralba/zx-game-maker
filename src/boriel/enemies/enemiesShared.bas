@@ -25,24 +25,24 @@
     Function checkPlatformByXY(x As Ubyte, y As Ubyte) As Ubyte
         If enemiesPerScreen(currentScreen) = 0 Then Return 0
         
+        Dim enemyPtr As Uinteger = @decompressedEnemiesScreen(0, 0)
         For enemyId=0 To enemiesPerScreen(currentScreen) - 1
-            If decompressedEnemiesScreen(enemyId, ENEMY_TILE) < 16 Then
-                Dim enemyCol As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL)
-                Dim enemyLin As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
+            If Peek(enemyPtr + ENEMY_TILE) < 16 Then
+                Dim enemyCol As Ubyte = Peek(enemyPtr + ENEMY_CURRENT_COL)
+                Dim enemyLin As Ubyte = Peek(enemyPtr + ENEMY_CURRENT_LIN)
                 
-                If x < enemyCol - 2 Then continue For
-                If x > enemyCol + 4 Then continue For
-                If y <> enemyLin Then continue For
-                
-                Return 1
+                If x >= enemyCol - 2 And x <= enemyCol + 4 And y = enemyLin Then
+                    Return 1
+                End If
             End If
+            enemyPtr = enemyPtr + 13
         Next enemyId
         
         Return 0
     End Function
     
     #ifdef KILL_JUMPING_ON_TOP
-        Function checkHitOnTop(enemyId As Ubyte, protaX1 As Ubyte, protaY1 As Ubyte, enemyX0 As Ubyte, enemyY0 As Ubyte, enemyX1 As Ubyte, enemyY1 As Ubyte) As Ubyte
+        Function checkHitOnTop(enemyId As Ubyte, protaX1 As Ubyte, protaY1 As Ubyte, enemyX0 As Ubyte, enemyY0 As Ubyte, enemyX1 As Ubyte, enemyY1 As Ubyte, enemyPtr As Uinteger) As Ubyte
             If isJumping() Then Return 0
             If landed Then Return 0
             
@@ -50,7 +50,7 @@
             If enemyY0 < protaY1 Then Return 0
             
             If checkAABB(protaX, protaY, protaX1, protaY1, enemyX0, enemyY0, enemyX1, enemyY1) Then
-                damageEnemy(enemyId)
+                damageEnemy(enemyId, enemyPtr)
                 landed = 1
                 stopJump()
                 jump()
@@ -63,11 +63,11 @@
 #endif
 
 #ifdef SHOOTING_ENABLED
-    Function checkBulletProtaCollision(enemyX0 As Ubyte, enemyY0 As Ubyte, enemyX1 As Ubyte, enemyY1 As Ubyte, enemyId As Ubyte) As Ubyte
+    Function checkBulletProtaCollision(enemyX0 As Ubyte, enemyY0 As Ubyte, enemyX1 As Ubyte, enemyY1 As Ubyte, enemyId As Ubyte, enemyPtr As Uinteger) As Ubyte
         If bulletPositionX = 0 Then Return 0
         
         If checkAABB(bulletPositionX, bulletPositionY, bulletPositionX + 1, bulletPositionY + 1, enemyX0, enemyY0, enemyX1, enemyY1) Then
-            damageEnemy(enemyId)
+            damageEnemy(enemyId, enemyPtr)
             resetBullet()
             Return 1
         End If
@@ -77,8 +77,8 @@
 #endif
 
 #ifdef SWORD_ENABLED
-    Function checkSwordEnemyCollision(enemyX0 As Ubyte, enemyY0 As Ubyte, enemyX1 As Ubyte, enemyY1 As Ubyte, enemyId As Ubyte) As Ubyte
-        If Not isEnemyVulnerable(decompressedEnemiesScreen(enemyId, ENEMY_LIFE)) Then Return 0
+    Function checkSwordEnemyCollision(enemyX0 As Ubyte, enemyY0 As Ubyte, enemyX1 As Ubyte, enemyY1 As Ubyte, enemyId As Ubyte, enemyPtr As Uinteger) As Ubyte
+        If Not isEnemyVulnerable(Peek(enemyPtr + ENEMY_LIFE)) Then Return 0
         
         If swordTimer = 0 Then Return 0
         
@@ -101,30 +101,30 @@
     End Function
 #endif
 
-Function checkProtaAndBulletCollision(enemyId As Ubyte) As Ubyte
+Function checkProtaAndBulletCollision(enemyId As Ubyte, enemyPtr As Uinteger) As Ubyte
     If invincible Then Return 0
     
     Dim protaX1 As Ubyte = protaX + SPRITE_COLLISION_SIZE
     Dim protaY1 As Ubyte = protaY + SPRITE_COLLISION_SIZE
     
-    Dim enemyX0 As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL)
-    Dim enemyY0 As Ubyte = decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN)
+    Dim enemyX0 As Ubyte = Peek(enemyPtr + ENEMY_CURRENT_COL)
+    Dim enemyY0 As Ubyte = Peek(enemyPtr + ENEMY_CURRENT_LIN)
     Dim enemyX1 As Ubyte = enemyX0 + SPRITE_COLLISION_SIZE
     Dim enemyY1 As Ubyte = enemyY0 + SPRITE_COLLISION_SIZE
     
     Dim damage As Ubyte = 0
     
     #ifdef SHOOTING_ENABLED
-        If checkBulletProtaCollision(enemyX0, enemyY0, enemyX1, enemyY1, enemyId) Then Return 1
+        If checkBulletProtaCollision(enemyX0, enemyY0, enemyX1, enemyY1, enemyId, enemyPtr) Then Return 1
     #endif
     
     #ifdef SWORD_ENABLED
-        If checkSwordEnemyCollision(enemyX0, enemyY0, enemyX1, enemyY1, enemyId) Then Return 1
+        If checkSwordEnemyCollision(enemyX0, enemyY0, enemyX1, enemyY1, enemyId, enemyPtr) Then Return 1
     #endif
     
     #ifdef SIDE_VIEW
         #ifdef KILL_JUMPING_ON_TOP
-            If checkHitOnTop(enemyId, protaX1, protaY1, enemyX0, enemyY0, enemyX1, enemyY1) Then Return 1
+            If checkHitOnTop(enemyId, protaX1, protaY1, enemyX0, enemyY0, enemyX1, enemyY1, enemyPtr) Then Return 1
         #endif
     #endif
 
@@ -141,33 +141,33 @@ End Function
 
 #define drawEnemy(enemyId, tile, enemyCol, enemyLin) currentEnemyFrame(enemyId) = currentEnemyFrame(enemyId) And (resetReturnMovement(enemyId) Xor 1) : Draw2x2Sprite(tile + currentEnemyFrame(enemyId), enemyCol, enemyLin)
 
-#define saveData(enemyId, horizontalDirection, verticalDirection, enemyCol, enemyLin) decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) = enemyCol : decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) = enemyLin : decompressedEnemiesScreen(enemyId, ENEMY_HORIZONTAL_DIRECTION) = horizontalDirection : decompressedEnemiesScreen(enemyId, ENEMY_VERTICAL_DIRECTION) = verticalDirection
+#define saveData(enemyPtr, horizontalDirection, verticalDirection, enemyCol, enemyLin) Poke enemyPtr + ENEMY_CURRENT_COL, enemyCol : Poke enemyPtr + ENEMY_CURRENT_LIN, enemyLin : Poke enemyPtr + ENEMY_HORIZONTAL_DIRECTION, horizontalDirection : Poke enemyPtr + ENEMY_VERTICAL_DIRECTION, verticalDirection
 
-Sub saveAndDraw(enemyId as Ubyte, tile As Ubyte, horizontalDirection As Ubyte, verticalDirection As Ubyte, enemyCol As Byte, enemyLin As Byte, enemySpeed As Ubyte)
+Sub saveAndDraw(enemyId as Ubyte, enemyPtr As Uinteger, tile As Ubyte, horizontalDirection As Ubyte, verticalDirection As Ubyte, enemyCol As Byte, enemyLin As Byte, enemySpeed As Ubyte)
     ' If platform, update frame every time, otherwise only when moving
     If isPlatform(tile) Then
         updateEnemyFrame(enemyId)
     End If
 
     If checkShouldSkipMoveBySpeed(enemySpeed) Then
-        drawEnemy(enemyId, tile, decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL), decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN))
+        drawEnemy(enemyId, tile, Peek(enemyPtr + ENEMY_CURRENT_COL), Peek(enemyPtr + ENEMY_CURRENT_LIN))
     Else
         If isEnemy(tile) Then
-            If decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_COL) <> enemyCol Or decompressedEnemiesScreen(enemyId, ENEMY_CURRENT_LIN) <> enemyLin Then
+            If Peek(enemyPtr + ENEMY_CURRENT_COL) <> enemyCol Or Peek(enemyPtr + ENEMY_CURRENT_LIN) <> enemyLin Then
                 updateEnemyFrame(enemyId)
             End If
         End If
         drawEnemy(enemyId, tile, enemyCol, enemyLin)
-        saveData(enemyId, horizontalDirection, verticalDirection, enemyCol, enemyLin)
+        saveData(enemyPtr, horizontalDirection, verticalDirection, enemyCol, enemyLin)
     End If
 End Sub
 
-Sub checkCollisionSaveAndDraw(enemyId as Ubyte, tile As Ubyte, horizontalDirection As Ubyte, verticalDirection As Ubyte, enemyCol As Byte, enemyLin As Byte, enemySpeed As Ubyte)
-    If checkProtaAndBulletCollision(enemyId) Then
-        If decompressedEnemiesScreen(enemyId, ENEMY_LIFE) <= 0 Then Return
+Sub checkCollisionSaveAndDraw(enemyId as Ubyte, enemyPtr As Uinteger, tile As Ubyte, horizontalDirection As Ubyte, verticalDirection As Ubyte, enemyCol As Byte, enemyLin As Byte, enemySpeed As Ubyte)
+    If checkProtaAndBulletCollision(enemyId, enemyPtr) Then
+        If Peek(enemyPtr + ENEMY_LIFE) <= 0 Then Return
     End If
 
-    saveAndDraw(enemyId, tile, horizontalDirection, verticalDirection, enemyCol, enemyLin, enemySpeed)
+    saveAndDraw(enemyId, enemyPtr, tile, horizontalDirection, verticalDirection, enemyCol, enemyLin, enemySpeed)
 End Sub
 
 ' Updates enemy position and flips tile for direction. Expands inline (no call overhead).

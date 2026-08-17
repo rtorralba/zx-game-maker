@@ -114,43 +114,46 @@ dim maxXScreenLeft as ubyte = 2
     #endif
     
     #ifdef SWORD_KILL_ENEMY
-        Sub killEnemy(enemyToKill as Ubyte)
-            decompressedEnemiesScreen(enemyToKill, ENEMY_LIFE) = 0
-            removeEnemy(enemyToKill)
+        Sub killEnemy(enemyToKill as Ubyte, enemyPtr As Uinteger)
+            Poke enemyPtr + ENEMY_LIFE, 0
+            removeEnemy(enemyToKill, enemyPtr)
         End Sub
     #endif
     
-    sub damageEnemy(enemyToKill as Ubyte)
-        if decompressedEnemiesScreen(enemyToKill, ENEMY_LIFE) > 97 then return 'invincible enemies
+    sub damageEnemy(enemyToKill as Ubyte, enemyPtr As Uinteger)
+        Dim currentLife As Ubyte = Peek(enemyPtr + ENEMY_LIFE)
+        if currentLife > 97 then return 'invincible enemies
         
-        decompressedEnemiesScreen(enemyToKill, ENEMY_LIFE) = decompressedEnemiesScreen(enemyToKill, ENEMY_LIFE) - 1
+        currentLife = currentLife - 1
+        Poke enemyPtr + ENEMY_LIFE, currentLife
+        
         #ifdef HISCORE_ENABLED
             incrementScore(5)
             shouldPrintHud = 1
         #endif
         
-        if decompressedEnemiesScreen(enemyToKill, ENEMY_LIFE) = 0 then            
+        if currentLife = 0 then            
             #ifdef FINISH_GAME_OBJECTIVE_ENEMY
-                If decompressedEnemiesScreen(enemyToKill, ENEMY_ID) = ENEMY_TO_KILL and enemyToKillAlreadyKilled = 0 Then
+                If Peek(enemyPtr + ENEMY_ID) = ENEMY_TO_KILL and enemyToKillAlreadyKilled = 0 Then
                     enemyToKillAlreadyKilled = 1
                 End If
             #endif
             #ifdef FINISH_GAME_OBJECTIVE_ITEMS_AND_ENEMY
-                If decompressedEnemiesScreen(enemyToKill, ENEMY_ID) = ENEMY_TO_KILL and enemyToKillAlreadyKilled = 0 Then
+                If Peek(enemyPtr + ENEMY_ID) = ENEMY_TO_KILL and enemyToKillAlreadyKilled = 0 Then
                     enemyToKillAlreadyKilled = 1
                 End If
             #endif
             
-            removeEnemy(enemyToKill)
+            removeEnemy(enemyToKill, enemyPtr)
             
         else
             BeepFX_Play(1)
         end if
     end sub
     
-    Sub removeEnemy(enemyToKill as Ubyte)
-        x = decompressedEnemiesScreen(enemyToKill, ENEMY_CURRENT_COL)
-        y = decompressedEnemiesScreen(enemyToKill, ENEMY_CURRENT_LIN)
+    Sub removeEnemy(enemyToKill as Ubyte, enemyPtr As Uinteger)
+        x = Peek(enemyPtr + ENEMY_CURRENT_COL)
+        y = Peek(enemyPtr + ENEMY_CURRENT_LIN)
         Draw2x2Sprite(BURST_SPRITE_ID, x, y)
         
         BeepFX_Play(0)

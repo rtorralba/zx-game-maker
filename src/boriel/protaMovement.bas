@@ -36,9 +36,9 @@ Function checkProtaSolidCollision(x As Ubyte, y As Ubyte) As Ubyte
     Return tile
 End Function
 
-#define canMoveLeft() (Not checkProtaSolidCollision(protaX - 1, protaY)) 
+#define canMoveLeft() ((protaX bAnd 1) Or Not checkProtaSolidCollision(protaX - 1, protaY)) 
 
-#define canMoveRight() (Not checkProtaSolidCollision(protaX + 1, protaY)) 
+#define canMoveRight() ((protaX bAnd 1) Or Not checkProtaSolidCollision(protaX + 1, protaY)) 
 
 Function canMoveUp() As Ubyte
     #ifdef ARCADE_MODE
@@ -47,6 +47,7 @@ Function canMoveUp() As Ubyte
             Return 1
         End If
     #endif
+    If protaY bAnd 1 Then Return 1
     Return Not checkProtaSolidCollision(protaX, protaY - 1)
 End Function
 
@@ -57,6 +58,7 @@ Function canMoveDown() As Ubyte
             Return 1
         End If
     #endif
+    If protaY bAnd 1 Then Return 1
     If checkProtaSolidCollision(protaX, protaY + 1) Then Return 0
     #ifdef SIDE_VIEW
         If checkPlatformByXY(protaX, protaY + 4) Then Return 0
