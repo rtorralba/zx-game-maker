@@ -42,13 +42,13 @@ Sub moveEnemies()
                         snapLin = Peek(enemyPtr + ENEMY_CURRENT_LIN)
                     End If
                     If enemyVerticalDirection Then
-                        If Not CheckCollision(protaX, snapLin - 4, 1) Then
+                        If Not CheckCollisionSolid(protaX, snapLin - 4) Then
                             protaY = snapLin - 4
                         End If
                     End If
                     If enemyHorizontalDirection Then
                         If Not checkShouldSkipMoveBySpeed(enemySpeed) Then
-                            If Not CheckCollision(protaX + enemyHorizontalDirection, protaY, 1) Then
+                            If Not CheckCollisionSolid(protaX + enemyHorizontalDirection, protaY) Then
                                 protaX = protaX + enemyHorizontalDirection
                             End If
                         End If

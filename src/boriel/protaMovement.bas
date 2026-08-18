@@ -1,5 +1,5 @@
 Function checkProtaSolidCollision(x As Ubyte, y As Ubyte) As Ubyte
-    Dim tile As Ubyte = CheckCollision(x, y, 1)
+    Dim tile As Ubyte = CheckCollisionSolid(x, y)
 
     #ifdef MESSAGES_ENABLED
         If tile = ENEMY_DOOR_TILE Then
@@ -210,7 +210,7 @@ End Function
     #endif
     
     Function isFalling() As Ubyte
-        If canMoveDown() And Not CheckCollision(protaX, protaY, 2) And Not CheckCollision(protaX, protaY + 2, 2) Then
+        If canMoveDown() And Not CheckCollisionLadder(protaX, protaY) And Not CheckCollisionLadder(protaX, protaY + 2) Then
             #ifdef JETPACK_FUEL
                 If pressingUp() Then
                     jumpCurrentKey = 0
@@ -383,7 +383,7 @@ Sub leftKey()
     Elseif canMoveLeft()
         #ifdef SIDE_VIEW
             #ifdef LADDERS_ENABLED
-                If CheckCollision(protaX, protaY, 2) Then
+                If CheckCollisionLadder(protaX, protaY) Then
                     saveProta(protaY, protaX - 1, getNextFrameLadder(), 0)
                     Return
                 End If
@@ -420,7 +420,7 @@ Sub rightKey()
     Elseif canMoveRight()
         #ifdef SIDE_VIEW
             #ifdef LADDERS_ENABLED
-                If CheckCollision(protaX, protaY, 2) Then
+                If CheckCollisionLadder(protaX, protaY) Then
                     saveProta(protaY, protaX + 1, getNextFrameLadder(), 1)
                     Return
                 End If
@@ -440,7 +440,7 @@ End Sub
 Sub upKey()
     #ifdef SIDE_VIEW
         #ifdef LADDERS_ENABLED
-            If CheckCollision(protaX, protaY, 2) Then
+            If CheckCollisionLadder(protaX, protaY) Then
                 If protaY = 0 Then
                     #ifdef ARCADE_MODE
                         protaY = 39
@@ -483,7 +483,7 @@ Sub downKey()
             Dim skip As Ubyte = 0
             #ifdef SIDE_VIEW
                 #ifdef LADDERS_ENABLED
-                    If CheckCollision(protaX, protaY, 2) Or CheckCollision(protaX, protaY + 1, 2) Then
+                    If CheckCollisionLadder(protaX, protaY) Or CheckCollisionLadder(protaX, protaY + 1) Then
                         skip = 1
                     End If
                 #endif
@@ -529,7 +529,7 @@ Sub downKey()
             Return
         End If
         #ifdef LADDERS_ENABLED
-            If CheckCollision(protaX, protaY, 2) Or CheckCollision(protaX, protaY + 1, 2) Then
+            If CheckCollisionLadder(protaX, protaY) Or CheckCollisionLadder(protaX, protaY + 1) Then
                 If protaY = MAX_LINE Then
                     #ifdef ARCADE_MODE
                         protaY = 0
@@ -602,7 +602,7 @@ Sub resetToFirstFrameOnStop()
         If isJumping() Then Return
         If canMoveDown() Then Return
         #ifdef LADDERS_ENABLED
-            If CheckCollision(protaX, protaY, 2) Then Return
+            If CheckCollisionLadder(protaX, protaY) Then Return
         #endif
         If protaDirection = 1 Then
             If protaTile <> FIRST_RUNNING_PROTA_SPRITE_RIGHT Then
@@ -818,7 +818,7 @@ End Sub
 Sub checkDamageByTile()
     If invincible Then Return
     
-    If CheckCollision(protaX, protaY, 0) Then
+    If CheckCollisionDamage(protaX, protaY) Then
         decrementLife()
     End If
 End Sub
@@ -834,7 +834,7 @@ End Sub
                 #endif
             #endif
             
-            If CheckCollision(protaX, protaY, 2) Then Return
+            If CheckCollisionLadder(protaX, protaY) Then Return
             
             saveProta(protaY, protaX, getNextProtaIdleSprite(), protaDirection)
         End If

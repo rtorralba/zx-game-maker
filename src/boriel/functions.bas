@@ -371,54 +371,102 @@ end function
     #define checkTravesablePlatformFromTopAndAll(x, y) checkTravesablePlatformType(x, y, 67)
 #endif
 
-'type 0 Damage, 1 Solid, 2 Ladder
-Function checkTypeOfTile(col as uByte, lin as uByte, type as Ubyte) as uByte
-    If type = 1 Then
-        Return isSolidTileByColLin(col, lin)
-    End If
-    If type = 0 Then
-        Return isDamageTileByColLin(col, lin)
-    End If
-    #ifdef SIDE_VIEW
-        #ifdef LADDERS_ENABLED
-            If type = 2 Then
-                Dim tile as Ubyte = GetTile(col, lin)
-                If tile >= 70 And tile <= 73 Then Return tile
-            End If
-        #endif
-    #endif
-    Return 0
-End Function
-
-'type 0 Damage, 1 Solid, 2 Ladder
-Function CheckCollision(x as Ubyte, y as Ubyte, type as Ubyte) as Ubyte
+Function CheckCollisionSolid(x as Ubyte, y as Ubyte) as Ubyte
     Dim xIsEven as Ubyte = (x bAnd 1) = 0
     Dim yIsEven as Ubyte = (y bAnd 1) = 0
     Dim col as Ubyte = x >> 1
     Dim lin as Ubyte = y >> 1
     Dim t as Ubyte
     
-    t = checkTypeOfTile(col, lin, type) : if t then return t
-    t = checkTypeOfTile(col + 1, lin, type) : if t then return t
-    t = checkTypeOfTile(col, lin + 1, type) : if t then return t
-    t = checkTypeOfTile(col + 1, lin + 1, type) : if t then return t
+    t = isSolidTileByColLin(col, lin) : if t then return t
+    t = isSolidTileByColLin(col + 1, lin) : if t then return t
+    t = isSolidTileByColLin(col, lin + 1) : if t then return t
+    t = isSolidTileByColLin(col + 1, lin + 1) : if t then return t
     
     if not yIsEven then
-        t = checkTypeOfTile(col, lin + 2, type) : if t then return t
-        t = checkTypeOfTile(col + 1, lin + 2, type) : if t then return t
+        t = isSolidTileByColLin(col, lin + 2) : if t then return t
+        t = isSolidTileByColLin(col + 1, lin + 2) : if t then return t
     end if
     
     if not xIsEven then
-        t = checkTypeOfTile(col + 2, lin, type) : if t then return t
-        t = checkTypeOfTile(col + 2, lin + 1, type) : if t then return t
+        t = isSolidTileByColLin(col + 2, lin) : if t then return t
+        t = isSolidTileByColLin(col + 2, lin + 1) : if t then return t
     end if
     
     if not xIsEven and not yIsEven then
-        t = checkTypeOfTile(col + 2, lin + 2, type) : if t then return t
+        t = isSolidTileByColLin(col + 2, lin + 2) : if t then return t
     end if
     
     return 0
 End Function
+
+Function CheckCollisionDamage(x as Ubyte, y as Ubyte) as Ubyte
+    Dim xIsEven as Ubyte = (x bAnd 1) = 0
+    Dim yIsEven as Ubyte = (y bAnd 1) = 0
+    Dim col as Ubyte = x >> 1
+    Dim lin as Ubyte = y >> 1
+    Dim t as Ubyte
+    
+    t = isDamageTileByColLin(col, lin) : if t then return t
+    t = isDamageTileByColLin(col + 1, lin) : if t then return t
+    t = isDamageTileByColLin(col, lin + 1) : if t then return t
+    t = isDamageTileByColLin(col + 1, lin + 1) : if t then return t
+    
+    if not yIsEven then
+        t = isDamageTileByColLin(col, lin + 2) : if t then return t
+        t = isDamageTileByColLin(col + 1, lin + 2) : if t then return t
+    end if
+    
+    if not xIsEven then
+        t = isDamageTileByColLin(col + 2, lin) : if t then return t
+        t = isDamageTileByColLin(col + 2, lin + 1) : if t then return t
+    end if
+    
+    if not xIsEven and not yIsEven then
+        t = isDamageTileByColLin(col + 2, lin + 2) : if t then return t
+    end if
+    
+    return 0
+End Function
+
+#ifdef SIDE_VIEW
+    #ifdef LADDERS_ENABLED
+Function isLadderTileByColLin(col as Ubyte, lin as Ubyte) as Ubyte
+    Dim tile as Ubyte = GetTile(col, lin)
+    If tile >= 70 And tile <= 73 Then Return tile
+    Return 0
+End Function
+
+Function CheckCollisionLadder(x as Ubyte, y as Ubyte) as Ubyte
+    Dim xIsEven as Ubyte = (x bAnd 1) = 0
+    Dim yIsEven as Ubyte = (y bAnd 1) = 0
+    Dim col as Ubyte = x >> 1
+    Dim lin as Ubyte = y >> 1
+    Dim t as Ubyte
+    
+    t = isLadderTileByColLin(col, lin) : if t then return t
+    t = isLadderTileByColLin(col + 1, lin) : if t then return t
+    t = isLadderTileByColLin(col, lin + 1) : if t then return t
+    t = isLadderTileByColLin(col + 1, lin + 1) : if t then return t
+    
+    if not yIsEven then
+        t = isLadderTileByColLin(col, lin + 2) : if t then return t
+        t = isLadderTileByColLin(col + 1, lin + 2) : if t then return t
+    end if
+    
+    if not xIsEven then
+        t = isLadderTileByColLin(col + 2, lin) : if t then return t
+        t = isLadderTileByColLin(col + 2, lin + 1) : if t then return t
+    end if
+    
+    if not xIsEven and not yIsEven then
+        t = isLadderTileByColLin(col + 2, lin + 2) : if t then return t
+    end if
+    
+    return 0
+End Function
+    #endif
+#endif
 
 sub removeTilesFromScreen(tile as ubyte)
     dim index, basePtr as uinteger
@@ -459,13 +507,13 @@ end sub
         
         #ifdef WALL_JUMP_ENABLED
             If landed = 0 Then
-                If CheckCollision(protaX + 1, protaY, 1) Then
+                If CheckCollisionSolid(protaX + 1, protaY) Then
                     wallJump = 1
                     protaDirection = 0
                     protaFrame = 4
                     If protaX > 0 Then protaX = protaX - 1
                     wallJumpTimer = 8
-                Elseif CheckCollision(protaX - 1, protaY, 1) Then
+                Elseif CheckCollisionSolid(protaX - 1, protaY) Then
                     wallJump = 1
                     protaDirection = 1
                     protaFrame = 1
@@ -667,13 +715,7 @@ End Function
     End Sub
 #endif
 
-Function checkAABB(x0a As Ubyte, y0a As Ubyte, x1a As Ubyte, y1a As Ubyte, x0b As Ubyte, y0b As Ubyte, x1b As Ubyte, y1b As Ubyte) As Ubyte
-    If x1a < x0b Then Return 0
-    If x0a > x1b Then Return 0
-    If y1a < y0b Then Return 0
-    If y0a > y1b Then Return 0
-    Return 1
-End Function
+#define checkAABB(x0a, y0a, x1a, y1a, x0b, y0b, x1b, y1b) ((x1a) >= (x0b) And (x0a) <= (x1b) And (y1a) >= (y0b) And (y0a) <= (y1b))
 
 sub debugA(value as UBYTE)
     PrintString("----", 7, 0, 0)

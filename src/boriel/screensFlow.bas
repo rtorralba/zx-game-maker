@@ -690,7 +690,7 @@ Sub swapScreen()
     #endif
     redrawScreen()
     
-    if CheckCollision(protaX, protaY, 1) Then
+    if CheckCollisionSolid(protaX, protaY) Then
         protaX = protaX + 2
     End If
 End Sub

@@ -304,7 +304,7 @@ Sub moveToScreen(direction As Ubyte)
     If direction = 8 Then
         #ifdef SIDE_VIEW
             #ifdef LADDERS_ENABLED
-                If CheckCollision(protaX, protaY, 2) Then Return
+                If CheckCollisionLadder(protaX, protaY) Then Return
             #endif
             jumpCurrentKey = 0
         #endif
@@ -319,7 +319,7 @@ Sub drawSprites()
             End If
         #endif
         #ifdef LADDERS_ENABLED
-            If CheckCollision(protaX, protaY, 2) Then
+            If CheckCollisionLadder(protaX, protaY) Then
                 If protaTile < 11 Then
                     protaTile = 11
                 End If
