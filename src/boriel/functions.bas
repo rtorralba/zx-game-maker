@@ -94,6 +94,7 @@ sub decrementLife()
             currentLife = 0
         end if
     #endif
+    shouldPrintHud = 1
     BeepFX_Play(1)
 end sub
 
