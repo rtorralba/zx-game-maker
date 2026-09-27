@@ -102,14 +102,20 @@ sub printHud()
     printLife()
     
     #ifdef JETPACK_FUEL
-        PrintPadded(jumpEnergy, 2, 7, HUD_JETPACK_FUEL_X, HUD_JETPACK_FUEL_Y)
+        #if HUD_JETPACK_FUEL_Y > 21
+            PrintPadded(jumpEnergy, 2, 7, HUD_JETPACK_FUEL_X, HUD_JETPACK_FUEL_Y)
+        #endif
     #endif
     #ifdef AMMO_ENABLED
-        PrintPadded(currentAmmo, 3, 7, HUD_AMMO_X, HUD_AMMO_Y)
+        #if HUD_AMMO_Y > 21
+            PrintPadded(currentAmmo, 3, 7, HUD_AMMO_X, HUD_AMMO_Y)
+        #endif
     #endif
     #ifndef ARCADE_MODE
         #ifdef KEYS_ENABLED
-            PrintPadded(currentKeys, 2, 7, HUD_KEYS_X, HUD_KEYS_Y)
+            #if HUD_KEYS_Y > 21
+                PrintPadded(currentKeys, 2, 7, HUD_KEYS_X, HUD_KEYS_Y)
+            #endif
         #endif
     #endif
     #ifdef HISCORE_ENABLED
@@ -117,11 +123,15 @@ sub printHud()
     #endif
     #ifndef ARCADE_MODE
         #ifdef ITEMS_ENABLED
-            PrintPadded(currentItems, 2, 7, HUD_ITEMS_X, HUD_ITEMS_Y)
+            #if HUD_ITEMS_Y > 21
+                PrintPadded(currentItems, 2, 7, HUD_ITEMS_X, HUD_ITEMS_Y)
+            #endif
         #endif
     #endif
     #ifdef CURRENT_STAGE_ENABLED
-        PrintPadded(currentScreen + 1, 2, 7, HUD_STAGE_X, HUD_STAGE_Y)
+        #if HUD_STAGE_Y > 21
+            PrintPadded(currentScreen + 1, 2, 7, HUD_STAGE_X, HUD_STAGE_Y)
+        #endif
     #endif
 end sub
 
@@ -129,8 +139,12 @@ end sub
 
 #ifdef HISCORE_ENABLED
     Sub printScore()
-        PrintZeroPadded(hiScore, 5, 7, HUD_HISCORE_X, HUD_HISCORE_Y)
-        PrintZeroPadded(score, 5, 7, HUD_HISCORE_X, HUD_HISCORE_Y_2)
+        #if HUD_HISCORE_Y > 21
+            PrintZeroPadded(hiScore, 5, 7, HUD_HISCORE_X, HUD_HISCORE_Y)
+        #endif
+        #if HUD_HISCORE_Y_2 > 21
+            PrintZeroPadded(score, 5, 7, HUD_HISCORE_X, HUD_HISCORE_Y_2)
+        #endif
     End Sub
 #endif
 
