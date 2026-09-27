@@ -210,7 +210,17 @@ End Function
     #endif
     
     Function isFalling() As Ubyte
-        If canMoveDown() And Not CheckCollisionLadder(protaX, protaY) And Not CheckCollisionLadder(protaX, protaY + 2) Then
+        Dim falling As Ubyte = canMoveDown()
+
+        #ifdef LADDERS_ENABLED
+            If falling Then
+                If CheckCollisionLadder(protaX, protaY) Or CheckCollisionLadder(protaX, protaY + 2) Then
+                    falling = 0
+                End If
+            End If
+        #endif
+
+        If falling Then
             #ifdef JETPACK_FUEL
                 If pressingUp() Then
                     jumpCurrentKey = 0
@@ -834,7 +844,10 @@ End Sub
                 #endif
             #endif
             
-            If CheckCollisionLadder(protaX, protaY) Then Return
+
+            #ifdef LADDERS_ENABLED
+                If CheckCollisionLadder(protaX, protaY) Then Return
+            #endif
             
             saveProta(protaY, protaX, getNextProtaIdleSprite(), protaDirection)
         End If
