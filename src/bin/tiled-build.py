@@ -407,7 +407,7 @@ if 'properties' in data:
             arcadeShowBigIntermediateTitle = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
-    damageTiles.append('0')
+    damageTiles.append(0)
  
 damageTilesCount = len(damageTiles) - 1 if len(damageTiles) > 0 else 0
 animatedTilesIdsCount = len(animatedTilesIds) - 1 if len(animatedTilesIds) > 0 else 0
