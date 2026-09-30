@@ -234,7 +234,7 @@
   </object>
   <object id="51" type="ZXSGMEnemy" gid="209" x="336" y="192" width="16" height="16">
    <properties>
-    <property name="move" propertytype="enemyMovementTypes" value="default"/>
+    <property name="move" propertytype="enemyMovementTypes" value="defaultWithShot"/>
     <property name="speed" type="int" propertytype="enemySpeed" value="1"/>
    </properties>
   </object>
@@ -255,7 +255,7 @@
    </properties>
    <point/>
   </object>
-  <object id="71" type="mainCharacter" gid="193" x="288" y="320" width="16" height="16"/>
+  <object id="71" type="mainCharacter" gid="193" x="152" y="320" width="16" height="16"/>
   <object id="78" type="ZXSGMText" x="176" y="320">
    <properties>
     <property name="default">Hi Carlos! How are things going with the &quot;mi mi mis&quot;? It seems like there's more space now, we can tell more stories and make a Khan Zelda!
