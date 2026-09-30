@@ -93,9 +93,9 @@
         If checkAABB(swordX, protaY + 1, swordX + 1, protaY + 2, enemyX0, enemyY0, enemyX1, enemyY1) = 0 Then Return 0
         
         #ifdef SWORD_KILL_ENEMY
-            killEnemy(enemyId)
+            killEnemy(enemyId, enemyPtr)
         #else
-            damageEnemy(enemyId)
+            damageEnemy(enemyId, enemyPtr)
         #endif
         Return 1
     End Function
