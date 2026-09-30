@@ -66,21 +66,23 @@ Sub moveEnemies()
         #endif
         
         #ifdef ENEMY_SHOOT_ENABLED
-            Dim enemyShootingTrigger As Ubyte = enemyId * 50
-            
-            If enemyShouldShoot(enemyBehaviour) And mainLoopCounter = enemyShootingTrigger Then
-                shootEnemyBullet(enemyCol, enemyLin)
-            End If
-            
-            If enemyShouldShoot(enemyBehaviour) And mainLoopCounter - enemyShootingTrigger < ENEMY_STOP_FRAMES Then
-                #ifdef ENEMY_STOPPED_SHOULD_LOOK_AT_PLAYER
-                    If isEnemyStopped(enemyLinEnd, enemyBehaviour) Then
-                        enemyHorizontalDirection = Sgn(protaX - enemyCol)
-                    End If
-                #endif
-                checkLeftDirection(enemyHorizontalDirection, tile)
-                checkCollisionSaveAndDraw(enemyId, enemyPtr, tile, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
-                Goto next_enemy
+            If enemyShouldShoot(enemyBehaviour) Then
+                Dim enemyShootingTrigger As Ubyte = enemyId * 50
+                
+                If mainLoopCounter = enemyShootingTrigger Then
+                    shootEnemyBullet(enemyCol, enemyLin)
+                End If
+                
+                If mainLoopCounter - enemyShootingTrigger < ENEMY_STOP_FRAMES Then
+                    #ifdef ENEMY_STOPPED_SHOULD_LOOK_AT_PLAYER
+                        If isEnemyStopped(enemyLinEnd, enemyBehaviour) Then
+                            enemyHorizontalDirection = Sgn(protaX - enemyCol)
+                        End If
+                    #endif
+                    checkLeftDirection(enemyHorizontalDirection, tile)
+                    checkCollisionSaveAndDraw(enemyId, enemyPtr, tile, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin, enemySpeed)
+                    Goto next_enemy
+                End If
             End If
         #endif
         
