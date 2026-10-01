@@ -726,6 +726,9 @@ if shouldKillEnemies == 1:
 if enemiesRespawn == 0:
     configStr += "#DEFINE ENEMIES_NOT_RESPAWN_ENABLED\n"
 
+if shouldKillEnemies or enemiesRespawn == 0:
+    configStr += "#DEFINE SHOULD_CHECK_SCREENS_WON\n"
+
 with open("output/screensWon.bin", "wb") as f:
     f.write(bytearray([0] * screensCount))
 

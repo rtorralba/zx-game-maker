@@ -132,20 +132,8 @@ dim maxXScreenLeft as ubyte = 2
             shouldPrintHud = 1
         #endif
         
-        if currentLife = 0 then            
-            #ifdef FINISH_GAME_OBJECTIVE_ENEMY
-                If Peek(enemyPtr + ENEMY_ID) = ENEMY_TO_KILL and enemyToKillAlreadyKilled = 0 Then
-                    enemyToKillAlreadyKilled = 1
-                End If
-            #endif
-            #ifdef FINISH_GAME_OBJECTIVE_ITEMS_AND_ENEMY
-                If Peek(enemyPtr + ENEMY_ID) = ENEMY_TO_KILL and enemyToKillAlreadyKilled = 0 Then
-                    enemyToKillAlreadyKilled = 1
-                End If
-            #endif
-            
+        if currentLife = 0 then                        
             removeEnemy(enemyToKill, enemyPtr)
-            
         else
             BeepFX_Play(1)
         end if
@@ -158,22 +146,23 @@ dim maxXScreenLeft as ubyte = 2
         
         BeepFX_Play(0)
         
-        #ifdef SHOULD_KILL_ENEMIES_ENABLED
+        #ifdef SHOULD_CHECK_SCREENS_WON
             if not screensWon(currentScreen) then
                 if allEnemiesKilled() then
                     screensWon(currentScreen) = 1
                     removeTilesFromScreen(63)
                 end if
             end if
-            return ' to prevent check twice if ENEMIES_NOT_RESPAWN_ENABLED is defined'
         #endif
-        
-        #ifdef ENEMIES_NOT_RESPAWN_ENABLED
-            if not screensWon(currentScreen) then
-                if allEnemiesKilled() then
-                    screensWon(currentScreen) = 1
-                    removeTilesFromScreen(63)
-                end if
-            end if
+
+        #ifdef FINISH_GAME_OBJECTIVE_ENEMY
+            If Peek(enemyPtr + ENEMY_ID) = ENEMY_TO_KILL and enemyToKillAlreadyKilled = 0 Then
+                enemyToKillAlreadyKilled = 1
+            End If
+        #endif
+        #ifdef FINISH_GAME_OBJECTIVE_ITEMS_AND_ENEMY
+            If Peek(enemyPtr + ENEMY_ID) = ENEMY_TO_KILL and enemyToKillAlreadyKilled = 0 Then
+                enemyToKillAlreadyKilled = 1
+            End If
         #endif
     End Sub
