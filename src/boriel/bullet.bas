@@ -83,26 +83,7 @@ dim maxXScreenLeft as ubyte = 2
                 end if
             end if
             
-            #ifdef USE_BREAKABLE_TILE_ALL
-                if tile = BREAKABLE_BY_BULLET_TILE then
-                    brokenTiles(currentScreen) = 1
-                    BeepFX_Play(0)
-                    removeTilesFromScreen(BREAKABLE_BY_BULLET_TILE)
-                end if
-            #endif
-            #ifdef USE_BREAKABLE_TILE_INDIVIDUAL
-                if tile = BREAKABLE_BY_BULLET_TILE then
-                    brokenTiles(brokenTilesCurrentIndex, 0) = currentScreen
-                    brokenTiles(brokenTilesCurrentIndex, 1) = xToCheckTile
-                    brokenTiles(brokenTilesCurrentIndex, 2) = yToCheckTile
-                    If brokenTilesCurrentIndex < BREAKABLE_TILES_COUNT - 1 Then
-                        brokenTilesCurrentIndex = brokenTilesCurrentIndex + 1
-                    End If
-                    
-                    BeepFX_Play(0)
-                    SetTile(0, BACKGROUND_ATTRIBUTE, xToCheckTile, yToCheckTile)
-                end if
-            #endif
+            breakTileAt(xToCheckTile, yToCheckTile)
             resetBullet()
         end sub
         

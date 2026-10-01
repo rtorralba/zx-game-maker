@@ -484,6 +484,22 @@ Sub upKey()
     #endif
 End Sub
 
+#ifdef SWORD_ENABLED
+    Sub checkSwordBreakableTiles()
+        Dim swordX As Ubyte
+        If swordDirection = 1 Then
+            swordX = protaX + 4
+            If swordX >= 60 Then swordX = 60
+        Else
+            If protaX >= 2 Then swordX = protaX - 2 Else swordX = 0
+        End If
+        
+        Dim col As Ubyte = swordX >> 1
+        breakTileAt(col, protaY >> 1)
+        breakTileAt(col, (protaY + 2) >> 1)
+    End Sub
+#endif
+
 Sub downKey()
     ' Sword Attack Logic
     #ifdef SWORD_ENABLED
@@ -502,6 +518,7 @@ Sub downKey()
                 If swordTimer = 0 Then
                     swordTimer = SWORD_DURATION
                     swordDirection = protaDirection
+                    checkSwordBreakableTiles()
                     #ifdef IDLE_ENABLED
                         protaLoopCounter = 0
                         
@@ -858,6 +875,7 @@ End Sub
     Sub updateSword()
         If swordTimer > 0 Then
             swordTimer = swordTimer - 1
+            checkSwordBreakableTiles()
         End If
     End Sub
 #endif

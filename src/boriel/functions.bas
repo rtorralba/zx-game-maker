@@ -575,6 +575,44 @@ End Function
 
 #define replaceTileWithBackground(col, lin) SetTile(GetTile(col, (lin) + 1), attrSet(GetTile(col, (lin) + 1)), col, lin)
 
+Sub breakTileAt(col As Ubyte, lin As Ubyte)
+    If col >= screenWidth Then Return
+    If lin >= 22 Then Return
+    
+    Dim tile As Ubyte = GetTile(col, lin)
+    
+    #ifdef USE_BREAKABLE_TILE_ALL
+        If tile = BREAKABLE_BY_BULLET_TILE Then
+            brokenTiles(currentScreen) = 1
+            BeepFX_Play(0)
+            removeTilesFromScreen(BREAKABLE_BY_BULLET_TILE)
+            Return
+        End If
+    #endif
+    
+    #ifdef USE_BREAKABLE_TILE_INDIVIDUAL
+        If tile = BREAKABLE_BY_BULLET_TILE Then
+            brokenTiles(brokenTilesCurrentIndex, 0) = currentScreen
+            brokenTiles(brokenTilesCurrentIndex, 1) = col
+            brokenTiles(brokenTilesCurrentIndex, 2) = lin
+            If brokenTilesCurrentIndex < BREAKABLE_TILES_COUNT - 1 Then
+                brokenTilesCurrentIndex = brokenTilesCurrentIndex + 1
+            End If
+            BeepFX_Play(0)
+            SetTile(0, BACKGROUND_ATTRIBUTE, col, lin)
+            Return
+        End If
+    #endif
+    
+    #ifdef USE_BREAKABLE_TILE_BY_TOUCH
+        If tile = BREAKABLE_BY_TOUCH_TILE Then
+            replaceTileWithBackground(col, lin)
+            BeepFX_Play(0)
+            Return
+        End If
+    #endif
+End Sub
+
 #ifdef IDLE_ENABLED
     Function getNextProtaIdleSprite() As Ubyte
         If protaTile = PROTA_IDLE_SPRITE_ID Then
