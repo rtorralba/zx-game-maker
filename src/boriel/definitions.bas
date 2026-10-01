@@ -157,8 +157,6 @@ Dim currentEnemyFrame(MAX_ENEMIES_PER_SCREEN) As Ubyte
 #endif
 
 #ifdef SHOOTING_ENABLED
-    Dim bullet(7) As Ubyte
-    
     Dim bulletPositionX as Ubyte = 0
     Dim bulletPositionY as Ubyte = 0
     Dim bulletDirection as Ubyte = 0

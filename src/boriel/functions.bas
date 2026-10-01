@@ -11,20 +11,29 @@ Function sgn8(v As Byte) As Byte
     Return 0
 End Function
 
-Sub PrintPadded(value As Ulong, padLength As Ubyte, Color As uInteger, X As uInteger, Y As uInteger)
-    Dim s As String = STR$(value)
-    While LEN(s) < padLength
-        s = s + " "
-    End While
-    PrintString(s, Color, X, Y)
+Sub PrintNumberPadded(value As Uinteger, padLength As Ubyte, Color As uInteger, X As uInteger, Y As uInteger, padChar As Ubyte)
+    Dim i As Ubyte
+    Dim first As Ubyte = 1
+    
+    For i = 0 To padLength - 1
+        Dim ch As Ubyte
+        If first = 1 Or value > 0 Or padChar = 48 Then
+            ch = 48 + (value MOD 10)
+            value = value / 10
+            first = 0
+        Else
+            ch = 32
+        End If
+        PrintChar(ch, Color, X + padLength - 1 - i, Y)
+    Next i
 End Sub
 
-Sub PrintZeroPadded(value As Ulong, padLength As Ubyte, Color As uInteger, X As uInteger, Y As uInteger)
-    Dim s As String = STR$(value)
-    While LEN(s) < padLength
-        s = "0" + s
-    End While
-    PrintString(s, Color, X, Y)
+Sub PrintPadded(value As Uinteger, padLength As Ubyte, Color As uInteger, X As uInteger, Y As uInteger)
+    PrintNumberPadded(value, padLength, Color, X, Y, 32)
+End Sub
+
+Sub PrintZeroPadded(value As Uinteger, padLength As Ubyte, Color As uInteger, X As uInteger, Y As uInteger)
+    PrintNumberPadded(value, padLength, Color, X, Y, 48)
 End Sub
 
 #ifdef LIVES_MODE_ENABLED
@@ -768,23 +777,3 @@ End Function
 #endif
 
 #define checkAABB(x0a, y0a, x1a, y1a, x0b, y0b, x1b, y1b) ((x1a) >= (x0b) And (x0a) <= (x1b) And (y1a) >= (y0b) And (y0a) <= (y1b))
-
-sub debugA(value as UBYTE)
-    PrintString("----", 7, 0, 0)
-    PrintString(STR$(value), 7, 0, 0)
-end sub
-
-sub debugB(value as UBYTE)
-    PrintString("  ", 7, 5, 0)
-    PrintString(STR$(value), 7, 5, 0)
-end sub
-
-sub debugC(value as UBYTE)
-    PrintString("  ", 7, 10, 0)
-    PrintString(STR$(value), 7, 10, 0)
-end sub
-
-sub debugD(value as UBYTE)
-    PrintString("  ", 7, 15, 0)
-    PrintString(STR$(value), 7, 15, 0)
-end sub

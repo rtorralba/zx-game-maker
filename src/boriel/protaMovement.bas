@@ -200,8 +200,7 @@ End Function
                 End If
                 incrementJumpKey()
                 jumpEnergy = jumpEnergy - 1
-                PrintString("  ", 7, HUD_JETPACK_FUEL_X, HUD_JETPACK_FUEL_Y)
-                PrintString(STR$(jumpEnergy), 7, HUD_JETPACK_FUEL_X, HUD_JETPACK_FUEL_Y)
+                PrintPadded(jumpEnergy, 2, 7, HUD_JETPACK_FUEL_X, HUD_JETPACK_FUEL_Y)
                 Return
             End If
             
