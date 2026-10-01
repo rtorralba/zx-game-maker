@@ -580,6 +580,11 @@
                 "value": true
             },
             {
+                "name": "objectsInheritBackground",
+                "type": "bool",
+                "value": true
+            },
+            {
                 "name": "paper",
                 "type": "string",
                 "value": "0"

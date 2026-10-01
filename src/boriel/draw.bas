@@ -140,8 +140,12 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
         End If
     End If
 
-    besideTile = GetTile(x, y - 1)
-    attr = getAttrFromTileAndApplyToOther(tile, besideTile)
+    #ifdef OBJECTS_INHERIT_BACKGROUND
+        besideTile = GetTile(x, y - 1)
+        attr = getAttrFromTileAndApplyToOther(tile, besideTile)
+    #else
+        attr = attrSet(tile)
+    #endif
 
     #ifdef ARCADE_MODE
         If tile = KEY_TILE Then

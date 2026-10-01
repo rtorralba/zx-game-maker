@@ -221,6 +221,8 @@ enemyStoppedShouldLookAtPlayer = 0
 arcadeResetAmmoOnScreenClear = 0
 arcadeShowBigIntermediateTitle = 0
 
+objectsInheritBackground = 1
+
 if 'properties' in data:
     for property in data['properties']:
         if property['name'] == 'gameName':
@@ -405,6 +407,8 @@ if 'properties' in data:
             arcadeResetAmmoOnScreenClear = 1 if property['value'] else 0
         elif property['name'] == 'arcadeShowBigIntermediateTitle':
             arcadeShowBigIntermediateTitle = 1 if property['value'] else 0
+        elif property['name'] == 'objectsInheritBackground':
+            objectsInheritBackground = 1 if property['value'] else 0
 
 if len(damageTiles) == 0:
     damageTiles.append(0)
@@ -632,6 +636,9 @@ configStr += "Const ITEMS_TO_OPEN_DOORS as ubyte = " + str(itemsToOpenDoors) + "
 if useBreakableTileByTouch == 1:
     configStr += "#DEFINE USE_BREAKABLE_TILE_BY_TOUCH\n"
     configStr += "Const BREAKABLE_BY_TOUCH_TILE_FRAMES as ubyte = " + str(useBreakableTileByTouchFrames) + "\n"
+
+if objectsInheritBackground == 1:
+    configStr += "#DEFINE OBJECTS_INHERIT_BACKGROUND\n"
 
 breakableTilesCount = 0
 screenObjectsCount = 0
