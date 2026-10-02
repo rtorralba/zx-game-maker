@@ -159,19 +159,13 @@ end sub
 
 #ifdef TIMER_ENABLED
     Sub updateTimerDisplay()
-        Dim timerSecondsRemaining as Ubyte = timerSeconds MOD 60
-        Dim minStr As String = STR$(timerSeconds / 60)
-        Dim secStr As String = STR$(timerSecondsRemaining)
-        If timerSecondsRemaining < 10 Then
-            secStr = "0" + secStr
-        End If
+        Dim minutes as Ubyte = timerSeconds / 60
+        Dim secondsRemaining as Ubyte = timerSeconds MOD 60
         
-        ' 1 char for minutes + ":" + 2 chars for seconds = 4 chars total
-        Dim timerStr As String = minStr + ":" + secStr
-        While LEN(timerStr) < 4
-            timerStr = timerStr + " "
-        End While
-        PrintString(timerStr, 7, HUD_TIMER_X, HUD_TIMER_Y)
+        PrintChar(48 + (minutes MOD 10), 7, HUD_TIMER_X, HUD_TIMER_Y)
+        PrintChar(58, 7, HUD_TIMER_X + 1, HUD_TIMER_Y)
+        PrintChar(48 + (secondsRemaining / 10), 7, HUD_TIMER_X + 2, HUD_TIMER_Y)
+        PrintChar(48 + (secondsRemaining MOD 10), 7, HUD_TIMER_X + 3, HUD_TIMER_Y)
     End Sub
     Sub updateTimer()
         If framec - lastFrameTimer > 50 Then

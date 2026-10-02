@@ -342,13 +342,13 @@ End Sub
             Dim currentLives As Ubyte = currentLife
             
             PrintString("TIME LEFT:      ", 7, 8, 6)
-            PrintString(STR$(timerSeconds), 7, 24 - LEN(STR$(timerSeconds)), 6)
+            PrintPadded(timerSeconds, 3, 7, 21, 6)
             
             PrintString("LIVES LEFT:    ", 7, 8, 8)
-            PrintString(STR$(currentLives), 7, 24 - LEN(STR$(currentLives)), 8)
+            PrintPadded(currentLives, 3, 7, 21, 8)
             
             PrintString("SCORE:          ", 7, 8, 10)
-            PrintString(STR$(score), 7, 24 - LEN(STR$(score)), 10)
+            PrintPadded(score, 5, 7, 19, 10)
             
             #ifdef ARCADE_SHOW_BIG_INTERMEDIATE_TITLE
                 doubleSizeTexto(10, 160, "SCREEN CLEARED!")
@@ -366,11 +366,8 @@ End Sub
                     timerSeconds = timerSeconds - 1
                     incrementScore(1)
                     
-                    PrintString("TIME LEFT:      ", 7, 8, 6)
-                    PrintString(STR$(timerSeconds), 7, 24 - LEN(STR$(timerSeconds)), 6)
-                    
-                    PrintString("SCORE:          ", 7, 8, 10)
-                    PrintString(STR$(score), 7, 24 - LEN(STR$(score)), 10)
+                    PrintPadded(timerSeconds, 3, 7, 21, 6)
+                    PrintPadded(score, 5, 7, 19, 10)
                     Beep .01, 12
                     
                     protaTile = getNextProtaIdleSprite()
@@ -382,11 +379,8 @@ End Sub
                     currentLives = currentLives - 1
                     incrementScore(50)
                     
-                    PrintString("LIVES LEFT:    ", 7, 8, 8)
-                    PrintString(STR$(currentLives), 7, 24 - LEN(STR$(currentLives)), 8)
-                    
-                    PrintString("SCORE:          ", 7, 8, 10)
-                    PrintString(STR$(score), 7, 24 - LEN(STR$(score)), 10)
+                    PrintPadded(currentLives, 3, 7, 21, 8)
+                    PrintPadded(score, 5, 7, 19, 10)
                     Beep .01, 12
                     
                     protaTile = getNextProtaIdleSprite()

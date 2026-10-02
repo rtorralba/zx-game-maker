@@ -54,10 +54,12 @@ dim maxXScreenLeft as ubyte = 2
         end sub
         
         sub checkBulletCollision()
-            if bulletPositionY = maxYScreenTop or bulletPositionY = maxYScreenBottom then
-                resetBullet()
-                return
-            end if
+            #ifdef OVERHEAD_VIEW
+                if bulletPositionY = maxYScreenTop or bulletPositionY = maxYScreenBottom then
+                    resetBullet()
+                    return
+                end if
+            #endif
             
             dim xToCheck as ubyte
             

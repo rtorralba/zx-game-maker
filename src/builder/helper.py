@@ -235,4 +235,4 @@ def blackoutForbiddenSprites(sprites_png_path):
                 pixels[x, y] = (0, 0, 0, 255)  # Negro con alpha
     
     img.save(sprites_png_path)
-    print(f"✓ Sprites prohibidos limpiados en {Path(sprites_png_path).name}")
+    print(f"OK: Sprites prohibidos limpiados en {Path(sprites_png_path).name}")
