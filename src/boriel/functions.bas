@@ -11,30 +11,33 @@ Function sgn8(v As Byte) As Byte
     Return 0
 End Function
 
-Sub PrintNumberPadded(value As Uinteger, padLength As Ubyte, Color As uInteger, X As uInteger, Y As uInteger, padChar As Ubyte)
-    Dim i As Ubyte
-    Dim first As Ubyte = 1
+Sub PrintPadded(value As Uinteger, padLength As Ubyte, Color As uInteger, X As uInteger, Y As uInteger)
+    Dim numDigits As Ubyte = 1
+    Dim temp As Uinteger = value
+    While temp >= 10
+        numDigits = numDigits + 1
+        temp = temp / 10
+    End While
     
-    For i = 0 To padLength - 1
-        Dim ch As Ubyte
-        If first = 1 Or value > 0 Or padChar = 48 Then
-            ch = 48 + (value MOD 10)
-            value = value / 10
-            first = 0
-        Else
-            ch = 32
-        End If
-        PrintChar(ch, Color, X + padLength - 1 - i, Y)
+    Dim i As Ubyte
+    For i = 0 To numDigits - 1
+        PrintChar(48 + (value MOD 10), Color, X + numDigits - 1 - i, Y)
+        value = value / 10
+    Next i
+    
+    For i = numDigits To padLength - 1
+        PrintChar(32, Color, X + i, Y)
     Next i
 End Sub
 
-Sub PrintPadded(value As Uinteger, padLength As Ubyte, Color As uInteger, X As uInteger, Y As uInteger)
-    PrintNumberPadded(value, padLength, Color, X, Y, 32)
+Sub PrintZeroPadded(value As Uinteger, padLength As Ubyte, Color As uInteger, X As uInteger, Y As uInteger)
+    Dim i As Ubyte
+    For i = 0 To padLength - 1
+        PrintChar(48 + (value MOD 10), Color, X + padLength - 1 - i, Y)
+        value = value / 10
+    Next i
 End Sub
 
-Sub PrintZeroPadded(value As Uinteger, padLength As Ubyte, Color As uInteger, X As uInteger, Y As uInteger)
-    PrintNumberPadded(value, padLength, Color, X, Y, 48)
-End Sub
 
 #ifdef LIVES_MODE_ENABLED
     #define printLife() PrintPadded(currentLife, 2, 7, HUD_LIFE_X, HUD_LIFE_Y)
