@@ -73,3 +73,45 @@
    - El estado de `git status` debe quedar limpio tras cada intervención, salvo los cambios solicitados por el usuario.
 4. **Validación del Entorno**:
    - Usar siempre el compilador y python del entorno virtual (`venv/Scripts/python.exe`, `venv/Scripts/zxbc.exe`).
+
+---
+
+## 5. Menú y Redefinición de Teclas en 128K (Banco 7)
+
+### Motivación y Arquitectura
+Para liberar memoria crítica en el **Banco 0** ($C000) y evitar restricciones de espacio en el ejecutable principal (`main.bin`), el menú principal y la pantalla de redefinición de teclas se compilan como un binario independiente (`src/boriel/menu128.bas` -> `output/menu.bin`) y se alojan en el **Banco 7** a partir de la dirección `$C000` (49152).
+
+### Distribución de Memoria en el Banco 7 ($C000 - $FFFF):
+- `$C000` - `$CFFF` (~4 KB): Código y datos del menú y redefinición (`menu.bin`).
+- `$D000` - `$DFFF` (~4 KB): Textos y diálogos del juego (`texts.bin`), si `TEXTS_ENABLED` está activo.
+- `$E000` - `$EFFF`: Buffer temporal de pantalla (`BUFFER_ADDR` para diálogos de texto).
+- `$FFF0` - `$FFFF` (16 bytes): Zona de comunicación entre `main.bin` y `menu128.bas`.
+
+### Comunicación entre `main.bin` y `menu128.bas`:
+Al llamar al menú desde `screensFlow.bas`:
+1. `main.bin` escribe en las posiciones de control del Banco 7:
+   - `65520` (Uinteger): Puntero al array de teclas (`@keyArray(0)`).
+   - `65522` (Ubyte): Disponibilidad de interfaz Kempston (`kempstonInterfaceAvailable`).
+   - `65523` (Uinteger): Puntuación máxima (`hiScore`).
+2. Conmuta con `SetBank(7)` y ejecuta `call 49152`.
+3. `menu128.bas` atiende los presets de control:
+   - Tecla 1: Teclado (QAOP + Espacio por defecto, o teclas personalizadas).
+   - Tecla 2 / Disparo Kempston: Kempston Joystick.
+   - Tecla 3: Sinclair Joystick (6, 7, 9, 8, 0).
+   - Tecla 4: Redefinición interactiva tecla por tecla (Izquierda, Derecha, Arriba, Abajo, Disparo).
+4. `menu128.bas` escribe el código de resultado en `65525` (1 = Teclado, 2 = Kempston, 0 = Teclas redefinidas / redibujar menú).
+5. `main.bin` restaura `SetBank(0)` y lee el resultado:
+   - Si el resultado es 0, el bucle repite (restaura pantalla de título y vuelve a invocar el menú).
+   - Si el resultado es 1 o 2, inicia la partida con `playGame()`.
+
+### Modo 48K:
+En modo 48K (`#ifndef ENABLED_128k`), el menú básico y la redefinición se mantienen dentro de `screensFlow.bas` en el banco principal sin afectarle los cambios de 128K.
+
+### Reglas Críticas de `menu128.bas` y Empaquetado de Cinta:
+1. **Punto de Entrada en `menu128.bas`**:
+   - Al compilar con origen en 49152 (`-S 49152`), el archivo debe iniciar obligatoriamente con un salto explícito `Goto startMenu` tras las declaraciones globales para saltar sobre las subrutinas y bloques `asm`.
+   - Al finalizar el bucle del menú (`Exit Do`), el programa debe terminar simplemente alcanzando el final del código BASIC (sin incluir un `ret` en ensamblador a mano). De este modo, el runtime de Boriel ejecuta automáticamente `.core.__END_PROGRAM`, restaurando el puntero de pila (`SP`) desde `__CALL_BACK__`, recuperando los registros salvados (`HL'`, `IY`, `IX`), habilitando interrupciones (`ei`) y ejecutando el `ret` que devuelve el control con la pila balanceada a `screensFlow.bas`. (Un `ret` manual desbalanceaba la pila al saltarse el desapilado de `IX`, `IY` y `HL'`, provocando un cuelgue al seleccionar una opción).
+2. **Sincronización de Bloques TAP**:
+   - La lista de bloques empaquetados en `src/build.py` (`tapsBuild`) debe coincidir de forma estricta con la secuencia de órdenes `load ""` de `src/boriel/dataLoader.bas`.
+   - Para pantallas opcionales (`intro.tap`, `gameover.tap`), debe comprobarse la condición `screenExists()` (que define `INTRO_SCREEN_ENABLED` / `GAMEOVER_SCREEN_ENABLED`) en lugar de únicamente la presencia de archivos temporales en disco.
+

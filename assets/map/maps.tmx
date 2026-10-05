@@ -45,8 +45,8 @@
   <property name="redefineKeysEnabled" type="bool" value="true"/>
   <property name="shooting" type="bool" value="true"/>
   <property name="shouldKillEnemies" type="bool" value="true"/>
-  <property name="swordEnabled" type="bool" value="true"/>
-  <property name="textsEnabled" type="bool" value="false"/>
+  <property name="swordEnabled" type="bool" value="false"/>
+  <property name="textsEnabled" type="bool" value="true"/>
   <property name="timerSeconds" type="int" value="0"/>
   <property name="useBreakableTile" propertytype="breakableTilesMode" value="individual"/>
   <property name="useBreakableTileByTouch" type="bool" value="true"/>

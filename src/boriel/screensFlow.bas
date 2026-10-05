@@ -1,12 +1,12 @@
+#ifdef ENABLED_128k
 Sub showMenu()
-    #ifdef ENABLED_128k
+    Dim menuChoice As Ubyte = 0
+    Do
         #ifdef MUSIC_ENABLED
             VortexTracker_Stop()
         #endif
-    #endif
-    inMenu = 1
-    Ink 7: Paper 0: Border 0: BRIGHT 0: FLASH 0: Cls
-    #ifdef ENABLED_128k
+        inMenu = 1
+        Ink 7: Paper 0: Border 0: BRIGHT 0: FLASH 0: Cls
         SetBank(screensBank)
         dzx0Standard(TITLE_SCREEN_ADDRESS, $4000)
         SetBank(0)
@@ -15,9 +15,35 @@ Sub showMenu()
                 VortexTracker_Play(MUSIC_TITLE_ADDRESS)
             #endif
         #endif
-    #Else
-        dzx0Standard(TITLE_SCREEN_ADDRESS, $4000)
-    #endif
+        
+        SetBank(7)
+        Poke Uinteger 65520, @keyArray(0)
+        Poke 65522, kempstonInterfaceAvailable
+        #ifdef HISCORE_ENABLED
+            Poke Uinteger 65523, CAST(Uinteger, hiScore)
+        #endif
+        Asm
+            call 49152
+        End Asm
+        menuChoice = Peek(65525)
+        SetBank(0)
+        
+        If menuChoice = 1 Then
+            kempston = 0
+            playGame()
+            Exit Do
+        ElseIf menuChoice = 2 Then
+            kempston = 1
+            playGame()
+            Exit Do
+        End If
+    Loop
+End Sub
+#else
+Sub showMenu()
+    inMenu = 1
+    Ink 7: Paper 0: Border 0: BRIGHT 0: FLASH 0: Cls
+    dzx0Standard(TITLE_SCREEN_ADDRESS, $4000)
     
     #ifdef HISCORE_ENABLED
         Ink getFirstCharInk(): Paper getFirstCharPaper(): Bright getFirstCharBright()
@@ -60,6 +86,7 @@ Sub showMenu()
         End If
     Loop
 End Sub
+#endif
 
 
 #ifdef PASSWORD_ENABLED
@@ -96,44 +123,38 @@ End Sub
     End Sub
 #endif
 
-#ifdef REDEFINE_KEYS_ENABLED
-    #ifndef PASSWORD_ENABLED
-        Function LeerTecla() As Uinteger
-            Do Loop While GetKeyScanCode()
-            Do Loop Until GetKeyScanCode()
-            Return GetKeyScanCode()
-        End Function
-    #endif
-    Sub redefineKeys()
-        Cls
-        
-        #ifdef ENABLED_128k
-            #ifdef MUSIC_ENABLED
-                #ifdef MUSIC_TITLE_ENABLED
-                    VortexTracker_Stop()
-                #endif
+#ifndef ENABLED_128k
+    #ifdef REDEFINE_KEYS_ENABLED
+        #ifndef PASSWORD_ENABLED
+            Function LeerTecla() As Uinteger
+                Do Loop While GetKeyScanCode()
+                Do Loop Until GetKeyScanCode()
+                Return GetKeyScanCode()
+            End Function
+        #endif
+        Sub redefineKeys()
+            Cls
+            
+            PrintString("<", 7, 16, 8)    
+            keyArray(LEFT) = LeerTecla()
+            
+            PrintString(">", 7, 16, 8)
+            keyArray(RIGHT) = LeerTecla()
+            
+            PrintString("^", 7, 16, 8)
+            keyArray(UP) = LeerTecla()
+            
+            PrintString("v", 7, 16, 8)
+            keyArray(DOWN) = LeerTecla()
+            
+            #ifdef SHOOTING_ENABLED
+                PrintString("FIRE", 7, 16, 8)
+                keyArray(FIRE) = LeerTecla()
             #endif
-        #endif
-        
-        PrintString("<", 7, 16, 8)    
-        keyArray(LEFT) = LeerTecla()
-        
-        PrintString(">", 7, 16, 8)
-        keyArray(RIGHT) = LeerTecla()
-        
-        PrintString("^", 7, 16, 8)
-        keyArray(UP) = LeerTecla()
-        
-        PrintString("v", 7, 16, 8)
-        keyArray(DOWN) = LeerTecla()
-        
-        #ifdef SHOOTING_ENABLED
-            PrintString("FIRE", 7, 16, 8)
-            keyArray(FIRE) = LeerTecla()
-        #endif
-        
-        showMenu()
-    End Sub
+            
+            showMenu()
+        End Sub
+    #endif
 #endif
 
 Sub playGame()

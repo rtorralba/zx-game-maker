@@ -39,9 +39,13 @@ def compilingGame():
     if useAlternativeCompiler:
         runCommand(alternativeCompiler + " --version")
         runCommand(alternativeCompiler + " -W160 -W170 -W130 -W190 -W150 -W100 -H 128 --heap-address 23755 -S 24120 -O 4 \"" + str(Path("boriel/main.bas")) + "\" --mmap \"" + str(OUTPUT_FOLDER / "map.txt") + "\" -D HIDE_LOAD_MSG -o \"" + str(OUTPUT_FOLDER / "main.bin") + "\"")
+        if getEnabled128K():
+            runCommand(alternativeCompiler + " -W160 -W170 -W130 -W190 -W150 -W100 -H 64 -S 49152 -O 4 \"" + str(Path("boriel/menu128.bas")) + "\" -o \"" + str(OUTPUT_FOLDER / "menu.bin") + "\"")
     else:
         runCommand("zxbc --version")
         runCommand("zxbc -W160 -W170 -W130 -W190 -W150 -W100 -H 128 --heap-address 23755 -S 24120 -O 4 \"" + str(Path("boriel/main.bas")) + "\" --mmap \"" + str(OUTPUT_FOLDER / "map.txt") + "\" -D HIDE_LOAD_MSG -o \"" + str(OUTPUT_FOLDER / "main.bin") + "\"")
+        if getEnabled128K():
+            runCommand("zxbc -W160 -W170 -W130 -W190 -W150 -W100 -H 64 -S 49152 -O 4 \"" + str(Path("boriel/menu128.bas")) + "\" -o \"" + str(OUTPUT_FOLDER / "menu.bin") + "\"")
 
 def checkMemory():
     runPythonScriptFile(str(BIN_FOLDER / "check-memory.py"))
@@ -107,16 +111,20 @@ def tapsBuild(outputFile):
             if not musicExists("intro"):
                 input_files.remove(str(OUTPUT_FOLDER / "music-intro.tap"))
 
-        if os.path.isfile(OUTPUT_FOLDER / "intro.scr.zx0"):
+        if screenExists("intro"):
             runCommand("zxbin2tap \"" + str(OUTPUT_FOLDER / "intro.scr.zx0") + "\" \"" + str(OUTPUT_FOLDER / "intro.tap") + "\" 49152")
             input_files.append(OUTPUT_FOLDER / "intro.tap")
         
-        if os.path.isfile(OUTPUT_FOLDER / "gameover.scr.zx0"):
+        if screenExists("gameover"):
             runCommand("zxbin2tap \"" + str(OUTPUT_FOLDER / "gameover.scr.zx0") + "\" \"" + str(OUTPUT_FOLDER / "gameover.tap") + "\" 49152")
             input_files.append(OUTPUT_FOLDER / "gameover.tap")
         
+        if os.path.isfile(OUTPUT_FOLDER / "menu.bin"):
+            runCommand("zxbin2tap \"" + str(OUTPUT_FOLDER / "menu.bin") + "\" \"" + str(OUTPUT_FOLDER / "menu.tap") + "\" 49152 --header menu")
+            input_files.append(OUTPUT_FOLDER / "menu.tap")
+
         if os.path.isfile(OUTPUT_FOLDER / "texts.bin"):
-            runCommand("zxbin2tap \"" + str(OUTPUT_FOLDER / "texts.bin") + "\" \"" + str(OUTPUT_FOLDER / "texts.tap") + "\" 49152 --header texts")
+            runCommand("zxbin2tap \"" + str(OUTPUT_FOLDER / "texts.bin") + "\" \"" + str(OUTPUT_FOLDER / "texts.tap") + "\" 53248 --header texts")
             input_files.append(OUTPUT_FOLDER / "texts.tap")
     else:
         input_files = [

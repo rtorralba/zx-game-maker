@@ -660,7 +660,7 @@ End Function
         Dim actualTextId As Ubyte = textLocations(textId, 1)
         
         SetBank(TEXTS_BANK)
-        Dim textPtr As UInteger = $C000
+        Dim textPtr As UInteger = $D000
         Dim textsSkipped As Ubyte = 0
         
         ' 1. Find Text Start
