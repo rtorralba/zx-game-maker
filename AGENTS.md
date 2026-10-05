@@ -98,7 +98,7 @@ Al llamar al menú desde `screensFlow.bas`:
    - Tecla 1: Teclado (QAOP + Espacio por defecto, o teclas personalizadas).
    - Tecla 2 / Disparo Kempston: Kempston Joystick.
    - Tecla 3: Sinclair Joystick (6, 7, 9, 8, 0).
-   - Tecla 4: Redefinición interactiva tecla por tecla (Izquierda, Derecha, Arriba, Abajo, Disparo).
+   - Tecla 4: Redefinición interactiva tecla por tecla (Izquierda, Derecha, Arriba, Abajo, Disparo). Muestra un indicador `?` mientras espera la pulsación y, al pulsar, decodifica el scancode Z80 con `PrintKeyName()` imprimiendo el nombre textual de la tecla en verde ("SPACE", "ENTER", "CAPS", "SYM", o la letra/número correspondiente) sin iconos superfluos.
 4. `menu128.bas` escribe el código de resultado en `65525` (1 = Teclado, 2 = Kempston, 0 = Teclas redefinidas / redibujar menú).
 5. `main.bin` restaura `SetBank(0)` y lee el resultado:
    - Si el resultado es 0, el bucle repite (restaura pantalla de título y vuelve a invocar el menú).

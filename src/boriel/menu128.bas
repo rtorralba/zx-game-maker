@@ -144,40 +144,99 @@ Sub saveKeys()
 End Sub
 
 #ifdef REDEFINE_KEYS_ENABLED
+Sub PrintKeyName(keyCode As Uinteger, color As Uinteger, x As Ubyte, y As Ubyte)
+    If keyCode = KEYSPACE Then
+        PrintString("SPACE", color, x, y)
+    ElseIf keyCode = KEYENTER Then
+        PrintString("ENTER", color, x, y)
+    ElseIf keyCode = KEYCAPS Then
+        PrintString("CAPS", color, x, y)
+    ElseIf keyCode = KEYSYMBOL Then
+        PrintString("SYM", color, x, y)
+    Else
+        Dim ch As Ubyte = 0
+        If keyCode = KEYA Then ch = 65
+        If keyCode = KEYB Then ch = 66
+        If keyCode = KEYC Then ch = 67
+        If keyCode = KEYD Then ch = 68
+        If keyCode = KEYE Then ch = 69
+        If keyCode = KEYF Then ch = 70
+        If keyCode = KEYG Then ch = 71
+        If keyCode = KEYH Then ch = 72
+        If keyCode = KEYI Then ch = 73
+        If keyCode = KEYJ Then ch = 74
+        If keyCode = KEYK Then ch = 75
+        If keyCode = KEYL Then ch = 76
+        If keyCode = KEYM Then ch = 77
+        If keyCode = KEYN Then ch = 78
+        If keyCode = KEYO Then ch = 79
+        If keyCode = KEYP Then ch = 80
+        If keyCode = KEYQ Then ch = 81
+        If keyCode = KEYR Then ch = 82
+        If keyCode = KEYS Then ch = 83
+        If keyCode = KEYT Then ch = 84
+        If keyCode = KEYU Then ch = 85
+        If keyCode = KEYV Then ch = 86
+        If keyCode = KEYW Then ch = 87
+        If keyCode = KEYX Then ch = 88
+        If keyCode = KEYY Then ch = 89
+        If keyCode = KEYZ Then ch = 90
+        If keyCode = KEY0 Then ch = 48
+        If keyCode = KEY1 Then ch = 49
+        If keyCode = KEY2 Then ch = 50
+        If keyCode = KEY3 Then ch = 51
+        If keyCode = KEY4 Then ch = 52
+        If keyCode = KEY5 Then ch = 53
+        If keyCode = KEY6 Then ch = 54
+        If keyCode = KEY7 Then ch = 55
+        If keyCode = KEY8 Then ch = 56
+        If keyCode = KEY9 Then ch = 57
+        If ch <> 0 Then
+            PrintChar(ch, color, x, y)
+        End If
+    End If
+End Sub
+
 Sub redefineKeys()
     Cls
     
     PrintString("REDEFINE KEYS", 7, 10, 4)
     
     PrintString("LEFT:", 7, 8, 8)
-    PrintString("<", 7, 18, 8)    
+    PrintString("?", 6, 18, 8)
     keyLeft = LeerTecla()
-    PrintString("OK", 4, 22, 8)
+    PrintString("     ", 7, 18, 8)
+    PrintKeyName(keyLeft, 4, 18, 8)
     
     PrintString("RIGHT:", 7, 8, 10)
-    PrintString(">", 7, 18, 10)
+    PrintString("?", 6, 18, 10)
     keyRight = LeerTecla()
-    PrintString("OK", 4, 22, 10)
+    PrintString("     ", 7, 18, 10)
+    PrintKeyName(keyRight, 4, 18, 10)
     
     PrintString("UP:", 7, 8, 12)
-    PrintString("^", 7, 18, 12)
+    PrintString("?", 6, 18, 12)
     keyUp = LeerTecla()
-    PrintString("OK", 4, 22, 12)
+    PrintString("     ", 7, 18, 12)
+    PrintKeyName(keyUp, 4, 18, 12)
     
     PrintString("DOWN:", 7, 8, 14)
-    PrintString("v", 7, 18, 14)
+    PrintString("?", 6, 18, 14)
     keyDown = LeerTecla()
-    PrintString("OK", 4, 22, 14)
+    PrintString("     ", 7, 18, 14)
+    PrintKeyName(keyDown, 4, 18, 14)
     
     #ifdef SHOOTING_ENABLED
         PrintString("FIRE:", 7, 8, 16)
-        PrintString("*", 7, 18, 16)
+        PrintString("?", 6, 18, 16)
         keyFire = LeerTecla()
-        PrintString("OK", 4, 22, 16)
+        PrintString("     ", 7, 18, 16)
+        PrintKeyName(keyFire, 4, 18, 16)
     #endif
     
     saveKeys()
     Do Loop While GetKeyScanCode()
+    Pause 25
 End Sub
 #endif
 
