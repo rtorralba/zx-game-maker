@@ -115,3 +115,23 @@ En modo 48K (`#ifndef ENABLED_128k`), el menú básico y la redefinición se man
    - La lista de bloques empaquetados en `src/build.py` (`tapsBuild`) debe coincidir de forma estricta con la secuencia de órdenes `load ""` de `src/boriel/dataLoader.bas`.
    - Para pantallas opcionales (`intro.tap`, `gameover.tap`), debe comprobarse la condición `screenExists()` (que define `INTRO_SCREEN_ENABLED` / `GAMEOVER_SCREEN_ENABLED`) en lugar de únicamente la presencia de archivos temporales en disco.
 
+---
+
+## 6. Tiles Rompibles y Ataque con Espada (`checkSwordBreakableTiles` / `SetTileChecked`)
+
+### Causa del Bug ("Tile en blanco que no desaparece y se redibuja al pasar por encima")
+Cuando el jugador golpea un tile rompible con la espada mientras salta o se mueve:
+1. **Conflicto de Buffer de Sprites (`SetTile` vs `SetTileChecked`)**:
+   - `GuSprites` gestiona el borrado y restauración de fondo mediante dos listas alternas: `CURRENT_DRAW_OPS` y `CURRENT_CLEAR_OPS`.
+   - Cuando la espada se dibuja (`Draw1x1Sprite`), `GuSprites` cachea en una operación de borrado (`CLEAR_OP`) la dirección gráfica del tile que estaba debajo en ese momento (el tile rompible).
+   - Si en el siguiente frame la espada destruye el tile y se utilizaba `SetTile(0, BACKGROUND_ATTRIBUTE, col, lin)`, `SetTile` actualizaba directamente la memoria de pantalla (`$4000`) y `TILE_MAP`, **sin actualizar las operaciones pendientes en `CURRENT_DRAW_OPS`**.
+   - En consecuencia, al llamar a `RenderFrame()`, el runtime ejecutaba la operación de restauración pendiente del frame previo, **volviendo a estampar el gráfico del tile rompible sobre la pantalla** (o dejando artefactos en blanco). En cambio, en `TILE_MAP` el tile ya valía 0, por lo que el jugador podía atravesarlo y, al caminar sobre él, el sprite del protagonista refrescaba el fondo con el valor 0 de `TILE_MAP`, haciendo que el tile "fantasma" desapareciera o se redibujara.
+   - **Solución**: Usar obligatoriamente `SetTileChecked(0, BACKGROUND_ATTRIBUTE, col, lin)` en `breakTileAt`, `removeTilesFromScreen` y `replaceTileWithBackground`. `SetTileChecked` comprueba `CURRENT_DRAW_MAP` y, si hay una operación pendiente sobre esa celda, redirige su puntero de restauración a tile 0 (vacío) evitando que se sobreescriba el fondo.
+
+2. **Cálculo de Coordenadas y Bounding Box de la Espada al Saltar**:
+   - El sprite de la espada es de 1x1 caracteres (8x8 píxeles = 2 unidades de medio carácter en X y 2 unidades en Y).
+   - Se dibuja en `(swordX, protaY + 1)`.
+   - Cuando el protagonista está saltando o cayendo, `protaY` o `swordX` adoptan valores impares. Un sprite desplazado 4 píxeles abarca hasta 2 columnas (`col1 = swordX >> 1` y `col2 = (swordX + 1) >> 1`) y 2 filas (`lin1 = (protaY + 1) >> 1` y `lin2 = (protaY + 2) >> 1`).
+   - La implementación anterior solo evaluaba `col = swordX >> 1` y las filas `protaY >> 1` (que cuando `protaY` era impar apuntaba a una fila **por encima** de la espada) y `(protaY + 2) >> 1`, ignorando la segunda columna y la fila real del impacto.
+   - **Solución**: En `checkSwordBreakableTiles()` (`protaMovement.bas`), se calculan con precisión `col1`, `col2`, `lin1` y `lin2` basados en la posición real de la espada `(swordX, protaY + 1)`, testeando y rompiendo todas las celdas cubiertas por el sprite en cualquier fase del salto.
+

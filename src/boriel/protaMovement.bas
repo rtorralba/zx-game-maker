@@ -493,9 +493,17 @@ End Sub
             If protaX >= 2 Then swordX = protaX - 2 Else swordX = 0
         End If
         
-        Dim col As Ubyte = swordX >> 1
-        breakTileAt(col, protaY >> 1)
-        breakTileAt(col, (protaY + 2) >> 1)
+        Dim col1 As Ubyte = swordX >> 1
+        Dim col2 As Ubyte = (swordX + 1) >> 1
+        Dim lin1 As Ubyte = (protaY + 1) >> 1
+        Dim lin2 As Ubyte = (protaY + 2) >> 1
+        
+        breakTileAt(col1, lin1)
+        If lin2 <> lin1 Then breakTileAt(col1, lin2)
+        If col2 <> col1 Then
+            breakTileAt(col2, lin1)
+            If lin2 <> lin1 Then breakTileAt(col2, lin2)
+        End If
     End Sub
 #endif
 

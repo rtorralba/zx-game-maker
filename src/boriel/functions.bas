@@ -498,7 +498,7 @@ sub removeTilesFromScreen(tile as ubyte)
     
     for index=0 to SCREEN_LENGTH
         if peek(basePtr + index) - 1 = tile then
-            SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
+            SetTileChecked(0, BACKGROUND_ATTRIBUTE, x, y)
             #ifndef ARCADE_MODE
                 If tile = KEY_DOOR_TILE Then
                     addScreenObject(KEY_DOOR_TILE, x, y)
@@ -579,7 +579,7 @@ Function getAttrFromTileAndApplyToOther(tile As Ubyte, besideTile As Ubyte) As U
     Return (attrSet(tile) bAnd 135) + (attrSet(besideTile) bAnd 120)  ' ink+flash + paper+bright
 End Function
 
-#define replaceTileWithBackground(col, lin) SetTile(GetTile(col, (lin) + 1), attrSet(GetTile(col, (lin) + 1)), col, lin)
+#define replaceTileWithBackground(col, lin) SetTileChecked(GetTile(col, (lin) + 1), attrSet(GetTile(col, (lin) + 1)), col, lin)
 
 Sub breakTileAt(col As Ubyte, lin As Ubyte)
     If col >= screenWidth Then Return
@@ -605,7 +605,7 @@ Sub breakTileAt(col As Ubyte, lin As Ubyte)
                 brokenTilesCurrentIndex = brokenTilesCurrentIndex + 1
             End If
             BeepFX_Play(0)
-            SetTile(0, BACKGROUND_ATTRIBUTE, col, lin)
+            SetTileChecked(0, BACKGROUND_ATTRIBUTE, col, lin)
             Return
         End If
     #endif
