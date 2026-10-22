@@ -14,8 +14,15 @@ class ScreensCompressor:
             if screenExists("gameover"):
                 self.__compressScreen("gameover")
 
+        language = os.getenv("ZXSGM_I18N_FOLDER", "default")
 
-        shutil.copy(SCREENS_FOLDER / "loading.scr", OUTPUT_FOLDER / "loading.bin")
+        if language == "default":
+            shutil.copy(SCREENS_FOLDER / "loading.scr", OUTPUT_FOLDER / "loading.bin")
+        else:
+            try:
+                shutil.copy(SCREENS_FOLDER / language / "loading.scr", OUTPUT_FOLDER / "loading.bin")
+            except:
+                shutil.copy(SCREENS_FOLDER / "loading.scr", OUTPUT_FOLDER / "loading.bin")
 
     def __compressScreen(self, screen_name):
         scrFile = str((SCREENS_FOLDER / screen_name).with_suffix(".scr"))
