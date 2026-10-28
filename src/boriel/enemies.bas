@@ -1,10 +1,10 @@
 #include "enemies/enemiesShared.bas"
 
 Sub moveEnemies()
-    If enemiesPerScreen(currentScreen) = 0 Then Return
+    If gUB(enemiesPerScreen, currentScreen) = 0 Then Return
     
     Dim enemyPtr As Uinteger = @decompressedEnemiesScreen(0, 0)
-    For enemyId=0 To enemiesPerScreen(currentScreen) - 1
+    For enemyId=0 To gUB(enemiesPerScreen, currentScreen) - 1
         Dim enemyLife As Ubyte = Peek(enemyPtr + ENEMY_LIFE)
         
         If isEnemyDeath(enemyLife) Then Goto next_enemy
@@ -62,7 +62,7 @@ Sub moveEnemies()
         #endif
         
         #ifdef ENEMIES_NOT_RESPAWN_ENABLED
-            If isEnemyVulnerable(enemyLife) And screensWon(currentScreen) Then Goto next_enemy
+            If isEnemyVulnerable(enemyLife) And gUB(screensWon, currentScreen) Then Goto next_enemy
         #endif
         
         #ifdef ENEMY_SHOOT_ENABLED
@@ -120,7 +120,7 @@ Sub moveEnemies()
                 objectiveAxisY = 0
             End If
             
-            If resetReturnMovement(enemyId) Then
+            If gUB(resetReturnMovement, enemyId) Then
                 enemyCol = enemyColIni
                 enemyLin = enemyLinIni
                 
@@ -140,10 +140,10 @@ Sub moveEnemies()
                 saveData(enemyPtr, enemyHorizontalDirection, enemyVerticalDirection, enemyCol, enemyLin)
                 
                 tile = tile + 16
-                resetReturnMovement(enemyId) = 0
+                sB(resetReturnMovement, enemyId, 0)
             Elseif objectiveAxisY = 1 And enemyLin = enemyLinEnd Or objectiveAxisY = 0 And enemyCol = enemyColEnd Then
                 tile = tile + 17
-                resetReturnMovement(enemyId) = 1
+                sB(resetReturnMovement, enemyId, 1)
             End If
             #ifdef RECTANGULAR_MOVE_ENABLED
             Elseif hasRectangularBehaviour(enemyBehaviour) Then

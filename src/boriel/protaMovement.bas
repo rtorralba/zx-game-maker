@@ -160,8 +160,8 @@ End Function
                 Return
             End If
             
-            If checkProtaSolidCollision(protaX, protaY + jumpArray(jumpCurrentKey)) Or checkTravesablePlatformFromTop(protaX, protaY + jumpArray(jumpCurrentKey)) Then
-                If jumpArray(jumpCurrentKey) > 0 Then
+            If checkProtaSolidCollision(protaX, protaY + gB(jumpArray, jumpCurrentKey)) Or checkTravesablePlatformFromTop(protaX, protaY + gB(jumpArray, jumpCurrentKey)) Then
+                If gB(jumpArray, jumpCurrentKey) > 0 Then
                     stopJump()
                 Else
                     incrementJumpKey()
@@ -169,14 +169,14 @@ End Function
                 Return
             End If
             
-            saveProta(protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
+            saveProta(protaY + gB(jumpArray, jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
             incrementJumpKey()
         End Sub
     #endif
     
     #ifdef JETPACK_FUEL
         Function pressingUp() As Ubyte
-            Return ((kempston = 0 And MultiKeys(keyArray(UP)) <> 0) Or (kempston = 1 And In(31) bAND %1000 <> 0))
+            Return ((kempston = 0 And MultiKeys(gUI(keyArray, UP)) <> 0) Or (kempston = 1 And In(31) bAND %1000 <> 0))
         End Function
         
         Sub checkIsFlying()
@@ -599,7 +599,7 @@ Function checkDashingOrWalljumping() As Ubyte
                 If kempston Then
                     If In(31) bAND %10000 Then fireKey()
                 Else
-                    If MultiKeys(keyArray(FIRE))<>0 Then fireKey()
+                    If MultiKeys(gUI(keyArray, FIRE))<>0 Then fireKey()
                 End If
                 Return 1
             End If
@@ -690,19 +690,19 @@ Sub keyboardListen()
             #endif
         End If
     Else
-        If MultiKeys(keyArray(LEFT))<>0 Then leftKey()
-        If MultiKeys(keyArray(RIGHT))<>0 Then rightKey()
-        If MultiKeys(keyArray(UP))<>0 Then upKey()
-        If MultiKeys(keyArray(DOWN))<>0 Then downKey()
-        If MultiKeys(keyArray(FIRE))<>0 Then fireKey()
+        If MultiKeys(gUI(keyArray, LEFT))<>0 Then leftKey()
+        If MultiKeys(gUI(keyArray, RIGHT))<>0 Then rightKey()
+        If MultiKeys(gUI(keyArray, UP))<>0 Then upKey()
+        If MultiKeys(gUI(keyArray, DOWN))<>0 Then downKey()
+        If MultiKeys(gUI(keyArray, FIRE))<>0 Then fireKey()
         #ifdef IDLE_ENABLED
-            If MultiKeys(keyArray(LEFT))=0 And MultiKeys(keyArray(RIGHT))=0 And MultiKeys(keyArray(UP))=0 And MultiKeys(keyArray(DOWN))=0 And MultiKeys(keyArray(FIRE))=0 Then
+            If MultiKeys(gUI(keyArray, LEFT))=0 And MultiKeys(gUI(keyArray, RIGHT))=0 And MultiKeys(gUI(keyArray, UP))=0 And MultiKeys(gUI(keyArray, DOWN))=0 And MultiKeys(gUI(keyArray, FIRE))=0 Then
                 If protaLoopCounter < IDLE_TIME Then protaLoopCounter = protaLoopCounter + 1
             Else
                 protaLoopCounter = 0
             End If
         #endif
-        If MultiKeys(keyArray(LEFT))=0 And MultiKeys(keyArray(RIGHT))=0 And MultiKeys(keyArray(UP))=0 And MultiKeys(keyArray(DOWN))=0 Then
+        If MultiKeys(gUI(keyArray, LEFT))=0 And MultiKeys(gUI(keyArray, RIGHT))=0 And MultiKeys(gUI(keyArray, UP))=0 And MultiKeys(gUI(keyArray, DOWN))=0 Then
             #ifdef IDLE_ENABLED
                 If protaLoopCounter < IDLE_TIME Then resetToFirstFrameOnStop()
             #Else
@@ -834,7 +834,7 @@ Sub processTileContact(tCol as Ubyte, tLin as Ubyte, bCol as Ubyte, bLin as Ubyt
         If besideTile = 0 Then
             FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, tCol, tLin)
         Else
-            FillWithTileChecked(0, 1, 1, attrSet(besideTile), tCol, tLin)
+            FillWithTileChecked(0, 1, 1, gUB(attrSet, besideTile), tCol, tLin)
         End If
     End If
 End Sub
@@ -896,7 +896,7 @@ Sub protaMovement()
                 noKeyPressedForSword = 1
             End If
         Else
-            If MultiKeys(keyArray(DOWN)) = 0 Then
+            If MultiKeys(gUI(keyArray, DOWN)) = 0 Then
                 noKeyPressedForSword = 1
             End If
         End If
@@ -912,7 +912,7 @@ Sub protaMovement()
                 noKeyPressedForShoot = 1
             End If
         Else
-            If MultiKeys(keyArray(FIRE)) = 0 Then
+            If MultiKeys(gUI(keyArray, FIRE)) = 0 Then
                 noKeyPressedForShoot = 1
             End If
         End If
@@ -925,7 +925,7 @@ Sub protaMovement()
                     noKeyPressedForJump = 1
                 End If
             Else
-                If MultiKeys(keyArray(UP)) = 0 Then
+                If MultiKeys(gUI(keyArray, UP)) = 0 Then
                     noKeyPressedForJump = 1
                 End If
             End If

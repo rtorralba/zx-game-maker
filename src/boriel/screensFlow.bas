@@ -54,23 +54,23 @@ Sub showMenu()
     Do
         kempston = 0
         If MultiKeys(KEY1) Then
-            If Not keyArray(LEFT) Then
-                Let keyArray(LEFT) = KEYO
-                Let keyArray(RIGHT) = KEYP
-                Let keyArray(UP) = KEYQ
-                Let keyArray(DOWN) = KEYA
-                Let keyArray(FIRE) = KEYSPACE
+            If Not gUI(keyArray, LEFT) Then
+                sI(keyArray, LEFT, KEYO)
+                sI(keyArray, RIGHT, KEYP)
+                sI(keyArray, UP, KEYQ)
+                sI(keyArray, DOWN, KEYA)
+                sI(keyArray, FIRE, KEYSPACE)
             End If
             playGame()
         elseif MultiKeys(KEY2) Then
             kempston = 1
             playGame()
         elseif MultiKeys(KEY3) Then
-            Let keyArray(LEFT)=KEY6
-            Let keyArray(RIGHT)=KEY7
-            Let keyArray(UP)=KEY9
-            Let keyArray(DOWN)=KEY8
-            Let keyArray(FIRE)=KEY0
+            sI(keyArray, LEFT, KEY6)
+            sI(keyArray, RIGHT, KEY7)
+            sI(keyArray, UP, KEY9)
+            sI(keyArray, DOWN, KEY8)
+            sI(keyArray, FIRE, KEY0)
             playGame()
             #ifdef REDEFINE_KEYS_ENABLED
             elseif MultiKeys(KEY4) Then
@@ -136,20 +136,20 @@ End Sub
             Cls
             
             PrintString("<", 7, 16, 8)    
-            keyArray(LEFT) = LeerTecla()
+            sI(keyArray, LEFT, LeerTecla())
             
             PrintString(">", 7, 16, 8)
-            keyArray(RIGHT) = LeerTecla()
+            sI(keyArray, RIGHT, LeerTecla())
             
             PrintString("^", 7, 16, 8)
-            keyArray(UP) = LeerTecla()
+            sI(keyArray, UP, LeerTecla())
             
             PrintString("v", 7, 16, 8)
-            keyArray(DOWN) = LeerTecla()
+            sI(keyArray, DOWN, LeerTecla())
             
             #ifdef SHOOTING_ENABLED
                 PrintString("FIRE", 7, 16, 8)
-                keyArray(FIRE) = LeerTecla()
+                sI(keyArray, FIRE, LeerTecla())
             #endif
             
             showMenu()
@@ -258,7 +258,7 @@ Sub playGame()
                     clearKey()
                     mapDrawOnlyItems()
                     currentItems = 0
-                    dzx0Standard(ENEMIES_DATA_ADDRESS + enemiesInScreenOffsets(currentScreen), arrayBasePtr(decompressedEnemiesScreen))
+                    dzx0Standard(ENEMIES_DATA_ADDRESS + gUI(enemiesInScreenOffsets, currentScreen), arrayBasePtr(decompressedEnemiesScreen))
                 End If
             #endif
             
@@ -478,13 +478,13 @@ End Sub
 #endif
 
 Sub calculateIfSkipMovementBySpeed()
-    skipMove(0) = 0
-    skipMove(1) = 0
-    skipMove(2) = 0
+    sB(skipMove, 0, 0)
+    sB(skipMove, 1, 0)
+    sB(skipMove, 2, 0)
     
-    If mainLoopCounter bAnd 7 <> 0 Then skipMove(0) = 1   ' 1 de cada 8 loops (slowest)
-    If mainLoopCounter bAnd 3 <> 0 Then skipMove(1) = 1   ' 1 de cada 4 loops
-    If mainLoopCounter bAnd 1 <> 0 Then skipMove(2) = 1   ' 1 de cada 2 loops
+    If mainLoopCounter bAnd 7 <> 0 Then sB(skipMove, 0, 1)   ' 1 de cada 8 loops (slowest)
+    If mainLoopCounter bAnd 3 <> 0 Then sB(skipMove, 1, 1)   ' 1 de cada 4 loops
+    If mainLoopCounter bAnd 1 <> 0 Then sB(skipMove, 2, 1)   ' 1 de cada 2 loops
 End Sub
 
 Sub makeAnimations()
@@ -588,8 +588,8 @@ Sub resetValues()
     Next i
 
     For i = 0 To MAX_ENEMIES_PER_SCREEN
-        currentEnemyFrame(i) = 0
-        resetReturnMovement(i) = 0
+        sB(currentEnemyFrame, i, 0)
+        sB(resetReturnMovement, i, 0)
     Next i
     
     #ifdef ARCADE_MODE
@@ -608,11 +608,11 @@ Sub resetValues()
     #endif
     
     For i = 0 To SCREENS_COUNT
-        screensWon(i) = 0
+        sB(screensWon, i, 0)
     Next i
     #ifdef USE_BREAKABLE_TILE_ALL
         For i = 0 To SCREENS_COUNT
-            brokenTiles(i) = 0
+            sB(brokenTiles, i, 0)
         Next i
     #endif
     #ifdef HISCORE_ENABLED
@@ -647,8 +647,8 @@ Sub resetValues()
 End Sub
 
 Sub swapScreen()
-    dzx0Standard(MAPS_DATA_ADDRESS + screensOffsets(currentScreen), arrayBasePtr(decompressedMap))
-    dzx0Standard(ENEMIES_DATA_ADDRESS + enemiesInScreenOffsets(currentScreen), arrayBasePtr(decompressedEnemiesScreen))
+    dzx0Standard(MAPS_DATA_ADDRESS + gUI(screensOffsets, currentScreen), arrayBasePtr(decompressedMap))
+    dzx0Standard(ENEMIES_DATA_ADDRESS + gUI(enemiesInScreenOffsets, currentScreen), arrayBasePtr(decompressedEnemiesScreen))
     #ifdef SHOOTING_ENABLED
         bulletPositionX = 0
     #endif
@@ -670,7 +670,7 @@ Sub swapScreen()
     #ifdef ENABLED_128k
         #ifdef MUSIC_ENABLED
             #ifdef ARCADE_MODE
-                dim musicNumber as ubyte = musicPerScreenArray(currentScreen)
+                dim musicNumber as ubyte = gUB(musicPerScreenArray, currentScreen)
                 If musicNumber = 1 Then
                     VortexTracker_Play(MUSIC_ADDRESS)
                 ElseIf musicNumber = 2 Then

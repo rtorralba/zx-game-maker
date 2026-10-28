@@ -23,10 +23,10 @@
     End Function
     
     Function checkPlatformByXY(x As Ubyte, y As Ubyte) As Ubyte
-        If enemiesPerScreen(currentScreen) = 0 Then Return 0
+        If gUB(enemiesPerScreen, currentScreen) = 0 Then Return 0
         
         Dim enemyPtr As Uinteger = @decompressedEnemiesScreen(0, 0)
-        For enemyId=0 To enemiesPerScreen(currentScreen) - 1
+        For enemyId=0 To gUB(enemiesPerScreen, currentScreen) - 1
             If Peek(enemyPtr + ENEMY_TILE) < 16 Then
                 Dim enemyCol As Ubyte = Peek(enemyPtr + ENEMY_CURRENT_COL)
                 Dim enemyLin As Ubyte = Peek(enemyPtr + ENEMY_CURRENT_LIN)
@@ -135,11 +135,11 @@ Function checkProtaAndBulletCollision(enemyId As Ubyte, enemyPtr As Uinteger) As
     Return 0
 End Function
 
-#define checkShouldSkipMoveBySpeed(enemySpeed) ((enemySpeed) <= 2 And skipMove(enemySpeed))
+#define checkShouldSkipMoveBySpeed(enemySpeed) ((enemySpeed) <= 2 And gUB(skipMove, enemySpeed))
 
-#define updateEnemyFrame(enemyId) currentEnemyFrame(enemyId) = currentEnemyFrame(enemyId) Xor 1
+#define updateEnemyFrame(enemyId) sB(currentEnemyFrame, enemyId, gUB(currentEnemyFrame, enemyId) Xor 1)
 
-#define drawEnemy(enemyId, tile, enemyCol, enemyLin) currentEnemyFrame(enemyId) = currentEnemyFrame(enemyId) And (resetReturnMovement(enemyId) Xor 1) : Draw2x2Sprite(tile + currentEnemyFrame(enemyId), enemyCol, enemyLin)
+#define drawEnemy(enemyId, tile, enemyCol, enemyLin) sB(currentEnemyFrame, enemyId, gUB(currentEnemyFrame, enemyId) And (gUB(resetReturnMovement, enemyId) Xor 1)) : Draw2x2Sprite(tile + gUB(currentEnemyFrame, enemyId), enemyCol, enemyLin)
 
 #define saveData(enemyPtr, horizontalDirection, verticalDirection, enemyCol, enemyLin) Poke enemyPtr + ENEMY_CURRENT_COL, enemyCol : Poke enemyPtr + ENEMY_CURRENT_LIN, enemyLin : Poke enemyPtr + ENEMY_HORIZONTAL_DIRECTION, horizontalDirection : Poke enemyPtr + ENEMY_VERTICAL_DIRECTION, verticalDirection
 

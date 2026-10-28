@@ -135,3 +135,29 @@ Cuando el jugador golpea un tile rompible con la espada mientras salta o se muev
    - La implementación anterior solo evaluaba `col = swordX >> 1` y las filas `protaY >> 1` (que cuando `protaY` era impar apuntaba a una fila **por encima** de la espada) y `(protaY + 2) >> 1`, ignorando la segunda columna y la fila real del impacto.
    - **Solución**: En `checkSwordBreakableTiles()` (`protaMovement.bas`), se calculan con precisión `col1`, `col2`, `lin1` y `lin2` basados en la posición real de la espada `(swordX, protaY + 1)`, testeando y rompiendo todas las celdas cubiertas por el sprite en cualquier fase del salto.
 
+---
+
+## 7. Optimización de Acceso a Arrays Unidimensionales (gB, gUB, gI, gUI, sB, sI)
+
+### Motivación
+En Boriel ZX Basic, el indexado estándar de arrays (`Array(i)`) genera llamadas internas al runtime (`__ARRAY`, `__ARRAY_PTR`) que realizan validaciones de dimensiones y límites. En bucles críticos de juego por frame (detección de colisiones, bucle de enemigos, comprobaciones de salto y teclado), esto consume ciclos de reloj y uso de pila en el Z80.
+
+### Macros de Acceso Directo por Puntero (`src/boriel/definitions.bas`)
+Aprovechando `arrayBasePtr(Array)` (que obtiene la dirección base de los datos saltando la cabecera del array: `PEEK(Uinteger, @x + 2)`), se definen:
+- **`gB(Array, i)`**: Lectura con `PEEK(Byte, ...)` para arrays de 1 byte con signo (`Byte`).
+- **`gUB(Array, i)`**: Lectura con `PEEK(UByte, ...)` para arrays de 1 byte sin signo (`UByte`).
+- **`gI(Array, i)`**: Lectura con `PEEK(Integer, ...)` desplazando el índice `i << 1` para arrays de 16 bits con signo (`Integer`).
+- **`gUI(Array, i)`**: Lectura con `PEEK(UInteger, ...)` desplazando el índice `i << 1` para arrays de 16 bits sin signo (`UInteger`).
+- **`sB(Array, i, v)`**: Escritura con `POKE Byte ...` para elementos de 1 byte.
+- **`sI(Array, i, v)`**: Escritura con `POKE Integer ...` para elementos de 2 bytes (desplazamiento `i << 1`).
+
+### Alcance de la Sustitución
+Se han migrado todos los accesos a arrays unidimensionales en:
+- `bullet.bas`: `screensWon` (`gUB`, `sB`).
+- `draw.bas`: `screensWon`, `attrSet`, `brokenTiles` (1D), `decompressedMap` (`gUB`).
+- `enemies.bas`: `enemiesPerScreen`, `screensWon`, `resetReturnMovement` (`gUB`, `sB`).
+- `enemies/enemiesShared.bas`: `enemiesPerScreen`, `skipMove`, `currentEnemyFrame`, `resetReturnMovement` (`gUB`, `sB`).
+- `functions.bas`: `enemiesPerScreen`, `attrSet`, `brokenTiles` (1D) (`gUB`, `sB`).
+- `protaMovement.bas`: `jumpArray` (`gB`), `keyArray` (`gUI`), `attrSet` (`gUB`).
+- `screensFlow.bas`: `keyArray` (`gUI`, `sI`), `enemiesInScreenOffsets`, `screensOffsets` (`gUI`), `skipMove`, `currentEnemyFrame`, `resetReturnMovement`, `screensWon`, `brokenTiles` (1D), `musicPerScreenArray` (`gUB`, `sB`).
+

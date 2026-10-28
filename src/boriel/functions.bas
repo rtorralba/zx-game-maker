@@ -250,11 +250,11 @@ Function isDamageTileByColLin(col as Ubyte, lin as Ubyte) As Ubyte
 End Function
 
 function allEnemiesKilled() as ubyte
-    if enemiesPerScreen(currentScreen) = 0 then return 1
+    if gUB(enemiesPerScreen, currentScreen) = 0 then return 1
     
     Dim enemyId As Ubyte
     Dim life As Ubyte
-    for enemyId = 0 TO enemiesPerScreen(currentScreen) - 1
+    for enemyId = 0 TO gUB(enemiesPerScreen, currentScreen) - 1
         if decompressedEnemiesScreen(enemyId, ENEMY_TILE) < 16 then
             continue for
         end if
@@ -576,10 +576,10 @@ end sub
 #endif
 
 Function getAttrFromTileAndApplyToOther(tile As Ubyte, besideTile As Ubyte) As Ubyte
-    Return (attrSet(tile) bAnd 135) + (attrSet(besideTile) bAnd 120)  ' ink+flash + paper+bright
+    Return (gUB(attrSet, tile) bAnd 135) + (gUB(attrSet, besideTile) bAnd 120)  ' ink+flash + paper+bright
 End Function
 
-#define replaceTileWithBackground(col, lin) SetTileChecked(GetTile(col, (lin) + 1), attrSet(GetTile(col, (lin) + 1)), col, lin)
+#define replaceTileWithBackground(col, lin) SetTileChecked(GetTile(col, (lin) + 1), gUB(attrSet, GetTile(col, (lin) + 1)), col, lin)
 
 Sub breakTileAt(col As Ubyte, lin As Ubyte)
     If col >= screenWidth Then Return
@@ -589,7 +589,7 @@ Sub breakTileAt(col As Ubyte, lin As Ubyte)
     
     #ifdef USE_BREAKABLE_TILE_ALL
         If tile = BREAKABLE_BY_BULLET_TILE Then
-            brokenTiles(currentScreen) = 1
+            sB(brokenTiles, currentScreen, 1)
             BeepFX_Play(0)
             removeTilesFromScreen(BREAKABLE_BY_BULLET_TILE)
             Return

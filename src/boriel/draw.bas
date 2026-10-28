@@ -50,10 +50,10 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
     
     #ifdef SHOULD_KILL_ENEMIES_ENABLED
         If tile = ENEMY_DOOR_TILE Then
-            If screensWon(currentScreen) Then
+            If gUB(screensWon, currentScreen) Then
                 SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
             Else
-                SetTile(tile, attrSet(tile), x, y)
+                SetTile(tile, gUB(attrSet, tile), x, y)
             End If
             Return
         End If
@@ -81,10 +81,10 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
     
     #ifdef USE_BREAKABLE_TILE_ALL
         If tile = BREAKABLE_BY_BULLET_TILE Then
-            If brokenTiles(currentScreen) Then
+            If gUB(brokenTiles, currentScreen) Then
                 SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
             Else
-                SetTileChecked(tile, attrSet(tile), x, y)
+                SetTileChecked(tile, gUB(attrSet, tile), x, y)
             End If
             Return
         End If
@@ -100,7 +100,7 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
                 SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
                 Return
             Next i
-            SetTileChecked(tile, attrSet(tile), x, y)
+            SetTileChecked(tile, gUB(attrSet, tile), x, y)
             Return
         End If
     #endif
@@ -109,7 +109,7 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
         If currentItems = ITEMS_TO_OPEN_DOORS Then
             SetTile(0, BACKGROUND_ATTRIBUTE, x, y)
         Else
-            SetTile(tile, attrSet(tile), x, y)
+            SetTile(tile, gUB(attrSet, tile), x, y)
         End If
         Return
     End If
@@ -119,7 +119,7 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
     If tile < LAST_PRINTABLE_TILE + 1 Then
         If tile = KEY_DOOR_TILE Then
             If not checkScreenObjectAlreadyTaken(tile, x, y) Then
-                SetTileChecked(tile, attrSet(tile), x, y)
+                SetTileChecked(tile, gUB(attrSet, tile), x, y)
             End If
             Return
         Else
@@ -127,14 +127,14 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
                 If tile > 63 And tile < 70 Then
                     Dim index As Uinteger
                     index = ((y + 1) * screenWidth) + x
-                    besideTile = decompressedMap(index) - 1
+                    besideTile = gUB(decompressedMap, index) - 1
                     attr = getAttrFromTileAndApplyToOther(tile, besideTile)
                     SetTile(tile, attr, x, y)
                 Else
-                    SetTile(tile, attrSet(tile), x, y)
+                    SetTile(tile, gUB(attrSet, tile), x, y)
                 End If
             #else
-                SetTile(tile, attrSet(tile), x, y)
+                SetTile(tile, gUB(attrSet, tile), x, y)
             #endif
             Return
         End If
@@ -144,20 +144,20 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
         besideTile = GetTile(x, y - 1)
         attr = getAttrFromTileAndApplyToOther(tile, besideTile)
     #else
-        attr = attrSet(tile)
+        attr = gUB(attrSet, tile)
     #endif
 
     #ifdef ARCADE_MODE
         If tile = KEY_TILE Then
             currentScreenKeyX = x
             currentScreenKeyY = y
-            SetTileChecked(besideTile, attrSet(besideTile), x, y)
+            SetTileChecked(besideTile, gUB(attrSet, besideTile), x, y)
         Else
             If Not checkScreenObjectAlreadyTaken(tile, x, y) Then
                 SetTileChecked(tile, attr, x, y)
             Else
                 if besideTile <> 0 Then
-                    SetTile(besideTile, attrSet(besideTile), x, y)
+                    SetTile(besideTile, gUB(attrSet, besideTile), x, y)
                 End If
             End If
         End If
@@ -166,7 +166,7 @@ Sub drawTile(tile As Ubyte, x As Ubyte, y As Ubyte)
             SetTileChecked(tile, attr, x, y)
         Else
             if besideTile <> 0 Then
-                SetTile(0, attrSet(besideTile), x, y)
+                SetTile(0, gUB(attrSet, besideTile), x, y)
             End If
         End If
     #endif
@@ -203,7 +203,7 @@ End Sub
                 End If
 
                 If tile = BREAKABLE_BY_TOUCH_TILE Then
-                    SetTileChecked(tile, attrSet(tile), x, y)
+                    SetTileChecked(tile, gUB(attrSet, tile), x, y)
                 End If
                 
                 x = x + 1
@@ -218,7 +218,7 @@ End Sub
             Dim besideTile As Ubyte
             besideTile = GetTile(currentScreenKeyX - 1, currentScreenKeyY)
             If besideTile <> 0 Then
-                SetTile(besideTile, attrSet(besideTile), currentScreenKeyX, currentScreenKeyY)
+                SetTile(besideTile, gUB(attrSet, besideTile), currentScreenKeyX, currentScreenKeyY)
             Else
                 SetTile(0, BACKGROUND_ATTRIBUTE, currentScreenKeyX, currentScreenKeyY)
             End If
@@ -388,7 +388,7 @@ Sub animateAnimatedTiles()
     For i=0 To MAX_ANIMATED_TILES_PER_SCREEN:
         If animatedTilesInScreen(i, 0) <> 0 Then
             Dim tile As Ubyte = animatedTilesInScreen(i, 0) + animatedFrame
-            SetTileAnimated(tile, attrSet(tile), animatedTilesInScreen(i, 1), animatedTilesInScreen(i, 2))
+            SetTileAnimated(tile, gUB(attrSet, tile), animatedTilesInScreen(i, 1), animatedTilesInScreen(i, 2))
         End If
     Next i
     animatedFrame = Not animatedFrame

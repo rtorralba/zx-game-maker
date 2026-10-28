@@ -238,6 +238,12 @@ Dim lastFrameOnBreakableTiles As Ubyte = 0
 
 #Define PROTA_IDLE_SPRITE_ID 13
 #define arrayBasePtr(x) (PEEK(Uinteger, @x + 2))
+#define gB(Array, i)    (PEEK(Byte,     (CAST(UInteger, (i)))        + arrayBasePtr(Array)))
+#define gUB(Array, i)   (PEEK(UByte,    (CAST(UInteger, (i)))        + arrayBasePtr(Array)))
+#define gI(Array, i)    (PEEK(Integer,  ((CAST(UInteger, (i))) << 1) + arrayBasePtr(Array)))
+#define gUI(Array, i)   (PEEK(UInteger, ((CAST(UInteger, (i))) << 1) + arrayBasePtr(Array)))
+#define sB(Array, i, v) POKE Byte     ((CAST(UInteger, (i)))        + arrayBasePtr(Array)), (v)
+#define sI(Array, i, v) POKE Integer  (((CAST(UInteger, (i))) << 1) + arrayBasePtr(Array)), (v)
 
 #ifdef AMMO_ENABLED
     Const AMMO_TILE As Ubyte = 187
