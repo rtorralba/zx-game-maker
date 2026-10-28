@@ -11,6 +11,19 @@ Function sgn8(v As Byte) As Byte
     Return 0
 End Function
 
+Sub fastcall clsCustom(attr As Ubyte)
+    Asm
+        ld hl, $4000
+        ld (hl), 0
+        ld de, $4001
+        ld bc, 6143
+        ldir
+        ld (hl), a
+        ld bc, 767
+        ldir
+    End Asm
+End Sub
+
 Sub PrintPadded(value As Uinteger, padLength As Ubyte, Color As uInteger, X As uInteger, Y As uInteger)
     Dim numDigits As Ubyte = 1
     Dim temp As Uinteger = value

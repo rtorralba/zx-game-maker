@@ -161,3 +161,22 @@ Se han migrado todos los accesos a arrays unidimensionales en:
 - `protaMovement.bas`: `jumpArray` (`gB`), `keyArray` (`gUI`), `attrSet` (`gUB`).
 - `screensFlow.bas`: `keyArray` (`gUI`, `sI`), `enemiesInScreenOffsets`, `screensOffsets` (`gUI`), `skipMove`, `currentEnemyFrame`, `resetReturnMovement`, `screensWon`, `brokenTiles` (1D), `musicPerScreenArray` (`gUB`, `sB`).
 
+---
+
+## 8. Optimización de Espacio: Eliminación del Runtime de Pantalla Sinclair (CLS, INK, PAPER, FLASH)
+
+### Motivación
+En el modelo ZX Spectrum 128K, el ejecutable principal `main.bin` reside en el Banco 0 ($5E38) y finalizaba peligrosamente cerca del límite $C000 (49152), dejando apenas ~250 bytes libres.
+El uso de sentencias Sinclair como `CLS`, `INK`, `PAPER`, `FLASH` y `BRIGHT` en el código BASIC forzaba al compilador `zxbc` a enlazar librerías completas de la ROM Sinclair (`.core.CLS`, `.core.INK`, `.core.PAPER`, `.core.FLASH`, etc.), consumiendo cientos de bytes de memoria crítica.
+
+### Solución Implementada
+1. **Subrutina en Ensamblador `clsCustom(attr)`**:
+   Se implementó `Sub fastcall clsCustom(attr As Ubyte)` en `functions.bas` y `menu128.bas`. Utiliza dos bloques `LDIR` de alta velocidad para limpiar los 6144 bytes de bitmap ($4000) a 0 y los 768 bytes de atributos ($5800) al atributo deseado (por defecto 7: blanco sobre negro, o el que se pase en el registro `A`).
+2. **Reemplazo de sentencias Sinclair**:
+   - `screensFlow.bas`: sustitución de `Ink 7: Paper 0: ...: Cls` por `clsCustom(7)`.
+   - `passwordScreen()` y `redefineKeys()`: sustitución de `Cls` por `clsCustom(7)`.
+   - `Flash 1` / `Flash 0` en pantalla intermedia: sustituido por el pase directo del atributo con flash (`135 = 128 + 7`) en `PrintString`.
+   - Eliminación de llamadas superfluas `Ink ...: Paper ...` que no tenían efecto visual debido a que `PrintString` y `PrintPadded` aplican los atributos explícitamente.
+3. **Resultado**:
+   Se eliminaron completamente del binario `.core.CLS`, `.core.INK`, `.core.PAPER`, `.core.FLASH` y `.core.__SET_FLASH`, liberando espacio inmediato en el Banco 0 (`main.bin` se redujo de `$BF00` a `$BE4A`).
+

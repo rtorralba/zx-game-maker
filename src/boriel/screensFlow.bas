@@ -6,7 +6,7 @@ Sub showMenu()
             VortexTracker_Stop()
         #endif
         inMenu = 1
-        Ink 7: Paper 0: Border 0: BRIGHT 0: FLASH 0: Cls
+        Border 0 : clsCustom(7)
         SetBank(screensBank)
         dzx0Standard(TITLE_SCREEN_ADDRESS, $4000)
         SetBank(0)
@@ -42,11 +42,10 @@ End Sub
 #else
 Sub showMenu()
     inMenu = 1
-    Ink 7: Paper 0: Border 0: BRIGHT 0: FLASH 0: Cls
+    Border 0 : clsCustom(7)
     dzx0Standard(TITLE_SCREEN_ADDRESS, $4000)
     
     #ifdef HISCORE_ENABLED
-        Ink getFirstCharInk(): Paper getFirstCharPaper(): Bright getFirstCharBright()
         PrintString("HI:", 7, 6, 23)
         PrintZeroPadded(hiScore, 5, 7, 9, 23)
     #endif
@@ -99,7 +98,7 @@ End Sub
     Sub passwordScreen()
         If passwordOk Then Return
         
-        Cls
+        clsCustom(7)
         
         Dim failed As Ubyte = 0
         
@@ -133,7 +132,7 @@ End Sub
             End Function
         #endif
         Sub redefineKeys()
-            Cls
+            clsCustom(7)
             
             PrintString("<", 7, 16, 8)    
             sI(keyArray, LEFT, LeerTecla())
@@ -186,7 +185,7 @@ Sub playGame()
         #endif
     #endif
     
-    Ink INK_VALUE: Paper PAPER_VALUE: Border BORDER_VALUE
+    Border BORDER_VALUE
     
     currentScreen = INITIAL_SCREEN
     
@@ -355,11 +354,6 @@ End Sub
             VortexTracker_Stop()
             clearScreen()
             
-            Dim tinta As Ubyte = BACKGROUND_ATTRIBUTE bAND 7
-            Dim papel As Ubyte = (BACKGROUND_ATTRIBUTE bAND 56) >> 3
-            Dim brillante As Ubyte = (BACKGROUND_ATTRIBUTE bAND 64) >> 6
-            Ink tinta: Paper papel: Bright brillante
-            
             Dim currentLives As Ubyte = currentLife
             
             PrintString("TIME LEFT:      ", 7, 8, 6)
@@ -409,13 +403,10 @@ End Sub
                     RenderFrame()
                 Wend
                 
-                Ink INK_VALUE: Paper PAPER_VALUE: Border BORDER_VALUE
+                Border BORDER_VALUE
                 printScore()
-                Ink tinta: Paper papel: Bright brillante
                 
-                Flash 1
-                PrintString("PRESS ENTER To Continue", 7, 4, 18)
-                Flash 0
+                PrintString("PRESS ENTER To Continue", 135, 4, 18)
                 
                 If score > hiScore Then
                     hiScore = score
@@ -436,7 +427,7 @@ End Sub
                 End If
             #endif
             
-            Ink INK_VALUE: Paper PAPER_VALUE: Border BORDER_VALUE
+            Border BORDER_VALUE
             
             If currentScreen <= SCREENS_COUNT Then
                 swapScreen()
