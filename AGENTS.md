@@ -200,3 +200,27 @@ Las funciones de detección de colisión de bounding box de 2x2 caracteres (`Che
    - Reducción de **620 bytes** adicionales en `main.bin` (de `$BE4A` a `$BBDE`).
    - El espacio libre en el Banco 0 antes del límite `$C000` (49152) aumentó de ~250 bytes a más de **1.050 bytes libres**.
 
+---
+
+## 10. Optimización de Espacio y Rendimiento: Cadenas, Caracteres y Reducción del Heap
+
+### Motivación
+En Boriel ZX Basic, el paso de parámetros por valor de tipo `String` y el troceado o conversión de caracteres mediante sentencias BASIC estándar (`texto(n)`, `Chr$(...)`) fuerzan la inclusión de librerías dinámicas del runtime (`.core.CHR`, `__MEM_ALLOC`, `__MEM_FREE`, `__LOADSTR`, `__STRLEN`, `__MEMCPY`). Cada troceado `texto(n)` realiza una asignación en el heap por carácter, lo que resulta lento e intensivo en memoria. Además, la función `printMessage` generaba copias duplicadas en el heap al invocarla con constantes y volverlas a copiar al llamar a `PrintString`.
+
+### Solución Implementada
+1. **Eliminación de `Chr$` en favor de `PrintChar` (`showTextDialog`)**:
+   - En `showTextDialog` (`functions.bas`), se sustituyó `PrintString(Chr$(PEEK(textPtr)), ...)` por `PrintChar(PEEK(textPtr), ...)`, y `PrintString(" ", ...)` por `PrintChar(32, ...)`.
+   - Esto eliminó completamente la librería `.core.CHR` y `__CHR_END` del binario compilado.
+2. **Acceso Directo por Puntero en `doubleSizeTexto`**:
+   - En lugar de `c = CODE texto(n)` (que reservaba y liberaba memoria en el heap por cada carácter), se lee directamente el código ASCII desde la memoria `c = PEEK(charAddr + n)` utilizando el puntero base `PEEK(UInteger, @texto) + 2`.
+   - Se extrajo el cálculo de `charFontBase = PEEK(UInteger, 23606)` fuera del bucle `FOR`.
+3. **Macro `printMessage`**:
+   - Se sustituyó la subrutina `printMessage` por una macro directa que llama a `PrintString` con las coordenadas del HUD, evitando la creación de variables y copias intermedias de cadenas en el heap.
+4. **Impresión de Caracteres Sueltos (`screensFlow.bas`) y Salvaguarda en `PrintString`**:
+   - En `passwordScreen` y `redefineKeys`, los caracteres únicos (`*`, `<`, `>`, `^`, `v`) se migraron a llamadas directas `PrintChar` con sus respectivos códigos ASCII (42, 60, 62, 94, 118).
+   - En `PrintString` (`src/boriel/lib/GuSprites.zxbas`), se añadió la salvaguarda `If tmpVal = 0 Then Return` para prevenir desbordamientos por debajo (`0 - 1 = 255`) al recibir cadenas vacías.
+5. **Resultado**:
+   - Reducción adicional de **217 bytes** en `main.bin` (de `$BBDE` a `$BB05`).
+   - El espacio libre antes del límite `$C000` (49152) alcanza **1.275 bytes libres**.
+   - Se redujo drásticamente la actividad sobre el heap en tiempo de ejecución.
+

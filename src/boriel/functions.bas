@@ -211,18 +211,11 @@ end sub
 #endif
 
 #ifdef MESSAGES_ENABLED
-    sub printMessage(line1 as string, line2 as string, p as ubyte, i as ubyte)
-        If line1 = "" AND line2 = "" Then Return
-        
-        #ifdef MESSAGES_FLASH_ENABLED
-            Dim attr as uByte = (p * 8) + i + (128 * MESSAGES_FLASH_ENABLED)
-        #else
-            Dim attr as uByte = (p * 8) + i
-        #endif
-        PrintString(line1, attr, HUD_MESSAGE_X, HUD_MESSAGE_Y)
-        PrintString(line2, attr, HUD_MESSAGE_X, HUD_MESSAGE_Y_2)
-        messageLoopCounter = 0
-    end sub
+    #ifdef MESSAGES_FLASH_ENABLED
+        #define printMessage(line1, line2, p, i) PrintString(line1, ((p) * 8) + (i) + (128 * MESSAGES_FLASH_ENABLED), HUD_MESSAGE_X, HUD_MESSAGE_Y) : PrintString(line2, ((p) * 8) + (i) + (128 * MESSAGES_FLASH_ENABLED), HUD_MESSAGE_X, HUD_MESSAGE_Y_2) : messageLoopCounter = 0
+    #else
+        #define printMessage(line1, line2, p, i) PrintString(line1, ((p) * 8) + (i), HUD_MESSAGE_X, HUD_MESSAGE_Y) : PrintString(line2, ((p) * 8) + (i), HUD_MESSAGE_X, HUD_MESSAGE_Y_2) : messageLoopCounter = 0
+    #endif
     
     sub checkMessageForDelete()
         If messageLoopCounter = MESSAGE_LOOPS_VISIBLE Then
@@ -369,21 +362,18 @@ end function
             End Sub
 
             Sub doubleSizeTexto(x As Ubyte, y As Ubyte, texto As String)
-                DIM dir AS UInteger
-                DIM n, c, xx AS UByte
-                ' Sacamos una copia de x
+                DIM dir, charFontBase AS UInteger
+                DIM n, c, xx, textLen AS UByte
+                DIM strPtr AS UInteger = PEEK(UInteger, @texto)
+                DIM charAddr AS UInteger = strPtr + 2
+                textLen = PEEK(UByte, strPtr)
+                If textLen = 0 Then Return
+                charFontBase = PEEK(UInteger, 23606)
                 xx = x
-                ' Recorremos la cadena letra a letra
-                FOR n = 0 TO LEN(texto)-1
-                    ' Dirección del carácter
-                    dir = PEEK(UInteger, 23606)
-                    ' Código ASCII del carácter
-                    c = CODE texto(n)
-                    ' Calculamos la dirección del carácter en memoria
-                    dir = dir + (CAST(UInteger,c) * 8)
-                    ' Imprimimos el carácter a doble tamaño
-                    doubleSize8x8(xx,y,dir)
-                    ' Incrementamos c en 16 pixels
+                FOR n = 0 TO textLen - 1
+                    c = PEEK(charAddr + n)
+                    dir = charFontBase + (CAST(UInteger, c) * 8)
+                    doubleSize8x8(xx, y, dir)
                     xx = xx + 16
                 NEXT n
             End Sub
@@ -681,7 +671,7 @@ End Function
             ElseIf charCode = 32 Then
                 ' Space
                 If currentX <= TEXTS_WINDOW_X + TEXTS_WINDOW_WIDTH - 1 Then
-                    PrintString(" ", attrVal, currentX, currentY)
+                    PrintChar(32, attrVal, currentX, currentY)
                     currentX = currentX + 1
                 End If
                 textPtr = textPtr + 1
@@ -704,7 +694,7 @@ End Function
                 ' Print Word
                 If currentY <= TEXTS_WINDOW_Y + TEXTS_WINDOW_HEIGHT - 1 Then
                     While PEEK(textPtr) <> 32 AND PEEK(textPtr) <> 10 AND PEEK(textPtr) <> 255
-                        PrintString(Chr$(PEEK(textPtr)), attrVal, currentX, currentY)
+                        PrintChar(PEEK(textPtr), attrVal, currentX, currentY)
                         currentX = currentX + 1
                         textPtr = textPtr + 1
                     Wend

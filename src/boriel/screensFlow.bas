@@ -106,7 +106,7 @@ End Sub
         
         For i=0 To 4
             LeerTecla()
-            PrintString("*", 7, 12 + i, 10)
+            PrintChar(42, 7, 12 + i, 10)
             If Inkey$ <> password(i) Then
                 failed = 1
             End If
@@ -134,16 +134,16 @@ End Sub
         Sub redefineKeys()
             clsCustom(7)
             
-            PrintString("<", 7, 16, 8)    
+            PrintChar(60, 7, 16, 8)    
             sI(keyArray, LEFT, LeerTecla())
             
-            PrintString(">", 7, 16, 8)
+            PrintChar(62, 7, 16, 8)
             sI(keyArray, RIGHT, LeerTecla())
             
-            PrintString("^", 7, 16, 8)
+            PrintChar(94, 7, 16, 8)
             sI(keyArray, UP, LeerTecla())
             
-            PrintString("v", 7, 16, 8)
+            PrintChar(118, 7, 16, 8)
             sI(keyArray, DOWN, LeerTecla())
             
             #ifdef SHOOTING_ENABLED
