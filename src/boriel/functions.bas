@@ -248,19 +248,41 @@ end sub
     End Sub
 #endif
 
-Function isDamageTileByColLin(col as Ubyte, lin as Ubyte) As Ubyte
+Function checkTileByType(col as Ubyte, lin as Ubyte, checkType as Ubyte) as Ubyte
     Dim tile as Ubyte = GetTile(col, lin)
-    DIM basePtr as UInteger = arrayBasePtr(damageTiles)
-    Dim i as Ubyte
+    If tile = 0 Then Return 0
     
-    For i = 0 to DAMAGE_TILES_COUNT
-        If peek(basePtr + i) = tile Then
-            Return tile
-        End If
-    Next i
-    
+    If checkType = 0 Then
+        If tile > 63 Then Return 0
+        #ifdef USE_BREAKABLE_TILE_BY_TOUCH
+            If tile = BREAKABLE_BY_TOUCH_TILE Then
+                If lastFrameOnBreakableTiles = 0 Then
+                    lastFrameOnBreakableTiles = framec
+                    tileToBreakByTouchX = col
+                    tileToBreakByTouchY = lin
+                End If
+            End If
+        #endif
+        Return tile
+    ElseIf checkType = 1 Then
+        Dim basePtr as UInteger = arrayBasePtr(damageTiles)
+        Dim i as Ubyte
+        For i = 0 To DAMAGE_TILES_COUNT
+            If Peek(basePtr + i) = tile Then Return tile
+        Next i
+        Return 0
+    #ifdef SIDE_VIEW
+        #ifdef LADDERS_ENABLED
+        ElseIf checkType = 2 Then
+            If tile >= 70 And tile <= 73 Then Return tile
+            Return 0
+        #endif
+    #endif
+    End If
     Return 0
 End Function
+
+#define isSolidTileByColLin(col, lin) checkTileByType(col, lin, 0)
 
 function allEnemiesKilled() as ubyte
     if gUB(enemiesPerScreen, currentScreen) = 0 then return 1
@@ -278,26 +300,6 @@ function allEnemiesKilled() as ubyte
     next enemyId
     
     return 1
-end function
-
-function isSolidTileByColLin(col as ubyte, lin as ubyte) as ubyte
-    dim tile as ubyte = GetTile(col, lin)
-    
-    if tile > 63 then return 0
-    if tile < 1 then return 0
-
-    #ifdef USE_BREAKABLE_TILE_BY_TOUCH
-        If tile = BREAKABLE_BY_TOUCH_TILE Then
-            If lastFrameOnBreakableTiles = 0 Then
-                lastFrameOnBreakableTiles = framec
-                
-                tileToBreakByTouchX = col
-                tileToBreakByTouchY = lin
-            End If
-        End If
-    #endif
-    
-    return tile
 end function
 
 #ifdef ARCADE_MODE
@@ -404,100 +406,40 @@ end function
     #define checkTravesablePlatformFromTopAndAll(x, y) checkTravesablePlatformType(x, y, 67)
 #endif
 
-Function CheckCollisionSolid(x as Ubyte, y as Ubyte) as Ubyte
+Function CheckCollision2x2(x as Ubyte, y as Ubyte, checkType as Ubyte) as Ubyte
     Dim xIsEven as Ubyte = (x bAnd 1) = 0
     Dim yIsEven as Ubyte = (y bAnd 1) = 0
     Dim col as Ubyte = x >> 1
     Dim lin as Ubyte = y >> 1
     Dim t as Ubyte
     
-    t = isSolidTileByColLin(col, lin) : if t then return t
-    t = isSolidTileByColLin(col + 1, lin) : if t then return t
-    t = isSolidTileByColLin(col, lin + 1) : if t then return t
-    t = isSolidTileByColLin(col + 1, lin + 1) : if t then return t
+    t = checkTileByType(col, lin, checkType) : if t then return t
+    t = checkTileByType(col + 1, lin, checkType) : if t then return t
+    t = checkTileByType(col, lin + 1, checkType) : if t then return t
+    t = checkTileByType(col + 1, lin + 1, checkType) : if t then return t
     
     if not yIsEven then
-        t = isSolidTileByColLin(col, lin + 2) : if t then return t
-        t = isSolidTileByColLin(col + 1, lin + 2) : if t then return t
+        t = checkTileByType(col, lin + 2, checkType) : if t then return t
+        t = checkTileByType(col + 1, lin + 2, checkType) : if t then return t
     end if
     
     if not xIsEven then
-        t = isSolidTileByColLin(col + 2, lin) : if t then return t
-        t = isSolidTileByColLin(col + 2, lin + 1) : if t then return t
+        t = checkTileByType(col + 2, lin, checkType) : if t then return t
+        t = checkTileByType(col + 2, lin + 1, checkType) : if t then return t
     end if
     
     if not xIsEven and not yIsEven then
-        t = isSolidTileByColLin(col + 2, lin + 2) : if t then return t
+        t = checkTileByType(col + 2, lin + 2, checkType) : if t then return t
     end if
     
     return 0
 End Function
 
-Function CheckCollisionDamage(x as Ubyte, y as Ubyte) as Ubyte
-    Dim xIsEven as Ubyte = (x bAnd 1) = 0
-    Dim yIsEven as Ubyte = (y bAnd 1) = 0
-    Dim col as Ubyte = x >> 1
-    Dim lin as Ubyte = y >> 1
-    Dim t as Ubyte
-    
-    t = isDamageTileByColLin(col, lin) : if t then return t
-    t = isDamageTileByColLin(col + 1, lin) : if t then return t
-    t = isDamageTileByColLin(col, lin + 1) : if t then return t
-    t = isDamageTileByColLin(col + 1, lin + 1) : if t then return t
-    
-    if not yIsEven then
-        t = isDamageTileByColLin(col, lin + 2) : if t then return t
-        t = isDamageTileByColLin(col + 1, lin + 2) : if t then return t
-    end if
-    
-    if not xIsEven then
-        t = isDamageTileByColLin(col + 2, lin) : if t then return t
-        t = isDamageTileByColLin(col + 2, lin + 1) : if t then return t
-    end if
-    
-    if not xIsEven and not yIsEven then
-        t = isDamageTileByColLin(col + 2, lin + 2) : if t then return t
-    end if
-    
-    return 0
-End Function
-
+#define CheckCollisionSolid(x, y) CheckCollision2x2(x, y, 0)
+#define CheckCollisionDamage(x, y) CheckCollision2x2(x, y, 1)
 #ifdef SIDE_VIEW
     #ifdef LADDERS_ENABLED
-Function isLadderTileByColLin(col as Ubyte, lin as Ubyte) as Ubyte
-    Dim tile as Ubyte = GetTile(col, lin)
-    If tile >= 70 And tile <= 73 Then Return tile
-    Return 0
-End Function
-
-Function CheckCollisionLadder(x as Ubyte, y as Ubyte) as Ubyte
-    Dim xIsEven as Ubyte = (x bAnd 1) = 0
-    Dim yIsEven as Ubyte = (y bAnd 1) = 0
-    Dim col as Ubyte = x >> 1
-    Dim lin as Ubyte = y >> 1
-    Dim t as Ubyte
-    
-    t = isLadderTileByColLin(col, lin) : if t then return t
-    t = isLadderTileByColLin(col + 1, lin) : if t then return t
-    t = isLadderTileByColLin(col, lin + 1) : if t then return t
-    t = isLadderTileByColLin(col + 1, lin + 1) : if t then return t
-    
-    if not yIsEven then
-        t = isLadderTileByColLin(col, lin + 2) : if t then return t
-        t = isLadderTileByColLin(col + 1, lin + 2) : if t then return t
-    end if
-    
-    if not xIsEven then
-        t = isLadderTileByColLin(col + 2, lin) : if t then return t
-        t = isLadderTileByColLin(col + 2, lin + 1) : if t then return t
-    end if
-    
-    if not xIsEven and not yIsEven then
-        t = isLadderTileByColLin(col + 2, lin + 2) : if t then return t
-    end if
-    
-    return 0
-End Function
+        #define CheckCollisionLadder(x, y) CheckCollision2x2(x, y, 2)
     #endif
 #endif
 

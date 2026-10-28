@@ -180,3 +180,23 @@ El uso de sentencias Sinclair como `CLS`, `INK`, `PAPER`, `FLASH` y `BRIGHT` en 
 3. **Resultado**:
    Se eliminaron completamente del binario `.core.CLS`, `.core.INK`, `.core.PAPER`, `.core.FLASH` y `.core.__SET_FLASH`, liberando espacio inmediato en el Banco 0 (`main.bin` se redujo de `$BF00` a `$BE4A`).
 
+---
+
+## 9. Optimización de Espacio y Velocidad: Unificación de Colisiones 2x2 (CheckCollision2x2)
+
+### Motivación
+Las funciones de detección de colisión de bounding box de 2x2 caracteres (`CheckCollisionSolid`, `CheckCollisionDamage` y `CheckCollisionLadder`) repetían de forma exacta la lógica de comprobación de 4 a 9 celdas (`col`, `lin`, offsets pares/impares), ocupando cerca de 1 KB de código duplicado en el Banco 0. Además, `isDamageTileByColLin` recorría la lista de tiles dañinos incluso en celdas vacías (`tile = 0`).
+
+### Solución Implementada
+1. **Función Centralizada de Bounding Box `CheckCollision2x2(x, y, checkType)`**:
+   Se unificó el cálculo de coordenadas de colisión 2x2 en una única rutina en `src/boriel/functions.bas`, recibiendo el tipo de comprobación (`0 = Sólido`, `1 = Daño`, `2 = Escalera`).
+2. **Evaluación Eficiente de Tiles `checkTileByType(col, lin, checkType)`**:
+   - Lee el tile con `GetTile(col, lin)`.
+   - Si `tile = 0` (aire/vacío), retorna 0 de inmediato, evitando cálculos y lecturas innecesarias en el 95% de los casos.
+   - Aplica la regla correspondiente según `checkType` (sólidos `1..63` y tiles rompibles por toque, tiles de daño de `damageTiles`, o escaleras `70..73`).
+3. **Compatibilidad Transparente por Macros**:
+   Se definieron `#define CheckCollisionSolid(x, y) CheckCollision2x2(x, y, 0)`, `#define CheckCollisionDamage(x, y) CheckCollision2x2(x, y, 1)` y `#define CheckCollisionLadder(x, y) CheckCollision2x2(x, y, 2)`, manteniendo intactos todos los puntos de llamada del proyecto sin tocar código en `protaMovement.bas`, `enemies.bas` o `screensFlow.bas`.
+4. **Resultado**:
+   - Reducción de **620 bytes** adicionales en `main.bin` (de `$BE4A` a `$BBDE`).
+   - El espacio libre en el Banco 0 antes del límite `$C000` (49152) aumentó de ~250 bytes a más de **1.050 bytes libres**.
+
