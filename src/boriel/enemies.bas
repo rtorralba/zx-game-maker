@@ -77,7 +77,7 @@ Sub moveEnemies()
                 If mainLoopCounter - enemyShootingTrigger < ENEMY_STOP_FRAMES Then
                     #ifdef ENEMY_STOPPED_SHOULD_LOOK_AT_PLAYER
                         If isEnemyStopped(enemyLinEnd, enemyBehaviour) Then
-                            enemyHorizontalDirection = Sgn(protaX - enemyCol)
+                            enemyHorizontalDirection = sgn8(protaX - enemyCol)
                         End If
                     #endif
                     checkLeftDirection(enemyHorizontalDirection, tile)

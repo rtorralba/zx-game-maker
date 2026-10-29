@@ -296,3 +296,30 @@ Esto consumía ciclos de reloj en llamadas y escrituras de arrays por frame, ade
    - El espacio libre en el Banco 0 antes del límite `$C000` (49152) se sitúa en **1.729 bytes libres**.
    - Cero escrituras en memoria por frame para el cálculo de velocidades y comportamiento de pausas idéntico al original.
 
+---
+
+## 14. Optimización de Velocidad y Espacio: Rutinas Críticas (sgn8 ASM Fastcall, Inlining de incrementScore y Guardas de Colisión)
+
+### Motivación
+1. **`sgn8` y llamadas a `Sgn`**: Se utilizaban múltiples comparaciones y marcos de pila en BASIC para determinar el signo de un byte, e incluso una llamada al `Sgn` genérico del runtime en `enemies.bas:79`.
+2. **`checkProtaAndBulletCollision`**: En cada frame y para cada enemigo activo, se invocaban `checkBulletProtaCollision` y `checkSwordEnemyCollision` apilando 12 parámetros en la pila, a pesar de que el 95% del tiempo no había proyectiles ni ataque de espada activos.
+3. **Inversión de dirección con `* -1`**: Multiplicar por -1 invocaba rutinas de multiplicación matemática de 16 bits en el Z80 (`__FMUL16`) en lugar de usar la instrucción de negación nativa del procesador (`NEG`).
+4. **`incrementScore`**: Subrutina de llamada frecuente al recoger ítems o sumar puntos que creaba marcos de pila y paso de parámetros.
+
+### Solución Implementada
+1. **`sgn8` en Ensamblador Puro `Fastcall` (`functions.bas`)**:
+   - Implementado en Z80 ASM nativo con instrucción `or a`, retornando 0 si `Z`, 1 si positivo y -1 si negativo.
+   - Pasa el parámetro en el registro `A` y retorna en `A` sin tocar la pila ni usar `IX`. Ocupa solo 8 bytes de código frente a los 43 bytes de la versión BASIC.
+   - Se reemplazó la llamada residual a `Sgn` en `enemies.bas:79` por `sgn8`.
+2. **Guardas Previas en Colisiones de Proyectil y Espada (`enemiesShared.bas`)**:
+   - Se añadieron `If bulletPositionX Then` e `If swordTimer Then` antes de las llamadas a `checkBulletProtaCollision` y `checkSwordEnemyCollision`.
+   - Se eliminan 2 llamadas a función y 12 pushes a la pila por cada enemigo en pantalla en casi todos los frames.
+3. **Negación Unaria Nativa (`enemiesShared.bas`)**:
+   - Se reemplazó `* -1` por `-enemyHorizontalDirection` y `-enemyVerticalDirection`, generando instrucciones `NEG` directas de 1 solo ciclo de reloj.
+4. **Inlining de `incrementScore` (`functions.bas`)**:
+   - Convertido a macro `#define incrementScore(amount) score = score + (amount) : If score > hiScore Then hiScore = score`, eliminando el salto de subrutina.
+5. **Resultado**:
+   - Reducción adicional de **51 bytes** en `main.bin` (de `$B93F` a `$B90C`).
+   - El espacio libre en el Banco 0 antes de `$C000` (49152) aumenta a **1.780 bytes libres** (frente a los ~250 bytes originales del proyecto).
+   - Ahorro masivo de ciclos de CPU en el bucle principal y bucle de enemigos.
+

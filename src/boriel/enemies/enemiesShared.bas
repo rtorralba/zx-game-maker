@@ -115,11 +115,11 @@ Function checkProtaAndBulletCollision(enemyId As Ubyte, enemyPtr As Uinteger) As
     Dim damage As Ubyte = 0
     
     #ifdef SHOOTING_ENABLED
-        If checkBulletProtaCollision(enemyX0, enemyY0, enemyX1, enemyY1, enemyId, enemyPtr) Then Return 1
+        If bulletPositionX Then If checkBulletProtaCollision(enemyX0, enemyY0, enemyX1, enemyY1, enemyId, enemyPtr) Then Return 1
     #endif
     
     #ifdef SWORD_ENABLED
-        If checkSwordEnemyCollision(enemyX0, enemyY0, enemyX1, enemyY1, enemyId, enemyPtr) Then Return 1
+        If swordTimer Then If checkSwordEnemyCollision(enemyX0, enemyY0, enemyX1, enemyY1, enemyId, enemyPtr) Then Return 1
     #endif
     
     #ifdef SIDE_VIEW
@@ -224,13 +224,13 @@ End Sub
 Sub setEnemyDirectionForDefaulMovement(enemyCol As Byte, enemyLin As Byte, enemyColIni As Byte, enemyLinIni As Byte, enemyColEnd As Byte, enemyLinEnd As Byte, ByRef enemyHorizontalDirection As Byte, ByRef enemyVerticalDirection As Byte)
     If enemyHorizontalDirection Then
         If enemyColIni = enemyCol Or enemyColEnd = enemyCol Then
-            enemyHorizontalDirection = enemyHorizontalDirection * -1
+            enemyHorizontalDirection = -enemyHorizontalDirection
         End If
     End If
     
     If enemyVerticalDirection Then
         If enemyLinIni = enemyLin Or enemyLinEnd = enemyLin Then
-            enemyVerticalDirection = enemyVerticalDirection * -1
+            enemyVerticalDirection = -enemyVerticalDirection
         End If
     End If
 End Sub

@@ -5,10 +5,16 @@
 #define isJumping() (jumpCurrentKey < jumpStopValue)
 #define incrementJumpKey() jumpCurrentKey = jumpCurrentKey + 1
 
-Function sgn8(v As Byte) As Byte
-    If v > 0 Then Return 1
-    If v < 0 Then Return -1
-    Return 0
+Function Fastcall sgn8(v As Byte) As Byte
+    Asm
+        or a
+        ret z
+        jp p, _sgn8_pos
+        ld a, -1
+        ret
+    _sgn8_pos:
+        ld a, 1
+    End Asm
 End Function
 
 Sub fastcall clsCustom(attr As Ubyte)
@@ -233,12 +239,7 @@ end sub
 #endif
 
 #ifdef HISCORE_ENABLED
-    Sub incrementScore(amount As Ubyte)
-        score = score + amount
-        If score > hiScore Then
-            hiScore = score
-        End If
-    End Sub
+    #define incrementScore(amount) score = score + (amount) : If score > hiScore Then hiScore = score
 #endif
 
 Function checkTileByType(col as Ubyte, lin as Ubyte, checkType as Ubyte) as Ubyte
