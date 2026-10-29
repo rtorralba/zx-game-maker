@@ -436,9 +436,11 @@ End Sub
             End If
         End Sub
         
+        Dim lastIntermediateFrame As Ubyte = 0
         Sub animateProtaForIntermediateScreen()
-            If framec mod 50 = 0 Then
+            If framec - lastIntermediateFrame >= 50 Then
                 protaTile = getNextProtaIdleSprite()
+                lastIntermediateFrame = framec
             End If
             Draw2x2Sprite(protaTile, protaX, protaY)
             RenderFrame()

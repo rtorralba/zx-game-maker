@@ -248,3 +248,25 @@ En total se ejecutaban hasta **17 lecturas de teclado por frame**, lo que consum
    - Reducción adicional de **152 bytes** de código en `main.bin` (de `$BB05` a `$BA6D`).
    - El espacio libre en el Banco 0 antes del límite `$C000` (49152) aumenta a **1.427 bytes libres**.
 
+---
+
+## 12. Optimización de Velocidad: Sustitución de MOD por Operaciones a Nivel de Bits y Temporizadores Delta
+
+### Motivación
+En Boriel ZX Basic, el operador `MOD` entre números enteros de 16 bits (`framec Mod 2` o `framec Mod 50`) invoca la rutina de división de 16 bits `.core.__MODU16`, la cual consume entre 150 y 200 ciclos de reloj T-states:
+1. **En la rutina de interrupciones IM2 (`VortexTracker_NextNote()`)**:
+   Se invoca 50 veces por segundo (cada 20 ms). Ejecutar una división de 16 bits (`framec Mod 2`) en una rutina de servicio de interrupción (ISR) penaliza el tiempo de CPU disponible para el juego principal en cada barrido de pantalla.
+2. **En el bucle de pantalla intermedia (`animateProtaForIntermediateScreen()`)**:
+   Un bucle cerrado ejecutaba `framec Mod 50 = 0` en cada iteración, realizando divisiones continuas.
+
+### Solución Implementada
+1. **Reemplazo por Máscara de Bits en IM2 (`128/vortexTracker.bas`)**:
+   - Se sustituyó `If framec Mod 2 = 0 Then` por `If (framec bAND 1) = 0 Then`.
+   - La comprobación pasa de una división por software de ~180 T-states a una simple operación `AND 1` de 7 T-states.
+2. **Reemplazo por Temporizador Delta en Pantalla Intermedia (`screensFlow.bas`)**:
+   - Se sustituyó `If framec mod 50 = 0 Then` por `If framec - lastIntermediateFrame >= 50 Then`, actualizando `lastIntermediateFrame = framec`.
+   - Se elimina la división periódica y se alinea con el patrón delta `framec - lastFrame >= PERIOD` usado en el resto del motor (`lastFrameTiles`, `lastFrameBeep`).
+3. **Resultado**:
+   - Eliminación de la llamada a `__MODU16` durante la interrupción IM2 (ahorro crítico de ~170 T-states cada 20 ms en modo `HURRY_UP_SECONDS`).
+   - Animación de personaje fluida sin divisiones en bucles rápidos.
+
