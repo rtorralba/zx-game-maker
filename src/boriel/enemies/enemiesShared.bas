@@ -135,7 +135,12 @@ Function checkProtaAndBulletCollision(enemyId As Ubyte, enemyPtr As Uinteger) As
     Return 0
 End Function
 
-#define checkShouldSkipMoveBySpeed(enemySpeed) ((enemySpeed) <= 2 And gUB(skipMove, enemySpeed))
+Function checkShouldSkipMoveBySpeed(enemySpeed As Ubyte) As Ubyte
+    If enemySpeed = 2 Then Return (mainLoopCounter bAnd 1) <> 0
+    If enemySpeed = 1 Then Return (mainLoopCounter bAnd 3) <> 0
+    If enemySpeed = 0 Then Return (mainLoopCounter bAnd 7) <> 0
+    Return 0
+End Function
 
 #define updateEnemyFrame(enemyId) sB(currentEnemyFrame, enemyId, gUB(currentEnemyFrame, enemyId) Xor 1)
 

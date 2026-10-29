@@ -212,8 +212,6 @@ Dim kempstonInterfaceAvailable As Ubyte = 0
 
 Dim resetBorder As Ubyte = 0
 
-Dim skipMove(2) As Ubyte = {0, 0, 0}
-
 Dim mainLoopCounter As Ubyte = 0
 
 #ifdef TIMER_ENABLED

@@ -270,3 +270,29 @@ En Boriel ZX Basic, el operador `MOD` entre números enteros de 16 bits (`framec
    - Eliminación de la llamada a `__MODU16` durante la interrupción IM2 (ahorro crítico de ~170 T-states cada 20 ms en modo `HURRY_UP_SECONDS`).
    - Animación de personaje fluida sin divisiones en bucles rápidos.
 
+---
+
+## 13. Optimización de Velocidad y Espacio: Eliminación del Array y Rutina de `skipMove`
+
+### Motivación
+En cada frame de juego, el bucle principal invocaba obligatoriamente `calculateIfSkipMovementBySpeed()`, la cual ejecutaba de 3 a 6 escrituras en memoria mediante `sB(skipMove, ...)` para precalcular si los enemigos con velocidad 0, 1 o 2 debían omitir su movimiento. Posteriormente, en el bucle de enemigos, se volvía a leer `gUB(skipMove, enemySpeed)`.
+Esto consumía ciclos de reloj en llamadas y escrituras de arrays por frame, además de reservar memoria RAM estática para el array `skipMove(2)` y compilar la subrutina entera.
+
+### Solución Implementada
+1. **Evaluación Directa por Bits en `checkShouldSkipMoveBySpeed` (`enemiesShared.bas`)**:
+   - Se transformó la comprobación en `Function checkShouldSkipMoveBySpeed(enemySpeed As Ubyte) As Ubyte`.
+   - Se evalúa directamente el bit correspondiente de `mainLoopCounter`:
+     - Velocidad 3 (o >= 3): retorna 0 (sin pausa, se mueve en el 100% de los frames).
+     - Velocidad 2: `(mainLoopCounter bAnd 1) <> 0` (omite 1 de cada 2 frames, 50% de velocidad con pausa corta).
+     - Velocidad 1: `(mainLoopCounter bAnd 3) <> 0` (omite 3 de cada 4 frames, 25% de velocidad con más pausa).
+     - Velocidad 0: `(mainLoopCounter bAnd 7) <> 0` (omite 7 de cada 8 frames, 12.5% de velocidad con máxima pausa).
+   - *Nota crítica sobre `Fastcall`*: No debe utilizarse `Fastcall` en funciones de Boriel ZX Basic que referencian sus parámetros en expresiones BASIC sin ensamblador puro, debido a un fallo en el generador de código de `zxbc` donde el parámetro se pasa en el registro `A` pero el cuerpo intenta leerlo desde la pila en `(ix+5)` (el cual no está inicializado al no haber prólogo `push ix`), leyendo basura de memoria y corrompiendo la velocidad.
+2. **Eliminación de la Subrutina y del Array**:
+   - Se eliminó la llamada `calculateIfSkipMovementBySpeed()` en el bucle principal de `playGame()` en `screensFlow.bas`.
+   - Se eliminó la definición de `Sub calculateIfSkipMovementBySpeed()` en `screensFlow.bas`.
+   - Se eliminó la declaración `Dim skipMove(2)` en `definitions.bas`.
+3. **Resultado**:
+   - Ahorro de más de **300 bytes** en `main.bin` (de `$BA6D` a `$B93F`).
+   - El espacio libre en el Banco 0 antes del límite `$C000` (49152) se sitúa en **1.729 bytes libres**.
+   - Cero escrituras en memoria por frame para el cálculo de velocidades y comportamiento de pausas idéntico al original.
+

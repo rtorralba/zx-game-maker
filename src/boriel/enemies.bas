@@ -38,7 +38,8 @@ Sub moveEnemies()
                 If checkPlatformHasProtaOnTop(enemyCol, enemyLin) Then
                     stopJump()
                     Dim snapLin As Byte = enemyLin
-                    If checkShouldSkipMoveBySpeed(enemySpeed) Then
+                    Dim shouldSkipPlatform As Ubyte = checkShouldSkipMoveBySpeed(enemySpeed)
+                    If shouldSkipPlatform Then
                         snapLin = Peek(enemyPtr + ENEMY_CURRENT_LIN)
                     End If
                     If enemyVerticalDirection Then
@@ -47,7 +48,7 @@ Sub moveEnemies()
                         End If
                     End If
                     If enemyHorizontalDirection Then
-                        If Not checkShouldSkipMoveBySpeed(enemySpeed) Then
+                        If Not shouldSkipPlatform Then
                             If Not CheckCollisionSolid(protaX + enemyHorizontalDirection, protaY) Then
                                 protaX = protaX + enemyHorizontalDirection
                             End If

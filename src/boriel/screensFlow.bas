@@ -268,8 +268,6 @@ Sub playGame()
             #endif
         #endif
         
-        calculateIfSkipMovementBySpeed()
-        
         #ifdef TIMER_ENABLED
             updateTimer()
         #endif
@@ -469,16 +467,6 @@ End Sub
         #endif
     End Sub
 #endif
-
-Sub calculateIfSkipMovementBySpeed()
-    sB(skipMove, 0, 0)
-    sB(skipMove, 1, 0)
-    sB(skipMove, 2, 0)
-    
-    If mainLoopCounter bAnd 7 <> 0 Then sB(skipMove, 0, 1)   ' 1 de cada 8 loops (slowest)
-    If mainLoopCounter bAnd 3 <> 0 Then sB(skipMove, 1, 1)   ' 1 de cada 4 loops
-    If mainLoopCounter bAnd 1 <> 0 Then sB(skipMove, 2, 1)   ' 1 de cada 2 loops
-End Sub
 
 Sub makeAnimations()
     If framec - lastFrameTiles >= ANIMATE_PERIOD_TILE Then
