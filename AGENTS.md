@@ -224,3 +224,27 @@ En Boriel ZX Basic, el paso de parámetros por valor de tipo `String` y el troce
    - El espacio libre antes del límite `$C000` (49152) alcanza **1.275 bytes libres**.
    - Se redujo drásticamente la actividad sobre el heap en tiempo de ejecución.
 
+---
+
+## 11. Optimización de Velocidad y Espacio: Eliminación de Lecturas Redundantes de Teclado y Kempston
+
+### Motivación
+En cada frame de juego, el teclado se consultaba repetidamente a través de llamadas a `MultiKeys(gUI(keyArray, ...))` e instrucciones `IN A, (C)` del Z80:
+1. En `protaMovement`: 3 lecturas redundantes para comprobar si se soltó la tecla (salto, disparo o espada) para flags de tecla no pulsada (`noKeyPressedFor...`).
+2. En `keyboardListen`: 5 lecturas para ejecutar las acciones (`LEFT`, `RIGHT`, `UP`, `DOWN`, `FIRE`).
+3. En `keyboardListen`: 5 lecturas más consecutivas para evaluar si ninguna tecla estaba pulsada (para el contador de Idle).
+4. En `keyboardListen`: 4 lecturas más para evaluar si no había direcciones pulsadas (para resetear el sprite al primer frame).
+En total se ejecutaban hasta **17 lecturas de teclado por frame**, lo que consumía cientos de ciclos de CPU Z80 leyendo puertos y accediendo a `keyArray`.
+
+### Solución Implementada
+1. **Captura Única por Frame**:
+   - En `keyboardListen()` (`protaMovement.bas`), se lee cada una de las 5 teclas exactamente una vez en variables locales (`kLeft`, `kRight`, `kUp`, `kDown`, `kFire`).
+   - Para Kempston Joystick, se lee el puerto 31 una única vez en `n = In(31)`.
+2. **Evaluación de Flags y Acciones con Bits**:
+   - Las comprobaciones de tecla soltada (`noKeyPressedForSword`, `noKeyPressedForShoot`, `noKeyPressedForJump`) se integraron en `keyboardListen()` evaluando directamente el estado ya leído (`kDown = 0`, `kFire = 0`, `kUp = 0`), eliminando los bloques duplicados en `protaMovement()`.
+   - Se sintetizan `anyDir = kLeft Or kRight Or kUp Or kDown` y `anyKey = anyDir Or kFire` mediante operaciones de bits rápidas, evitando llamar a `MultiKeys` para los chequeos de reposo e Idle.
+3. **Resultado**:
+   - Reducción de 17 llamadas a solo **5 lecturas de teclado (o 1 lectura de puerto para Kempston)** por frame.
+   - Reducción adicional de **152 bytes** de código en `main.bin` (de `$BB05` a `$BA6D`).
+   - El espacio libre en el Banco 0 antes del límite `$C000` (49152) aumenta a **1.427 bytes libres**.
+
