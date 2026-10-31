@@ -50,7 +50,7 @@ Sub Fastcall VortexTracker_NextNote()
     #ifdef TIMER_ENABLED
         #ifdef HURRY_UP_SECONDS
             If vortexTracker2x Then
-                If framec Mod 2 = 0 Then
+                If (framec bAND 1) = 0 Then
                     callVtAddress($C005)
                 End If
             End If

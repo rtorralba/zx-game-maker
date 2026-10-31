@@ -160,8 +160,8 @@ End Function
                 Return
             End If
             
-            If checkProtaSolidCollision(protaX, protaY + jumpArray(jumpCurrentKey)) Or checkTravesablePlatformFromTop(protaX, protaY + jumpArray(jumpCurrentKey)) Then
-                If jumpArray(jumpCurrentKey) > 0 Then
+            If checkProtaSolidCollision(protaX, protaY + gB(jumpArray, jumpCurrentKey)) Or checkTravesablePlatformFromTop(protaX, protaY + gB(jumpArray, jumpCurrentKey)) Then
+                If gB(jumpArray, jumpCurrentKey) > 0 Then
                     stopJump()
                 Else
                     incrementJumpKey()
@@ -169,14 +169,14 @@ End Function
                 Return
             End If
             
-            saveProta(protaY + jumpArray(jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
+            saveProta(protaY + gB(jumpArray, jumpCurrentKey), protaX, getNextFrameJumpingFalling(), protaDirection)
             incrementJumpKey()
         End Sub
     #endif
     
     #ifdef JETPACK_FUEL
         Function pressingUp() As Ubyte
-            Return ((kempston = 0 And MultiKeys(keyArray(UP)) <> 0) Or (kempston = 1 And In(31) bAND %1000 <> 0))
+            Return ((kempston = 0 And MultiKeys(gUI(keyArray, UP)) <> 0) Or (kempston = 1 And In(31) bAND %1000 <> 0))
         End Function
         
         Sub checkIsFlying()
@@ -215,6 +215,9 @@ End Function
             If falling Then
                 If CheckCollisionLadder(protaX, protaY) Or CheckCollisionLadder(protaX, protaY + 2) Then
                     falling = 0
+                    #ifdef WALL_JUMP_ENABLED
+                        lastWallJumpSide = 0
+                    #endif
                 End If
             End If
         #endif
@@ -231,6 +234,7 @@ End Function
                 landed = 1
                 #ifdef WALL_JUMP_ENABLED
                     wallJumpTimer = 0
+                    lastWallJumpSide = 0
                 #endif
                 #ifdef DASH_ENABLED
                     isDashing = 0
@@ -262,7 +266,15 @@ End Function
                 moveScreen = 2
             Else
                 #ifndef JETPACK_FUEL
-                    saveProta(protaY + 2, protaX, getNextFrameJumpingFalling(), protaDirection)
+                    #ifdef WALL_JUMP_ENABLED
+                        If CheckCollisionSolid(protaX + 1, protaY) Or CheckCollisionSolid(protaX - 1, protaY) Then
+                            saveProta(protaY + 1, protaX, getNextFrameJumpingFalling(), protaDirection)
+                        Else
+                            saveProta(protaY + 2, protaX, getNextFrameJumpingFalling(), protaDirection)
+                        End If
+                    #else
+                        saveProta(protaY + 2, protaX, getNextFrameJumpingFalling(), protaDirection)
+                    #endif
                 #Else
                     saveProta(protaY + 1, protaX, getNextFrameJumpingFalling(), protaDirection)
                 #endif
@@ -589,17 +601,52 @@ Function checkDashingOrWalljumping() As Ubyte
     #ifdef SIDE_VIEW
         #ifdef WALL_JUMP_ENABLED
             If wallJumpTimer > 0 Then
+                Dim kLeft As Ubyte = 0
+                Dim kRight As Ubyte = 0
+                If kempston Then
+                    Dim nJoy As Ubyte = In(31)
+                    If nJoy bAND %10 Then kLeft = 1
+                    If nJoy bAND %1 Then kRight = 1
+                Else
+                    kLeft = MultiKeys(gUI(keyArray, LEFT))
+                    kRight = MultiKeys(gUI(keyArray, RIGHT))
+                End If
+                
+                If (protaDirection = 0 And kRight <> 0) Or (protaDirection = 1 And kLeft <> 0) Then
+                    wallJumpTimer = 0
+                    #ifdef DISABLE_CONTINUOUS_JUMP
+                        noKeyPressedForJump = 1
+                    #endif
+                    Return 0
+                End If
+
                 wallJumpTimer = wallJumpTimer - 1
                 If protaDirection = 0 Then
-                    leftKey()
+                    If canMoveLeft() Then
+                        leftKey()
+                    Else
+                        wallJumpTimer = 0
+                        #ifdef DISABLE_CONTINUOUS_JUMP
+                            noKeyPressedForJump = 1
+                        #endif
+                        Return 0
+                    End If
                 Else
-                    rightKey()
+                    If canMoveRight() Then
+                        rightKey()
+                    Else
+                        wallJumpTimer = 0
+                        #ifdef DISABLE_CONTINUOUS_JUMP
+                            noKeyPressedForJump = 1
+                        #endif
+                        Return 0
+                    End If
                 End If
                 
                 If kempston Then
                     If In(31) bAND %10000 Then fireKey()
                 Else
-                    If MultiKeys(keyArray(FIRE))<>0 Then fireKey()
+                    If MultiKeys(gUI(keyArray, FIRE))<>0 Then fireKey()
                 End If
                 Return 1
             End If
@@ -675,6 +722,19 @@ Sub keyboardListen()
         If n bAND %1000 Then upKey()
         If n bAND %100 Then downKey()
         If n bAND %10000 Then fireKey()
+        
+        #ifdef SWORD_ENABLED
+            If n bAND %100 = 0 Then noKeyPressedForSword = 1
+        #endif
+        #ifdef SHOOTING_ENABLED
+            If n bAND %10000 = 0 Then noKeyPressedForShoot = 1
+        #endif
+        #ifdef SIDE_VIEW
+            #ifdef DISABLE_CONTINUOUS_JUMP
+                If n bAND %1000 = 0 Then noKeyPressedForJump = 1
+            #endif
+        #endif
+        
         #ifdef IDLE_ENABLED
             If n = 0 Then
                 If protaLoopCounter < IDLE_TIME Then protaLoopCounter = protaLoopCounter + 1
@@ -690,19 +750,41 @@ Sub keyboardListen()
             #endif
         End If
     Else
-        If MultiKeys(keyArray(LEFT))<>0 Then leftKey()
-        If MultiKeys(keyArray(RIGHT))<>0 Then rightKey()
-        If MultiKeys(keyArray(UP))<>0 Then upKey()
-        If MultiKeys(keyArray(DOWN))<>0 Then downKey()
-        If MultiKeys(keyArray(FIRE))<>0 Then fireKey()
+        Dim kLeft As Ubyte = MultiKeys(gUI(keyArray, LEFT))
+        Dim kRight As Ubyte = MultiKeys(gUI(keyArray, RIGHT))
+        Dim kUp As Ubyte = MultiKeys(gUI(keyArray, UP))
+        Dim kDown As Ubyte = MultiKeys(gUI(keyArray, DOWN))
+        Dim kFire As Ubyte = MultiKeys(gUI(keyArray, FIRE))
+        
+        If kLeft <> 0 Then leftKey()
+        If kRight <> 0 Then rightKey()
+        If kUp <> 0 Then upKey()
+        If kDown <> 0 Then downKey()
+        If kFire <> 0 Then fireKey()
+        
+        #ifdef SWORD_ENABLED
+            If kDown = 0 Then noKeyPressedForSword = 1
+        #endif
+        #ifdef SHOOTING_ENABLED
+            If kFire = 0 Then noKeyPressedForShoot = 1
+        #endif
+        #ifdef SIDE_VIEW
+            #ifdef DISABLE_CONTINUOUS_JUMP
+                If kUp = 0 Then noKeyPressedForJump = 1
+            #endif
+        #endif
+        
+        Dim anyDir As Ubyte = kLeft Or kRight Or kUp Or kDown
+        
         #ifdef IDLE_ENABLED
-            If MultiKeys(keyArray(LEFT))=0 And MultiKeys(keyArray(RIGHT))=0 And MultiKeys(keyArray(UP))=0 And MultiKeys(keyArray(DOWN))=0 And MultiKeys(keyArray(FIRE))=0 Then
+            If anyDir = 0 And kFire = 0 Then
                 If protaLoopCounter < IDLE_TIME Then protaLoopCounter = protaLoopCounter + 1
             Else
                 protaLoopCounter = 0
             End If
         #endif
-        If MultiKeys(keyArray(LEFT))=0 And MultiKeys(keyArray(RIGHT))=0 And MultiKeys(keyArray(UP))=0 And MultiKeys(keyArray(DOWN))=0 Then
+        
+        If anyDir = 0 Then
             #ifdef IDLE_ENABLED
                 If protaLoopCounter < IDLE_TIME Then resetToFirstFrameOnStop()
             #Else
@@ -834,7 +916,7 @@ Sub processTileContact(tCol as Ubyte, tLin as Ubyte, bCol as Ubyte, bLin as Ubyt
         If besideTile = 0 Then
             FillWithTileChecked(0, 1, 1, BACKGROUND_ATTRIBUTE, tCol, tLin)
         Else
-            FillWithTileChecked(0, 1, 1, attrSet(besideTile), tCol, tLin)
+            FillWithTileChecked(0, 1, 1, gUB(attrSet, besideTile), tCol, tLin)
         End If
     End If
 End Sub
@@ -890,46 +972,10 @@ End Sub
 Sub protaMovement()
     #ifdef SWORD_ENABLED
         updateSword()
-        
-        If kempston = 1 Then
-            If In(31) bAND %100 = 0 Then
-                noKeyPressedForSword = 1
-            End If
-        Else
-            If MultiKeys(keyArray(DOWN)) = 0 Then
-                noKeyPressedForSword = 1
-            End If
-        End If
     #endif
     
     #ifdef LIVES_MODE_GRAVEYARD
         If invincible Then Return
-    #endif
-    
-    #ifdef SHOOTING_ENABLED
-        If kempston = 1 Then
-            If In(31) bAND %10000 = 0 Then
-                noKeyPressedForShoot = 1
-            End If
-        Else
-            If MultiKeys(keyArray(FIRE)) = 0 Then
-                noKeyPressedForShoot = 1
-            End If
-        End If
-    #endif
-    
-    #ifdef SIDE_VIEW
-        #ifdef DISABLE_CONTINUOUS_JUMP
-            If kempston = 1 Then
-                If In(31) bAND %1000 = 0 Then
-                    noKeyPressedForJump = 1
-                End If
-            Else
-                If MultiKeys(keyArray(UP)) = 0 Then
-                    noKeyPressedForJump = 1
-                End If
-            End If
-        #endif
     #endif
     
     If Not checkDashingOrWalljumping() Then

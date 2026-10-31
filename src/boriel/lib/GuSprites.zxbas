@@ -2976,6 +2976,7 @@ end sub
 sub PrintString(text as string, Color as uInteger, X as uInteger, Y as uInteger)
     Dim buc as uByte
     Dim tmpVal as uByte = len(text)
+    If tmpVal = 0 Then Return
     Dim strPtr as uInteger = peek(uInteger, @text)
     Dim charAddr as uInteger = strPtr + 2
 

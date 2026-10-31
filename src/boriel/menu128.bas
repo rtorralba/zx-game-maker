@@ -197,8 +197,21 @@ Sub PrintKeyName(keyCode As Uinteger, color As Uinteger, x As Ubyte, y As Ubyte)
     End If
 End Sub
 
+Sub fastcall clsCustom(attr As Ubyte)
+    Asm
+        ld hl, $4000
+        ld (hl), 0
+        ld de, $4001
+        ld bc, 6143
+        ldir
+        ld (hl), a
+        ld bc, 767
+        ldir
+    End Asm
+End Sub
+
 Sub redefineKeys()
-    Cls
+    clsCustom(7)
     
     PrintString("REDEFINE KEYS", 7, 10, 4)
     

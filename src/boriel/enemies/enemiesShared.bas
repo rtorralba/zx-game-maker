@@ -23,10 +23,10 @@
     End Function
     
     Function checkPlatformByXY(x As Ubyte, y As Ubyte) As Ubyte
-        If enemiesPerScreen(currentScreen) = 0 Then Return 0
+        If gUB(enemiesPerScreen, currentScreen) = 0 Then Return 0
         
         Dim enemyPtr As Uinteger = @decompressedEnemiesScreen(0, 0)
-        For enemyId=0 To enemiesPerScreen(currentScreen) - 1
+        For enemyId=0 To gUB(enemiesPerScreen, currentScreen) - 1
             If Peek(enemyPtr + ENEMY_TILE) < 16 Then
                 Dim enemyCol As Ubyte = Peek(enemyPtr + ENEMY_CURRENT_COL)
                 Dim enemyLin As Ubyte = Peek(enemyPtr + ENEMY_CURRENT_LIN)
@@ -115,11 +115,11 @@ Function checkProtaAndBulletCollision(enemyId As Ubyte, enemyPtr As Uinteger) As
     Dim damage As Ubyte = 0
     
     #ifdef SHOOTING_ENABLED
-        If checkBulletProtaCollision(enemyX0, enemyY0, enemyX1, enemyY1, enemyId, enemyPtr) Then Return 1
+        If bulletPositionX Then If checkBulletProtaCollision(enemyX0, enemyY0, enemyX1, enemyY1, enemyId, enemyPtr) Then Return 1
     #endif
     
     #ifdef SWORD_ENABLED
-        If checkSwordEnemyCollision(enemyX0, enemyY0, enemyX1, enemyY1, enemyId, enemyPtr) Then Return 1
+        If swordTimer Then If checkSwordEnemyCollision(enemyX0, enemyY0, enemyX1, enemyY1, enemyId, enemyPtr) Then Return 1
     #endif
     
     #ifdef SIDE_VIEW
@@ -135,11 +135,16 @@ Function checkProtaAndBulletCollision(enemyId As Ubyte, enemyPtr As Uinteger) As
     Return 0
 End Function
 
-#define checkShouldSkipMoveBySpeed(enemySpeed) ((enemySpeed) <= 2 And skipMove(enemySpeed))
+Function checkShouldSkipMoveBySpeed(enemySpeed As Ubyte) As Ubyte
+    If enemySpeed = 2 Then Return (mainLoopCounter bAnd 1) <> 0
+    If enemySpeed = 1 Then Return (mainLoopCounter bAnd 3) <> 0
+    If enemySpeed = 0 Then Return (mainLoopCounter bAnd 7) <> 0
+    Return 0
+End Function
 
-#define updateEnemyFrame(enemyId) currentEnemyFrame(enemyId) = currentEnemyFrame(enemyId) Xor 1
+#define updateEnemyFrame(enemyId) sB(currentEnemyFrame, enemyId, gUB(currentEnemyFrame, enemyId) Xor 1)
 
-#define drawEnemy(enemyId, tile, enemyCol, enemyLin) currentEnemyFrame(enemyId) = currentEnemyFrame(enemyId) And (resetReturnMovement(enemyId) Xor 1) : Draw2x2Sprite(tile + currentEnemyFrame(enemyId), enemyCol, enemyLin)
+#define drawEnemy(enemyId, tile, enemyCol, enemyLin) sB(currentEnemyFrame, enemyId, gUB(currentEnemyFrame, enemyId) And (gUB(resetReturnMovement, enemyId) Xor 1)) : Draw2x2Sprite(tile + gUB(currentEnemyFrame, enemyId), enemyCol, enemyLin)
 
 #define saveData(enemyPtr, horizontalDirection, verticalDirection, enemyCol, enemyLin) Poke enemyPtr + ENEMY_CURRENT_COL, enemyCol : Poke enemyPtr + ENEMY_CURRENT_LIN, enemyLin : Poke enemyPtr + ENEMY_HORIZONTAL_DIRECTION, horizontalDirection : Poke enemyPtr + ENEMY_VERTICAL_DIRECTION, verticalDirection
 
@@ -219,13 +224,13 @@ End Sub
 Sub setEnemyDirectionForDefaulMovement(enemyCol As Byte, enemyLin As Byte, enemyColIni As Byte, enemyLinIni As Byte, enemyColEnd As Byte, enemyLinEnd As Byte, ByRef enemyHorizontalDirection As Byte, ByRef enemyVerticalDirection As Byte)
     If enemyHorizontalDirection Then
         If enemyColIni = enemyCol Or enemyColEnd = enemyCol Then
-            enemyHorizontalDirection = enemyHorizontalDirection * -1
+            enemyHorizontalDirection = -enemyHorizontalDirection
         End If
     End If
     
     If enemyVerticalDirection Then
         If enemyLinIni = enemyLin Or enemyLinEnd = enemyLin Then
-            enemyVerticalDirection = enemyVerticalDirection * -1
+            enemyVerticalDirection = -enemyVerticalDirection
         End If
     End If
 End Sub

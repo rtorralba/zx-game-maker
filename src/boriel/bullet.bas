@@ -130,9 +130,9 @@ dim maxXScreenLeft as ubyte = 2
         BeepFX_Play(0)
         
         #ifdef SHOULD_CHECK_SCREENS_WON
-            if not screensWon(currentScreen) then
+            if not gUB(screensWon, currentScreen) then
                 if allEnemiesKilled() then
-                    screensWon(currentScreen) = 1
+                    sB(screensWon, currentScreen, 1)
                     removeTilesFromScreen(63)
                 end if
             end if

@@ -5,11 +5,30 @@
 #define isJumping() (jumpCurrentKey < jumpStopValue)
 #define incrementJumpKey() jumpCurrentKey = jumpCurrentKey + 1
 
-Function sgn8(v As Byte) As Byte
-    If v > 0 Then Return 1
-    If v < 0 Then Return -1
-    Return 0
+Function Fastcall sgn8(v As Byte) As Byte
+    Asm
+        or a
+        ret z
+        jp p, _sgn8_pos
+        ld a, -1
+        ret
+    _sgn8_pos:
+        ld a, 1
+    End Asm
 End Function
+
+Sub fastcall clsCustom(attr As Ubyte)
+    Asm
+        ld hl, $4000
+        ld (hl), 0
+        ld de, $4001
+        ld bc, 6143
+        ldir
+        ld (hl), a
+        ld bc, 767
+        ldir
+    End Asm
+End Sub
 
 Sub PrintPadded(value As Uinteger, padLength As Ubyte, Color As uInteger, X As uInteger, Y As uInteger)
     Dim numDigits As Ubyte = 1
@@ -198,18 +217,11 @@ end sub
 #endif
 
 #ifdef MESSAGES_ENABLED
-    sub printMessage(line1 as string, line2 as string, p as ubyte, i as ubyte)
-        If line1 = "" AND line2 = "" Then Return
-        
-        #ifdef MESSAGES_FLASH_ENABLED
-            Dim attr as uByte = (p * 8) + i + (128 * MESSAGES_FLASH_ENABLED)
-        #else
-            Dim attr as uByte = (p * 8) + i
-        #endif
-        PrintString(line1, attr, HUD_MESSAGE_X, HUD_MESSAGE_Y)
-        PrintString(line2, attr, HUD_MESSAGE_X, HUD_MESSAGE_Y_2)
-        messageLoopCounter = 0
-    end sub
+    #ifdef MESSAGES_FLASH_ENABLED
+        #define printMessage(line1, line2, p, i) PrintString(line1, ((p) * 8) + (i) + (128 * MESSAGES_FLASH_ENABLED), HUD_MESSAGE_X, HUD_MESSAGE_Y) : PrintString(line2, ((p) * 8) + (i) + (128 * MESSAGES_FLASH_ENABLED), HUD_MESSAGE_X, HUD_MESSAGE_Y_2) : messageLoopCounter = 0
+    #else
+        #define printMessage(line1, line2, p, i) PrintString(line1, ((p) * 8) + (i), HUD_MESSAGE_X, HUD_MESSAGE_Y) : PrintString(line2, ((p) * 8) + (i), HUD_MESSAGE_X, HUD_MESSAGE_Y_2) : messageLoopCounter = 0
+    #endif
     
     sub checkMessageForDelete()
         If messageLoopCounter = MESSAGE_LOOPS_VISIBLE Then
@@ -227,34 +239,51 @@ end sub
 #endif
 
 #ifdef HISCORE_ENABLED
-    Sub incrementScore(amount As Ubyte)
-        score = score + amount
-        If score > hiScore Then
-            hiScore = score
-        End If
-    End Sub
+    #define incrementScore(amount) score = score + (amount) : If score > hiScore Then hiScore = score
 #endif
 
-Function isDamageTileByColLin(col as Ubyte, lin as Ubyte) As Ubyte
+Function checkTileByType(col as Ubyte, lin as Ubyte, checkType as Ubyte) as Ubyte
     Dim tile as Ubyte = GetTile(col, lin)
-    DIM basePtr as UInteger = arrayBasePtr(damageTiles)
-    Dim i as Ubyte
+    If tile = 0 Then Return 0
     
-    For i = 0 to DAMAGE_TILES_COUNT
-        If peek(basePtr + i) = tile Then
-            Return tile
-        End If
-    Next i
-    
+    If checkType = 0 Then
+        If tile > 63 Then Return 0
+        #ifdef USE_BREAKABLE_TILE_BY_TOUCH
+            If tile = BREAKABLE_BY_TOUCH_TILE Then
+                If lastFrameOnBreakableTiles = 0 Then
+                    lastFrameOnBreakableTiles = framec
+                    tileToBreakByTouchX = col
+                    tileToBreakByTouchY = lin
+                End If
+            End If
+        #endif
+        Return tile
+    ElseIf checkType = 1 Then
+        Dim basePtr as UInteger = arrayBasePtr(damageTiles)
+        Dim i as Ubyte
+        For i = 0 To DAMAGE_TILES_COUNT
+            If Peek(basePtr + i) = tile Then Return tile
+        Next i
+        Return 0
+    #ifdef SIDE_VIEW
+        #ifdef LADDERS_ENABLED
+        ElseIf checkType = 2 Then
+            If tile >= 70 And tile <= 73 Then Return tile
+            Return 0
+        #endif
+    #endif
+    End If
     Return 0
 End Function
 
+#define isSolidTileByColLin(col, lin) checkTileByType(col, lin, 0)
+
 function allEnemiesKilled() as ubyte
-    if enemiesPerScreen(currentScreen) = 0 then return 1
+    if gUB(enemiesPerScreen, currentScreen) = 0 then return 1
     
     Dim enemyId As Ubyte
     Dim life As Ubyte
-    for enemyId = 0 TO enemiesPerScreen(currentScreen) - 1
+    for enemyId = 0 TO gUB(enemiesPerScreen, currentScreen) - 1
         if decompressedEnemiesScreen(enemyId, ENEMY_TILE) < 16 then
             continue for
         end if
@@ -265,26 +294,6 @@ function allEnemiesKilled() as ubyte
     next enemyId
     
     return 1
-end function
-
-function isSolidTileByColLin(col as ubyte, lin as ubyte) as ubyte
-    dim tile as ubyte = GetTile(col, lin)
-    
-    if tile > 63 then return 0
-    if tile < 1 then return 0
-
-    #ifdef USE_BREAKABLE_TILE_BY_TOUCH
-        If tile = BREAKABLE_BY_TOUCH_TILE Then
-            If lastFrameOnBreakableTiles = 0 Then
-                lastFrameOnBreakableTiles = framec
-                
-                tileToBreakByTouchX = col
-                tileToBreakByTouchY = lin
-            End If
-        End If
-    #endif
-    
-    return tile
 end function
 
 #ifdef ARCADE_MODE
@@ -354,21 +363,18 @@ end function
             End Sub
 
             Sub doubleSizeTexto(x As Ubyte, y As Ubyte, texto As String)
-                DIM dir AS UInteger
-                DIM n, c, xx AS UByte
-                ' Sacamos una copia de x
+                DIM dir, charFontBase AS UInteger
+                DIM n, c, xx, textLen AS UByte
+                DIM strPtr AS UInteger = PEEK(UInteger, @texto)
+                DIM charAddr AS UInteger = strPtr + 2
+                textLen = PEEK(UByte, strPtr)
+                If textLen = 0 Then Return
+                charFontBase = PEEK(UInteger, 23606)
                 xx = x
-                ' Recorremos la cadena letra a letra
-                FOR n = 0 TO LEN(texto)-1
-                    ' Dirección del carácter
-                    dir = PEEK(UInteger, 23606)
-                    ' Código ASCII del carácter
-                    c = CODE texto(n)
-                    ' Calculamos la dirección del carácter en memoria
-                    dir = dir + (CAST(UInteger,c) * 8)
-                    ' Imprimimos el carácter a doble tamaño
-                    doubleSize8x8(xx,y,dir)
-                    ' Incrementamos c en 16 pixels
+                FOR n = 0 TO textLen - 1
+                    c = PEEK(charAddr + n)
+                    dir = charFontBase + (CAST(UInteger, c) * 8)
+                    doubleSize8x8(xx, y, dir)
                     xx = xx + 16
                 NEXT n
             End Sub
@@ -391,100 +397,40 @@ end function
     #define checkTravesablePlatformFromTopAndAll(x, y) checkTravesablePlatformType(x, y, 67)
 #endif
 
-Function CheckCollisionSolid(x as Ubyte, y as Ubyte) as Ubyte
+Function CheckCollision2x2(x as Ubyte, y as Ubyte, checkType as Ubyte) as Ubyte
     Dim xIsEven as Ubyte = (x bAnd 1) = 0
     Dim yIsEven as Ubyte = (y bAnd 1) = 0
     Dim col as Ubyte = x >> 1
     Dim lin as Ubyte = y >> 1
     Dim t as Ubyte
     
-    t = isSolidTileByColLin(col, lin) : if t then return t
-    t = isSolidTileByColLin(col + 1, lin) : if t then return t
-    t = isSolidTileByColLin(col, lin + 1) : if t then return t
-    t = isSolidTileByColLin(col + 1, lin + 1) : if t then return t
+    t = checkTileByType(col, lin, checkType) : if t then return t
+    t = checkTileByType(col + 1, lin, checkType) : if t then return t
+    t = checkTileByType(col, lin + 1, checkType) : if t then return t
+    t = checkTileByType(col + 1, lin + 1, checkType) : if t then return t
     
     if not yIsEven then
-        t = isSolidTileByColLin(col, lin + 2) : if t then return t
-        t = isSolidTileByColLin(col + 1, lin + 2) : if t then return t
+        t = checkTileByType(col, lin + 2, checkType) : if t then return t
+        t = checkTileByType(col + 1, lin + 2, checkType) : if t then return t
     end if
     
     if not xIsEven then
-        t = isSolidTileByColLin(col + 2, lin) : if t then return t
-        t = isSolidTileByColLin(col + 2, lin + 1) : if t then return t
+        t = checkTileByType(col + 2, lin, checkType) : if t then return t
+        t = checkTileByType(col + 2, lin + 1, checkType) : if t then return t
     end if
     
     if not xIsEven and not yIsEven then
-        t = isSolidTileByColLin(col + 2, lin + 2) : if t then return t
+        t = checkTileByType(col + 2, lin + 2, checkType) : if t then return t
     end if
     
     return 0
 End Function
 
-Function CheckCollisionDamage(x as Ubyte, y as Ubyte) as Ubyte
-    Dim xIsEven as Ubyte = (x bAnd 1) = 0
-    Dim yIsEven as Ubyte = (y bAnd 1) = 0
-    Dim col as Ubyte = x >> 1
-    Dim lin as Ubyte = y >> 1
-    Dim t as Ubyte
-    
-    t = isDamageTileByColLin(col, lin) : if t then return t
-    t = isDamageTileByColLin(col + 1, lin) : if t then return t
-    t = isDamageTileByColLin(col, lin + 1) : if t then return t
-    t = isDamageTileByColLin(col + 1, lin + 1) : if t then return t
-    
-    if not yIsEven then
-        t = isDamageTileByColLin(col, lin + 2) : if t then return t
-        t = isDamageTileByColLin(col + 1, lin + 2) : if t then return t
-    end if
-    
-    if not xIsEven then
-        t = isDamageTileByColLin(col + 2, lin) : if t then return t
-        t = isDamageTileByColLin(col + 2, lin + 1) : if t then return t
-    end if
-    
-    if not xIsEven and not yIsEven then
-        t = isDamageTileByColLin(col + 2, lin + 2) : if t then return t
-    end if
-    
-    return 0
-End Function
-
+#define CheckCollisionSolid(x, y) CheckCollision2x2(x, y, 0)
+#define CheckCollisionDamage(x, y) CheckCollision2x2(x, y, 1)
 #ifdef SIDE_VIEW
     #ifdef LADDERS_ENABLED
-Function isLadderTileByColLin(col as Ubyte, lin as Ubyte) as Ubyte
-    Dim tile as Ubyte = GetTile(col, lin)
-    If tile >= 70 And tile <= 73 Then Return tile
-    Return 0
-End Function
-
-Function CheckCollisionLadder(x as Ubyte, y as Ubyte) as Ubyte
-    Dim xIsEven as Ubyte = (x bAnd 1) = 0
-    Dim yIsEven as Ubyte = (y bAnd 1) = 0
-    Dim col as Ubyte = x >> 1
-    Dim lin as Ubyte = y >> 1
-    Dim t as Ubyte
-    
-    t = isLadderTileByColLin(col, lin) : if t then return t
-    t = isLadderTileByColLin(col + 1, lin) : if t then return t
-    t = isLadderTileByColLin(col, lin + 1) : if t then return t
-    t = isLadderTileByColLin(col + 1, lin + 1) : if t then return t
-    
-    if not yIsEven then
-        t = isLadderTileByColLin(col, lin + 2) : if t then return t
-        t = isLadderTileByColLin(col + 1, lin + 2) : if t then return t
-    end if
-    
-    if not xIsEven then
-        t = isLadderTileByColLin(col + 2, lin) : if t then return t
-        t = isLadderTileByColLin(col + 2, lin + 1) : if t then return t
-    end if
-    
-    if not xIsEven and not yIsEven then
-        t = isLadderTileByColLin(col + 2, lin + 2) : if t then return t
-    end if
-    
-    return 0
-End Function
+        #define CheckCollisionLadder(x, y) CheckCollision2x2(x, y, 2)
     #endif
 #endif
 
@@ -527,24 +473,31 @@ end sub
         
         #ifdef WALL_JUMP_ENABLED
             If landed = 0 Then
-                If CheckCollisionSolid(protaX + 1, protaY) Then
+                If CheckCollisionSolid(protaX + 1, protaY) And lastWallJumpSide <> 1 Then
                     wallJump = 1
+                    lastWallJumpSide = 1
                     protaDirection = 0
                     protaFrame = 4
                     If protaX > 0 Then protaX = protaX - 1
-                    wallJumpTimer = 8
-                Elseif CheckCollisionSolid(protaX - 1, protaY) Then
+                    wallJumpTimer = 6
+                    BeepFX_Play(2)
+                Elseif CheckCollisionSolid(protaX - 1, protaY) And lastWallJumpSide <> 2 Then
                     wallJump = 1
+                    lastWallJumpSide = 2
                     protaDirection = 1
                     protaFrame = 1
                     If protaX < 60 Then protaX = protaX + 1
-                    wallJumpTimer = 8
+                    wallJumpTimer = 6
+                    BeepFX_Play(2)
                 End If
             End If
         #endif
         
         if (isJumpStopped() and landed) or wallJump then
             landed = 0
+            #ifdef WALL_JUMP_ENABLED
+                If Not wallJump Then lastWallJumpSide = 0
+            #endif
             #ifdef DASH_ENABLED
                 isDashing = 0
             #endif
@@ -576,10 +529,10 @@ end sub
 #endif
 
 Function getAttrFromTileAndApplyToOther(tile As Ubyte, besideTile As Ubyte) As Ubyte
-    Return (attrSet(tile) bAnd 135) + (attrSet(besideTile) bAnd 120)  ' ink+flash + paper+bright
+    Return (gUB(attrSet, tile) bAnd 135) + (gUB(attrSet, besideTile) bAnd 120)  ' ink+flash + paper+bright
 End Function
 
-#define replaceTileWithBackground(col, lin) SetTileChecked(GetTile(col, (lin) + 1), attrSet(GetTile(col, (lin) + 1)), col, lin)
+#define replaceTileWithBackground(col, lin) SetTileChecked(GetTile(col, (lin) + 1), gUB(attrSet, GetTile(col, (lin) + 1)), col, lin)
 
 Sub breakTileAt(col As Ubyte, lin As Ubyte)
     If col >= screenWidth Then Return
@@ -589,7 +542,7 @@ Sub breakTileAt(col As Ubyte, lin As Ubyte)
     
     #ifdef USE_BREAKABLE_TILE_ALL
         If tile = BREAKABLE_BY_BULLET_TILE Then
-            brokenTiles(currentScreen) = 1
+            sB(brokenTiles, currentScreen, 1)
             BeepFX_Play(0)
             removeTilesFromScreen(BREAKABLE_BY_BULLET_TILE)
             Return
@@ -726,7 +679,7 @@ End Function
             ElseIf charCode = 32 Then
                 ' Space
                 If currentX <= TEXTS_WINDOW_X + TEXTS_WINDOW_WIDTH - 1 Then
-                    PrintString(" ", attrVal, currentX, currentY)
+                    PrintChar(32, attrVal, currentX, currentY)
                     currentX = currentX + 1
                 End If
                 textPtr = textPtr + 1
@@ -749,7 +702,7 @@ End Function
                 ' Print Word
                 If currentY <= TEXTS_WINDOW_Y + TEXTS_WINDOW_HEIGHT - 1 Then
                     While PEEK(textPtr) <> 32 AND PEEK(textPtr) <> 10 AND PEEK(textPtr) <> 255
-                        PrintString(Chr$(PEEK(textPtr)), attrVal, currentX, currentY)
+                        PrintChar(PEEK(textPtr), attrVal, currentX, currentY)
                         currentX = currentX + 1
                         textPtr = textPtr + 1
                     Wend
