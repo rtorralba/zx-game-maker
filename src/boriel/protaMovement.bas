@@ -215,6 +215,9 @@ End Function
             If falling Then
                 If CheckCollisionLadder(protaX, protaY) Or CheckCollisionLadder(protaX, protaY + 2) Then
                     falling = 0
+                    #ifdef WALL_JUMP_ENABLED
+                        lastWallJumpSide = 0
+                    #endif
                 End If
             End If
         #endif
@@ -231,6 +234,7 @@ End Function
                 landed = 1
                 #ifdef WALL_JUMP_ENABLED
                     wallJumpTimer = 0
+                    lastWallJumpSide = 0
                 #endif
                 #ifdef DASH_ENABLED
                     isDashing = 0
@@ -262,7 +266,15 @@ End Function
                 moveScreen = 2
             Else
                 #ifndef JETPACK_FUEL
-                    saveProta(protaY + 2, protaX, getNextFrameJumpingFalling(), protaDirection)
+                    #ifdef WALL_JUMP_ENABLED
+                        If CheckCollisionSolid(protaX + 1, protaY) Or CheckCollisionSolid(protaX - 1, protaY) Then
+                            saveProta(protaY + 1, protaX, getNextFrameJumpingFalling(), protaDirection)
+                        Else
+                            saveProta(protaY + 2, protaX, getNextFrameJumpingFalling(), protaDirection)
+                        End If
+                    #else
+                        saveProta(protaY + 2, protaX, getNextFrameJumpingFalling(), protaDirection)
+                    #endif
                 #Else
                     saveProta(protaY + 1, protaX, getNextFrameJumpingFalling(), protaDirection)
                 #endif
@@ -589,11 +601,46 @@ Function checkDashingOrWalljumping() As Ubyte
     #ifdef SIDE_VIEW
         #ifdef WALL_JUMP_ENABLED
             If wallJumpTimer > 0 Then
+                Dim kLeft As Ubyte = 0
+                Dim kRight As Ubyte = 0
+                If kempston Then
+                    Dim nJoy As Ubyte = In(31)
+                    If nJoy bAND %10 Then kLeft = 1
+                    If nJoy bAND %1 Then kRight = 1
+                Else
+                    kLeft = MultiKeys(gUI(keyArray, LEFT))
+                    kRight = MultiKeys(gUI(keyArray, RIGHT))
+                End If
+                
+                If (protaDirection = 0 And kRight <> 0) Or (protaDirection = 1 And kLeft <> 0) Then
+                    wallJumpTimer = 0
+                    #ifdef DISABLE_CONTINUOUS_JUMP
+                        noKeyPressedForJump = 1
+                    #endif
+                    Return 0
+                End If
+
                 wallJumpTimer = wallJumpTimer - 1
                 If protaDirection = 0 Then
-                    leftKey()
+                    If canMoveLeft() Then
+                        leftKey()
+                    Else
+                        wallJumpTimer = 0
+                        #ifdef DISABLE_CONTINUOUS_JUMP
+                            noKeyPressedForJump = 1
+                        #endif
+                        Return 0
+                    End If
                 Else
-                    rightKey()
+                    If canMoveRight() Then
+                        rightKey()
+                    Else
+                        wallJumpTimer = 0
+                        #ifdef DISABLE_CONTINUOUS_JUMP
+                            noKeyPressedForJump = 1
+                        #endif
+                        Return 0
+                    End If
                 End If
                 
                 If kempston Then

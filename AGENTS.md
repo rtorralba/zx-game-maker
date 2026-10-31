@@ -323,3 +323,44 @@ Esto consumía ciclos de reloj en llamadas y escrituras de arrays por frame, ade
    - El espacio libre en el Banco 0 antes de `$C000` (49152) aumenta a **1.780 bytes libres** (frente a los ~250 bytes originales del proyecto).
    - Ahorro masivo de ciclos de CPU en el bucle principal y bucle de enemigos.
 
+---
+
+## 15. Mejora del Wall Jump: Deslizamiento (Wall Slide) y Cancelación de Bloqueo en Chimeneas
+
+### Motivación y Problemas Detectados
+Al intentar concatenar rebotes sucesivos de Wall Jump entre paredes cercanas (ej. chimeneas de 2 o 3 tiles de ancho), el control resultaba extremadamente tosco y difícil por tres causas principales:
+1. **Bloqueo Incondicional por `wallJumpTimer` (8 frames)**:
+   - Al rebotar, `wallJumpTimer = 8` forzaba el desplazamiento hacia la pared contraria.
+   - En una chimenea estrecha, el personaje alcanzaba la pared opuesta en apenas 2 o 3 frames.
+   - Sin embargo, mientras `wallJumpTimer > 0`, `checkDashingOrWalljumping()` devolvía 1, **bloqueando completamente la lectura del teclado (`keyboardListen()`)**.
+   - Cualquier pulsación de salto efectuada por el jugador contra la pared opuesta se ignoraba durante los 5 o 6 frames restantes. Para cuando el timer expiraba, el impulso vertical del salto había concluido y el personaje caía.
+2. **Imposibilidad de Cancelar con la Cruceta (Input Override)**:
+   - Si el jugador saltaba de una pared hacia otra y pulsaba instintivamente la dirección contraria para preparar el siguiente rebote, el timer ignoraba la cruceta y mantenía el empuje forzado.
+3. **Caída Ultrarrápida sin Deslizamiento por la Pared (Wall Slide)**:
+   - Al entrar en caída (`gravity()`), el protagonista caía a 2 unidades (8 píxeles por frame) sin importar si estaba rozando una pared vertical, dejando una ventana de reacción mínima.
+
+### Solución Implementada
+1. **Cancelación Inmediata del Timer al Contactar con la Pared Opuesta (`checkDashingOrWalljumping`)**:
+   - En `src/boriel/protaMovement.bas`, se evalúa `canMoveLeft()` / `canMoveRight()` antes de aplicar el desplazamiento.
+   - Si el personaje impacta contra la pared contraria (`Not canMoveLeft()` o `Not canMoveRight()`):
+     - Se cancela inmediatamente `wallJumpTimer = 0`.
+     - Se habilita el flag de salto `noKeyPressedForJump = 1` para permitir el re-trigger del siguiente salto.
+     - Se retorna 0, devolviendo el control del teclado en ese mismo frame.
+2. **Cancelación por Pulsación Contradireccional (Override Manual)**:
+   - Si mientras el timer empuja al personaje en una dirección el jugador presiona activamente la dirección opuesta, el timer se cancela inmediatamente devolviendo el control manual.
+3. **Deslizamiento Suave por Pared (Wall Slide en `gravity`)**:
+   - En `gravity()` (`protaMovement.bas`), si el jugador está en el aire cayendo y roza una pared sólida (`CheckCollisionSolid(protaX + 1, protaY)` o `CheckCollisionSolid(protaX - 1, protaY)`):
+     - La caída se reduce a la mitad de velocidad: `saveProta(protaY + 1, ...)` (4 píxeles por frame en vez de 8).
+     - Proporciona una ventana de tiempo cómoda y fluida para ejecutar el siguiente rebote.
+4. **Prevención de Escalada en un Solo Muro (`lastWallJumpSide`)**:
+   - Con la cancelación rápida de timer, el jugador podía rebotar contra un muro, pulsar inmediatamente hacia el mismo muro en el aire y volver a saltar sobre él en bucle infinito.
+   - Se añadió la variable `lastWallJumpSide` en `definitions.bas` (`1` = salto desde muro derecho, `2` = salto desde muro izquierdo, `0` = suelo/escalera).
+   - En `jump()` (`functions.bas`), solo se permite saltar si el lado actual es distinto de `lastWallJumpSide`.
+   - Al tocar el suelo (`landed = 1`) o agarrar una escalera, `lastWallJumpSide` se resetea a 0. Esto permite escalar chimeneas alternando paredes izquierda/derecha de forma ilimitada y fluida, pero imposibilita trepar indefinidamente por una única pared.
+5. **Ajuste del Timer Base**:
+   - Se ajustó el tiempo base de despegue de 8 a 6 frames en `jump()` (`functions.bas`), proporcionando una parábola más ágil y limpia.
+6. **Resultado**:
+   - Concatenación de Wall Jumps en chimeneas inmediata, suave y altamente reactiva.
+   - Imposibilidad de escalar una pared vertical solitaria.
+   - Espacio libre en el Banco 0: **1.492 bytes libres** antes de `$C000` (`main.bin` finaliza en `$BA2C`).
+

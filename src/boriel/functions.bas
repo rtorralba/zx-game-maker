@@ -473,24 +473,29 @@ end sub
         
         #ifdef WALL_JUMP_ENABLED
             If landed = 0 Then
-                If CheckCollisionSolid(protaX + 1, protaY) Then
+                If CheckCollisionSolid(protaX + 1, protaY) And lastWallJumpSide <> 1 Then
                     wallJump = 1
+                    lastWallJumpSide = 1
                     protaDirection = 0
                     protaFrame = 4
                     If protaX > 0 Then protaX = protaX - 1
-                    wallJumpTimer = 8
-                Elseif CheckCollisionSolid(protaX - 1, protaY) Then
+                    wallJumpTimer = 6
+                Elseif CheckCollisionSolid(protaX - 1, protaY) And lastWallJumpSide <> 2 Then
                     wallJump = 1
+                    lastWallJumpSide = 2
                     protaDirection = 1
                     protaFrame = 1
                     If protaX < 60 Then protaX = protaX + 1
-                    wallJumpTimer = 8
+                    wallJumpTimer = 6
                 End If
             End If
         #endif
         
         if (isJumpStopped() and landed) or wallJump then
             landed = 0
+            #ifdef WALL_JUMP_ENABLED
+                If Not wallJump Then lastWallJumpSide = 0
+            #endif
             #ifdef DASH_ENABLED
                 isDashing = 0
             #endif

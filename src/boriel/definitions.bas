@@ -257,6 +257,7 @@ Dim lastFrameOnBreakableTiles As Ubyte = 0
 
 #ifdef WALL_JUMP_ENABLED
     Dim wallJumpTimer As Ubyte = 0
+    Dim lastWallJumpSide As Ubyte = 0
 #endif
 
 #ifdef DASH_ENABLED
