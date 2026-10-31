@@ -480,6 +480,7 @@ end sub
                     protaFrame = 4
                     If protaX > 0 Then protaX = protaX - 1
                     wallJumpTimer = 6
+                    BeepFX_Play(2)
                 Elseif CheckCollisionSolid(protaX - 1, protaY) And lastWallJumpSide <> 2 Then
                     wallJump = 1
                     lastWallJumpSide = 2
@@ -487,6 +488,7 @@ end sub
                     protaFrame = 1
                     If protaX < 60 Then protaX = protaX + 1
                     wallJumpTimer = 6
+                    BeepFX_Play(2)
                 End If
             End If
         #endif

@@ -364,3 +364,24 @@ Al intentar concatenar rebotes sucesivos de Wall Jump entre paredes cercanas (ej
    - Imposibilidad de escalar una pared vertical solitaria.
    - Espacio libre en el Banco 0: **1.492 bytes libres** antes de `$C000` (`main.bin` finaliza en `$BA2C`).
 
+---
+
+## 16. Feedback de Wall Jump: Sonido de Impulso (BeepFX_Play(2)) y Descarte de Efectos Gráficos
+
+### Motivación y Decisión de Diseño
+Inicialmente se exploraron dos alternativas para el feedback visual en el rebote de pared:
+1. Un sistema de partículas dinámico (tipo MPAGD / *Cafetonic*) o sprites 1x1: requería aumentar buffers de sprites en `GuSprites`, consumiendo cientos de bytes críticos de memoria y operaciones de restauración por frame.
+2. Un sprite 2x2 temporal de impacto/explosión (`BURST_SPRITE_ID = 16`): aunque funcional, la adición de llamadas a `Draw2x2Sprite`, comprobaciones de temporizador y coordenadas consumía **363 bytes** en `main.bin`, un coste desproporcionado para un efecto secundario en un sistema con memoria ajustada.
+
+Se optó por una solución óptima y minimalista: **feedback puramente sonoro**.
+
+### Implementación
+- En `jump()` (`src/boriel/functions.bas`), al confirmarse el rebote contra el muro izquierdo o derecho en un Wall Jump válido:
+  - Se ejecuta directamente `BeepFX_Play(2)` (el mismo sonido de impulso/fuerza utilizado en el Dash).
+- Se descartaron por completo todas las variables de temporización (`wallJumpBurstTimer`, etc.) y llamadas a dibujo de sprites.
+
+### Resultado y Memoria
+- El coste de `BeepFX_Play(2)` en código máquina es de únicamente **10 bytes** en total (`ld a, 2; call BeepFX_Play`).
+- Se recuperaron **353 bytes** de memoria respecto a la solución con sprites.
+- `main.bin` finaliza en `$BA36`, conservando **1.482 bytes libres** en el Banco 0 antes del límite crítico `$C000`.
+
