@@ -73,6 +73,7 @@
   "prop_128Kenabled": "128K Enabled",
   "prop_ammo": "Ammo",
   "prop_animatePeriodMain": "Main Character Animation Period",
+  "prop_animatePeriodPlatform": "Platform Animation Period",
   "prop_animatePeriodTile": "Tile Animation Period",
   "prop_backgroundAttribute": "Background Attribute",
   "prop_borderColorItem": "Border Color (Item)",

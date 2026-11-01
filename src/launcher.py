@@ -466,6 +466,7 @@ TOOLTIPS = {
     "128Kenabled": "Activa o desactiva las características exclusivas de 128K.",
     "ammo": "Munición inicial del jugador.",
     "animatePeriodMain": "Período de animación para el personaje principal.",
+    "animatePeriodPlatform": "Período de animación para las plataformas móviles.",
     "animatePeriodTile": "Período de animación para los tiles del mapa.",
     "backgroundAttribute": "Atributo de color del fondo de la pantalla (0-255).",
     "borderColorItem": "Color del borde de la pantalla al recoger un objeto (0-7).",

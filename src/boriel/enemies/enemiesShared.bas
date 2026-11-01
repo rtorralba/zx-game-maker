@@ -149,9 +149,15 @@ End Function
 #define saveData(enemyPtr, horizontalDirection, verticalDirection, enemyCol, enemyLin) Poke enemyPtr + ENEMY_CURRENT_COL, enemyCol : Poke enemyPtr + ENEMY_CURRENT_LIN, enemyLin : Poke enemyPtr + ENEMY_HORIZONTAL_DIRECTION, horizontalDirection : Poke enemyPtr + ENEMY_VERTICAL_DIRECTION, verticalDirection
 
 Sub saveAndDraw(enemyId as Ubyte, enemyPtr As Uinteger, tile As Ubyte, horizontalDirection As Ubyte, verticalDirection As Ubyte, enemyCol As Byte, enemyLin As Byte, enemySpeed As Ubyte)
-    ' If platform, update frame every time, otherwise only when moving
+    ' If platform, update frame by animation period, otherwise only when moving
     If isPlatform(tile) Then
-        updateEnemyFrame(enemyId)
+        #if ANIMATE_PERIOD_PLATFORM > 0
+            If framec - lastFramePlatforms >= ANIMATE_PERIOD_PLATFORM Then
+                platformFrame = platformFrame Xor 1
+                lastFramePlatforms = framec
+            End If
+            sB(currentEnemyFrame, enemyId, platformFrame)
+        #endif
     End If
 
     If checkShouldSkipMoveBySpeed(enemySpeed) Then

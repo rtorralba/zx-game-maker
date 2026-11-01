@@ -98,6 +98,10 @@ Dim framec As Ubyte AT 23672
 #endif
 
 Dim lastFrameTiles As Ubyte = 0
+#if ANIMATE_PERIOD_PLATFORM > 0
+    Dim lastFramePlatforms As Ubyte AT 23296
+    Dim platformFrame As Ubyte AT 23297
+#endif
 
 Const INVINCIBLE_FRAMES As Ubyte = 25
 Dim invincible As Ubyte = 0

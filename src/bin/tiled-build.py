@@ -109,6 +109,7 @@ backgroundAttribute = 7
 animatePeriodMain = 3
 animatePeriodEnemy = 3
 animatePeriodTile = 10
+animatePeriodPlatform = 10
 
 password = ""
 
@@ -266,6 +267,8 @@ if 'properties' in data:
             animatePeriodEnemy = property['value']
         elif property['name'] == 'animatePeriodTile':
             animatePeriodTile = property['value']
+        elif property['name'] == 'animatePeriodPlatform':
+            animatePeriodPlatform = property['value']
         elif property['name'] == 'password':
             password = property['value']
         elif property['name'] == 'gameView':
@@ -482,7 +485,8 @@ configStr += "const ITEM_TILE as ubyte = " + itemTile + "\n"
 configStr += "const LIFE_TILE as ubyte = " + lifeTile + "\n"
 # configStr += "const ANIMATE_PERIOD_MAIN as ubyte = " + str(animatePeriodMain) + "\n"
 # configStr += "const ANIMATE_PERIOD_ENEMY as ubyte = " + str(animatePeriodEnemy) + "\n"
-configStr += "const ANIMATE_PERIOD_TILE as ubyte = " + str(animatePeriodTile) + "\n\n"
+configStr += "const ANIMATE_PERIOD_TILE as ubyte = " + str(animatePeriodTile) + "\n"
+configStr += "#define ANIMATE_PERIOD_PLATFORM " + str(animatePeriodPlatform) + "\n\n"
 
 configStr += "const ITEMS_COUNTDOWN as ubyte = " + str(itemsCountdown) + "\n"
 configStr += "dim itemsToFind as ubyte = " + str(goalItems) + "\n"

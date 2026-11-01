@@ -73,6 +73,7 @@
   "prop_128Kenabled": "128K Habilitado",
   "prop_ammo": "Munição",
   "prop_animatePeriodMain": "Período de animação (personagem)",
+  "prop_animatePeriodPlatform": "Período de animação (plataformas)",
   "prop_animatePeriodTile": "Período de animação (tiles)",
   "prop_backgroundAttribute": "Atributo de fundo",
   "prop_borderColorItem": "Cor da borda (objeto)",

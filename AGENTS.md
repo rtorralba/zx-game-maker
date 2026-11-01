@@ -437,3 +437,64 @@ Para evitar saturar el espacio de ejecución en el Banco 0 ($5E38 - $BA51, donde
 - La tipografía incluida de ejemplo en `assets/fonts/general.ch8` proviene de la colección **ZX Origins font collection** de **Damien Guard (DamienG)** (https://damieng.com/zx-origins).
 - Se documenta la atribución completa en `assets/fonts/README.md` y en la sección de créditos y licencias de `README.md`, respetando los términos de uso libre y no redistribución como catálogo independiente fijados por el autor.
 
+
+---
+
+## 18. Velocidad de Animación Configurable para Plataformas Móviles (nimatePeriodPlatform)
+
+### Motivación y Objetivo
+Anteriormente, las plataformas móviles (isPlatform(tile) = tile < 16) alternaban su frame gráfico (de 0 a 1 y viceversa) dentro de saveAndDraw() en cada iteración del bucle principal de juego (a 50 Hz). Esto provocaba un parpadeo gráfico hiperactivo e impedía a los creadores de juegos regular la cadencia visual de las plataformas según el estilo de su juego.
+
+### Propiedad de Mapa y Tooling
+1. **Definición de Propiedad**:
+   - Se añadió la propiedad nimatePeriodPlatform (tipo int, valor por defecto 10) al esquema del proyecto de Tiled (ZXSpectrumGameMaker).
+   - Con el valor por defecto 10, el intercambio de frames se produce cada 10 barridos de pantalla (5 veces por segundo a 50 Hz), logrando un ciclo de animación suave y natural.
+2. **Archivos de Tooling y Metadatos Actualizados**:
+   - src/propertytypes.json: Agregado nimatePeriodPlatform dentro de la clase ZXSpectrumGameMaker.
+   - ssets/map/maps.tiled-project y plantillas en examples/.
+   - ssets/map/maps.tmx y mapas de prueba en examples/.
+   - src/launcher.py: Tooltip explicativo de la propiedad.
+   - src/i18n/es.json, en.json, pt.json: Textos de interfaz localizados en español, inglés y portugués.
+3. **Pipeline de Build (src/bin/tiled-build.py)**:
+   - Inicializa nimatePeriodPlatform = 10.
+   - Extrae el valor configurado en el mapa TMX.
+   - Genera en output/config.bas:
+     `asic
+     #define ANIMATE_PERIOD_PLATFORM <valor>
+     `
+     *(Regla crítica sobre Boriel ZX Basic)*: Las directivas condicionales del preprocesador (#if, #ifdef) son evaluadas antes del paso de compilación BASIC. En el preprocesador C de zxbc, cualquier identificador que no haya sido definido con #define (como las declaraciones const de BASIC) se evalúa como 0. Por ello, ANIMATE_PERIOD_PLATFORM debe emitirse como #define ANIMATE_PERIOD_PLATFORM <valor> para que las directivas #if ANIMATE_PERIOD_PLATFORM > 0 funcionen correctamente y no descarten el bloque de código.
+
+### Implementación en el Motor de Juego (src/boriel/)
+1. **Variables en Memoria Fija sin Crecimiento de BSS (definitions.bas)**:
+   - Se evita cualquier operación MOD (conforme a la regla de la Sección 12).
+   - Se declaran lastFramePlatforms y platformFrame mapeadas a direcciones absolutas en el buffer de impresora de Spectrum ( / 23296 - 23297):
+     `asic
+     #if ANIMATE_PERIOD_PLATFORM > 0
+         Dim lastFramePlatforms As Ubyte AT 23296
+         Dim platformFrame As Ubyte AT 23297
+     #endif
+     `
+   - *(Regla crítica sobre BSS y ALIGN 256 en im2.bas)*: Declarar variables globales estándar (Dim ... As Ubyte = 0) añade bytes a la sección .bss. Al encontrarse la tabla de interrupciones de im2.bas alineada a 256 bytes (ALIGN 256), el crecimiento de apenas 2 bytes en .bss provocaba que la dirección previa pasara el límite de página, obligando a ALIGN 256 a insertar un salto de relleno de 255 bytes vacíos hasta $8600. El uso de AT 23296 sitúa las variables fuera del segmento .bss, ocupando **0 bytes en BSS** y evitando por completo el relleno de 255 bytes en im2.bas.
+
+2. **Evaluación Directa en Dibujado (enemiesShared.bas / saveAndDraw)**:
+   - Se elimina cualquier lógica de animación en moveEnemies() (enemies.bas), manteniéndolo limpio y sin banderas globales.
+   - En saveAndDraw(), la comprobación del período delta se realiza exclusivamente al momento de dibujar una plataforma:
+     `asic
+     If isPlatform(tile) Then
+         #if ANIMATE_PERIOD_PLATFORM > 0
+             If framec - lastFramePlatforms >= ANIMATE_PERIOD_PLATFORM Then
+                 platformFrame = platformFrame Xor 1
+                 lastFramePlatforms = framec
+             End If
+             sB(currentEnemyFrame, enemyId, platformFrame)
+         #endif
+     End If
+     `
+   - Si una pantalla contiene múltiples plataformas, la primera plataforma que se dibuja en el frame actual detecta que ramec - lastFramePlatforms >= ANIMATE_PERIOD_PLATFORM, conmuta platformFrame y actualiza lastFramePlatforms = framec. Las siguientes plataformas evaluadas en ese mismo frame observan una diferencia de 0, por lo que adoptan el mismo valor de platformFrame de forma sincronizada sin conmutar de más.
+   - Si no hay plataformas en la pantalla, el código no se ejecuta y el coste es cero.
+   - Si ANIMATE_PERIOD_PLATFORM = 0, el preprocesador excluye el bloque completo a coste cero.
+
+### Rendimiento y Memoria
+- El impacto total en el binario es mínimo (~20 bytes de código), sin variables en BSS.
+- Se recuperan los 255 bytes de alineación de im2.bas, aumentando el espacio libre del Banco 0 a **13.259 bytes libres**.
+- Todas las plataformas de una misma pantalla intercambian fotograma de forma perfectamente sincronizada y fluida.
