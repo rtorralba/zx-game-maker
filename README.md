@@ -53,6 +53,7 @@ Libraries and other software that are included in this project or that it was in
 * [r-lyeh](https://github.com/r-lyeh) Spectral emulator
 * [S.V.Bulba](https://ay.strangled.net/) Vortex Tracker II
 * [Freepik](https://www.flaticon.com/authors/freepik) Launcher Icons
+* [Damien Guard](https://damieng.com/zx-origins) [ZX Origins font collection](https://damieng.com/zx-origins)
 * Juan Segura Duran [Libro Boriel Basic (2023)](https://www.amazon.es/Boriel-Basic-para-ZX-Spectrum/dp/B0CQD65FXZ/)
 
 ## Special Thanks
@@ -84,5 +85,6 @@ Si usas assets del motor, cosa que desaconsejamos por aquello de la originalidad
 
 * Gráficos: al motor y a [PixelArtM](https://twitter.com/PixelArtM)
 * Efectos de sonido: a [shiru8bit](http://shiru.untergrund.net)
+* Fuente tipográfica: a [Damien Guard](https://damieng.com/zx-origins) ([ZX Origins](https://damieng.com/zx-origins))
 
 Si quieres hacer copias físicas sólo tienes que añadir también el logo en un lugar visible y avisarnos, siempre es agradable saber de estos nuevos desarrollos.
