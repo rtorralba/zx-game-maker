@@ -2,9 +2,9 @@
 
 # ZX Spectrum Game Maker
 
-Herramienta para crear juegos para ZX Spectrum de manera visual usando [Tiled](https://www.mapeditor.org/) y el editor de imágenes que prefieras.
+Herramienta para crear juegos para ZX Spectrum de manera visual usando [ZX Game Maker Studio](https://juntelart.itch.io/zx-game-maker).
 
-Recomendamos usar [ZX Paintbrush](https://sourcesolutions.itch.io/zx-paintbrush), pero puedes usar el editor que quieras siempre y cuando las imágenes cumplan las restricciones del ZX Spectrum (color, tamaño)
+Recomendamos usar [ZX Drawer](https://juntelart.itch.io/zxdrawer), pero puedes usar el editor que quieras siempre y cuando las imágenes cumplan las restricciones del ZX Spectrum (color, tamaño)
 
 ## Tech
 
