@@ -15,6 +15,8 @@ def getOsSeparator():
 from configuration.folders import BIN_FOLDER, OUTPUT_FOLDER, DIST_FOLDER, ASSETS_FOLDER, SCREENS_FOLDER, MAP_FOLDER, MAPS_FILE, HUD_MAP_FILE, MAPS_PROJECT, MUSIC_FOLDER
 from configuration.memoria import INITIAL_ADDRESS, MEMORY_BANK_SIZE
 
+FONTS_FOLDER = ASSETS_FOLDER / "fonts"
+
 # Detectar el sistema operativo para poder apuntar especificamente a MacOS
 CURRENT_OS = platform.system()
 
@@ -196,6 +198,9 @@ def screenExists(screen_name):
 
 def musicExists(music_name):
     return os.path.isfile((MUSIC_FOLDER / music_name).with_suffix(".tap"))
+
+def fontExists(font_name="general"):
+    return os.path.isfile((FONTS_FOLDER / font_name).with_suffix(".ch8"))
 
 def blackoutForbiddenSprites(sprites_png_path):
     """

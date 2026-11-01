@@ -27,7 +27,7 @@ Dim keyFire As Uinteger
 Goto startMenu
 
 asm
-ROM_CHARSET EQU 15616 - 256
+MENU_ROM_CHARSET EQU 15616 - 256
 
 PROC
 PRINT_CHAR:
@@ -49,7 +49,7 @@ PRINT_CHAR:
     add hl, hl
     add hl, hl
     add hl, hl
-    ld bc, ROM_CHARSET
+    ld bc, MENU_ROM_CHARSET
     add hl, bc
     
     ld a, d

@@ -385,3 +385,55 @@ Se optó por una solución óptima y minimalista: **feedback puramente sonoro**.
 - Se recuperaron **353 bytes** de memoria respecto a la solución con sprites.
 - `main.bin` finaliza en `$BA36`, conservando **1.482 bytes libres** en el Banco 0 antes del límite crítico `$C000`.
 
+---
+
+## 17. Tipografía Personalizada (`assets/fonts/general.ch8`)
+
+### Motivación y Objetivo
+Permitir que el juego utilice una fuente tipográfica personalizada de 8x8 píxeles si existe el archivo binario `assets/fonts/general.ch8` (768 bytes, 96 caracteres ASCII 32 a 127). Si dicho archivo no existe, el motor retrocede de forma transparente a la tipografía estándar de la ROM del ZX Spectrum ($3D00).
+
+### Arquitectura de Memoria
+Para evitar saturar el espacio de ejecución en el Banco 0 ($5E38 - $BA51, donde reside `main.bin`), la fuente de 768 bytes se empaqueta como un recurso en `files.tap` y se aloja en el **Banco 0 paged RAM** ($C000+), donde se dispone de más de **13 KB libres**.
+
+### Pipeline de Build (`src/builder/`)
+1. **Detección (`helper.py`)**:
+   - `FONTS_FOLDER = ASSETS_FOLDER / "fonts"`
+   - Función de consulta `fontExists(font_name="general")` que comprueba si existe `general.ch8`.
+2. **Empaquetado (`BinaryFilesToTapMerger.py`)**:
+   - Si `fontExists("general")` es verdadero, `general.ch8` se añade a la lista de archivos que se concatenan en `files.bin` (`files.tap`), cargándose en memoria a partir de `INITIAL_ADDRESS` ($C000).
+3. **Métricas de Memoria (`Sizes.py`, `SizesGetter.py`, `ChartGenerator.py`)**:
+   - Se registró `FONT_DATA` dentro de `Sizes` y se añadió a `getKeysToMemoryBank()` para su gestión explícita.
+   - En `SizesGetter`, se calcula el tamaño del fichero `general.ch8`.
+   - En los informes y gráficos de memoria (`ChartGenerator`), `FONT_DATA` se refleja en el Banco 0.
+4. **Generación de Configuración (`ConfigWriter.py`)**:
+   - Si la fuente existe, escribe en `output/config.bas`:
+     ```basic
+     const FONT_DATA_ADDRESS as uinteger = <address>
+     #DEFINE CUSTOM_FONT_ENABLED
+     #DEFINE ROM_CHARSET <address - 256>
+     ```
+   - Al definir `#DEFINE ROM_CHARSET <address - 256>`, la librería `src/boriel/lib/GuSprites.zxbas` omite su valor por defecto (`3C00h`) y apunta directamente a la dirección de memoria de la fuente personalizada.
+
+### Integración en el Motor de Juego (`src/boriel/`)
+1. **Inicialización de Gráficos (`graphicsInitializer.bas`)**:
+   - En `initGraphics()`, si `CUSTOM_FONT_ENABLED` está activo, se actualiza la variable del sistema de Spectrum `CHARS` (dirección 23606):
+     ```basic
+     #ifdef CUSTOM_FONT_ENABLED
+         Poke Uinteger 23606, FONT_DATA_ADDRESS - 256
+     #endif
+     ```
+   - Esto hace que cualquier rutina que lea `CHARS` (como `doubleSizeTexto` en `functions.bas`) utilice automáticamente los glifos de `general.ch8`.
+2. **Compatibilidad con `menu128.bas`**:
+   - En `src/boriel/menu128.bas`, se renombró el símbolo interno de ensamblador de `ROM_CHARSET` a `MENU_ROM_CHARSET` para evitar conflictos léxicos con la macro `#DEFINE ROM_CHARSET` exportada por `config.bas`. El menú en el Banco 7 sigue utilizando de forma segura la ROM del Spectrum sin riesgo de acceder a memoria paginada incorrecta.
+3. **Diálogos de Texto (`showTextDialog` en `functions.bas`)**:
+   - En modo 128K, mientras se leen textos de diálogos desde el Banco 7 (`TEXTS_BANK`), las llamadas a `PrintChar` alternan temporalmente a `SetBank(0)` para consultar los glifos de `general.ch8` y regresan a `SetBank(TEXTS_BANK)`.
+
+### Resultado
+- Si `general.ch8` está presente: el juego completo (HUD, puntuaciones, vidas, munición, textos, letreros gigantes 2x2 y diálogos) se renderiza con la nueva fuente tipográfica.
+- Si `general.ch8` no existe: el juego compila y se ejecuta normalmente usando la fuente clásica de la ROM.
+- Impacto en `main.bin`: Mínimo (~25 bytes de código BASIC/ASM), conservando **1.455 bytes libres** antes de `$C000`.
+
+### Atribución y Licencia de la Fuente
+- La tipografía incluida de ejemplo en `assets/fonts/general.ch8` proviene de la colección **ZX Origins font collection** de **Damien Guard (DamienG)** (https://damieng.com/zx-origins).
+- Se documenta la atribución completa en `assets/fonts/README.md` y en la sección de créditos y licencias de `README.md`, respetando los términos de uso libre y no redistribución como catálogo independiente fijados por el autor.
+

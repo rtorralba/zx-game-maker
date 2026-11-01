@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from builder.Sizes import Sizes
-from builder.helper import ASSETS_FOLDER, BIN_FOLDER, OUTPUT_FOLDER, musicExists, screenExists
+from builder.helper import ASSETS_FOLDER, BIN_FOLDER, OUTPUT_FOLDER, FONTS_FOLDER, musicExists, screenExists, fontExists
 
 class SizesGetter:
     def __init__(self, outputFolder, is128k, useBreakableTile):
@@ -31,6 +31,9 @@ class SizesGetter:
 
         if self.useBreakableTile == 'all':
             sizes.BROKEN_TILES_DATA = self.__getOutputFileSize("brokenTiles.bin")
+
+        if fontExists("general"):
+            sizes.FONT_DATA = self.__getFileSize(FONTS_FOLDER / "general.ch8")
         
         if self.is128k:
             sizes.VTPLAYER = self.__getFileSize(BIN_FOLDER / "vtplayer.tap")

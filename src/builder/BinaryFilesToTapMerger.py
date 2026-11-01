@@ -39,6 +39,9 @@ class BinaryFilesToTapMerger:
         if useBreakableTile == 'all':
             input_files.append(OUTPUT_FOLDER / "brokenTiles.bin")
 
+        if fontExists("general"):
+            input_files.append(FONTS_FOLDER / "general.ch8")
+
         concatenateFiles(output_file, input_files)
 
         runCommand("zxbin2tap \"" + str(output_file) + "\" \"" + str(OUTPUT_FOLDER / "files.tap") + "\" " + str(tapAddress))

@@ -1,6 +1,6 @@
 
 from builder.Sizes import Sizes
-from builder.helper import getEnabled128K, getUseBreakableTile, musicExists, screenExists
+from builder.helper import getEnabled128K, getUseBreakableTile, musicExists, screenExists, fontExists
 
 class ConfigWriter:
     def __init__(self, basicConfigPath, initialAddress, sizes: Sizes):
@@ -81,7 +81,13 @@ class ConfigWriter:
                 currentAddress = self.__writeDeclarationAndIncrement(key, currentAddress)
 
             if getUseBreakableTile():
-                self.__writeDeclarationAndIncrement(Sizes.BROKEN_TILES_DATA_STRING(), currentAddress)
+                currentAddress = self.__writeDeclarationAndIncrement(Sizes.BROKEN_TILES_DATA_STRING(), currentAddress)
+
+            if fontExists("general"):
+                fontAddress = currentAddress
+                currentAddress = self.__writeDeclarationAndIncrement(Sizes.FONT_DATA_STRING(), currentAddress)
+                self.__write("#DEFINE CUSTOM_FONT_ENABLED\n")
+                self.__write(f"#DEFINE ROM_CHARSET {fontAddress - 256}\n")
     
     def __setFileHandler(self, fileHandler):
         self.fileHandler = fileHandler

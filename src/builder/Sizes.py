@@ -29,6 +29,11 @@ class Sizes:
         self.MUSIC_3 = 0
         self.MUSIC_ENDING = 0
         self.MUSIC_GAMEOVER = 0
+        self.FONT_DATA = 0
+    
+    @staticmethod
+    def FONT_DATA_STRING():
+        return "FONT_DATA"
     
     @staticmethod
     def BEEP_FX_STRING():
@@ -144,11 +149,10 @@ class Sizes:
 
     @staticmethod
     def getKeysToMemoryBank():
-        return ["BEEP_FX", "TITLE_SCREEN", "ENDING_SCREEN", "HUD_SCREEN", "INTRO_SCREEN", "GAMEOVER_SCREEN", "MUSIC", "BROKEN_TILES_DATA", "MUSIC_TITLE", "MUSIC_2", "MUSIC_3", "MUSIC_ENDING", "MUSIC_GAMEOVER", "MUSIC_STAGE_CLEAR", "MUSIC_INTRO", "VTPLAYER"]
+        return ["BEEP_FX", "TITLE_SCREEN", "ENDING_SCREEN", "HUD_SCREEN", "INTRO_SCREEN", "GAMEOVER_SCREEN", "MUSIC", "BROKEN_TILES_DATA", "FONT_DATA", "MUSIC_TITLE", "MUSIC_2", "MUSIC_3", "MUSIC_ENDING", "MUSIC_GAMEOVER", "MUSIC_STAGE_CLEAR", "MUSIC_INTRO", "VTPLAYER"]
 
     def printAllSizesByMemoryBankFor128(self):
-
-        self.__printSizesArraySum([
+        bank0_sizes = [
             self.MAPS_DATA_STRING(),
             self.SCREEN_OFFSETS_DATA_STRING(),
             self.SCREEN_OBJECTS_DATA_STRING(),
@@ -161,7 +165,11 @@ class Sizes:
             self.ATTR_DATA_STRING(),
             self.DAMAGE_TILES_DATA_STRING(),
             self.ANIMATED_TILES_IN_SCREEN_DATA_STRING()
-        ], "0")
+        ]
+        if self.FONT_DATA > 0:
+            bank0_sizes.append(self.FONT_DATA_STRING())
+
+        self.__printSizesArraySum(bank0_sizes, "0")
 
         self.__printSizesArraySum([self.TITLE_SCREEN_STRING(), self.ENDING_SCREEN_STRING(), self.HUD_SCREEN_STRING(), self.GAMEOVER_SCREEN_STRING(), self.INTRO_SCREEN_STRING()], "3")
         self.__printSizesArraySum([self.VTPLAYER_STRING(), self.MUSIC_TITLE_STRING(), self.MUSIC_STRING(), self.MUSIC_2_STRING(), self.MUSIC_3_STRING(), self.MUSIC_ENDING_STRING(), self.MUSIC_GAMEOVER_STRING()], "4")
@@ -169,7 +177,7 @@ class Sizes:
 
 
     def printAllSizesByMemoryBankFor48(self):
-        self.__printSizesArraySum([
+        bank0_sizes = [
             self.MAPS_DATA_STRING(),
             self.SCREEN_OFFSETS_DATA_STRING(),
             self.SCREEN_OBJECTS_DATA_STRING(),
@@ -186,7 +194,11 @@ class Sizes:
             self.TITLE_SCREEN_STRING(),
             self.ENDING_SCREEN_STRING(),
             self.HUD_SCREEN_STRING(),
-        ], "0")
+        ]
+        if self.FONT_DATA > 0:
+            bank0_sizes.append(self.FONT_DATA_STRING())
+
+        self.__printSizesArraySum(bank0_sizes, "0")
 
     def __printSizesArraySum(self, sizesArray, name):
         memoryBankSize = 0

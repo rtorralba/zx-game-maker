@@ -679,7 +679,17 @@ End Function
             ElseIf charCode = 32 Then
                 ' Space
                 If currentX <= TEXTS_WINDOW_X + TEXTS_WINDOW_WIDTH - 1 Then
+                    #ifdef CUSTOM_FONT_ENABLED
+                        #ifdef ENABLED_128k
+                            SetBank(0)
+                        #endif
+                    #endif
                     PrintChar(32, attrVal, currentX, currentY)
+                    #ifdef CUSTOM_FONT_ENABLED
+                        #ifdef ENABLED_128k
+                            SetBank(TEXTS_BANK)
+                        #endif
+                    #endif
                     currentX = currentX + 1
                 End If
                 textPtr = textPtr + 1
@@ -702,7 +712,18 @@ End Function
                 ' Print Word
                 If currentY <= TEXTS_WINDOW_Y + TEXTS_WINDOW_HEIGHT - 1 Then
                     While PEEK(textPtr) <> 32 AND PEEK(textPtr) <> 10 AND PEEK(textPtr) <> 255
-                        PrintChar(PEEK(textPtr), attrVal, currentX, currentY)
+                        #ifdef CUSTOM_FONT_ENABLED
+                            #ifdef ENABLED_128k
+                                charCode = PEEK(textPtr)
+                                SetBank(0)
+                                PrintChar(charCode, attrVal, currentX, currentY)
+                                SetBank(TEXTS_BANK)
+                            #else
+                                PrintChar(PEEK(textPtr), attrVal, currentX, currentY)
+                            #endif
+                        #else
+                            PrintChar(PEEK(textPtr), attrVal, currentX, currentY)
+                        #endif
                         currentX = currentX + 1
                         textPtr = textPtr + 1
                     Wend
