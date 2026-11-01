@@ -106,8 +106,20 @@ initTexts = ""
 
 backgroundAttribute = 7
 
-animatePeriodMain = 3
-animatePeriodEnemy = 3
+def frequencyToPeriod(freq):
+    try:
+        val = int(freq)
+    except (ValueError, TypeError):
+        return 10
+    if val <= 0:
+        return 0
+    table = {1: 50, 2: 25, 3: 17, 4: 13, 5: 10, 6: 8, 7: 6, 8: 5, 9: 4, 10: 2}
+    if val in table:
+        return table[val]
+    if val > 10:
+        return min(255, val)
+    return max(1, min(255, round(50 / val)))
+
 animatePeriodTile = 10
 animatePeriodPlatform = 10
 
@@ -261,14 +273,10 @@ if 'properties' in data:
             initTexts = property['value']
         elif property['name'] == 'backgroundAttribute':
             backgroundAttribute = property['value']
-        elif property['name'] == 'animatePeriodMain':
-            animatePeriodMain = property['value']
-        elif property['name'] == 'animatePeriodEnemy':
-            animatePeriodEnemy = property['value']
-        elif property['name'] == 'animatePeriodTile':
-            animatePeriodTile = property['value']
-        elif property['name'] == 'animatePeriodPlatform':
-            animatePeriodPlatform = property['value']
+        elif property['name'] in ('animateFrequencyTile', 'animatePeriodTile'):
+            animatePeriodTile = frequencyToPeriod(property['value'])
+        elif property['name'] in ('animateFrequencyPlatform', 'animatePeriodPlatform'):
+            animatePeriodPlatform = frequencyToPeriod(property['value'])
         elif property['name'] == 'password':
             password = property['value']
         elif property['name'] == 'gameView':
@@ -483,8 +491,6 @@ configStr += "const KEY_TILE as ubyte = " + keyTile + "\n"
 configStr += "const ITEM_TILE as ubyte = " + itemTile + "\n"
 # configStr += "const DOOR_TILE as ubyte = " + doorTile + "\n"
 configStr += "const LIFE_TILE as ubyte = " + lifeTile + "\n"
-# configStr += "const ANIMATE_PERIOD_MAIN as ubyte = " + str(animatePeriodMain) + "\n"
-# configStr += "const ANIMATE_PERIOD_ENEMY as ubyte = " + str(animatePeriodEnemy) + "\n"
 configStr += "const ANIMATE_PERIOD_TILE as ubyte = " + str(animatePeriodTile) + "\n"
 configStr += "#define ANIMATE_PERIOD_PLATFORM " + str(animatePeriodPlatform) + "\n\n"
 

@@ -78,8 +78,7 @@
         "color": "#ffa0a0a4",
         "drawFill": true,
         "id": 12,
-        "members": [
-        ],
+        "members": [],
         "name": "mainCharacter",
         "type": "class",
         "useAs": [
@@ -98,8 +97,7 @@
         "color": "#ffa0a0a4",
         "drawFill": true,
         "id": 13,
-        "members": [
-        ],
+        "members": [],
         "name": "music1",
         "type": "class",
         "useAs": [
@@ -118,8 +116,7 @@
         "color": "#ffa0a0a4",
         "drawFill": true,
         "id": 14,
-        "members": [
-        ],
+        "members": [],
         "name": "music2",
         "type": "class",
         "useAs": [
@@ -138,8 +135,7 @@
         "color": "#ffa0a0a4",
         "drawFill": true,
         "id": 15,
-        "members": [
-        ],
+        "members": [],
         "name": "music3",
         "type": "class",
         "useAs": [
@@ -170,8 +166,7 @@
         "color": "#ffa0a0a4",
         "drawFill": true,
         "id": 16,
-        "members": [
-        ],
+        "members": [],
         "name": "platform",
         "type": "class",
         "useAs": [
@@ -296,24 +291,14 @@
                 "value": 10
             },
             {
-                "name": "animatePeriodEnemy",
+                "name": "animateFrequencyPlatform",
                 "type": "int",
-                "value": 3
+                "value": 5
             },
             {
-                "name": "animatePeriodMain",
+                "name": "animateFrequencyTile",
                 "type": "int",
-                "value": 3
-            },
-            {
-                "name": "animatePeriodPlatform",
-                "type": "int",
-                "value": 10
-            },
-            {
-                "name": "animatePeriodTile",
-                "type": "int",
-                "value": 10
+                "value": 5
             },
             {
                 "name": "arcadeHurryUpSeconds",

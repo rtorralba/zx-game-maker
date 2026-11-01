@@ -6,9 +6,8 @@
  <properties>
   <property name="128Kenabled" type="bool" value="true"/>
   <property name="ammo" type="int" value="10"/>
-  <property name="animatePeriodMain" type="int" value="1"/>
-  <property name="animatePeriodPlatform" type="int" value="40"/>
-  <property name="animatePeriodTile" type="int" value="10"/>
+  <property name="animateFrequencyPlatform" type="int" value="5"/>
+  <property name="animateFrequencyTile" type="int" value="2"/>
   <property name="backgroundAttribute" type="int" value="7"/>
   <property name="borderColorItem" type="int" value="1"/>
   <property name="borderColorKey" type="int" value="2"/>

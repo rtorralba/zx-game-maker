@@ -72,9 +72,6 @@
   "config_saved": "Configuração salva com sucesso.",
   "prop_128Kenabled": "128K Habilitado",
   "prop_ammo": "Munição",
-  "prop_animatePeriodMain": "Período de animação (personagem)",
-  "prop_animatePeriodPlatform": "Período de animação (plataformas)",
-  "prop_animatePeriodTile": "Período de animação (tiles)",
   "prop_backgroundAttribute": "Atributo de fundo",
   "prop_borderColorItem": "Cor da borda (objeto)",
   "prop_borderColorKey": "Cor da borda (chave)",
@@ -119,5 +116,7 @@
   "prop_useBreakableTileByTouch": "Tile quebrável ao tocar",
   "prop_wallJumpEnabled": "Salto na parede habilitado",
   "language_changed_restart": "Idioma alterado com sucesso. Por favor, reinicie a aplicação para aplicar as mudanças.",
-  "preview": "Visualização"
+  "preview": "Visualização",
+  "prop_animateFrequencyPlatform": "Frequência de animação (plataformas)",
+  "prop_animateFrequencyTile": "Frequência de animação (tiles)"
 }

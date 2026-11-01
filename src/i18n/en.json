@@ -72,9 +72,6 @@
   "config_saved": "Configuration saved successfully.",
   "prop_128Kenabled": "128K Enabled",
   "prop_ammo": "Ammo",
-  "prop_animatePeriodMain": "Main Character Animation Period",
-  "prop_animatePeriodPlatform": "Platform Animation Period",
-  "prop_animatePeriodTile": "Tile Animation Period",
   "prop_backgroundAttribute": "Background Attribute",
   "prop_borderColorItem": "Border Color (Item)",
   "prop_borderColorKey": "Border Color (Key)",
@@ -119,5 +116,7 @@
   "prop_useBreakableTileByTouch": "Breakable Tile by Touch",
   "prop_wallJumpEnabled": "Wall Jump Enabled",
   "language_changed_restart": "Language changed successfully. Please restart the application to apply the changes.",
-  "preview": "Preview"
+  "preview": "Preview",
+  "prop_animateFrequencyPlatform": "Platform Animation Frequency",
+  "prop_animateFrequencyTile": "Tile Animation Frequency"
 }

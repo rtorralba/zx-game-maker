@@ -465,9 +465,8 @@ def fxBuild():
 TOOLTIPS = {
     "128Kenabled": "Activa o desactiva las características exclusivas de 128K.",
     "ammo": "Munición inicial del jugador.",
-    "animatePeriodMain": "Período de animación para el personaje principal.",
-    "animatePeriodPlatform": "Período de animación para las plataformas móviles.",
-    "animatePeriodTile": "Período de animación para los tiles del mapa.",
+    "animateFrequencyPlatform": "Frecuencia de animación para las plataformas (1 = más lenta, 10 = más rápida, 0 = desactivada).",
+    "animateFrequencyTile": "Frecuencia de animación para los tiles animados (1 = más lenta, 10 = más rápida, 0 = desactivada).",
     "backgroundAttribute": "Atributo de color del fondo de la pantalla (0-255).",
     "borderColorItem": "Color del borde de la pantalla al recoger un objeto (0-7).",
     "borderColorKey": "Color del borde al recoger una llave (0-7).",
