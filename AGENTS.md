@@ -503,3 +503,68 @@ Se reemplazan estas propiedades por una escala intuitiva de **frecuencia de 1 a 
 - El impacto total en el binario es mínimo (~20 bytes de código), sin variables en BSS.
 - Se recuperan los 255 bytes de alineación de `im2.bas`, manteniendo **13.259 bytes libres** en el Banco 0.
 - Todas las plataformas y tiles animados disponen de configuración homogénea y sincronizada.
+
+---
+
+## 19. Transliteración Automática de Textos y Mensajes a ASCII Spectrum
+
+### Motivación y Objetivo
+El juego de caracteres estándar de la ROM del ZX Spectrum solo contempla los códigos ASCII del 32 al 127. Los caracteres acentuados (`á`, `é`, `í`, `ó`, `ú`), diacríticos (`ñ`, `ç`, `ã`), diéresis (`ü`), signos de apertura (`¿`, `¡`) o comillas tipográficas no existen en la fuente del Spectrum y, al imprimirse, provocaban caracteres corruptos (bloques gráficos o tokens) y desajustes de longitud en pantalla.
+
+Para que los usuarios puedan escribir con ortografía natural (por ejemplo, `camión`, `MUNICIÓN`, `¿DÓNDE?`, `Maçã`) sin preocuparse por la compatibilidad de caracteres, se implementó una transliteración automática a caracteres ASCII válidos (por ejemplo, `camión` -> `camion`).
+
+### Arquitectura e Implementación
+1. **Módulo de Transliteración Central (`src/builder/transliterate.py`)**:
+   - `transliterate(text)`:
+     - Mapea puntuación y caracteres especiales no descomponibles: `¿` -> `?`, `¡` -> `!`, `«` / `»` / `“` / `”` -> `"`, `‘` / `’` -> `'`, `–` / `—` -> `-`, `…` -> `...`, `ß` -> `ss`.
+     - Aplica descomposición canónica Unicode NFD (`unicodedata.normalize('NFD', text)`).
+     - Descarta marcas de combinación (`unicodedata.category(c) != 'Mn'`), convirtiendo vocales acentuadas en vocales estándar (`ó` -> `o`, `ñ` -> `n`, etc.).
+     - Codifica en ASCII estricto descartando cualquier byte residual inválido.
+
+2. **Integración en Mensajes de HUD (`messages.toml` / `src/builder/HudMessage.py`)**:
+   - En el constructor de `HudMessage(line1, line2, ...)`, ambas líneas se transliteran antes de calcular el padding y recorte de 8 caracteres (`ljust(8)[:8]`).
+   - Esto previene recortes erróneos de caracteres multi-byte UTF-8 y garantiza que las dos líneas del HUD muestren exactamente hasta 8 caracteres ASCII limpios.
+
+3. **Integración en Textos de Juego (`src/bin/tiled-build.py`)**:
+   - **Textos de Diálogo (`ZXSGMText`)**: Las propiedades de texto por idioma (`default`, `es`, `pt`) se transliteran al leerse de los objetos del mapa.
+   - **Binario de Textos (`texts.bin`)**: `normalize_text_to_ascii(text)` utiliza `transliterate()` antes de escribir los bloques a disco para el Banco 7.
+   - **Textos Iniciales (`initTexts`)**: Las líneas de texto inicial se transliteran al emitirse en `output/config.bas`.
+
+---
+
+## 20. Corrección de Solapamiento de Memoria entre `brokenTiles` y `FONT_DATA` (Garabato en Espacios en Blanco)
+
+### Síntoma del Problema
+Al jugar en un mapa con modo de tiles rompibles individual (`useBreakableTile = "individual"`), tras destruir un tile rompible (o al inicializarse la lógica de tiles rompibles), todos los espacios en blanco del HUD (el relleno de espacios de `PrintPadded` en vidas, munición, llaves, espada e ítems, así como los espacios al final de los mensajes de HUD como `"COGIDA! "`) aparecían con un garabato o glifo extraño con dos puntos en la parte superior:
+```text
+.....#..
+...#..#.
+```
+(Bytes `[4, 18, 0, 0, 0, 0, 0, 0]`).
+
+### Causa Raíz
+1. **Comprobación Incompleta en el Pipeline de Empaquetado**:
+   - `src/bin/tiled-build.py` genera el archivo `output/brokenTiles.bin` tanto si `useBreakableTile == 'all'` como si `useBreakableTile == 'individual'`.
+   - Sin embargo, `src/builder/BinaryFilesToTapMerger.py` y `src/builder/SizesGetter.py` únicamente comprobaban la condición estricta `if useBreakableTile == 'all':`.
+   - Por tanto, en modo `'individual'`, `brokenTiles.bin` quedaba excluido de la concatenación en `files.bin` y `sizes.BROKEN_TILES_DATA` quedaba en 0.
+2. **Colisión de Direcciones en `ConfigWriter.py`**:
+   - En `ConfigWriter.py`, `BROKEN_TILES_DATA_ADDRESS` se escribía con la dirección actual (`currentAddress = 51509`).
+   - Al ser su tamaño 0, la dirección no se incrementaba (`currentAddress + 0 = 51509`).
+   - Inmediatamente después, `FONT_DATA_ADDRESS` se declaraba con esa misma dirección (`51509`), y `#DEFINE ROM_CHARSET 51253` (`51509 - 256`).
+   - Dado que el carácter 32 (espacio `' '`) se ubica en `ROM_CHARSET + 32 * 8 = 51253 + 256 = 51509`, **el array `brokenTiles` y el mapa de bits del carácter 32 de la fuente compartían exactamente la misma posición de memoria**.
+3. **Sobreescritura del Carácter Espacio en Tiempo de Ejecución**:
+   - Al romperse un tile situado en la columna 4 y fila 18, el motor ejecutaba:
+     `brokenTiles(brokenTilesCurrentIndex, 1) = col` (4)
+     `brokenTiles(brokenTilesCurrentIndex, 2) = lin` (18)
+   - Esto escribía directamente los bytes `4` y `18` en los bytes 1 y 2 de la dirección 51509, corrompiendo el gráfico del espacio en blanco de la fuente tipográfica e imprimiendo el glifo parásito en cualquier llamada subsiguiente con `PrintChar(32)`.
+
+### Solución Implementada
+1. **Normalización en `src/builder/helper.py`**:
+   - Se actualizó `getUseBreakableTile()` para evaluar `maps.json` y retornar explícitamente `'all'`, `'individual'` o `None` (evitando que cadenas como `'none'` o `'disabled'` evalúen a `True` por falsos positivos de cadenas no vacías en Python).
+2. **Corrección de Inclusión y Tamaños (`BinaryFilesToTapMerger.py` y `SizesGetter.py`)**:
+   - Se sustituyó `if useBreakableTile == 'all':` por `if useBreakableTile:` en ambos archivos, asegurando que `brokenTiles.bin` se concatene siempre en `files.bin` y su tamaño real se registre en `sizes.BROKEN_TILES_DATA`.
+   - Como resultado, `FONT_DATA_ADDRESS` se desplaza exactamente los bytes requeridos (ej. 9 bytes, pasando a 51518) y `ROM_CHARSET` pasa a 51262, eliminando cualquier solapamiento.
+3. **Actualización de Información de Memoria y Gráficos (`Sizes.py` y `ChartGenerator.py`)**:
+   - Se incluyó `BROKEN_TILES_DATA` en `bank0_sizes` y en las etiquetas de los gráficos de memoria generados cuando su tamaño es superior a 0.
+4. **Prevención de Errores de Construcción en Windows (`MusicSetup.py`)**:
+   - Se reemplazaron las llamadas `os.rename` por `os.replace` al desempaquetar pistas en `MusicSetup.py`, previniendo errores de colisión de archivos (`FileExistsError [WinError 183]`) en ejecuciones sucesivas del build.

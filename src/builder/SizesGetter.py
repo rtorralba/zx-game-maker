@@ -29,7 +29,7 @@ class SizesGetter:
         sizes.SCREENS_WON_DATA = self.__getOutputFileSize("screensWon.bin")
         sizes.DECOMPRESSED_ENEMIES_SCREEN_DATA = self.__getOutputFileSize("decompressedEnemiesScreen.bin")
 
-        if self.useBreakableTile == 'all':
+        if self.useBreakableTile:
             sizes.BROKEN_TILES_DATA = self.__getOutputFileSize("brokenTiles.bin")
 
         if fontExists("general"):

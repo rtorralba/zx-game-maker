@@ -38,7 +38,7 @@
   <property name="mainCharacterInvincible" type="bool" value="false"/>
   <property name="maxAnimatedTilesPerScreen" type="int" value="10"/>
   <property name="maxEnemiesPerScreen" type="int" value="5"/>
-  <property name="messagesEnabled" type="bool" value="false"/>
+  <property name="messagesEnabled" type="bool" value="true"/>
   <property name="messagesFlashEnabled" type="bool" value="false"/>
   <property name="musicEnabled" type="bool" value="true"/>
   <property name="newBeeperPlayer" type="bool" value="true"/>
@@ -261,7 +261,7 @@
     <property name="default">Hi Carlos! How are things going with the &quot;mi mi mis&quot;? It seems like there's more space now, we can tell more stories and make a Khan Zelda!
 
 It seems like there's a lot of space, maybe we don't need to allow so much text, what do you think?</property>
-    <property name="es">Hola Carlos! Como van los mi mi mis, parece ahora cabe mas, podemos contar mas historietas y hacer el zelda de Khan
+    <property name="es">Hola Carlos! Como van los mi mi mis, parece ahora cabe más, podemos contar más historietas y hacer el zelda de Khan
 
 Parece que cabe mucho, igual no hace falta permitir tanto texto, que pensais?</property>
     <property name="pt">Olá Carlos! Como estão as coisas com os &quot;Mi Mi Mis&quot;? Parece que agora temos mais espaço, podemos contar mais histórias e fazer uma Zelda Khan!

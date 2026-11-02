@@ -1,7 +1,11 @@
+from builder.transliterate import transliterate
+
 class HudMessage:
     def __init__(self, line1, line2, ink="green", paper="black"):
-        self.Line1 = line1.ljust(8)[:8] if line1 != "" else ""
-        self.Line2 = line2.ljust(8)[:8] if line2 != "" else ""
+        clean1 = transliterate(line1)
+        clean2 = transliterate(line2)
+        self.Line1 = clean1.ljust(8)[:8] if clean1 != "" else ""
+        self.Line2 = clean2.ljust(8)[:8] if clean2 != "" else ""
         self.Ink = self.__colorToSpectrum(ink)
         self.Paper = self.__colorToSpectrum(paper)
 

@@ -36,7 +36,7 @@ class BinaryFilesToTapMerger:
             OUTPUT_FOLDER / "decompressedEnemiesScreen.bin"
         ]
 
-        if useBreakableTile == 'all':
+        if useBreakableTile:
             input_files.append(OUTPUT_FOLDER / "brokenTiles.bin")
 
         if fontExists("general"):

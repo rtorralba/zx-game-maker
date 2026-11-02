@@ -10,6 +10,10 @@ from pprint import pprint
 import subprocess
 import sys
 import unicodedata
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+from builder.transliterate import transliterate
 
 def exitWithErrorMessage(message):
     print('\n\n=====================================================================================')
@@ -568,7 +572,7 @@ if len(initTexts) > 0:
     initTexts = initTexts.split("\n")
     configStr += "dim initTexts(" + str(len(initTexts) - 1) + ") as string\n"
     for idx, text in enumerate(initTexts):
-        configStr += "initTexts(" + str(idx) + ") = \"" + text + "\"\n"
+        configStr += "initTexts(" + str(idx) + ") = \"" + transliterate(text) + "\"\n"
 
 configStr += "\n"
 
@@ -877,9 +881,9 @@ for layer in data['layers']:
                             freezeOnSightEnabled = 1
 
             elif object['type'] == 'ZXSGMText':
-                texts['default'][screenId] = str(object['properties'][0]['value']) if 'properties' in object and len(object['properties']) > 0 else "Texto sin establecer"
-                texts['es'][screenId] = str(object['properties'][1]['value']) if 'properties' in object and len(object['properties']) > 1 else "Text not set"
-                texts['pt'][screenId] = str(object['properties'][2]['value']) if 'properties' in object and len(object['properties']) > 2 else "Texto indefinido"
+                texts['default'][screenId] = transliterate(str(object['properties'][0]['value'])) if 'properties' in object and len(object['properties']) > 0 else "Texto sin establecer"
+                texts['es'][screenId] = transliterate(str(object['properties'][1]['value'])) if 'properties' in object and len(object['properties']) > 1 else "Text not set"
+                texts['pt'][screenId] = transliterate(str(object['properties'][2]['value'])) if 'properties' in object and len(object['properties']) > 2 else "Texto indefinido"
             elif object['type'] == 'ZXSGMPointer':
                 # Pointers are processed in a second pass
                 pass
@@ -1063,12 +1067,7 @@ with open("output/decompressedEnemiesScreen.bin", "wb") as f:
 
 def normalize_text_to_ascii(text):
     """Normalize text to ASCII, removing accents and special characters for ZX Spectrum compatibility"""
-    # Normalize to NFD form (decomposed)
-    nfd_form = unicodedata.normalize('NFD', text)
-    # Filter out non-spacing mark characters (accents) and encode to ASCII
-    ascii_text = "".join(c for c in nfd_form if unicodedata.category(c) != 'Mn')
-    # Encode to ASCII, replacing any remaining non-ASCII characters
-    return ascii_text.encode('ascii', 'ignore')
+    return transliterate(text).encode('ascii', 'ignore')
 
 textLocs = [] # List of tuples (screenId, index)
 

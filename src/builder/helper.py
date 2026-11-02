@@ -143,7 +143,14 @@ def getEnemyShootEnabled():
 def getUseBreakableTile():
     with open(OUTPUT_FOLDER / "maps.json", "r") as f:
         maps_json = json.load(f)
-    return any(prop["name"] == "useBreakableTile" and prop["value"] for prop in maps_json["properties"])
+    for prop in maps_json.get("properties", []):
+        if prop["name"] == "useBreakableTile":
+            val = prop.get("value")
+            if val in ("all", "individual"):
+                return val
+            if isinstance(val, bool) and val:
+                return "all"
+    return None
 
 def scrToPng(scr_path, png_path):
     """

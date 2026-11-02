@@ -8,6 +8,8 @@ class ChartGenerator:
         mapsSize = sizes.MAPS_DATA + sizes.SCREEN_OFFSETS_DATA + sizes.SCREEN_OBJECTS_DATA + sizes.SCREENS_WON_DATA
         if is128k:
             paramsMap0 = "Maps:" + str(mapsSize) + ",Enemies:" + str(enemiesSize) + ",Tileset:" + str(sizes.TILESET_DATA) + ",Attributes:" + str(sizes.ATTR_DATA) + ",Objects:" + str(sizes.SCREEN_OBJECTS_DATA) + ",Damage-Tiles:" + str(sizes.DAMAGE_TILES_DATA) + ",Animated-Tiles:" + str(sizes.ANIMATED_TILES_IN_SCREEN_DATA)
+            if sizes.BROKEN_TILES_DATA > 0:
+                paramsMap0 += ",Broken-Tiles:" + str(sizes.BROKEN_TILES_DATA)
             if sizes.FONT_DATA > 0:
                 paramsMap0 += ",Font:" + str(sizes.FONT_DATA)
             paramsMap0 += " memory-bank-0-128K.png"
@@ -20,6 +22,8 @@ class ChartGenerator:
             self.__generateMemoryChart(paramsMap6)
         else:
             paramsMap0 = "FX:" + str(sizes.BEEP_FX) + ",Title-Screen:" + str(sizes.TITLE_SCREEN) + ",End-Screen:" + str(sizes.ENDING_SCREEN) + ",HUD:" + str(sizes.HUD_SCREEN) + ",Maps:" + str(mapsSize) + ",Enemies:" + str(enemiesSize) + ",Tileset:" + str(sizes.TILESET_DATA) + ",Attributes:" + str(sizes.ATTR_DATA) + ",Objects:" + str(sizes.SCREEN_OBJECTS_DATA) + ",Damage-Tiles:" + str(sizes.DAMAGE_TILES_DATA) + ",Animated-Tiles:" + str(sizes.ANIMATED_TILES_IN_SCREEN_DATA)
+            if sizes.BROKEN_TILES_DATA > 0:
+                paramsMap0 += ",Broken-Tiles:" + str(sizes.BROKEN_TILES_DATA)
             if sizes.FONT_DATA > 0:
                 paramsMap0 += ",Font:" + str(sizes.FONT_DATA)
             paramsMap0 += " memory-bank-0-48K.png"

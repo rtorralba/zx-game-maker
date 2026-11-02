@@ -166,6 +166,8 @@ class Sizes:
             self.DAMAGE_TILES_DATA_STRING(),
             self.ANIMATED_TILES_IN_SCREEN_DATA_STRING()
         ]
+        if self.BROKEN_TILES_DATA > 0:
+            bank0_sizes.append(self.BROKEN_TILES_DATA_STRING())
         if self.FONT_DATA > 0:
             bank0_sizes.append(self.FONT_DATA_STRING())
 
@@ -195,6 +197,8 @@ class Sizes:
             self.ENDING_SCREEN_STRING(),
             self.HUD_SCREEN_STRING(),
         ]
+        if self.BROKEN_TILES_DATA > 0:
+            bank0_sizes.append(self.BROKEN_TILES_DATA_STRING())
         if self.FONT_DATA > 0:
             bank0_sizes.append(self.FONT_DATA_STRING())
 
