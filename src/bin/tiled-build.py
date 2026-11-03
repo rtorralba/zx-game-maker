@@ -787,11 +787,7 @@ if arcadeMode == 1:
 
 enemyIdCounter = 0
 
-texts = {
-    'default': {},
-    'es': {},
-    'pt': {}
-}
+texts = defaultdict(dict)
 
 freezeOnSightEnabled = 0
 
@@ -881,9 +877,23 @@ for layer in data['layers']:
                             freezeOnSightEnabled = 1
 
             elif object['type'] == 'ZXSGMText':
-                texts['default'][screenId] = transliterate(str(object['properties'][0]['value'])) if 'properties' in object and len(object['properties']) > 0 else "Texto sin establecer"
-                texts['es'][screenId] = transliterate(str(object['properties'][1]['value'])) if 'properties' in object and len(object['properties']) > 1 else "Text not set"
-                texts['pt'][screenId] = transliterate(str(object['properties'][2]['value'])) if 'properties' in object and len(object['properties']) > 2 else "Texto indefinido"
+                has_text = False
+                if 'properties' in object:
+                    for prop in object['properties']:
+                        prop_name = str(prop.get('name', '')).strip().lower()
+                        prop_val = transliterate(str(prop.get('value', '')))
+                        if prop_name:
+                            texts[prop_name][screenId] = prop_val
+                            has_text = True
+                            if prop_name == 'default' and screenId not in texts['en']:
+                                texts['en'][screenId] = prop_val
+                            elif prop_name == 'en' and screenId not in texts['default']:
+                                texts['default'][screenId] = prop_val
+                if not has_text:
+                    texts['default'][screenId] = "Text not set"
+                    texts['en'][screenId] = "Text not set"
+                    texts['es'][screenId] = "Texto sin establecer"
+                    texts['pt'][screenId] = "Texto indefinido"
             elif object['type'] == 'ZXSGMPointer':
                 # Pointers are processed in a second pass
                 pass
@@ -1071,16 +1081,28 @@ def normalize_text_to_ascii(text):
 
 textLocs = [] # List of tuples (screenId, index)
 
-# Sort screen IDs numerically (keys are already screenIds)
-sorted_screen_ids = sorted([k for k in texts[currentLanguage].keys()], 
+target_lang = currentLanguage.lower()
+if target_lang not in texts or not texts[target_lang]:
+    if 'default' in texts and texts['default']:
+        target_lang = 'default'
+    elif 'en' in texts and texts['en']:
+        target_lang = 'en'
+
+# Collect all screen IDs that contain a text object across any language
+all_text_screen_ids = set()
+for lang_dict in texts.values():
+    all_text_screen_ids.update(lang_dict.keys())
+
+# Sort screen IDs numerically
+sorted_screen_ids = sorted(all_text_screen_ids, 
                            key=lambda x: int(x) if isinstance(x, int) or str(x).isdigit() else 99999)
 
 # Generate binary file for current language only
 binary_data = bytearray()
 
 for idx, screen_id in enumerate(sorted_screen_ids):
-    # Get text content for this screen
-    text_content = texts[currentLanguage].get(screen_id, "")
+    # Get text content for this screen, falling back to default/en if this specific screen lacks translation
+    text_content = texts.get(target_lang, {}).get(screen_id) or texts.get('default', {}).get(screen_id) or texts.get('en', {}).get(screen_id) or ""
     
     # Capture the screen locations
     textLocs.append((int(screen_id), idx))

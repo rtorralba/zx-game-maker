@@ -568,3 +568,30 @@ Al jugar en un mapa con modo de tiles rompibles individual (`useBreakableTile = 
    - Se incluyó `BROKEN_TILES_DATA` en `bank0_sizes` y en las etiquetas de los gráficos de memoria generados cuando su tamaño es superior a 0.
 4. **Prevención de Errores de Construcción en Windows (`MusicSetup.py`)**:
    - Se reemplazaron las llamadas `os.rename` por `os.replace` al desempaquetar pistas en `MusicSetup.py`, previniendo errores de colisión de archivos (`FileExistsError [WinError 183]`) en ejecuciones sucesivas del build.
+
+---
+
+## 21. Corrección de Lectura de Textos Multilingüe por Código de Idioma en Tiled (`ZXSGMText`)
+
+### Motivación del Problema
+Anteriormente, el parser de objetos de diálogo de Tiled (`object['type'] == 'ZXSGMText'` en `src/bin/tiled-build.py`) leía las propiedades de texto mediante índices posicionales fijos:
+- `object['properties'][0]` -> asignado incondicionalmente a `default` (inglés).
+- `object['properties'][1]` -> asignado incondicionalmente a `es` (español).
+- `object['properties'][2]` -> asignado incondicionalmente a `pt` (portugués).
+
+Esto causaba que:
+1. El primer elemento siempre fuera considerado inglés independientemente de su atributo `name` (si un usuario ponía `es` primero o Tiled ordenaba las propiedades de forma distinta, el texto en español se publicaba como inglés).
+2. Si un objeto solo definía un idioma (ej. solo `es`), quedaba grabado en `default` y faltaba en `es`.
+3. Nuevos idiomas o códigos ISO definidos por el usuario en Tiled (`fr`, `de`, `it`, etc.) no se podían añadir.
+4. Los textos por defecto (fallbacks) estaban cruzados (español en `default` e inglés en `es`).
+
+### Solución Implementada (`src/bin/tiled-build.py`)
+1. **Indexado por `prop['name']`**:
+   - Se itera sobre `object['properties']`, extrayendo el nombre en minúsculas (`prop_name = str(prop.get('name', '')).strip().lower()`) y el texto transliterado (`transliterate(...)`).
+   - Se almacena dinámicamente en `texts[prop_name][screenId] = prop_val`.
+   - Se crea un alias bidireccional automático entre `default` y `en` para compatibilidad transparente.
+2. **Generación Robusta de `texts.bin`**:
+   - Se resuelve el idioma destino (`target_lang = currentLanguage.lower()`), haciendo fallback a `default`/`en` si el idioma solicitado no está presente.
+   - Se recopilan todos los IDs de pantalla con textos registrados en cualquier idioma (`all_text_screen_ids`).
+   - Si una pantalla concreta no tiene traducción en el idioma destino seleccionado, recurre limpiamente al texto de `default`/`en` en vez de quedar vacía o desalinear `textLocations`.
+   - Soporte nativo para cualquier código ISO añadido en Tiled.
